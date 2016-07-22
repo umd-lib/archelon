@@ -32,6 +32,12 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+# Blacklight Gems
+gem 'blacklight', "~> 6.0"
+gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw]
+gem 'therubyracer'
+
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
@@ -45,3 +51,9 @@ group :development do
   gem 'spring'
 end
 
+
+group :development, :test do
+  gem 'solr_wrapper', '>= 0.3'
+end
+
+gem 'rsolr', '~> 1.0'
