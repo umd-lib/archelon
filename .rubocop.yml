@@ -1,0 +1,33 @@
+# Enables Rails cops
+Rails:
+  Enabled: true
+
+# Exclude auto-generated files
+AllCops:
+  Exclude:
+    - 'bin/setup'
+    - 'bin/spring'
+    - 'config/application.rb'
+    - 'db/schema.rb'
+    - 'db/migrate/*'
+
+# Increase max allowed line length
+Metrics/LineLength:
+  Max: 120
+
+# The following configuration exclude checks that seem
+# silly, or conflict with the way Rails naturally does
+# things.
+Style/Documentation:
+  Exclude:
+    - 'app/controllers/*_controller.rb'
+    - 'app/helpers/*_helper.rb'
+    - 'test/test_helper.rb'
+    - 'test/controllers/*_controller_test.rb'
+
+Style/ClassAndModuleChildren:
+  Exclude:
+    - 'test/test_helper.rb'
+
+Style/IndentationConsistency:
+  EnforcedStyle: rails
