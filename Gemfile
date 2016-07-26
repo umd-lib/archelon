@@ -36,6 +36,9 @@ gem 'blacklight', '~> 6.0'
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw]
 gem 'therubyracer'
 
+# dotenv - For storing production configuration parameters
+gem 'dotenv-rails', '~> 2.1.1'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
