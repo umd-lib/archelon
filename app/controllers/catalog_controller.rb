@@ -35,7 +35,7 @@ class CatalogController < ApplicationController
     # }
 
     # solr field configuration for search results/index views
-    config.index.title_field = 'title_display'
+    config.index.title_field = 'title'
     config.index.display_type_field = 'format'
 
     # solr field configuration for document/show views
@@ -68,6 +68,7 @@ class CatalogController < ApplicationController
     # :index_range can be an array or range of prefixes that will be used to create the navigation
     # (note: It is case sensitive when searching values)
 
+    config.add_facet_field 'author_not_tokenized', label: 'Author'
     # config.add_facet_field 'pub_date', label: 'Publication Year', single: true
     # config.add_facet_field 'subject_topic_facet', label: 'Topic', limit: 20, index_range: 'A'..'Z'
     # config.add_facet_field 'language_facet', label: 'Language', limit: true
@@ -183,6 +184,7 @@ class CatalogController < ApplicationController
     # config.add_sort_field 'pub_date_sort desc, title_sort asc', label: 'year'
     # config.add_sort_field 'author_sort asc, title_sort asc', label: 'author'
     # config.add_sort_field 'title_sort asc, pub_date_sort desc', label: 'title'
+    config.add_sort_field 'author_not_tokenized asc', label: 'author'
 
     # If there are more than this many search results, no spelling ("did you
     # mean") suggestion is offered.
