@@ -36,11 +36,10 @@ class CatalogController < ApplicationController
     # }
 
     # solr field configuration for search results/index views
-    config.index.title_field = 'title'
-    config.index.display_type_field = 'format'
+    config.index.title_field = 'display_title'
 
     # solr field configuration for document/show views
-    # config.show.title_field = 'title_display'
+    config.show.title_field = 'display_title'
     # config.show.display_type_field = 'format'
 
     # solr fields that will be treated as facets by the blacklight application
@@ -70,6 +69,9 @@ class CatalogController < ApplicationController
     # (note: It is case sensitive when searching values)
 
     config.add_facet_field 'author_not_tokenized', label: 'Author'
+    config.add_facet_field 'type', label: 'Type'
+    config.add_facet_field 'pcdm_type', label: 'PCDM Type'
+    config.add_facet_field 'rdf_type', label: 'RDF Type'
     # config.add_facet_field 'pub_date', label: 'Publication Year', single: true
     # config.add_facet_field 'subject_topic_facet', label: 'Topic', limit: 20, index_range: 'A'..'Z'
     # config.add_facet_field 'language_facet', label: 'Language', limit: true
@@ -92,32 +94,21 @@ class CatalogController < ApplicationController
 
     # solr fields to be displayed in the index (search results) view
     #   The ordering of the field names is the order of the display
-    config.add_index_field 'title_display', label: 'Title'
-    config.add_index_field 'title_vern_display', label: 'Title'
-    config.add_index_field 'author_display', label: 'Author'
-    config.add_index_field 'author_vern_display', label: 'Author'
-    config.add_index_field 'format', label: 'Format'
-    config.add_index_field 'language_facet', label: 'Language'
-    config.add_index_field 'published_display', label: 'Published'
-    config.add_index_field 'published_vern_display', label: 'Published'
-    config.add_index_field 'lc_callnum_display', label: 'Call number'
+    config.add_index_field 'id', label: 'Fedora URL'
+    config.add_index_field 'author', label: 'Author'
+    config.add_index_field 'created', label: 'Created'
 
     # solr fields to be displayed in the show (single result) view
     #   The ordering of the field names is the order of the display
-    config.add_show_field 'title_display', label: 'Title'
-    config.add_show_field 'title_vern_display', label: 'Title'
-    config.add_show_field 'subtitle_display', label: 'Subtitle'
-    config.add_show_field 'subtitle_vern_display', label: 'Subtitle'
-    config.add_show_field 'author_display', label: 'Author'
-    config.add_show_field 'author_vern_display', label: 'Author'
-    config.add_show_field 'format', label: 'Format'
-    config.add_show_field 'url_fulltext_display', label: 'URL'
-    config.add_show_field 'url_suppl_display', label: 'More Information'
-    config.add_show_field 'language_facet', label: 'Language'
-    config.add_show_field 'published_display', label: 'Published'
-    config.add_show_field 'published_vern_display', label: 'Published'
-    config.add_show_field 'lc_callnum_display', label: 'Call number'
-    config.add_show_field 'isbn_t', label: 'ISBN'
+    config.add_show_field 'display_title', label: 'Title'
+    config.add_show_field 'author', label: 'Author'
+    config.add_show_field 'type', label: 'Type'
+    config.add_show_field 'id', label: 'Fedora URL'
+    config.add_show_field 'rdf_type', label: 'RDF Type'
+    config.add_show_field 'pcdm_type', label: 'PCDM Type'
+    config.add_show_field 'description', label: 'Description'
+    config.add_show_field 'created', label: 'Created'
+    config.add_show_field 'last_modified', label: 'Last Modified'
 
     # "fielded" search configuration. Used by pulldown among other places.
     # For supported keys in hash, see rdoc for Blacklight::SearchFields
@@ -186,6 +177,10 @@ class CatalogController < ApplicationController
     # config.add_sort_field 'author_sort asc, title_sort asc', label: 'author'
     # config.add_sort_field 'title_sort asc, pub_date_sort desc', label: 'title'
     config.add_sort_field 'author_not_tokenized asc', label: 'author'
+    config.add_sort_field 'display_title asc', label: 'title'
+    config.add_sort_field 'created asc', label: 'created'
+    config.add_sort_field 'created desc', label: 'created Desc'
+    config.add_sort_field 'last_modified desc', label: 'last modified'
 
     # If there are more than this many search results, no spelling ("did you
     # mean") suggestion is offered.
