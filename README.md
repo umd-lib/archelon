@@ -1,28 +1,40 @@
-== README
-
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+# fcrepo-search
+fcrepo-search is a rails based search interface for the fedora 4 repository. It uses the blacklight gem for providing the search functionalaity.  
 
 
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+## Quick Start
+
+Requires:
+
+* Ruby 2.2.4
+* Bundler
+
+### Setup
+1) Checkout the code and install the dependencies:
+
+```
+> git clone git@github.com:umd-lib/fcrepo-search
+> cd fcrepo-search
+> bundle install
+```
+
+2) Set up the database:
+
+```
+> rake db:migrate
+```
+
+3) Create a `.env` file from the `env_example` file and set the solr url to point to a working solr url.
+
+
+### Run the web application
+
+4) To run the web application:
+
+```
+> rails server
+```
+
+See [fcrepo-search-vagrant][1] for running fcrepo-search in a vagrant environment.
+
+[1]: https://github.com/umd-lib/fcrepo-search-vagrant

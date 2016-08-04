@@ -1,0 +1,10 @@
+# Example .env file
+# Make a copy of this file named ".env" and fill out the properties
+# Note: The .env file should _not_ be checked in to Git!
+
+# File containing server-specific Rails environment variables.
+# Do not check into Git!
+
+# --- config/blacklight.yml
+# URL of the solr running in the fcrepo-vagrant
+SOLR_URL=http://192.168.40.11:8983/solr/fedora4
