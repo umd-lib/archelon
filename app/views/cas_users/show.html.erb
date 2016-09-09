@@ -10,5 +10,14 @@
   <%= @cas_user.name %>
 </p>
 
+<% if current_cas_user.is_admin? %>
+
+<p>
+  <strong>Admin:</strong>
+  <%= @cas_user.admin %>
+</p>
+
+
 <%= link_to 'Edit', edit_cas_user_path(@cas_user) %> |
-<%= link_to 'Back', cas_users_path %>
+<% end %>
+<%= link_to 'Back', "#", onclick: "history.back();" %>

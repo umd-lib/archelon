@@ -1,5 +1,7 @@
 class CasUsersController < ApplicationController
   before_action :set_cas_user, only: [:show, :edit, :update, :destroy]
+  before_action :verify_admin, only: [:index, :new, :create, :edit, :update, :destroy]
+  before_action :verify_self_or_admin, only: [:show]
 
   # GET /cas_users
   # GET /cas_users.json
@@ -74,6 +76,20 @@ class CasUsersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def cas_user_params
-      params.require(:cas_user).permit(:cas_directory_id, :name)
+      params.require(:cas_user).permit(:cas_directory_id, :name, :admin)
+    end
+
+    # Verify current user is an admin before all actions except :show
+    def verify_admin
+      if !current_cas_user.is_admin?
+        render(file: File.join(Rails.root, 'public/403.html'), status: :forbidden, layout: false)
+      end
+    end
+
+    # Verify current user is an admin before all actions except :show
+    def verify_self_or_admin
+      if !current_cas_user.is_admin? and (current_cas_user.id != @cas_user.id)
+        render(file: File.join(Rails.root, 'public/403.html'), status: :forbidden, layout: false)
+      end
     end
 end

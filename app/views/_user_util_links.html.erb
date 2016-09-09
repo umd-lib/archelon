@@ -1,5 +1,13 @@
 <div class="navbar-right">
   <ul class="nav navbar-nav">
+    <% if current_cas_user.is_admin? %>
+      <li>
+        <%= link_to 'Manage Users', controller: 'cas_users', action: 'index' %>
+      </li>
+    <% end %>
+      <li>
+        <%= link_to current_cas_user.name, '/cas_users/' + current_cas_user.id.to_s %>
+      </li>
       <li>
         <%= link_to t('blacklight.header_links.logout'), logout_path %>
       </li>
