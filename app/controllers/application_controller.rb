@@ -1,4 +1,7 @@
 class ApplicationController < ActionController::Base
+  include CasHelper
+  before_action :authenticate
+
   # Adds a few additional behaviors into the application controller
   include Blacklight::Controller
   layout 'blacklight'

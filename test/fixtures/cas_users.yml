@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  cas_directory_id: one
+  name: One
+
+two:
+  cas_directory_id: two
+  name: Two
+
+test_user:
+  cas_directory_id: test_user
+  name: Test User

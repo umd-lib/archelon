@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Cas directory:</strong>
+  <%= @cas_user.cas_directory_id %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @cas_user.name %>
+</p>
+
+<%= link_to 'Edit', edit_cas_user_path(@cas_user) %> |
+<%= link_to 'Back', cas_users_path %>

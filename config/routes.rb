@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :cas_users
+
   mount Blacklight::Engine => '/'
   root to: 'catalog#index'
   concern :searchable, Blacklight::Routes::Searchable.new
@@ -20,6 +22,8 @@ Rails.application.routes.draw do
       delete 'clear'
     end
   end
+
+  get 'logout' => 'cas_users#logout'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
