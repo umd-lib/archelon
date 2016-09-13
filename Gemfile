@@ -36,6 +36,11 @@ gem 'blacklight', '~> 6.0'
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw]
 gem 'therubyracer'
 
+# CAS Authentication
+# April 25, 2016: Need to use GitHub instead of Gem
+# See https://github.com/rubycas/rubycas-client-rails/issues/27
+gem 'rubycas-client', git: 'https://github.com/rubycas/rubycas-client.git', branch: 'master'
+
 # dotenv - For storing production configuration parameters
 gem 'dotenv-rails', '~> 2.1.1'
 

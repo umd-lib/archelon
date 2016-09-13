@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite time='0.660317' skipped='0' failures='0' errors='0' name="CasUsersControllerTest" assertions='13' tests='7'>
+  <testcase time='0.077678' name="test_should_create_cas_user" assertions='3'>
+  </testcase>
+  <testcase time='0.523278' name="test_should_get_new" assertions='1'>
+  </testcase>
+  <testcase time='0.014366' name="test_should_get_edit" assertions='1'>
+  </testcase>
+  <testcase time='0.005940' name="test_should_destroy_cas_user" assertions='3'>
+  </testcase>
+  <testcase time='0.013830' name="test_should_get_index" assertions='2'>
+  </testcase>
+  <testcase time='0.015551' name="test_should_show_cas_user" assertions='1'>
+  </testcase>
+  <testcase time='0.009675' name="test_should_update_cas_user" assertions='2'>
+  </testcase>
+</testsuite>

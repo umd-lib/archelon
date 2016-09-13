@@ -26,6 +26,11 @@ Requires:
 
 3) Create a `.env` file from the `env_example` file and set the solr url to point to a working solr url.
 
+4) Add your directory ID to whitelist
+
+```
+> rake 'db:add_admin_cas_user[your_directory_id, Your Name]'
+```
 
 ### Run the web application
 

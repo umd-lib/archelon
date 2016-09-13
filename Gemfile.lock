@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/rubycas/rubycas-client.git
+  revision: 7b67c8f1b5515ee4e28479d640d2da0a5aadfbe0
+  branch: master
+  specs:
+    rubycas-client (2.3.10.rc1)
+      activesupport
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -223,6 +231,7 @@ DEPENDENCIES
   rsolr (~> 1.0)
   rubocop (~> 0.39.0)
   rubocop-checkstyle_formatter (~> 0.2.0)
+  rubycas-client!
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
   solr_wrapper (>= 0.3)
@@ -235,4 +244,4 @@ DEPENDENCIES
   web-console (~> 2.0)
 
 BUNDLED WITH
-   1.11.2
+   1.12.5

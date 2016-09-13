@@ -1,0 +1,31 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Cas Users</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Cas directory</th>
+      <th>Name</th>
+      <th>Admin</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @cas_users.each do |cas_user| %>
+      <tr>
+        <td><%= cas_user.cas_directory_id %></td>
+        <td><%= cas_user.name %></td>
+        <td><%= cas_user.admin %></td>
+        <td><%= link_to 'Show', cas_user %></td>
+        <td><%= link_to 'Edit', edit_cas_user_path(cas_user) %></td>
+        <td><%= link_to 'Destroy', cas_user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Cas user', new_cas_user_path %>

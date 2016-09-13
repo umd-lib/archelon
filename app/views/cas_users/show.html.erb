@@ -1,0 +1,23 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Cas directory:</strong>
+  <%= @cas_user.cas_directory_id %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @cas_user.name %>
+</p>
+
+<% if current_cas_user.is_admin? %>
+
+<p>
+  <strong>Admin:</strong>
+  <%= @cas_user.admin %>
+</p>
+
+
+<%= link_to 'Edit', edit_cas_user_path(@cas_user) %> |
+<% end %>
+<%= link_to 'Back', "#", onclick: "history.back();" %>
