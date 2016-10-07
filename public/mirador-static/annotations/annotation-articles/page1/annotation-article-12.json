@@ -1,0 +1,54 @@
+{
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "annotations/article12",
+  "@type": "sc:AnnotationList",
+  "label": "CHANGE PROPOSED IN THE HONOR CODE",
+  "resources": [
+    {
+      "@id": "ocrFile1-P1_TB00036",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "CHANGE PROPOSED\nIN THE HONOR CODE\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=4082,912,715,213"
+        },
+        "full": "pageFileGrp1"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile1-P1_TB00037",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "STUDENT COUNCIL TO ACT\nAFTER MOING OVER\nSUGGESTIONS\nNumerous recommendations have\nbeen made for the revised Honor\ncode. Students and faculty are re-\nquested to look over these suggested\nchanges and to voice further opin-\nions. The student executive council\nintends drawing up a final code\nalter considering all recommenda-\ntions.\nThe code will be presented to the\nStudents’ Assembly and voted on by\nwritten ballot.\nFollowing are the recommenda-\ntions thus far receiveed:\n1. Honor systems are not preval-\nent In preparatory schools. For\nthis reason it would be fairer, in\nthe case of new students, in any\nevent Freshmen, not to impose the\nmaximum penalty for the first vio-\nlation.\n2. The penalty of any other viola-\ntion of the Honor System shall be\nhandled by the Executive Commit-\ntee, with a maximum penalty of\nrecommendation to the president\nfor dismissal from the University.\n3. During examinations and quiz-\nzes, where space permits, students\nto be seated one seat apart.\n4. Define examination—“A writ-\nten quizz for the duration of one\nhour or more shall be considered\nan examination.’’\n5. Instructors are expected to re-\nmain in the room during examina-\ntions.\n6. Every faculty member and stu-\ndent of the University is honor\nbound to report any infringement\nof the Honor System to the Honor\nCourt President and to the Presi-\ndent of (he Student Assembly, in\nthe case of any violation of the\nHonor Code which does not pertain\nto examinations and quizzes.\n7. Every faculty member and\nstudent of the University is honor\nbound to report any infringement\nof the Honor System to the Honor\nCourt President, as pertains to ex-\naminations and quizzes, and to the\nPresident of the Student. Assembly\nall other cases coming within the\napplication of the code.\n8. The Honor Court must take ac-\ntion on any case t ithin two weeks\nafter it has been reported.\nOfficers and Duties\n9. The Honor Court shall consist\nof two undergraduates of each col-\nlege, one Senior and one Junior\nmember, except immediately after\nthe May election, at which time the\ncourt members will be Junior and\nSophomores. The new member\nshall be elected by all members of\nthe college at a meeting during the\nsecond week of May, said member\nto be picked from the Sophomore\nclass. This meeting shall be called\nby the Senior Class President of the\nUniversity, who will preside.\n10. Annual ratification of the\nHonor Code, subject to two-thirds\n\\ote of the student body, (This\nwould bring the system periodically\nto the attention of all students and\nwould permit each student to have\na voice in its adoption.)\nU. of M. \n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=4079,1197,732,4238"
+        },
+        "full": "pageFileGrp1"
+      },
+      "motivation": "oa:highlighting"
+    }
+  ]
+}

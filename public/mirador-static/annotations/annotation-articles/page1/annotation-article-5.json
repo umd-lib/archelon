@@ -1,0 +1,146 @@
+{
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "annotations/article5",
+  "@type": "sc:AnnotationList",
+  "label": "MANY ACCEPT BIDS OF VARIOUS FRATS",
+  "resources": [
+    {
+      "@id": "ocrFile1-P1_TB00017",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "MANY ACCEPT BIDS\nOF VARIOUS FRATS\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=1838,913,714,208"
+        },
+        "full": "pageFileGrp1"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile1-P1_TB00018",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "SIGMA NU LEADS WITH\n18 DELTA MU IS\nNEXT WITH 17\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=1838,1195,712,154"
+        },
+        "full": "pageFileGrp1"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile1-P1_TB00019",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "Approximately 180 bids were is-\nsued this year in the annual pledging\ncampaign. Of this number over\n100 Freshmen decided they wanted\nto be fraternity men.\nSigma Nu of the national group\nheaded the list in number of\npledges having captured 18. Della\nMu topped the locals with 17.\nSigma Nu\nGeorge Burroughs, Upper Marl-\nboro, Md.; Henry Whlteford, Bal-\ntimore; Omar Crothers, Elkton,\nMd.; Jefferson Dix, and Frances\nWarren, College Park, Md.; Victor\nFreetag, Brooklyn, N. Y.; Parker\nA Lee, Elizabeth, N. J.; Fred Lin-\nton, Tokoma Park, Md.; Tyler\nPage, John Parsons, Wilfred Hearn,\nCharles V. Koons, George Tew,\nWilliam Wiley, Albert Clayton, Nel-\nbert Zahn, and Neil Campbell, all\nof Washington.\nDella Mu\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=1838,1409,711,1154"
+        },
+        "full": "pageFileGrp1"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile1-P1_TB00020",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "John A. Anders, Westminister,\nMd.; Frances L. Carpenter, Mt.\nVictoria, Md.; Richard Epple,\nRidgewood, N. .1.; Curtis L.\nFamous, Street, Md.; William L.\nHopkins Salisbury, Md.; William\nF. Klair, Havre De Grace, Md.;\nNiel E. Nielson and Howard E.\nSangston, Washington; Daniel T.\nO’Brien, Morganza, Md.; Harry O.\nOrt, Midland, Md.; Walter P.\nPlumley, Jr., Takoma Park, Md.;\nCharles A. Denton, Mutual, Md.:\nRoswell R. Buyer, Baltimore; P++.A\nH. Mac Gill, Glen Park, N. J.; Ben-\njamin Monroe, Takoma Park, Md.;\nJ. Russel Ward, Paris, Md.; Frank\nLewis, Berlin, Md.; Warren G.\nMyers, Thurmont, Md.\nKappa Alpha\nS. Simmons, H. Blakeslee, M.\nPrice, G, Kessler, W. Hale, F.\nStephens, F. Alexander, l>. Whel-\nchel, and T. Stephens, all of Wash-\nington ; H. Gorgas, and C. Loane,\nBaltimore: Arthur Humphries.\nSnow Hill, Md.; B. Aman, Hyatts-\nville, Md.; J. Keenan, and G. Sny-\nder, Windber, Pa.\nXu Sigma Oinirron\nE. Creed, Frederick, Md.; F.\nDonaldson and H. Donaldson,\nLaurel, Md.; Harry Gray, River-\ndale, Md.; J. C. Byrne, Boston,\nMass.; F. J. Kane, Bridgeport,\nConn.; J. E. Holland, and Harold\nLangford, Princess Anne, Md.; P.\nCorkran, Rhodesdale, Md.; H. H.\nAnderson, Princess Anne, Md.;\nRoss H. Black, Hanover, Pa.; Scott\nPollock, Washington: H. Howard,\nWashington; C. G. Stevens, Balti-\nmore, and P. Andrews, Grantsville,\nMaryland.\nSigma Phi Sigma\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=1839,2583,718,2175"
+        },
+        "full": "pageFileGrp1"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile1-P1_TB00021",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "Paul A. Shuman, New Bruns-\nwick, N. J.; Francis J. Porter,\nFrederick Dodge. William Denni-\nson and William Scofield, Washing-\nton; Phillip Insley Cambridge, Md,;\nHarry Merrikin, Salisbury, Md.;\nEdward Shepherd, College Park,\nMd., Howard McCormack, Raspe-\nbed, Md., and Burley Lewis, Oak-\nland, Md.\nDelta Psi Omega\nKenneth Ramsburg, Frederick,\nMd.; Ross Smith, Frederick, Md.;\nJames Hudson, Stockton. Md.; E.\nNorton, Hagerstown, Md.; Charles\nCaldwell, and Elmer Rohberger,\nBaltimore; W. Holloway, Salisbury\nMd., and Henry Wheeler, Bel Air,\nMaryland.\nSigma Tan Omega\nR. Duncan Clark, Oris Rader,\nBruce Geddes ,and James Mackin-\ntosh, Washington; Bruce Billmeyer,\nJames Shaw, and John Roeder,\nCumberland, Md., and Merl Hersh-\nberger, Grantsville, Md.\nPhi Sigma Kappa\nFrederick Bradstreet, New Haven,\nConn.; Elmer Cramer, Hagerstown,\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=1841,4772,715,1394"
+        },
+        "full": "pageFileGrp1"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile1-P1_TB00022",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "Mil.; Robert Estes, Washington;\nAlbert Ouertler, Schuylkill Haven,\nPa.; Ernest Parker, Handover, Mil.;\nJoseph Thoma, Salisbury, Md., and\nRobert Wilson, Buffalo, N. Y.\nDelta Sigma Phi\nCarlton Collins, Thurston Dean,\nand Arthur Worn)rack, Washington;\nCarl Wertheimer, Frederick, Md.;\nand Franklin Halley, Brandywine,\nMaryland.\nSigma Delta.\nKmily and Aline Herzog and Eva\nAtkinson, Washington; Eleanor\nFreeny, Delmar, Mil.; Anne Math-\news, Chestertown, Md.; Virginia\nSturgis. Hyattsville, Md.; Grace\nWarner, Forest Hill, Md,; and Mil-\ndred Wiemer, Palmyra, N. J.\nAlpha Oniicron Pi.\nEster Burgess, Mildred Bonnett,\nAlice Bonnett, Dorothy Finch, Ani-\nta Peters, Phyllis Harbaugh, Wash-\nington; Ruth Barnard, Perryville,\nMd.; Elizabeth Phillips, Salisbury,\nMd.; Mary Anderson, Stubenville,\nOhio; Margaret Temple, Riverdale,\nMd.; Mildred Hislop, Hyattsville,\nMd.; Hazel Tenney, Hagerstown,\nMd.; Olyure Hammock, Marbury,\nMd.\nKap|>a \\i\nEvelyn Moore, Laurel, Maryland,\nMd., Alice Burdick, Baltimore, Md.\nFrances Norton, Hyattsville, Md.,\nMary Graybill, Buena Vista, Va.,\nMargaret McMinimy, .Washington,\nD. C.\nTwo non-competing fraternities\non the campus announce the pledg-\ning of men. They are Phi Alpha\nand the A. G. Club.\nPledges of Phi Alpha are R. Ru-\nbenstein, Jersey City, N. J.; C.\nFramm, Cumberland, Md.; Maurice\n‘lW)'y?T'Whsbington, D. C.\nThe A. G. Club has pledged Her-\nbert Delckman, Elm Grove, W. Va.;\nMarion W. Wallace, Sudlersville,\nMd.; Joeph . Long, Ridgely, Md.;\nRobert A. Brown, Silver Spring,\nMd.; H. 11. Washburn. Lutherville,\nMd.; William Cooper, Salisbury,\nMd.: W. Robert Teeter, Blkton,\nMd.; and Arthur B. Hamilton, Dar-\nlington, Md.\nU. of M. \n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=2583,902,723,2906"
+        },
+        "full": "pageFileGrp1"
+      },
+      "motivation": "oa:highlighting"
+    }
+  ]
+}

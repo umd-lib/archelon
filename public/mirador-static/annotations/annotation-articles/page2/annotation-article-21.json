@@ -1,0 +1,54 @@
+{
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "annotations/article21",
+  "@type": "sc:AnnotationList",
+  "label": "JUNIOR CLASS NAMES MARCH 19 FOR BIG PROM",
+  "resources": [
+    {
+      "@id": "ocrFile2-P2_TB00015",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "JUNIOR CLASS NAMES\nMARCH 19 FOR BIG PROM\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=1674,471,706,109"
+        },
+        "full": "pageFileGrp2"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile2-P2_TB00016",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "March 19 is the date of the Jun-\nior Prom. This was the decision of\nthe Junior class as the result of a\nmeeting last Thursday.\nCommittees will be appointed to\ntake care of arrangements lor the\ndance. Further particulars will lie\nknown at a later date.\nU. of M. \n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=1669,624,709,432"
+        },
+        "full": "pageFileGrp2"
+      },
+      "motivation": "oa:highlighting"
+    }
+  ]
+}

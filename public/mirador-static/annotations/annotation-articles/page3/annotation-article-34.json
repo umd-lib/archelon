@@ -1,0 +1,77 @@
+{
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "annotations/article34",
+  "@type": "sc:AnnotationList",
+  "label": "STRAKA AND WILSON GO TO CHICAGO CONVENTION",
+  "resources": [
+    {
+      "@id": "ocrFile3-P3_TB00015",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "STRAKA AND WILSON GO\nTO CHICAGO CONVENTION\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=1052,4413,718,90"
+        },
+        "full": "pageFileGrp3"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile3-P3_TB00016",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "Robert P. Straka and N. John\nWilson represented the Maryland\nChapter of Delta Sigma Phi, inter-\nnational college fraternity, at its\nnineteenth biennial cnvention to\nheld at Hotel LaSalle, Chicago, De-\ncember 28-30.\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=1057,4561,715,321"
+        },
+        "full": "pageFileGrp3"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile3-P3_TB00017",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "Hon. Ames J. Davis, secretary of\nlabor, and an honorary member of\nthe fraternity, and Mayor George\nDever, of Chicago, were the princi-\npal speakers.\nThe fraternity which has 41 chap-\nters at leading universities and\ncolleges in the United States and\nCanada, recently installed chapters\nat Southern California, John B. Stet-\nson University, and at Nebras-\nka. There also are 14 alumni chap-\nters.\nU. of M. \n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=1055,4902,717,665"
+        },
+        "full": "pageFileGrp3"
+      },
+      "motivation": "oa:highlighting"
+    }
+  ]
+}

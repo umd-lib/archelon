@@ -1,0 +1,54 @@
+{
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "annotations/article10",
+  "@type": "sc:AnnotationList",
+  "label": "FRESHMEN WILL SELECT OFFICERS ON THURSDAY",
+  "resources": [
+    {
+      "@id": "ocrFile1-P1_TB00032",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "FRESHMEN WILL SELECT\nOFFICERS ON THURSDAY\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=3328,4376,718,159"
+        },
+        "full": "pageFileGrp1"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile1-P1_TB00033",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "Nominations for permanent offi-\ncers were made at a meeting of the\nFreshman class last Thursday.\nPresident Adams, of the Sopho-\nmore class, also announced that\nseveral “rat’’ rules would be re-\nmoved in the near future.\nNominations, election to take\nplace on Thursday, follow:\nFor President—Wilford Hearn,\nGordon Kessler, Milton Price and\nDaniel O’Brien.\nFor Vice-President—Fred Lin-\nton, Fred Bradstreet and E. C.\nLoane.\nFor Secretary—Olyure Hammock,\nEleanor Freeny, Virginia Sturgis,\nand Emily Herzog.\nFor Treasurer—Ross Black, Wal-\nker Hale, and C. V. Koons.\nFor Sergeant-at-Arms—John\nParsons, John Keenan, Francis\nPorter, and Walker Hale.\nU. of M. \n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=3332,4605,713,1241"
+        },
+        "full": "pageFileGrp1"
+      },
+      "motivation": "oa:highlighting"
+    }
+  ]
+}

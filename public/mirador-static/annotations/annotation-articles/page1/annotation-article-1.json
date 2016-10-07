@@ -1,0 +1,100 @@
+{
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "annotations/article1",
+  "@type": "sc:AnnotationList",
+  "label": "VARSITY BASKETERS PLAY GAME TONIGHT",
+  "resources": [
+    {
+      "@id": "ocrFile1-P1_TB00006",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "VARSITY BASKETERS\nPLAY GAME TONIGHT\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=339,920,718,211"
+        },
+        "full": "pageFileGrp1"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile1-P1_TB00007",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "MEET RICHMOND DEFEAT\nW. AND L. NAVY IN\nFIRST GAMES\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=346,1200,707,161"
+        },
+        "full": "pageFileGrp1"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile1-P1_TB00008",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "Maryland’s varsity basket ball\nteam that got off to a flying start\nby beating Washington and Lee, 40\nto 27, and Navy, 21 to 12, in its\ntwo games prior to the Christmas\nholidays, will resume action tonight\nby entertaining the University of\nRichmond five in Ritchie gymna-\nsium .\nRichmond will not be easy prey\nand the Old Liners will have to be\non their mettle to get the long end\nof the count. The team from the\nOld Dominion capital is a veteran\none, all of the players of the suc-\ncessful combination of last season\nagain being available and Frank\nDobson, their coach, is well versed\nin the court game.\nMake Great Start\nThe Old Liners’ veteran outfit\nshowed to good advantage in the\ntriumph over Navy that caused the\ncritics along the Atlantic Seaboard\nto sit up and take notice. In fact,\nthe Marylanders got recognition in\nthe New York paper-, some of the\nexperts going so far as to say that\nthe Terrapin team probably was the\nbest in the East. The Gotham\nwriters saw Navy nose out Colum-\nbi, a good quint, and they con-\ncluded that Maryland must be “hot”\nto go over to Annapolis and trim\nthe Midshipmen.\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=343,1414,715,1702"
+        },
+        "full": "pageFileGrp1"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile1-P1_TB00009",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "Maryland did play a great all-\naround game against Navy and\nwith Ensor having a field day by\nregistering 17 points, was in the\nvan all the way. Faber got the\nother markers. Ensor’s collection\ncame from five court goals and 7\nout of 9 tries from the foul line.\nHowever, it was the clever team-\nwork and defensive play that told.\nNavy’s 12 points was the lowest\never scored by a Midshipmen basket\nball team.\nThe Old Liners started Faber and\nEnsor at forwards, Supplee at cen-\nter, and Beatty and Cardwell at\nguards against Navy. Boyd, who\nplayed in the place of Faber for a\nwhile, was the only substitution.\nW. and L. Easy\nMaryland used practically the\nwhole squad in the Washington and\nLee contest, starting a reserve com-\nbination with the exception of Card-\nwell at guard. Troxell and Adams,\nforwards; Llnkous, center, and\nWhelchel and Cardwell, guards be-\ngan the clash, but seven others got\ninto the fray before the finish.\nFaber, Ensor, Supplee, Boyd,\nStevens, Beatty and Woodward\nwere the others to see action, some\nof the regulars being rushed in\nwhen Washington and Lee got off\nto a four point lead. This was the\nonly time the Generals were in the\nvan,as the Old Liners soon forged\nto the front and stayed there, mix-\ning reserves and regulars all the\nway and never having the complete\nfull team in the game.\nTonight’s game will be the last\nhome clash until Gallaudet visits\non Wednesday, January 20, as the\ntossers will leave on a jaunt into\nVirginia tomorrow for three games\nin four days. V. M. I. and Wash-\nington and Lee will be met at\nLexington tomorrow and Thursday\nnights, respectively and after rest-\ntackle Virginia Poly at Blacksburg\ning Friday, the Old Liners will\nSaturday.\nU. of M. \n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=343,3132,718,2620"
+        },
+        "full": "pageFileGrp1"
+      },
+      "motivation": "oa:highlighting"
+    }
+  ]
+}

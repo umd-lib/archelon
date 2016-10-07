@@ -1,0 +1,54 @@
+{
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "annotations/article9",
+  "@type": "sc:AnnotationList",
+  "label": "MACHINE GUN COMPANY LEADS TO PROMOTIONS",
+  "resources": [
+    {
+      "@id": "ocrFile1-P1_TB00030",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "MACHINE GUN COMPANY\nLEADS TO PROMOTIONS\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=3328,1945,715,159"
+        },
+        "full": "pageFileGrp1"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile1-P1_TB00031",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "News comes from the military\ndepartment that a machine gun\ncompany is in the process of or-\nganization. Seven first lieutenants\nhave been made happy with the an-\nnouncement that they are now’ cap-\ntains.\nThe new captains are Alfred H.\nClark, Commander Machine Gun\nCompany; ■ Edward S. Thompson,\nsecond in command, Machine Gun\nCompany; William E. Bishop, sec-\nond in command, Company B.; Ice-\nland H. Cheek, second in command,\nCompany A,; Madison McCauley,\nsecond in command, Company C.;\nB. Ellesmere McKeige, Battalion\nAdjutant; William Trimble, Bat-\ntalion Supply Officer.\nThe following have been raised\nIrom second lieutenants to first:\nLionel K. Ensor, Company B;\nGeorge Melchoir, Company A.;\nLionel E. Newcomer, Machine Gun\nCompany: Lawrence E. Lehman,\nCompany A.; William H. White-\nford, Company C.; and Theodore\nJohnson, Company B.\nJ. B. Seth is to remain Lieut.\nCol., M. Stewart Whaley, major,\nand Captains Eric Metzeroth. Rus-\nsel Allen, and George O’Neill are to\ncontinue in command of rifle com-\npanies A., 8., and C., respectively,\nwhile Captain Edward Barron wTH\nstill handle the band.\nFive juniors are transferred from\nrifle companies to the machine gun\ncompany. They are Sergeants Leroy\nW. Sheriff, M. O. Wooster, W. G.\nBewley, C. L. Propst, and E. B.\nRothgeb.\nU. of M. \n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=3331,2176,720,2154"
+        },
+        "full": "pageFileGrp1"
+      },
+      "motivation": "oa:highlighting"
+    }
+  ]
+}

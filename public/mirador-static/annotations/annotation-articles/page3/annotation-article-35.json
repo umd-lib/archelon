@@ -1,0 +1,54 @@
+{
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "annotations/article35",
+  "@type": "sc:AnnotationList",
+  "label": "FACULTY HEADS SPEAK AT SCIENCE MEETINGS",
+  "resources": [
+    {
+      "@id": "ocrFile3-P3_TB00018",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "FACULTY HEADS SPEAK\nAT SCIENCE MEETINGS\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=1058,5583,712,87"
+        },
+        "full": "pageFileGrp3"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile3-P3_TB00019",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "During the Christinas holidays,\nP| W| Zimmerman, E. C.' Auchter,\nC. E. Temple, B. F. Holmes, and E.\nN. Cory of the University present-\ned papers before the various sections\nof scientists at the meeting of the\nAssociation for the Advancement of\nScience which was hold in Kansas\nCity.\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=1054,5728,715,424"
+        },
+        "full": "pageFileGrp3"
+      },
+      "motivation": "oa:highlighting"
+    }
+  ]
+}

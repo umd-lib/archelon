@@ -1,0 +1,54 @@
+{
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "annotations/article36",
+  "@type": "sc:AnnotationList",
+  "label": "EIGHT GAMES SCHEDULES FOR FRESHMEN TOSSERS",
+  "resources": [
+    {
+      "@id": "ocrFile3-P3_TB00020",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "EIGHT GAMES SCHEDULES\nFOR FRESHMEN TOSSERS\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=1806,431,710,159"
+        },
+        "full": "pageFileGrp3"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile3-P3_TB00021",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "Freshmen hasketers were to pry\nopen their season by playing Sparks\nHigh School this afternoon in\nRitchie gymnasium. Muddy Kusor.\nforward on the Varsity quint came\nfrom Sparks, ami that is saying a\nwhole In: in favor ol the Baltimore\nCounty institution.\nIn all eight games have carded for\nthe yearling tossers and it is prob-\nable that two or throe more will he\nadded.\nGeorgs Tew, Robert Estes and\nAlbert Guertler, centers; Walker\nHale, Milly Price, E. V. Komis.\nMorris Bobbys and Howard Mc-\nCormick. forwards, and Delbert\n/aim, Thurston Dean, Bruce Kes-\nsler and Jefferson Dix, guards, are\nleading members of Ihe squad.\nThe schedule:\nJanuary 12—Sparks High at\nCollege Park (Afternoon).\nJanuary 20 Catholic fni-\nvetrsif.y Freshmen at College\nPark.\nFebruary I—lT. of M. Dental\nSchool at College Park.\nFebruary !>—Calvert Hall at\nCollege Park.\nFebruary 12—Eastern High\nat College Park.\nFebruary til—Navy Plebes\nat .\\ima|Hili.s,\nFebruary to—Western High\nat College Park.\nFebruary IS— llyatttsvillc\nHigh at College Park.\nU. of M. \n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=1809,660,704,1893"
+        },
+        "full": "pageFileGrp3"
+      },
+      "motivation": "oa:highlighting"
+    }
+  ]
+}

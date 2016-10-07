@@ -1,0 +1,41 @@
+{
+  "@context":"http://iiif.io/api/presentation/2/context.json",
+  "@id":"http://iiif-sandbox.lib.umd.edu/manifests/sn83045081/1902-01-15/2-dynamic",
+  "@type":"sc:AnnotationList",
+  "resources": [
+    {
+      "@id" : "search-result-001",
+      "@type": ["oa:Annotation", "umd:searchResult"],
+      "resource" : [ {
+        "@type" : "dctypes:Text",
+        "chars": ""
+      } ],
+      "on" : {
+        "@type" : "oa:SpecificResource",
+        "selector" : {
+          "@type" : "oa:FragmentSelector",
+          "value" : "xywh=910,2410,220,70"
+        },
+        "full" : "http://iiif-sandbox.lib.umd.edu/manifests/sn83045081/1902-01-15/2"
+      },
+      "motivation" : "oa:highlighting"
+    },
+    {
+      "@id" : "search-result-002",
+      "@type": ["oa:Annotation", "umd:searchResult"],
+      "resource" : [ {
+        "@type" : "dctypes:Text",
+        "chars": ""
+      } ],
+      "on" : {
+        "@type" : "oa:SpecificResource",
+        "selector" : {
+          "@type" : "oa:FragmentSelector",
+          "value" : "xywh=585,2120,190,45"
+        },
+        "full" : "http://iiif-sandbox.lib.umd.edu/manifests/sn83045081/1902-01-15/2"
+      },
+      "motivation" : "oa:highlighting"
+    }
+  ]
+}

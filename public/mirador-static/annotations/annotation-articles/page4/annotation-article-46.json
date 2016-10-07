@@ -1,0 +1,100 @@
+{
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "annotations/article46",
+  "@type": "sc:AnnotationList",
+  "label": "BETTY AMOS IS DELEGATE TO STUDENTS GATHERING",
+  "resources": [
+    {
+      "@id": "ocrFile4-P4_TB00008",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "BETTY AMOS IS DELEGATE\nTO STUDENTS GATHERING\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=1717,427,712,164"
+        },
+        "full": "pageFileGrp4"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile4-P4_TB00009",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "While the most of us were spend-\ning the last few days of our Christ-\nmas vacation in our homes, there\nwas meeting in New York City the\nNational Council of Christian As-\nsociations, better known as the C.\nC. A’s., composed of representative\nstudents from states as far west as\nCalifornia and as far south as\nTexas.\nThis year saw the first time that\nany college in the Mid-Atlantic di-\nvision of the C. C. A. has been re-\npresented and Maryland feels that\nit was well represented by Betty\nAmos, who went to the Council for\nthe University,\nThe meeting tvered two im-\nportant question! . First a deter-\nmination of the attitude of students\nall over the country toward the de-\ncisions reached at Princeton re-\ngarding' the World Court, and sec-\nond, and most important, a deter-\nmination of their attitude concern-\ning the very definite stand against\nall denominations and all creeds\ntaken by the Conference of Inter-\ndenominational Students at Evans-\nton, 111. The last mentioned con-\nferencj was called by the church\nboards of the country and included\ndiscussions in which none could\nparticipate except the students.\nThey reached the conclusion that\nthere should be one church only,\na Unified Church, allowing absolute\nfreedom of thought to all.\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=1713,658,713,1964"
+        },
+        "full": "pageFileGrp4"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile4-P4_TB00010",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "The C. C. A. that the group\nmeeting at Evanston had done\nnothing really constructive, that is,\nthat they could better have discus-\nsed how students can work through\nvarious churches or what demands\nthey might make of the church,\nrather than merely discussing\nfaults of the churches and hastily\ndeciding against denominational-\nisms and creeds. They felt that\nthat should be the attitude of the\nC. C. A. toward the decision, and\na\nalso that if the absolute conviction\nof (he students was against denoxni-\nnationalism, they should agree to\ngive up all Christian organizations\nin the colleges and work through\nthis one unification, as they are\nasking the churches to do. It was\nthe opinion of the council that the\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=1713,2633,709,1003"
+        },
+        "full": "pageFileGrp4"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile4-P4_TB00011",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "present student generation is not\nready for such a big step, even\nthough it might bo right.\nAnother item in the program of\nthe meeting was a thorough study\nof the present educational system.\nThis was referred to a committee\nwho will work on it and give their\nreport at the next annual meeting.\nU. of M. \n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=2465,427,699,465"
+        },
+        "full": "pageFileGrp4"
+      },
+      "motivation": "oa:highlighting"
+    }
+  ]
+}
