@@ -1,7 +1,7 @@
-var manifests = "./manifest.json";
+var manifests = "/manifest.json";
 jQuery(function() {
   if (typeof manifests === undefined || manifests === null || manifests === "") {
-    manifests = "./manifest.json";
+    manifests = "/manifest.json";
     // window.console.log(encodeURIComponent(manifests));
   }
 });

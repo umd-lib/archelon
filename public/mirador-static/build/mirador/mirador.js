@@ -41448,7 +41448,7 @@ return paper;
     //true or false.  controls display of "Add new object from URL" on manifest listing page
     'showAddFromURLBox' : true,
 
-    'buildPath' : 'build/mirador/',
+    'buildPath' : '/mirador-static/build/mirador/',
 
     'i18nPath' : 'locales/',
 
