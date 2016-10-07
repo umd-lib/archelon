@@ -1,0 +1,17 @@
+
+<% if is_mirador_displayable(document) %>
+
+  <% content_for :mirador_headers do -%>
+    <style type="text/css">
+    #viewer { background: #333 url(/mirador-static/build/mirador/images/debut_dark.png) left top repeat; width: 100%; height: 100%; position: relative; top:100;}
+    /*.qtip { display: none!important; }*/
+    </style>
+  <% end -%>
+
+  <div style="width: 600px; height: 400px; position: relative;">
+  <div id="viewer">
+    <script src="/mirador-static/build/mirador/mirador.js"></script>
+    <script type="text/javascript" src="/mirador-static/site.js"></script>
+  </div>
+  <div>
+<% end %>
