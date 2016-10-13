@@ -1,4 +1,4 @@
-var manifests = "/manifest.json";
+var manifests = window.manifestUrl;
 jQuery(function() {
   if (typeof manifests === undefined || manifests === null || manifests === "") {
     manifests = "/manifest.json";

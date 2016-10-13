@@ -11,6 +11,9 @@
   <div style="width: 600px; height: 400px; position: relative;">
   <div id="viewer">
     <script src="/mirador-static/build/mirador/mirador.js"></script>
+    <%= javascript_tag do %>
+      window.manifestUrl = '<%= iiif_manifest_url(document) %>';
+    <% end %>
     <script type="text/javascript" src="/mirador-static/site.js"></script>
   </div>
   <div>
