@@ -41452,7 +41452,7 @@ return paper;
     //true or false.  controls display of "Add new object from URL" on manifest listing page
     'showAddFromURLBox' : true,
 
-    'buildPath' : 'build/mirador/',
+    'buildPath' : '/mirador-static/build/mirador/',
 
     'i18nPath' : 'locales/',
 
@@ -51477,7 +51477,7 @@ return paper;
         _this.osdSelection = _this.osd.selection({
           // startRotated: false,
           showSelectionControl: false,
-          prefixUrl: './build/mirador/images/',
+          prefixUrl: '/mirador-static/build/mirador/images/',
           keyboardShortcut: false,
           onSelection: function(rect) {
             if (rect.height > 0 && rect.width > 0) {

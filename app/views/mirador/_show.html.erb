@@ -1,20 +1,33 @@
 
 <% if is_mirador_displayable(document) %>
 
-  <% content_for :mirador_headers do -%>
+  <% content_for :head do -%>
     <style type="text/css">
-    #viewer { background: #333 url(/mirador-static/build/mirador/images/debut_dark.png) left top repeat; width: 100%; height: 100%; position: relative; top:100;}
-    /*.qtip { display: none!important; }*/
+      #mirador-viewer {
+        width: 100%;
+        height: 100%;
+      }
+      #placeholder {
+        width: 100%;
+        height: 100%;
+        padding-top: 190px;
+        border: 1px solid #808080;
+        vertical-align: middle;
+        text-align: center;
+        color: #808080;
+      }
     </style>
   <% end -%>
 
   <div style="width: 600px; height: 400px; position: relative;">
-  <div id="viewer">
-    <script src="/mirador-static/build/mirador/mirador.js"></script>
     <%= javascript_tag do %>
-      window.manifestUrl = '<%= iiif_manifest_url(document) %>';
+      window.iiifURLPrefix = '<%= iiif_base_url %>';
+      window.manifestPcdmID = '<%= encoded_id(document) %>';
     <% end %>
-    <script type="text/javascript" src="/mirador-static/site.js"></script>
+    <div id="mirador-viewer">
+      <div id="placeholder">Loading Mirador Viewer...</div>
+    </div>
+    <script src="/mirador-static/build/mirador/mirador.js"></script>
+    <script type="text/javascript" src="/mirador-static/js/site.js"></script>
   </div>
-  <div>
 <% end %>

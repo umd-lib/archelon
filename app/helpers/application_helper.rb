@@ -3,18 +3,28 @@ require "erb"
 module ApplicationHelper
   FEDORA_BASE_URL = Rails.application.config.fcrepo_base_url
   IIIF_MANIFEST_PREFIX = Rails.application.config.iiif_manifest_url
-  FEDORA_BINARY = "http://fedora.info/definitions/v4/repository#Binary"
-  ALLOWED_MIME_TYPES = ["image/jpeg", "image/tiff", "image/jp2"]
+  PCDM_OBJECT = 'http://pcdm.org/models#Object'
+  PCDM_FILE = 'http://pcdm.org/models#File'
+  ALLOWED_MIME_TYPE = 'image/tiff'
 
   def is_mirador_displayable(document)
-    return true
-    document._source[:rdf_type].include? FEDORA_BINARY and ALLOWED_MIME_TYPES.include? document._source[:mime_type]
+    rdf_types = document._source[:rdf_type];
+    if rdf_types.include? PCDM_OBJECT
+      return true
+    elsif document._source[:rdf_type].include? PCDM_FILE and (ALLOWED_MIME_TYPE == document._source[:mime_type])
+      return true
+    else
+      return false
+    end
   end
 
-  def iiif_manifest_url(document)
+  def encoded_id(document)
     id = document._source[:id]
     id.slice!(FEDORA_BASE_URL)
-    iiif_url = IIIF_MANIFEST_PREFIX + ERB::Util.url_encode(id)
-    return iiif_url
+    return ERB::Util.url_encode(id)
+  end
+
+  def iiif_base_url()
+    return IIIF_MANIFEST_PREFIX
   end
 end

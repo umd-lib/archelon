@@ -9,12 +9,32 @@ var umdMiradorOCR = true;
 var umdMiradorOCRText = '';
 var umdMiradorOCRHovered = 0;
 
+// check current PCDM ID is an issue or a page/image file and return corresponding canvasID
+function getCanvasID(iiifPre, currentPcdmID, data) {
+  var canvasesJSON = data['sequences'][0]['canvases'];
+
+  // if the requested PCDM ID is not issue
+  if (iiifPre + currentPcdmID + '/manifest' !== data['@id']) {
+    // loop all canvases to match requested PCDM ID
+    for (var i = 0; i < canvasesJSON.length; i++) {
+      if (canvasesJSON[i]['@id'].split('/canvas/')[1] === currentPcdmID) {
+        // check if requesting PCDM ID matches canvas id; if so, return the canvas id
+        return canvasesJSON[i]['@id'];
+      } else if (canvasesJSON[i]['images'][0]['@id'].split('/annotation/')[1] === currentPcdmID) {
+        // check if requesting PCDM id matches imaeg file; if so, return the canvas id
+        return canvasesJSON[i]['@id'];
+      }
+    }
+  }
+  return canvasesJSON[0]['@id'];
+}
+
+
 $(function() {
   // create temporary manifest uri
-  // var manifestPcdmID = getParamValue('manifest');
-  // var iiifURLPrefix = decodeURIComponent(getParamValue('iiifURLPrefix')); // default 'https://iiiflocal/manifests/'
-  // var manifestURI = iiifURLPrefix + manifestPcdmID;
-  var manifestURI = './manifest.json';
+  var manifestPcdmID = window.manifestPcdmID;
+  var iiifURLPrefix = window.iiifURLPrefix;
+  var manifestURI = iiifURLPrefix + manifestPcdmID;
 
   // to get the manifest before initiate the Mirador viewer
   $.ajax({
@@ -23,8 +43,9 @@ $(function() {
     async: true,
     success: function (data) {
       // get page CanvasID or first page
-      // var canvasID = getCanvasID(iiifURLPrefix, manifestPcdmID, data);
-      var canvasID = 'http://iiif-sandbox.lib.umd.edu/manifests/sn83045081/1902-01-15/2';
+      var canvasID = getCanvasID(iiifURLPrefix, manifestPcdmID, data);
+
+      // initiate the Mirador viewer
       m = Mirador({
         'id': 'mirador-viewer',
         'layout': '1x1',
