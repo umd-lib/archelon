@@ -1,0 +1,123 @@
+{
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "annotations/article44",
+  "@type": "sc:AnnotationList",
+  "label": "BROWNE IS ON LOSING SIDE AT CONFERENCE",
+  "resources": [
+    {
+      "@id": "ocrFile4-P4_TB00001",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "BROWNE IS ON LOSING\nSIDE AT CONFERENCE\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=227,439,709,206"
+        },
+        "full": "pageFileGrp4"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile4-P4_TB00002",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "OPPOSED WORLD COURT\nTHAT WAS APPROVED\nAT PRINCETON\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=227,720,709,134"
+        },
+        "full": "pageFileGrp4"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile4-P4_TB00003",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "Tom Browne, who was sent as a\nrepresentative to the National Col-\nlegiate World Court Conference,\nheld at Princeton, presented his re-\nport to the Student Assembly last\nWednesday.\nWhat the conference accomplish-\ned was set forth in the report.\nThe conference went on record\nas favoring the establishment of a\nNational Federation of Students of\nAmerica. Two purposes for which\nthe Federation is primarily work-\ning are: First, to secure an increas-\ned interest and influence upon na-\ntional *iud international affairs in\nthe colleges and universities of this\ncountry; second, to achieve a closer\nunity between tlie colleges of the\nUnited States, and to promote sym-\npathy and understanding between\nthe students of this country and\nthose of the rest of the world.\nMeans of Action.\nThe means for attaining these\nends will be:\nFirst, the establishment of schol-\narships between the colleges of\nAmerica and Europe similar to the\nRhodes and Davidson scholarships\nwhich now exist.\nThese scholarships would be for\nthe duration of one year and would\nbe held by Juniors who could re-\nturn to their own colleges after be-\ning abroad. Second: student tours\nto Europe during the summer to\nstudy the social, political and eco-\nnomic conditions of Europe and to\nattend a short course at some Euro-\npean University. Third: a ‘central\nclearing house for all information\nregarding student conditions In\nEurope, and information on fellow-\nship in this and foreign countries.\nFourth: co-operation between facul-\nty' and undergraduates in Ameri-\ncan colleges on matters relating to\ngovernment of courses of study,\nstudent government and adminis-\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=216,913,717,2432"
+        },
+        "full": "pageFileGrp4"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile4-P4_TB00004",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "tration of discipline. Fifth: a cen-\ntral bureau whose purpose will be\nto furnish colleges with prominent\nspeakers on national and interna-\ntional problems. Sixth: the crea-\ntion of public opinion to militate\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=217,3364,712,277"
+        },
+        "full": "pageFileGrp4"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile4-P4_TB00005",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "against commercialism in college\nathletics. Seventh: the encourage-\nment of a spirit of individuality and\ninitiative as opposed to the pre-\nvalent tendency towards standariz-\ned mediocrity.\nBrowne Against It\nThe Conference went on record\nas favoring the adherence of the\nUnited States to tlie Court.\nBrowne spoke against the United\nStates going into the Court. He\nsaid that the Court was a mere\ncreature of the League of Nations\nwhich the American people turned\ndown by a majority of seven mil-\nlion at the 1920 election. He stated\nthat if the United States joined the\nCourt it would sound the death\nknell of the Monroe doctrine which\nhas protected this country and the\nentire Western Hemisphere from\nforeign nations since 1823. He de-\nclared the Court composed of\nforeign judges, would have the\nright to settle a treaty dispute be-\ntween the United States' and Japan\ninvolving the right of the latter to\nsend immigrants to the United\nStates.\nSchools from practically every\nstate in the union were represented\nat the Conference.\nU. of M. \n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=965,430,713,1650"
+        },
+        "full": "pageFileGrp4"
+      },
+      "motivation": "oa:highlighting"
+    }
+  ]
+}

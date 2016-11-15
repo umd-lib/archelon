@@ -1,0 +1,54 @@
+{
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "annotations/article41",
+  "@type": "sc:AnnotationList",
+  "label": "HON. RICHARD YATES ADDRESSES STUDENTS",
+  "resources": [
+    {
+      "@id": "ocrFile3-P3_TB00030",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "HON. RICHARD YATES\nADDRESSES STUDENTS\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=2553,2902,717,161"
+        },
+        "full": "pageFileGrp3"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile3-P3_TB00031",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "Descend ins from (lie rostrum\nafter lie hart rteliverod liis famous\nlecture on “Lincoln,” Hon Richard\nYates, representative from Illinois\nand former Governor of that state,\nshook hands with approximately\nfour hundred at the last assemblage\nof the student body in 1925,\nHe told of his early life stressing\nparticularly his school days with\nthe late William Jennings Bryan\nHis lecture on the great Givi!\nWar President brought out many\ninteresting facts of tha.‘. great man’s\nlife that are not generally known.\nU. of M. \nNed Arty, ’2 1 is with the Kemp\nBros, fanning Company, of Potts-\ntovvn, Indiana.\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=2551,3135,715,987"
+        },
+        "full": "pageFileGrp3"
+      },
+      "motivation": "oa:highlighting"
+    }
+  ]
+}

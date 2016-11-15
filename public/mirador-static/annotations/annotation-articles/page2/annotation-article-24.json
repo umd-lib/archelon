@@ -1,0 +1,146 @@
+{
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "annotations/article24",
+  "@type": "sc:AnnotationList",
+  "label": "ALUMNI COLUMN",
+  "resources": [
+    {
+      "@id": "ocrFile2-P2_TB00021",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "ALUMNI COLUMN\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=1765,3513,532,131"
+        },
+        "full": "pageFileGrp2"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile2-P2_TB00022",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "Any institution of learning will\nsucceed only as its alumni succeed-\ned for they represent the finished\nproduct. On the other hand, each\nalumnus carries the brand of his\nAlma Mater and must see to the\nsuccess of it.\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=1665,3694,706,328"
+        },
+        "full": "pageFileGrp2"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile2-P2_TB00023",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "A. D. Radebaugh, ’l4, resigned\nhis position as County Agent of\nCecil County and has accepted the\nposition of Director of the Bureau\nof Raw Products of the service de-\npartment of the American Can Com-\npany which is the largest tin can\ncompany in the United States. He\nis located in the Citizens’ Bank\nBuilding in Baltimore.\nRadebaugh brought fame to him-\nself recently when he exhibited at\nthe International Corn Show in Chi-\ncago the ear of corn which won the\nGrand Championship, an honor\nwhich gives a Maryland man the\nbest ear of corn in the World in\n1925.\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=1665,4091,709,861"
+        },
+        "full": "pageFileGrp2"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile2-P2_TB00024",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "Windell Powell, ’25, journeyed to\nSchenectady, New York, on Jan-\nuary 1 to take up his duties with\nthe General Electric Company. Pow-\nell won a host of friends while at\nMaryland. He received a great dd’al\nof practical knowledge in the elec-\ntrical line in his connection with\ngeneral service.\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=1668,5028,706,424"
+        },
+        "full": "pageFileGrp2"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile2-P2_TB00025",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "H. O. Yates, jr., ’24, who was em-\nployed for some time after grad-\nuation at our greenhouses is now\nassistant professor of Horticulture\nat the University of Maine, and is in\ncharge of all the floriculture and\nlandscape gardening work.\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=1668,5517,706,326"
+        },
+        "full": "pageFileGrp2"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile2-P2_TB00026",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "News comes from the Registrar’s\noffice that Ruth Fuhrman died at\nher home i.i Washington some time\nduring Decemoer. She was grad-\nuated from the Horticultural course\nof the College of Agriculture in\n1923.\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=1669,5906,707,321"
+        },
+        "full": "pageFileGrp2"
+      },
+      "motivation": "oa:highlighting"
+    }
+  ]
+}

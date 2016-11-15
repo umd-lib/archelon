@@ -1,0 +1,54 @@
+{
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "annotations/article14",
+  "@type": "sc:AnnotationList",
+  "label": "The Diamondback",
+  "resources": [
+    {
+      "@id": "ocrFile2-P2_TB00001",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "The Diamondback\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=176,498,707,93"
+        },
+        "full": "pageFileGrp2"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile2-P2_TB00002",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "Published weekly during the col-\nlege year in the interests of the Stu-\ndents, Faculty and Alumni of the\nUniversity of Maryland.\nEntered at College Park, Md., De-\ncember 24, 1909, as second-class\nmatter under the Act of Congress,\nJuly 16, 1894.\nAddress all business matters to\nthe Business Manager; all other\nmatters to the Editor-in-Chief.\nSubscription price.. . S2.(H) per year\n(In Advance.)\nSingle Copies 10 Cents\nAdvertising Kates Upon Request.\nEditor-in-Chief, KENNETH STONER\nNews Editor, MILFORD SPRECHER\nBusiness Manager.KAßL FRAZIER\nCo-Eds BETTY AMOS\nAlumni GEARY EPPLEY\nCirc. Mgr. . . , EMERSON BISHOFF\nSup. Editor W. H. HOTTEL\nREPORTORIAL STAFF\nPatricia Wolf, W. Egbert Tingley,\nEd Tenney, J. E. Savage, T. H.\nStephens, G. T. O’Neil, Raymond\nCarrington, Parker Lee, Ross\nBlack, Mary Jane McCurdy, “Jo”\nKelly, Frank Winant, Olyure\nHammock.\nCIRCULATION\nRichard Coffman, Paul Gunby,\nIrving Baumgartner.\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=167,661,720,1591"
+        },
+        "full": "pageFileGrp2"
+      },
+      "motivation": "oa:highlighting"
+    }
+  ]
+}

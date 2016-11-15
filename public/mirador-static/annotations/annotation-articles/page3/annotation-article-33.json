@@ -1,0 +1,77 @@
+{
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "annotations/article33",
+  "@type": "sc:AnnotationList",
+  "label": "CIVIL ENGINEERS TRIM ELECTRICALS AT \"DUCKS\"",
+  "resources": [
+    {
+      "@id": "ocrFile3-P3_TB00012",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "CIVIL ENGINEERS TRIM\nELECTRICALS AT \"DUCKS\"\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=1057,2573,717,161"
+        },
+        "full": "pageFileGrp3"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile3-P3_TB00013",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "In a duckpin match the Senior\nCivil Engineers won two games out\nof three from the Senior Electricals.\nAfter swamping the Short Circuits\nfor two games, the Dirt Engineers\nshowed a sudden reversal of form\nand were nosed out by eleven pins\nin an exciting final. The scores\nmade by both teams in the three\ngames were:\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=1058,2805,718,474"
+        },
+        "full": "pageFileGrp3"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile3-P3_TB00014",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "Senior Civils.\n1. De At ley 102 02 84\n2. Trimble 88 104 83\n3. Revel le 90 94 77\n4. Kline 114 82 90\n5. Coblentz 85 103 98\nTotal 479 470 432\nSet, 1,387.\nSenior Electricals.\n1. Thompson .... 81 87 81\n2. Lebowit/. 75 74 85\n3. Pinney 75 74 85\n4. Bishop 82 90 90\n5. White 112 119 93\nTotal 418 445 441\nSet, 1,304.\nThe Dirt Engineers would like to\narrange games with other colleges\non the hill. Dates can lie obtained\nfrom E. F. De Atley.\nU. of M. \n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=1057,3293,715,1106"
+        },
+        "full": "pageFileGrp3"
+      },
+      "motivation": "oa:highlighting"
+    }
+  ]
+}

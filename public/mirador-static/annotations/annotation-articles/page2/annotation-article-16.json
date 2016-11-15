@@ -1,0 +1,54 @@
+{
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "annotations/article16",
+  "@type": "sc:AnnotationList",
+  "label": "PAY PUBLICATION FEES.",
+  "resources": [
+    {
+      "@id": "ocrFile2-P2_TB00005",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "PAY PUBLICATION FEES.\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=257,3877,543,36"
+        },
+        "full": "pageFileGrp2"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile2-P2_TB00006",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "Every indication seems to point\ntoward another successful Reveille.\nGreater interest among the stu-\ndents, however, can be evidenced.\nSome are saying that the year book\nshould be a finer one than that of\nlast year, because the present staff\nshould profit by previous exper-\nience. We do know one thing,\nevery single publication fee should\nbe in the hands of the business man-\nager within the next few weeks.\nA number have yet to pay their\npublication fees. This group prom-\nised on the first day of school to\npay within a very short time. They\nhave failed to do so and there is no\nexcuse.\nU. of M. \n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=169,3976,718,907"
+        },
+        "full": "pageFileGrp2"
+      },
+      "motivation": "oa:highlighting"
+    }
+  ]
+}

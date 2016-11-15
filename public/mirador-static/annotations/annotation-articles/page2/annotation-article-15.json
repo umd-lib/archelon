@@ -1,0 +1,54 @@
+{
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "annotations/article15",
+  "@type": "sc:AnnotationList",
+  "label": "WELL FITTED FOR JOB.",
+  "resources": [
+    {
+      "@id": "ocrFile2-P2_TB00003",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "WELL FITTED FOR JOB.\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=246,2317,550,50"
+        },
+        "full": "pageFileGrp2"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile2-P2_TB00004",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "Mike Stevens should make a fine\ncaptain for the foot ball team next\nFall. Although a real sportsman,\nquiet and unassuming, Mike posses-\nses plenty of fight and determina-\ntion and is sure to set a fast pace\nfor his teammates. In fact, if all\nthe gridmen tried to follow Mike’s\nlead, Coach Curley Byrd doubtless\nwould have to call a halt or his\nplayers soon would be ragged.\nMike bespoke the stuff of which\nhe is made when he said at the ban-\nquet: “With all the backfield ma-\nterial that will be left from this\nseason’s team and that coming up\nfrom the Freshmen eleven it ap-\npears to me as if the captain would\nbe warming the bench most of the\ntime.”\nHowever, if Curly can develop\nenough backs to keep Mike on the\nbench, he will have a mighty sweet\narray of ball carriers. But at any\nrate. Mike showed that he is the\nkind of a fellow who would willing-\nly sit on the side lines if there is a\nbetter man to fill his shoes. That’s\nthe real spirit.\nU. of M. \n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=167,2425,717,1444"
+        },
+        "full": "pageFileGrp2"
+      },
+      "motivation": "oa:highlighting"
+    }
+  ]
+}

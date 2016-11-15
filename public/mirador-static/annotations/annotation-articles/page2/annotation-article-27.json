@@ -1,0 +1,54 @@
+{
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "annotations/article27",
+  "@type": "sc:AnnotationList",
+  "label": "FIVE FROM JUNIOR CLASS PLACED ON HONOR COURT",
+  "resources": [
+    {
+      "@id": "ocrFile2-P2_TB00031",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "FIVE FROM JUNIOR CLASS\nPLACED ON HONOR COURT\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=3154,1220,713,162"
+        },
+        "full": "pageFileGrp2"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile2-P2_TB00032",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "Five new members have been\nelected to the Honor Court from the\nJunior class. One person w'as se-\nlected by each college. Those\nchosen are Norwood Thornton,\nAgriculture; Parks Shipley, Arts\nand Sciences; M. B. Stevens, Edu-\ncation; W. 11. Elgin, Engineering,\nRuth Mcßae, Home Economics.\nSenior representatives of the\nvarious colleges are last years’\nJunior members. The old court\njudges are E. K. Ensor, Agricul-\nture; Gilbert Dent, Arts and\nSciences; Phyllis Morgan, Educa-\ntion; M. H. White, Engineering, and\nMary Riley, Home Economics.\nThe court will be called together\nwithin a few days at which time\norganization will be completed.\nU. of M. \nDr. A. F. Woods addressed mem-\nbers of the Maryland Farm Bureau\non two occasions at the annual\nmeetings which w'ere held in Balti-\nmore during the past week. Many\nother members of the University\nfaculty attended the lectures.\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=3143,1455,721,1362"
+        },
+        "full": "pageFileGrp2"
+      },
+      "motivation": "oa:highlighting"
+    }
+  ]
+}

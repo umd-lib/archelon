@@ -1,0 +1,54 @@
+{
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "annotations/article7",
+  "@type": "sc:AnnotationList",
+  "label": "CO-ED RIFLE SHOOTERS PLAN TO GET REVENGE",
+  "resources": [
+    {
+      "@id": "ocrFile1-P1_TB00025",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "CO-ED RIFLE SHOOTERS\nPLAN TO GET REVENGE\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=2589,5460,709,161"
+        },
+        "full": "pageFileGrp1"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile1-P1_TB00026",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "The men’s rifle team will fire in a\nmatch against the girls Thursday\nevening.\nIt will be recalled that in a sim-\nilar shoulder-to-shoulder match in\nthe fall the men defeated the girls\nby one, point, 497 to 49G.\nThe women are planning a great\nrevenge.\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=2589,5690,712,479"
+        },
+        "full": "pageFileGrp1"
+      },
+      "motivation": "oa:highlighting"
+    }
+  ]
+}

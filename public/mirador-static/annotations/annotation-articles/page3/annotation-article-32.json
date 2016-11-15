@@ -1,0 +1,77 @@
+{
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "annotations/article32",
+  "@type": "sc:AnnotationList",
+  "label": "WALTER CHAPMAN WINS FOOTBALL MANAGERSHIP",
+  "resources": [
+    {
+      "@id": "ocrFile3-P3_TB00009",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "WALTER CHAPMAN WINS\nFOOTBALL MANAGERSHIP\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=1058,1235,715,161"
+        },
+        "full": "pageFileGrp3"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile3-P3_TB00010",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "Walter Chapman was elected as-\nsistant foot ball manager over\nRoger Snouffer by the Student Body\nlast Wednesday.\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=1061,1468,710,175"
+        },
+        "full": "pageFileGrp3"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile3-P3_TB00011",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "Chapman is a member of the Stu-\ndent Grange and represents his\nclass on the Executive Council. In\n(addition, he plays on the Sigma\nPhi Sigma Fraternity basket ball\nteam. Last year he received he;\nnumerals in lacrosse and held down\na berth in (lie Glee Club.\nAt Chestertown, Md., of which he\nis a native, Chapman made quite a\nrecord as an athlete. In high school,\nhe was a member of the foot ball\nsquad, and received his letter in\nbase ball and track. In basket ball\nlie shown especially for he wa;\nrated one of t lie best high school\nplayers on the shore.\nU. of M. \n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=1058,1665,713,883"
+        },
+        "full": "pageFileGrp3"
+      },
+      "motivation": "oa:highlighting"
+    }
+  ]
+}

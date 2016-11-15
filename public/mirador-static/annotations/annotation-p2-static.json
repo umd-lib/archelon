@@ -1,0 +1,41 @@
+{
+  "@context":"http://iiif.io/api/presentation/2/context.json",
+  "@id":"http://iiif-sandbox.lib.umd.edu/manifests/sn83045081/1902-01-15/2-static",
+  "@type":"sc:AnnotationList",
+  "resources": [
+    {
+      "@id" : "http://iiif-sandbox.lib.umd.edu/annotation/article/001",
+      "@type" : ["oa:Annotation", "umd:articleSegment"],
+      "resource" : [ {
+        "@type" : "dctypes:Text",
+        "chars": ""
+      } ],
+      "on" : {
+        "@type" : "oa:SpecificResource",
+        "selector" : {
+          "@type" : "oa:FragmentSelector",
+          "value" : "xywh=400,1240,820,500"
+        },
+        "full" : "http://iiif-sandbox.lib.umd.edu/manifests/sn83045081/1902-01-15/2"
+      },
+      "motivation" : "oa:highlighting"
+    },
+    {
+      "@id" : "http://iiif-sandbox.lib.umd.edu/annotation/article/002",
+      "@type": ["oa:Annotation", "umd:articleSegment"],
+      "resource" : [ {
+        "@type" : "dctypes:Text",
+        "chars": ""
+      } ],
+      "on" : {
+        "@type" : "oa:SpecificResource",
+        "selector" : {
+          "@type" : "oa:FragmentSelector",
+          "value" : "xywh=2000,2320,820,3170"
+        },
+        "full" : "http://iiif-sandbox.lib.umd.edu/manifests/sn83045081/1902-01-15/2"
+      },
+      "motivation" : "oa:highlighting"
+    }
+  ]
+}

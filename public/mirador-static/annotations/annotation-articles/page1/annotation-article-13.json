@@ -1,0 +1,54 @@
+{
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "annotations/article13",
+  "@type": "sc:AnnotationList",
+  "label": "STATE AGENTS TO HOLD FIVE-DAY MEETING HERE",
+  "resources": [
+    {
+      "@id": "ocrFile1-P1_TB00038",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "STATE AGENTS TO HOLD\nFIVE-DAY MEETING HERE\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=4083,5480,715,96"
+        },
+        "full": "pageFileGrp1"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile1-P1_TB00039",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "Beginning January 18 and extend-\ning until January 22 there will ho\nheld at the University of Maryland\na meeting of ail County Agents and\nHome Demonstration Agents from\nall parts of the state.\nM. Ramcowes, director of the\nOhio Experiment Station, will speak\nat one of the meetings on “Leader-\nship in Extension Work.'’\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=4083,5635,715,532"
+        },
+        "full": "pageFileGrp1"
+      },
+      "motivation": "oa:highlighting"
+    }
+  ]
+}

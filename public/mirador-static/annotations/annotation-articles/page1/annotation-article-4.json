@@ -1,0 +1,54 @@
+{
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "annotations/article4",
+  "@type": "sc:AnnotationList",
+  "label": "MINSTREL SHOW TO BE HELD THURSDAY NIGHT",
+  "resources": [
+    {
+      "@id": "ocrFile1-P1_TB00015",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "MINSTREL SHOW TO BE\nHELD THURSDAY NIGHT\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=1094,5172,715,164"
+        },
+        "full": "pageFileGrp1"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile1-P1_TB00016",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "Progress Club, of College Park,\nwill hold a minstrel show in the\nAuditorium Thursday evening, the\nproceeds to be used for the Prince\nGeorge’s County Student Scholar-\nship to the University, and for the\ngeneral Improvement of the com-\nmunity.\nSince College Park Is also the\nstudents’ community and since the\nproceeds are to be used for such\nworthy causes, it is hoped the stu-\ndents will support the affair.\nThe talent will come from Wash-\nington and a splendid minstrel show\nis promised.\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=1098,5406,712,762"
+        },
+        "full": "pageFileGrp1"
+      },
+      "motivation": "oa:highlighting"
+    }
+  ]
+}

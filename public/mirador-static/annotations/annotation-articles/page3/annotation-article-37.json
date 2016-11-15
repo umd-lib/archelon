@@ -1,0 +1,54 @@
+{
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "annotations/article37",
+  "@type": "sc:AnnotationList",
+  "label": "GIRLS AT HOMESTEAD ENTERTAIN AT DANCE",
+  "resources": [
+    {
+      "@id": "ocrFile3-P3_TB00022",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "GIRLS AT HOMESTEAD\nENTERTAIN AT DANCE\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=1806,2569,710,90"
+        },
+        "full": "pageFileGrp3"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile3-P3_TB00023",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "(Jirls at the Homestead entertain-\ned last Friday night at a dance at\ntheir dormitory. Twenty young\ncollegiate misses and twenty-odd\nyoung Oxford clad youths disported\nthemselves to the tunes of Carl Van\nSickler’s music. There was Charles\ntoning and less noisy dancing; there\nwas punch and food in generous\nquantities.\nMilly Woolman had charge of the\nmusic. Emily Herzog was respon-\nsible for the effectively decorated\nrooms. Marcia Pierce saw that\neveryone was fell-fed. And Frances\nMaisch had charge of the Clean-Up\nSquad that functioned after the fes-\ntivities were over.\nU. of M. \n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=1805,2717,712,904"
+        },
+        "full": "pageFileGrp3"
+      },
+      "motivation": "oa:highlighting"
+    }
+  ]
+}

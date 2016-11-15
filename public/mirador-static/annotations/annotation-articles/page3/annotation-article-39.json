@@ -1,0 +1,54 @@
+{
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "annotations/article39",
+  "@type": "sc:AnnotationList",
+  "label": "GIRL BASKETERS PICKED, BUT NAMES NOT GIVEN",
+  "resources": [
+    {
+      "@id": "ocrFile3-P3_TB00026",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "GIRL BASKETERS PICKED,\nBUT NAMES NOT GIVEN\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=2554,430,710,95"
+        },
+        "full": "pageFileGrp3"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile3-P3_TB00027",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "Try-outs for class basket ball\nteams took place last night in the\ngymnasium. Miss Adele Stamp,\nMaxine llc-iss, and I’atricia Wol\npicked the teams, which will In* an-\nnounced soon.\nMax and Pat have been coachin\nthe classes in girls’ haske; hall\nwhich have been, practicing since\nThanksgiving.\nAlter the class series have he n\npi :yed off, house games will he\nplayed. A sorority series may he\nrun off after these games are flu-\nshed. The games will take place\non Monday nights from six to eight\no’c lock.\n■ U. of M.\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=2554,586,714,914"
+        },
+        "full": "pageFileGrp3"
+      },
+      "motivation": "oa:highlighting"
+    }
+  ]
+}

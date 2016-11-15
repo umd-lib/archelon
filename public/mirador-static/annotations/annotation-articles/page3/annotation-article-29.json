@@ -1,0 +1,77 @@
+{
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "annotations/article29",
+  "@type": "sc:AnnotationList",
+  "label": "SIGMI PHI SIGMA AND DELTA MU WIN",
+  "resources": [
+    {
+      "@id": "ocrFile3-P3_TB00001",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "SIGMI PHI SIGMA\nAND DELTA MU WIN\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=306,435,718,208"
+        },
+        "full": "pageFileGrp3"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile3-P3_TB00002",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "SCORE IN OPENING FRAYS\nOF COURT SEASON\nIN FRAT LOOP >\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=309,717,717,161"
+        },
+        "full": "pageFileGrp3"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile3-P3_TB00003",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "Victories were rung up by Sigma\nPhi Sigma of the national loop and\nDelta Mu of the local circuit last\nThursday night in the opening\ngames of the Inter-fraternity\nBasket ball league. Sigma Phi\nSigma had little trouble in subduing\nthe Phi Sigma Kappa, It! to 8, but\nDelta Mu, last year’s local group\nchampions, found real difficulty in\ngaining a 14 to 11 verdict over Nn\nSigma Omlcron. A floor goal by-\nMelchior in the last minute of play-\ndecided the game.\nIn the first game, Sigma Phi\nSigma was always in the van, and\nat half time held a lead of 8 to 4.\nThe Phi Sigs made a game effort to\noverhaul then in the final period,\nbut the frequent scoring of Miller\nand Davidson afforded Sigma Phi\nSigma an easy victory. The work\nof Crosthwait for the losers stood\nout.\nNu Signia Omicron was ahead (I\nto 4, at the end of the first half,\nbut could not hold their advantage\nduring the closing period. Melchior\nand Longridge featured Delta Mu’s\nplay, while Sewell and McDonald\nwere best for N. S. O.\nThursday night Delta Sigma Phi,\nlast year's title holders, play Kappa\nAlpha, while Delta I’si Omega en-\ngages Sigma Tan Omega.\nHosier of Teams\nMembers of the varsity teams\nare:\nSigma Xu—Charlie Deibert, Her-\nbert Murray, Gene Drayton, John\nRay, Pete Heavens, Forrest Coakley,\nJohn Johnson, and Lawrence Bom-\nber ger.\nKappa Alpha—Alvin Parker, Ed-\nward Tenney, Paul Triplett, Mon-\nroe Leaf, Hugh Reading, and\nCharles Miller.\nDelta Sigma Phi—Wilbur Snyder,\nBert McGann, John Waters, Robert\nStraka, Mason Hopwood, Gilbert\nDent, Carl Slemmer, and William\nBlandford.\nSigma Phi Sigma—Craig Bow-\nman, Alban Knight, James David-\nson, Ben Le Seur, Bernard Miller\nand Walter Chapman.\nPhi Sigma Kappa—Sam Crosth-\nwait, Ralph Powers, Herman Reiss,\nDavid Dallas, Stewart Gibson, Jack\nSavage.\nDelta Mu—Adam Nall, Cecil Cole,\nEdward Melchior, Prank Terhune,\nJohn Llewelyn, Ira Staley, and\nJoseph Longridge.\nXu Sigma Omicron— Reese Se-\nwell, Merrit Bottom, Egbert Ting-\nley, Edward Corkran, Kingsley Mc-\nDonald, Howard Summer and Rit-\nchie Taylor.\nSigma Tan Omega Edward\nEvans, R. Miller, R. Lynn, R. Chev-\narria, Sam Winterberg, and Harvey\nStanton.\nDella Psi Omega—John Lang,\nJohn Leatherman, Wilbur Street,\nWilliam Korff. Ed. Neihiser, Earl\nHuyett, and Myles Burgee.\nU. of M. \n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=306,931,723,3852"
+        },
+        "full": "pageFileGrp3"
+      },
+      "motivation": "oa:highlighting"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "annotations/article20",
+  "@type": "sc:AnnotationList",
+  "label": "CLASS DUES MUST BE PAID NEXT SEMESTER",
+  "resources": [
+    {
+      "@id": "ocrFile2-P2_TB00013",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "CLASS DUES MUST BE\nPAID NEXT SEMESTER\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=920,5110,714,96"
+        },
+        "full": "pageFileGrp2"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile2-P2_TB00014",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "Class treasurers, in co-operation\nwith the financial office of the Uni-\nversity, have decided to present bills\nfor the class dues along with bills\nfor the second semester. All dues\nwill be payable at the cashier’r of-\nfice at the time of registration. Stu-\ndents must come prepared to meet\n'these charges. They will include\nnot only the dues for the present\nyear, but also any of past years\nwhich have not been paid.\nSeniors should know that they\nwill not he permitted to graduate\nunless they have paid up in full ail\nclass dues for the four years. They\nshould also be acquainted with the\nfact that fees for student publica-\ntions must be paid before com-\nmencement day.\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=920,5265,717,969"
+        },
+        "full": "pageFileGrp2"
+      },
+      "motivation": "oa:highlighting"
+    }
+  ]
+}

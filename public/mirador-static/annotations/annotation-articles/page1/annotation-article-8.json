@@ -1,0 +1,77 @@
+{
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "annotations/article8",
+  "@type": "sc:AnnotationList",
+  "label": "PLAY WILL BE GIVEN AT ASSEMBLY PERIOD",
+  "resources": [
+    {
+      "@id": "ocrFile1-P1_TB00027",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "PLAY WILL BE GIVEN\nAT ASSEMBLY PERIOD\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=3331,902,710,159"
+        },
+        "full": "pageFileGrp1"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile1-P1_TB00028",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "Assembly period tomorrow will\nbe given over to a short business\nmeeting and tlie Masque and Bauble\nClub. The dramatics organization\nwill present a one act play which\nthey have been rehearsing for some\ntime.\n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=3334,1135,709,318"
+        },
+        "full": "pageFileGrp1"
+      },
+      "motivation": "oa:highlighting"
+    },
+    {
+      "@id": "ocrFile1-P1_TB00029",
+      "@type": [
+        "oa:Annotation",
+        "umd:Article"
+      ],
+      "resource": [
+        {
+          "@type": "cnt:ContentAsText",
+          "format": "text/plain",
+          "chars": "The report from the committee\nappointed by (he student executive\ncouncil to investigate certain ex-\npenditures of the assembly’s money\nwill not be given as several of the\nmembers are away on a basket ball\ntrip. The report will be made pub-\nlic in the near future.\nU. of M. \n"
+        }
+      ],
+      "on": {
+        "@type": "oa:SpecificResource",
+        "selector": {
+          "@type": "oa:FragmentSelector",
+          "value": "xywh=3332,1477,707,419"
+        },
+        "full": "pageFileGrp1"
+      },
+      "motivation": "oa:highlighting"
+    }
+  ]
+}
