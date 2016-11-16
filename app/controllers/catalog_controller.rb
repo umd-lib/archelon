@@ -14,7 +14,8 @@ class CatalogController < ApplicationController
 
     ## Default parameters to send to solr for all search-like requests. See also SearchBuilder#processed_parameters
     config.default_solr_params = {
-      rows: 10
+      :rows => 10,
+      :fq  => ['pcdm_type:[* TO *]']
     }
 
     # solr path which will be added to solr base url before the other solr params.
