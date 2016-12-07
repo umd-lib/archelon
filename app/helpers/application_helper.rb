@@ -3,8 +3,8 @@ require "erb"
 module ApplicationHelper
   FEDORA_BASE_URL = Rails.application.config.fcrepo_base_url
   IIIF_MANIFEST_PREFIX = Rails.application.config.iiif_manifest_url
-  PCDM_OBJECT = 'http://pcdm.org/models#Object'
-  PCDM_FILE = 'http://pcdm.org/models#File'
+  PCDM_OBJECT = 'pcdm:Object'
+  PCDM_FILE = 'pcdm:File'
   ALLOWED_MIME_TYPE = 'image/tiff'
 
   def is_mirador_displayable(document)
