@@ -15,7 +15,7 @@ class CatalogController < ApplicationController
     ## Default parameters to send to solr for all search-like requests. See also SearchBuilder#processed_parameters
     config.default_solr_params = {
       :rows => 10,
-      :fq  => ['pcdm_type:[* TO *]']
+      :fq  => ['is_pcdm:true']
     }
 
     # solr path which will be added to solr base url before the other solr params.
@@ -71,8 +71,8 @@ class CatalogController < ApplicationController
 
     config.add_facet_field 'author_not_tokenized', label: 'Author'
     config.add_facet_field 'type', label: 'Type'
-    config.add_facet_field 'pcdm_type', label: 'PCDM Type'
     config.add_facet_field 'rdf_type', label: 'RDF Type'
+    config.add_facet_field 'newspaper_object_type', label: 'Newspaper Object Type'
     # config.add_facet_field 'pub_date', label: 'Publication Year', single: true
     # config.add_facet_field 'subject_topic_facet', label: 'Topic', limit: 20, index_range: 'A'..'Z'
     # config.add_facet_field 'language_facet', label: 'Language', limit: true
@@ -97,20 +97,35 @@ class CatalogController < ApplicationController
     #   The ordering of the field names is the order of the display
     config.add_index_field 'id', label: 'Fedora URL'
     config.add_index_field 'author', label: 'Author'
+    config.add_index_field 'created_by', label: 'Created_by'
     config.add_index_field 'created', label: 'Created'
+    config.add_index_field 'last_modified', label: 'last_modified'
 
     # solr fields to be displayed in the show (single result) view
     #   The ordering of the field names is the order of the display
     config.add_show_field 'display_title', label: 'Title'
     config.add_show_field 'author', label: 'Author'
     config.add_show_field 'type', label: 'Type'
+    config.add_show_field 'rdf_type', label: 'RDF Type'
+    config.add_show_field 'id', label: 'Fedora URL'
+    config.add_show_field 'date', label: 'Date'
+    config.add_show_field 'pcdm_collection', label: 'Collection'
+    config.add_show_field 'pcdm_member_of', label: 'Member Of'
+    config.add_show_field 'pcdm_members', label: 'Members'
+    config.add_show_field 'pcdm_file_of', label: 'File Of'
+    config.add_show_field 'pcdm_files', label: 'Files'
+    config.add_show_field 'newspaper_object_type', label: 'Newspaper Object Type'
+    config.add_show_field 'issue_volume', label: 'Volume'
+    config.add_show_field 'issue_issue', label: 'Issue Number'
+    config.add_show_field 'issue_edition', label: 'Edition'
+    config.add_show_field 'issue_lccn', label: 'LCCN'
+    config.add_show_field 'page_number', label: 'Number'
+    config.add_show_field 'page_reel', label: 'Reel'
+    config.add_show_field 'page_issue', label: 'Issue'
+    config.add_show_field 'page_sequence', label: 'Sequence'
     config.add_show_field 'size', label: 'Size'
     config.add_show_field 'mime_type', label: 'Mime Type'
     config.add_show_field 'digest', label: 'Digest'
-    config.add_show_field 'id', label: 'Fedora URL'
-    config.add_show_field 'rdf_type', label: 'RDF Type'
-    config.add_show_field 'pcdm_type', label: 'PCDM Type'
-    config.add_show_field 'description', label: 'Description'
     config.add_show_field 'created_by', label: 'Created By'
     config.add_show_field 'created', label: 'Created'
     config.add_show_field 'last_modified', label: 'Last Modified'
