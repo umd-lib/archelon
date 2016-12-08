@@ -112,6 +112,8 @@ class CatalogController < ApplicationController
     config.add_show_field 'pcdm_collection', label: 'Collection'
     config.add_show_field 'pcdm_member_of', label: 'Member Of'
     config.add_show_field 'pcdm_members', label: 'Members'
+    config.add_show_field 'pcdm_related_object_of', label: 'Related To'
+    config.add_show_field 'pcdm_related_objects', label: 'Related Objects'
     config.add_show_field 'pcdm_file_of', label: 'File Of'
     config.add_show_field 'pcdm_files', label: 'Files'
     config.add_show_field 'newspaper_object_type', label: 'Newspaper Object Type'
