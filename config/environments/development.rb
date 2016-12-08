@@ -39,6 +39,7 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
-  config.fcrepo_base_url = 'https://fcrepolocal/fcrepo/rest/'
-  config.iiif_manifest_url = 'https://iiiflocal/manifests/'
+  # FCREPO & IIIF URLs
+  config.fcrepo_base_url = ENV['FCREPO_BASE_URL'] || 'https://fcrepolocal/fcrepo/rest/'
+  config.iiif_manifest_url = ENV['IIIF_MANIFEST_URL'] || 'https://iiiflocal/manifests/'
 end

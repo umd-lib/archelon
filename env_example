@@ -8,3 +8,11 @@
 # --- config/blacklight.yml
 # URL of the solr running in the fcrepo-vagrant
 SOLR_URL=http://192.168.40.11:8983/solr/fedora4
+
+# --- config/environments/*.rb
+# URL of the fcrepo running in the fcrepo-vagrant
+FCREPO_BASE_URL = 'https://fcrepolocal/fcrepo/rest/'
+
+# --- config/environments/*.rb
+# URL of the pcdm-manifest running in the iiif-vagrant
+IIIF_MANIFEST_URL = 'https://iiiflocal/manifests/'
