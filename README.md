@@ -1,6 +1,6 @@
-# fcrepo-search
-fcrepo-search is a rails based search interface for the fedora 4 repository. It uses the blacklight gem for providing the search functionalaity.  
+# archelon
 
+Archelon is a Rails-based search interface for the Fedora 4 repository. It uses the Blacklight gem for providing the search functionality.
 
 ## Quick Start
 
@@ -10,11 +10,12 @@ Requires:
 * Bundler
 
 ### Setup
+
 1) Checkout the code and install the dependencies:
 
 ```
-> git clone git@github.com:umd-lib/fcrepo-search
-> cd fcrepo-search
+> git clone git@github.com:umd-lib/archelon.git
+> cd archelon
 > bundle install
 ```
 
@@ -34,12 +35,12 @@ Requires:
 
 ### Run the web application
 
-4) To run the web application:
+5) To run the web application:
 
 ```
 > rails server
 ```
 
-See [fcrepo-search-vagrant][1] for running fcrepo-search in a vagrant environment.
+See [archelon-vagrant] for running Archelon application in a Vagrant environment.
 
-[1]: https://github.com/umd-lib/fcrepo-search-vagrant
+[archelon-vagrant]: https://github.com/umd-lib/archelon-vagrant
