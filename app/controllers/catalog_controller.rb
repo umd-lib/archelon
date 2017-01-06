@@ -72,7 +72,8 @@ class CatalogController < ApplicationController
     config.add_facet_field 'author_not_tokenized', label: 'Author'
     config.add_facet_field 'type', label: 'Type'
     config.add_facet_field 'rdf_type', label: 'RDF Type'
-    config.add_facet_field 'newspaper_object_type', label: 'Newspaper Object Type'
+    config.add_facet_field 'object_type', label: 'Object Type'
+    config.add_facet_field 'component', label: 'Component'
     # config.add_facet_field 'pub_date', label: 'Publication Year', single: true
     # config.add_facet_field 'subject_topic_facet', label: 'Topic', limit: 20, index_range: 'A'..'Z'
     # config.add_facet_field 'language_facet', label: 'Language', limit: true
@@ -116,7 +117,8 @@ class CatalogController < ApplicationController
     config.add_show_field 'pcdm_related_objects', label: 'Related Objects'
     config.add_show_field 'pcdm_file_of', label: 'File Of'
     config.add_show_field 'pcdm_files', label: 'Files'
-    config.add_show_field 'newspaper_object_type', label: 'Newspaper Object Type'
+    config.add_show_field 'object_type', label: 'Object Type'
+    config.add_show_field 'component', label: 'Component'
     config.add_show_field 'issue_volume', label: 'Volume'
     config.add_show_field 'issue_issue', label: 'Issue Number'
     config.add_show_field 'issue_edition', label: 'Edition'
