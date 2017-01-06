@@ -96,11 +96,12 @@ class CatalogController < ApplicationController
 
     # solr fields to be displayed in the index (search results) view
     #   The ordering of the field names is the order of the display
-    config.add_index_field 'id', label: 'Fedora URL'
+    config.add_index_field 'object_type', label: 'Object Type'
+    config.add_index_field 'component', label: 'Component'
     config.add_index_field 'author', label: 'Author'
-    config.add_index_field 'created_by', label: 'Created_by'
+    config.add_index_field 'created_by', label: 'Created By'
     config.add_index_field 'created', label: 'Created'
-    config.add_index_field 'last_modified', label: 'last_modified'
+    config.add_index_field 'last_modified', label: 'Last Modified'
 
     # solr fields to be displayed in the show (single result) view
     #   The ordering of the field names is the order of the display
