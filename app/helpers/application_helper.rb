@@ -27,4 +27,32 @@ module ApplicationHelper
   def iiif_base_url()
     return IIIF_MANIFEST_PREFIX
   end
+
+  def from_subquery(subquery_field, args)
+    args[:document][args[:field]] = args[:document][subquery_field]['docs']
+  end
+
+  def collection_from_subquery(args)
+    from_subquery 'pcdm_collection_info', args
+  end
+
+  def parent_from_subquery(args)
+    from_subquery 'pcdm_member_of_info', args
+  end
+
+  def members_from_subquery(args)
+    from_subquery 'pcdm_members_info', args
+  end
+
+  def related_objects_from_subquery(args)
+    from_subquery 'pcdm_related_objects_info', args
+  end
+
+  def related_object_of_from_subquery(args)
+    from_subquery 'pcdm_related_object_of_info', args
+  end
+
+  def rdf_type_list(args)
+    args[:document][args[:field]]
+  end
 end

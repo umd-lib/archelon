@@ -108,14 +108,14 @@ class CatalogController < ApplicationController
     config.add_show_field 'display_title', label: 'Title'
     config.add_show_field 'author', label: 'Author'
     config.add_show_field 'type', label: 'Type'
-    config.add_show_field 'rdf_type', label: 'RDF Type'
+    config.add_show_field 'rdf_type', label: 'RDF Type', helper_method: :rdf_type_list
     config.add_show_field 'id', label: 'Fedora URL'
     config.add_show_field 'date', label: 'Date'
-    config.add_show_field 'pcdm_collection', label: 'Collection'
-    config.add_show_field 'pcdm_member_of', label: 'Member Of'
-    config.add_show_field 'pcdm_members', label: 'Members'
-    config.add_show_field 'pcdm_related_object_of', label: 'Related To'
-    config.add_show_field 'pcdm_related_objects', label: 'Related Objects'
+    config.add_show_field 'pcdm_collection', label: 'Collection', helper_method: :collection_from_subquery
+    config.add_show_field 'pcdm_member_of', label: 'Member Of', helper_method: :parent_from_subquery
+    config.add_show_field 'pcdm_members', label: 'Members', helper_method: :members_from_subquery
+    config.add_show_field 'pcdm_related_object_of', label: 'Related To', helper_method: :related_object_of_from_subquery
+    config.add_show_field 'pcdm_related_objects', label: 'Related Objects', helper_method: :related_objects_from_subquery
     config.add_show_field 'pcdm_file_of', label: 'File Of'
     config.add_show_field 'pcdm_files', label: 'Files'
     config.add_show_field 'object_type', label: 'Object Type'

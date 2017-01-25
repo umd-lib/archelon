@@ -3,9 +3,27 @@
 <dl class="dl-horizontal  dl-invert">
   <% document_show_fields(document).each do |field_name, field| -%>
     <% if should_render_show_field? document, field %>
-      <dt class="blacklight-<%= field_name.parameterize %>"><%= render_document_show_field_label document, field: field_name %></dt>
+      <dt class="blacklight-<%= field_name.parameterize %>">
+      <%= render_document_show_field_label document, field: field_name %>
+      </dt>
       <% if field_name=='id' %>
         <dd class="blacklight-<%= field_name.parameterize %>"><%= link_to doc_presenter.field_value(field_name), doc_presenter.field_value(field_name), target: "_blank" %></dd>
+      <% elsif ['pcdm_members', 'pcdm_related_objects', 'pcdm_related_object_of', 'pcdm_member_of', 'pcdm_collection'].include?(field_name) %>
+        <dd class="blacklight-<%= field_name.parameterize %>">
+          <ul class="multivalued-field-value">
+            <% doc_presenter.field_value(field_name).each do |v| %>
+              <li><%= link_to v['title'][0], solr_document_path(v['id']) %></li>
+            <% end %>
+          </ul>
+        </dd>
+      <% elsif field_name == 'rdf_type' %>
+        <dd class="blacklight-<%= field_name.parameterize %>">
+          <ul class="multivalued-field-value">
+            <% doc_presenter.field_value(field_name).each do |v| %>
+              <li><%= v %></li>
+            <% end %>
+          </ul>
+        </dd>
       <% else %>
         <dd class="blacklight-<%= field_name.parameterize %>"><%= doc_presenter.field_value field_name %></dd>
       <% end %>
