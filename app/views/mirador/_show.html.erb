@@ -22,7 +22,7 @@
   <div style="width: 600px; height: 400px; position: relative;">
     <%= javascript_tag do %>
       window.iiifURLPrefix = '<%= iiif_base_url %>';
-      window.manifestPcdmID = '<%= encoded_id(document) %>';
+      window.manifestPcdmID = 'fcrepo:<%= encoded_id(document) %>';
     <% end %>
     <div id="mirador-viewer">
       <div id="placeholder">Loading Mirador Viewer...</div>
