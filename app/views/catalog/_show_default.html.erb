@@ -29,5 +29,5 @@
       <% end %>
     <% end -%>
   <% end -%>
-  <%= render "mirador/show", document: document %>
+  <%= render "mirador/show", document: document unless document['component'] == 'article' %>
 </dl>
