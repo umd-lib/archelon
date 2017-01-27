@@ -1,0 +1,19 @@
+<div class="panel panel-default">
+  <div class="panel-heading">Links</div>
+  <div class="panel-body">
+    <ul class="nav">
+      <li><%= link_to 'View in Fedora', @document.id, target: '_blank' %></li>
+    </ul>
+  </div>
+</div>
+
+<%= render :partial => 'show_tools' %>
+
+<% unless @document.more_like_this.empty? %>
+  <div class="card">
+    <div class="card-header">More Like This</div>
+    <div class="card-block">
+      <%= render :collection => @document.more_like_this, :partial => 'show_more_like_this', :as => :document %>
+    </div>
+  </div>
+<% end %>
