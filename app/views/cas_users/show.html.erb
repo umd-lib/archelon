@@ -1,7 +1,7 @@
 <p id="notice"><%= notice %></p>
 
 <p>
-  <strong>Cas directory:</strong>
+  <strong>Directory ID:</strong>
   <%= @cas_user.cas_directory_id %>
 </p>
 
@@ -16,8 +16,9 @@
   <strong>Admin:</strong>
   <%= @cas_user.admin %>
 </p>
-
-
-<%= link_to 'Edit', edit_cas_user_path(@cas_user) %> |
 <% end %>
-<%= link_to 'Back', "#", onclick: "history.back();" %>
+
+<div class="actions">
+  <%= link_to 'Edit', edit_cas_user_path(@cas_user), class: 'btn btn-success' if current_cas_user.is_admin? %>
+  <%= link_to 'List Users', cas_users_path, class: 'btn btn-default' %>
+</div>

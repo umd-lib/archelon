@@ -12,7 +12,7 @@
   <% end %>
 
   <div class="field">
-    <%= f.label :cas_directory_id %><br>
+    <%= f.label :cas_directory_id, 'Directory ID' %><br>
     <%= f.text_field :cas_directory_id %>
   </div>
   <div class="field">
@@ -24,6 +24,7 @@
     <%= f.check_box :admin %>
   </div>
   <div class="actions">
-    <%= f.submit %>
+    <%= f.submit 'Save', class: 'btn btn-success' %>
+    <%= link_to 'Cancel', (@cas_user.new_record? ? cas_users_path : cas_user_path(@cas_user)), class: 'btn btn-danger' %>
   </div>
 <% end %>
