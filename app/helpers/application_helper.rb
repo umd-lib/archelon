@@ -58,4 +58,10 @@ module ApplicationHelper
   def fcrepo_url
     FEDORA_BASE_URL.sub(/fcrepo\/rest\/?/, "")
   end
+
+  def view_in_fedora_link(document)
+    url = document[:id]
+    url += '/fcr:metadata' if document[:rdf_type].include? 'fedora:Binary'
+    link_to 'View in Fedora', url, target: '_blank'
+  end
 end

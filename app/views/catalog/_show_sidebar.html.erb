@@ -2,7 +2,10 @@
   <div class="panel-heading">Links</div>
   <div class="panel-body">
     <ul class="nav">
-      <li><%= link_to 'View in Fedora', @document.id, target: '_blank' %></li>
+      <li><%= view_in_fedora_link(@document) %></li>
+      <% if @document[:rdf_type].include? 'fedora:Binary' %>
+        <li><%= link_to 'Download', @document.id, target: '_blank' %></li>
+      <% end %>
     </ul>
   </div>
 </div>
