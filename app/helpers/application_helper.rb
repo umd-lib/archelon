@@ -54,4 +54,8 @@ module ApplicationHelper
   def rdf_type_list(args)
     args[:document][args[:field]]
   end
+
+  def fcrepo_url
+    FEDORA_BASE_URL.sub(/fcrepo\/rest\/?/, "")
+  end
 end
