@@ -109,7 +109,6 @@ class CatalogController < ApplicationController
     config.add_show_field 'author', label: 'Author'
     config.add_show_field 'type', label: 'Type'
     config.add_show_field 'rdf_type', label: 'RDF Type', helper_method: :rdf_type_list
-    config.add_show_field 'id', label: 'Fedora URL'
     config.add_show_field 'date', label: 'Date'
     config.add_show_field 'pcdm_collection', label: 'Collection', helper_method: :collection_from_subquery
     config.add_show_field 'pcdm_member_of', label: 'Member Of', helper_method: :parent_from_subquery
