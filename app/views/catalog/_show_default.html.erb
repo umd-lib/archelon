@@ -8,7 +8,7 @@
       </dt>
       <% if field_name=='id' %>
         <dd class="blacklight-<%= field_name.parameterize %>"><%= link_to doc_presenter.field_value(field_name), doc_presenter.field_value(field_name), target: "_blank" %></dd>
-      <% elsif ['pcdm_members', 'pcdm_related_objects', 'pcdm_related_object_of', 'pcdm_member_of', 'pcdm_collection'].include?(field_name) %>
+      <% elsif ['pcdm_members', 'pcdm_files', 'pcdm_related_objects', 'pcdm_related_object_of', 'pcdm_member_of', 'pcdm_file_of', 'pcdm_collection'].include?(field_name) %>
         <dd class="blacklight-<%= field_name.parameterize %>">
           <ul class="multivalued-field-value">
             <% doc_presenter.field_value(field_name).each do |v| %>
