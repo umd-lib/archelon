@@ -79,5 +79,5 @@ Rails.application.configure do
 
   # FCREPO & IIIF URLs
   config.fcrepo_base_url = ENV['FCREPO_BASE_URL']
-  config.iiif_manifest_url = ENV['IIIF_MANIFEST_URL']
+  config.iiif_base_url = ENV['IIIF_BASE_URL']
 end

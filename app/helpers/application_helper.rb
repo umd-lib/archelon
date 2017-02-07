@@ -2,7 +2,7 @@ require "erb"
 
 module ApplicationHelper
   FEDORA_BASE_URL = Rails.application.config.fcrepo_base_url
-  IIIF_MANIFEST_PREFIX = Rails.application.config.iiif_manifest_url
+  IIIF_BASE_URL = Rails.application.config.iiif_base_url
   PCDM_OBJECT = 'pcdm:Object'
   PCDM_FILE = 'pcdm:File'
   ALLOWED_MIME_TYPE = 'image/tiff'
@@ -24,7 +24,7 @@ module ApplicationHelper
   end
 
   def iiif_base_url()
-    return IIIF_MANIFEST_PREFIX
+    return IIIF_BASE_URL
   end
 
   def from_subquery(subquery_field, args)
