@@ -43,6 +43,14 @@ module ApplicationHelper
     from_subquery 'pcdm_members_info', args
   end
 
+  def file_parent_from_subquery(args)
+    from_subquery 'pcdm_file_of_info', args
+  end
+
+  def files_from_subquery(args)
+    from_subquery 'pcdm_files_info', args
+  end
+
   def related_objects_from_subquery(args)
     from_subquery 'pcdm_related_objects_info', args
   end

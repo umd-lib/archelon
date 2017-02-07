@@ -115,8 +115,8 @@ class CatalogController < ApplicationController
     config.add_show_field 'pcdm_members', label: 'Members', helper_method: :members_from_subquery
     config.add_show_field 'pcdm_related_object_of', label: 'Related To', helper_method: :related_object_of_from_subquery
     config.add_show_field 'pcdm_related_objects', label: 'Related Objects', helper_method: :related_objects_from_subquery
-    config.add_show_field 'pcdm_file_of', label: 'File Of'
-    config.add_show_field 'pcdm_files', label: 'Files'
+    config.add_show_field 'pcdm_file_of', label: 'File Of', helper_method: :file_parent_from_subquery
+    config.add_show_field 'pcdm_files', label: 'Files', helper_method: :files_from_subquery
     config.add_show_field 'object_type', label: 'Object Type'
     config.add_show_field 'component', label: 'Component'
     config.add_show_field 'issue_volume', label: 'Volume'
