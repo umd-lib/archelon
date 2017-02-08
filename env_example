@@ -14,5 +14,5 @@ SOLR_URL=http://192.168.40.11:8983/solr/fedora4
 FCREPO_BASE_URL = 'https://fcrepolocal/fcrepo/rest/'
 
 # --- config/environments/*.rb
-# URL of the pcdm-manifest running in the iiif-vagrant
-IIIF_MANIFEST_URL = 'https://iiiflocal/manifests/'
+# base URL of the IIIF server (which serves the manifests, images, and viewer)
+IIIF_BASE_URL = 'https://iiiflocal/'
