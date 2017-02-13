@@ -165,7 +165,8 @@ class CatalogController < ApplicationController
     config.add_sort_field 'display_title asc', label: 'title'
     config.add_sort_field 'created asc', label: 'created (oldest to newest)'
     config.add_sort_field 'created desc', label: 'created (newest to oldest)'
-    config.add_sort_field 'last_modified desc', label: 'last modified'
+    config.add_sort_field 'last_modified asc', label: 'last modified (oldest to newest)'
+    config.add_sort_field 'last_modified desc', label: 'last modified (newest to oldest)'
 
     # If there are more than this many search results, no spelling ("did you
     # mean") suggestion is offered.
