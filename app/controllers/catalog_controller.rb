@@ -71,8 +71,8 @@ class CatalogController < ApplicationController
 
     config.add_facet_field 'author_not_tokenized', label: 'Author'
     config.add_facet_field 'type', label: 'Type'
-    config.add_facet_field 'object_type', label: 'Object Type'
-    config.add_facet_field 'component', label: 'Component'
+    config.add_facet_field 'object_type_not_tokenized', label: 'Object Type'
+    config.add_facet_field 'component_not_tokenized', label: 'Component'
     config.add_facet_field 'rdf_type', label: 'RDF Type'
     # config.add_facet_field 'pub_date', label: 'Publication Year', single: true
     # config.add_facet_field 'subject_topic_facet', label: 'Topic', limit: 20, index_range: 'A'..'Z'
