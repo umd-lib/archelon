@@ -69,11 +69,11 @@ class CatalogController < ApplicationController
     # :index_range can be an array or range of prefixes that will be used to create the navigation
     # (note: It is case sensitive when searching values)
 
-    config.add_facet_field 'author_not_tokenized', label: 'Author'
-    config.add_facet_field 'type', label: 'Type'
-    config.add_facet_field 'object_type_not_tokenized', label: 'Object Type'
-    config.add_facet_field 'component_not_tokenized', label: 'Component'
-    config.add_facet_field 'rdf_type', label: 'RDF Type'
+    config.add_facet_field 'author_not_tokenized', label: 'Author', limit: 10
+    config.add_facet_field 'type', label: 'Type', limit: 10
+    config.add_facet_field 'object_type_not_tokenized', label: 'Object Type', limit: 10
+    config.add_facet_field 'component_not_tokenized', label: 'Component', limit: 10
+    config.add_facet_field 'rdf_type', label: 'RDF Type', limit: 10
     # config.add_facet_field 'pub_date', label: 'Publication Year', single: true
     # config.add_facet_field 'subject_topic_facet', label: 'Topic', limit: 20, index_range: 'A'..'Z'
     # config.add_facet_field 'language_facet', label: 'Language', limit: true
