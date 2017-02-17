@@ -3,22 +3,12 @@
 @import "bootstrap";
 @import "bootswatch";
 @import 'blacklight/blacklight';
+@import 'custom';
 
 .multivalued-field-value {
     list-style-type: none;
     padding-left: 0;
     margin: 0;
-}
-
-#header-navbar .navbar-brand {
-    width: 334px;
-    height: 61px;
-    margin-top: 5px;
-    margin-left: 0;
-    margin-right: 0;
-    margin-bottom: 5px;
-    text-indent: 217px;
-    font-size: 2em;
 }
 
 // based on https://benmarshall.me/responsive-iframes/
