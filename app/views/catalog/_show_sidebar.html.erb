@@ -1,0 +1,20 @@
+<div class="panel panel-default">
+  <div class="panel-heading">Links</div>
+  <div class="panel-body">
+    <ul class="nav">
+      <li><%= view_in_fedora_link(@document) %></li>
+      <% if @document[:rdf_type].include? 'fedora:Binary' %>
+        <li><%= link_to 'Download', @document.id, target: '_blank' %></li>
+      <% end %>
+    </ul>
+  </div>
+</div>
+
+<% unless @document.more_like_this.empty? %>
+  <div class="card">
+    <div class="card-header">More Like This</div>
+    <div class="card-block">
+      <%= render :collection => @document.more_like_this, :partial => 'show_more_like_this', :as => :document %>
+    </div>
+  </div>
+<% end %>

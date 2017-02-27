@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Directory ID:</strong>
+  <%= @cas_user.cas_directory_id %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @cas_user.name %>
+</p>
+
+<% if current_cas_user.is_admin? %>
+
+<p>
+  <strong>Admin:</strong>
+  <%= @cas_user.admin %>
+</p>
+<% end %>
+
+<div class="actions">
+  <%= link_to 'Edit', edit_cas_user_path(@cas_user), class: 'btn btn-success' if current_cas_user.is_admin? %>
+  <%= link_to 'List Users', cas_users_path, class: 'btn btn-default' %>
+</div>

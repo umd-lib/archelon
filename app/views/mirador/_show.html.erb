@@ -1,0 +1,5 @@
+<% if is_mirador_displayable(document) %>
+  <div class="intrinsic-container ratio-4x3">
+    <iframe src="<%= iiif_base_url %>viewer/mirador.html?manifest=fcrepo:<%= encoded_id(document) %>&amp;iiifURLPrefix=<%= iiif_base_url %>manifests/" allowfullscreen></iframe>
+  </div>
+<% end %>

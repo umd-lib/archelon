@@ -76,4 +76,8 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  # FCREPO & IIIF URLs
+  config.fcrepo_base_url = ENV['FCREPO_BASE_URL']
+  config.iiif_base_url = ENV['IIIF_BASE_URL']
 end
