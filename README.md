@@ -44,3 +44,8 @@ Requires:
 See [archelon-vagrant] for running Archelon application in a Vagrant environment.
 
 [archelon-vagrant]: https://github.com/umd-lib/archelon-vagrant
+
+## License
+
+See the [LICENSE](LICENSE.md) file for license rights and limitations (Apache 2.0).
+

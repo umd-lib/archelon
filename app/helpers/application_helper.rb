@@ -63,6 +63,10 @@ module ApplicationHelper
     args[:document][args[:field]]
   end
 
+  def unique_component_types(pcdm_members_info)
+    pcdm_members_info.map {|member| member['component']}.uniq
+  end
+
   def fcrepo_url
     FEDORA_BASE_URL.sub(/fcrepo\/rest\/?/, "")
   end
