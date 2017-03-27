@@ -81,14 +81,14 @@ class CasUsersController < ApplicationController
 
     # Verify current user is an admin before all actions except :show
     def verify_admin
-      if !current_cas_user.is_admin?
+      unless current_cas_user.admin?
         render(file: File.join(Rails.root, 'public/403.html'), status: :forbidden, layout: false)
       end
     end
 
     # Verify current user is an admin before all actions except :show
     def verify_self_or_admin
-      if !current_cas_user.is_admin? and (current_cas_user.id != @cas_user.id)
+      if !current_cas_user.admin? && (current_cas_user.id != @cas_user.id)
         render(file: File.join(Rails.root, 'public/403.html'), status: :forbidden, layout: false)
       end
     end

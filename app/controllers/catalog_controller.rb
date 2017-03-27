@@ -14,8 +14,8 @@ class CatalogController < ApplicationController
 
     ## Default parameters to send to solr for all search-like requests. See also SearchBuilder#processed_parameters
     config.default_solr_params = {
-      :rows => 10,
-      :fq  => ['is_pcdm:true']
+      rows: 10,
+      fq: ['is_pcdm:true']
     }
 
     # solr path which will be added to solr base url before the other solr params.
@@ -114,7 +114,9 @@ class CatalogController < ApplicationController
     config.add_show_field 'pcdm_member_of', label: 'Member Of', helper_method: :parent_from_subquery
     config.add_show_field 'pcdm_members', label: 'Members', helper_method: :members_from_subquery
     config.add_show_field 'pcdm_related_object_of', label: 'Related To', helper_method: :related_object_of_from_subquery
+    # rubocop:disable Metrics/LineLength
     config.add_show_field 'pcdm_related_objects', label: 'Related Objects', helper_method: :related_objects_from_subquery
+    # rubocop:enable Metrics/LineLength
     config.add_show_field 'pcdm_file_of', label: 'File Of', helper_method: :file_parent_from_subquery
     config.add_show_field 'pcdm_files', label: 'Files', helper_method: :files_from_subquery
     config.add_show_field 'object_type', label: 'Object Type'

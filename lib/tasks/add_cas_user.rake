@@ -12,7 +12,6 @@ namespace :db do
     end
   end
 
-
   desc 'Add a casuser as admin'
   task :add_admin_cas_user, [:cas_directory_id, :full_name] => :environment do |_t, args|
     cas_directory_id = args[:cas_directory_id]
@@ -22,11 +21,11 @@ namespace :db do
       puts "CasUser '#{cas_directory_id}' created!"
     else
       puts "CasUser '#{cas_directory_id}' already exists!"
-      if !CasUser.find_by_cas_directory_id(cas_directory_id).is_admin?
+      unless CasUser.find_by_cas_directory_id(cas_directory_id).admin?
         user = CasUser.find_by_cas_directory_id(cas_directory_id)
         user.admin = true
         user.save
-        puts "Granted admin privilege!"
+        puts 'Granted admin privilege!'
       end
     end
   end

@@ -10,7 +10,7 @@
   <%= @cas_user.name %>
 </p>
 
-<% if current_cas_user.is_admin? %>
+<% if current_cas_user.admin? %>
 
 <p>
   <strong>Admin:</strong>
@@ -19,6 +19,6 @@
 <% end %>
 
 <div class="actions">
-  <%= link_to 'Edit', edit_cas_user_path(@cas_user), class: 'btn btn-success' if current_cas_user.is_admin? %>
+  <%= link_to 'Edit', edit_cas_user_path(@cas_user), class: 'btn btn-success' if current_cas_user.admin? %>
   <%= link_to 'List Users', cas_users_path, class: 'btn btn-default' %>
 </div>
