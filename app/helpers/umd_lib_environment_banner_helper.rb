@@ -1,20 +1,18 @@
 module UMDLibEnvironmentBannerHelper
   # https://confluence.umd.edu/display/LIB/Create+Environment+Banners
   def umd_lib_environment_banner
-    if Rails.env.development? || Rails.env.vagrant?
-      environment = 'Local'
-    else
-      hostname = `hostname -s`
-      if hostname =~ /dev$/
-        environment = 'Development'
-      elsif hostname =~ /stage$/
-        environment = 'Staging'
-      end
+    current_env = environment_name
+    if current_env
+      text = "#{current_env} Environment"
+      id = "environment-#{current_env.downcase}"
+      content_tag :div, text, class: 'environment-banner', id: id
     end
-    if environment
-      content_tag :div, "#{environment} Environment",
-        class: 'environment-banner',
-        id: "environment-#{environment.downcase}"
-    end
+  end
+
+  def environment_name
+    return 'Local' if Rails.env.development? || Rails.env.vagrant?
+    hostname = `hostname -s`
+    return 'Development' if hostname =~ /dev$/
+    return 'Staging' if hostname =~ /stage$/
   end
 end

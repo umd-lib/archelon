@@ -1,30 +1,26 @@
-require "erb"
+require 'erb'
 
 module ApplicationHelper
   FEDORA_BASE_URL = Rails.application.config.fcrepo_base_url
   IIIF_BASE_URL = Rails.application.config.iiif_base_url
-  PCDM_OBJECT = 'pcdm:Object'
-  PCDM_FILE = 'pcdm:File'
-  ALLOWED_MIME_TYPE = 'image/tiff'
+  PCDM_OBJECT = 'pcdm:Object'.freeze
+  PCDM_FILE = 'pcdm:File'.freeze
+  ALLOWED_MIME_TYPE = 'image/tiff'.freeze
 
-  def is_mirador_displayable(document)
-    rdf_types = document._source[:rdf_type];
-    if rdf_types.include? PCDM_OBJECT
-      return true
-    elsif document._source[:rdf_type].include? PCDM_FILE and (ALLOWED_MIME_TYPE == document._source[:mime_type])
-      return true
-    else
-      return false
-    end
+  def mirador_displayable?(document)
+    rdf_types = document._source[:rdf_type]
+    return true if rdf_types.include? PCDM_OBJECT
+    return true if rdf_types.include?(PCDM_FILE) && (ALLOWED_MIME_TYPE == document._source[:mime_type])
+    false
   end
 
   def encoded_id(document)
     id = document._source[:id]
-    return ERB::Util.url_encode(id.slice(FEDORA_BASE_URL.size, id.size))
+    ERB::Util.url_encode(id.slice(FEDORA_BASE_URL.size, id.size))
   end
 
-  def iiif_base_url()
-    return IIIF_BASE_URL
+  def iiif_base_url
+    IIIF_BASE_URL
   end
 
   def from_subquery(subquery_field, args)
@@ -64,11 +60,11 @@ module ApplicationHelper
   end
 
   def unique_component_types(pcdm_members_info)
-    pcdm_members_info.map {|member| member['component']}.uniq
+    pcdm_members_info.map { |member| member['component'] }.uniq
   end
 
   def fcrepo_url
-    FEDORA_BASE_URL.sub(/fcrepo\/rest\/?/, "")
+    FEDORA_BASE_URL.sub(%r{fcrepo/rest/?}, '')
   end
 
   def view_in_fedora_link(document)
