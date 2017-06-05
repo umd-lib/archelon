@@ -96,6 +96,10 @@ class CatalogController < ApplicationController
 
     # solr fields to be displayed in the index (search results) view
     #   The ordering of the field names is the order of the display
+    config.add_index_field 'id', label: 'Annotation', helper_method: :link_to_document_view, if:
+    lambda { |_context, _field, document|
+      document[:rdf_type].include?('oa:Annotation')
+    }
     config.add_index_field 'object_type', label: 'Object Type'
     config.add_index_field 'component', label: 'Component'
     config.add_index_field 'author', label: 'Author'
@@ -129,6 +133,7 @@ class CatalogController < ApplicationController
     config.add_show_field 'page_reel', label: 'Reel'
     config.add_show_field 'page_issue', label: 'Issue'
     config.add_show_field 'page_sequence', label: 'Sequence'
+    config.add_show_field 'annotation_source', label: 'Pages', helper_method: :annotation_source_from_subquery
     config.add_show_field 'size', label: 'Size'
     config.add_show_field 'mime_type', label: 'Mime Type'
     config.add_show_field 'digest', label: 'Digest'

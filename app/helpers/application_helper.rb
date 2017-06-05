@@ -55,6 +55,10 @@ module ApplicationHelper
     from_subquery 'pcdm_related_object_of_info', args
   end
 
+  def annotation_source_from_subquery(args)
+    from_subquery 'annotation_source_info', args
+  end
+
   def rdf_type_list(args)
     args[:document][args[:field]]
   end
@@ -71,5 +75,11 @@ module ApplicationHelper
     url = document[:id]
     url += '/fcr:metadata' if document[:rdf_type].include? 'fedora:Binary'
     link_to 'View in Fedora', url, target: '_blank'
+  end
+
+  def link_to_document_view(args)
+    value = args[:value]
+    value = [value] unless value.is_a? Array
+    safe_join(value.map { |v| link_to v, solr_document_path(v) }, ', ')
   end
 end
