@@ -13,9 +13,10 @@ class CatalogController < ApplicationController
     # config.response_model = Blacklight::Solr::Response
 
     ## Default parameters to send to solr for all search-like requests. See also SearchBuilder#processed_parameters
+    # The fq parameter is conditionally overriden in app/models/search_builder.rb
     config.default_solr_params = {
       rows: 10,
-      fq: ['is_pcdm:true OR rdf_type:oa\:Annotation']
+      fq: ['is_pcdm:true']
     }
 
     # solr path which will be added to solr base url before the other solr params.
