@@ -16,7 +16,11 @@ module ApplicationHelper
 
   def encoded_id(document)
     id = document._source[:id]
-    ERB::Util.url_encode(id.slice(FEDORA_BASE_URL.size, id.size))
+    url_encode(id.slice(FEDORA_BASE_URL.size, id.size))
+  end
+
+  def url_encode(str)
+    ERB::Util.url_encode(str)
   end
 
   def iiif_base_url

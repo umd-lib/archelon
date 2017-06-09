@@ -1,5 +1,5 @@
 <% if mirador_displayable?(document) %>
-  <% query_param = @current_query ? "&q=#{@current_query}" : '' %>
+  <% query_param = @current_query ? "&q=#{url_encode(@current_query)}" : '' %>
   <div class="intrinsic-container ratio-4x3">
     <iframe src="<%= iiif_base_url %>viewer/mirador.html?manifest=fcrepo:<%= encoded_id(document) %>&amp;iiifURLPrefix=<%= iiif_base_url %>manifests/<%= query_param %>" allowfullscreen></iframe>
   </div>
