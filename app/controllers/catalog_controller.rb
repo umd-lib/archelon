@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 class CatalogController < ApplicationController
   include Blacklight::Catalog
+  before_action :make_current_query_accessible, only: [:show, :index]
 
   configure_blacklight do |config|
     ## Class for sending and receiving requests from a search index
@@ -187,5 +188,11 @@ class CatalogController < ApplicationController
     # Configuration for autocomplete suggestor
     config.autocomplete_enabled = true
     config.autocomplete_path = 'suggest'
+  end
+
+  private
+
+  def make_current_query_accessible
+    @current_query = params[:q]
   end
 end
