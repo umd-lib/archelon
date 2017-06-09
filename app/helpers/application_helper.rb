@@ -82,4 +82,13 @@ module ApplicationHelper
     value = [value] unless value.is_a? Array
     safe_join(value.map { |v| link_to v, solr_document_path(v) }, ', ')
   end
+
+  def strip_word_coordinates(args)
+    coord_pattern = /\|\d+,\d+,\d+,\d+/
+    if args[:value].is_a? Array
+      args[:value].map { |v| v.gsub(coord_pattern, '')}.join('... ').html_safe
+    else
+      args[:value].gsub(coord_pattern, '')
+    end
+  end
 end

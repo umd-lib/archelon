@@ -103,9 +103,13 @@ class CatalogController < ApplicationController
     config.add_index_field 'object_type', label: 'Object Type'
     config.add_index_field 'component', label: 'Component'
     config.add_index_field 'author', label: 'Author'
+    config.add_index_field 'extracted_text', label: 'OCR', :highlight => true, helper_method: :strip_word_coordinates
     config.add_index_field 'created_by', label: 'Created By'
     config.add_index_field 'created', label: 'Created'
     config.add_index_field 'last_modified', label: 'Last Modified'
+
+    # Have BL send the most basic highlighting parameters for you
+    config.add_field_configuration_to_solr_request!
 
     # solr fields to be displayed in the show (single result) view
     #   The ordering of the field names is the order of the display

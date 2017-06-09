@@ -63,3 +63,9 @@
         font-size: 1.5em;
     }
 }
+
+/* Make the hit highlight text bold */
+.document-metadata > dd > em {
+    font-weight: bold;
+    font-style: normal;
+}
