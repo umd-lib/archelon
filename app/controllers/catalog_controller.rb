@@ -13,9 +13,10 @@ class CatalogController < ApplicationController
     # config.response_model = Blacklight::Solr::Response
 
     ## Default parameters to send to solr for all search-like requests. See also SearchBuilder#processed_parameters
+    # The fq parameter is conditionally overriden in app/models/search_builder.rb
     config.default_solr_params = {
       rows: 10,
-      fq: ['is_pcdm:true OR rdf_type:oa\:Annotation']
+      fq: ['is_pcdm:true']
     }
 
     # solr path which will be added to solr base url before the other solr params.
@@ -96,12 +97,20 @@ class CatalogController < ApplicationController
 
     # solr fields to be displayed in the index (search results) view
     #   The ordering of the field names is the order of the display
+    config.add_index_field 'id', label: 'Annotation', helper_method: :link_to_document_view, if:
+    lambda { |_context, _field, document|
+      document[:rdf_type].include?('oa:Annotation')
+    }
     config.add_index_field 'object_type', label: 'Object Type'
     config.add_index_field 'component', label: 'Component'
     config.add_index_field 'author', label: 'Author'
+    config.add_index_field 'extracted_text', label: 'OCR', :highlight => true, helper_method: :strip_word_coordinates
     config.add_index_field 'created_by', label: 'Created By'
     config.add_index_field 'created', label: 'Created'
     config.add_index_field 'last_modified', label: 'Last Modified'
+
+    # Have BL send the most basic highlighting parameters for you
+    config.add_field_configuration_to_solr_request!
 
     # solr fields to be displayed in the show (single result) view
     #   The ordering of the field names is the order of the display
@@ -129,6 +138,7 @@ class CatalogController < ApplicationController
     config.add_show_field 'page_reel', label: 'Reel'
     config.add_show_field 'page_issue', label: 'Issue'
     config.add_show_field 'page_sequence', label: 'Sequence'
+    config.add_show_field 'annotation_source', label: 'Pages', helper_method: :annotation_source_from_subquery
     config.add_show_field 'size', label: 'Size'
     config.add_show_field 'mime_type', label: 'Mime Type'
     config.add_show_field 'digest', label: 'Digest'
