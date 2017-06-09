@@ -25,6 +25,6 @@ module UrlHelper
   def link_to_annotation_pages(doc)
     return unless doc[:annotation_source_info] && doc[:annotation_source_info][:docs]
     pages = doc[:annotation_source_info][:docs]
-    safe_join(pages.map { |page| link_to page[:display_title], solr_document_path(page[:id]) }, ', ')
+    safe_join(pages.map { |page| link_to page[:display_title], solr_document_path(page[:id], q: @current_query) }, ', ')
   end
 end
