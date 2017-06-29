@@ -1,4 +1,5 @@
 require 'erb'
+require 'addressable/template'
 
 module ApplicationHelper
   FEDORA_BASE_URL = Rails.application.config.fcrepo_base_url
@@ -6,6 +7,7 @@ module ApplicationHelper
   PCDM_OBJECT = 'pcdm:Object'.freeze
   PCDM_FILE = 'pcdm:File'.freeze
   ALLOWED_MIME_TYPE = 'image/tiff'.freeze
+  MIRADOR_STATIC_VERSION = Rails.application.config.mirador_static_version
 
   def mirador_displayable?(document)
     rdf_types = document._source[:rdf_type]
@@ -17,6 +19,10 @@ module ApplicationHelper
   def encoded_id(document)
     id = document._source[:id]
     ERB::Util.url_encode(id.slice(FEDORA_BASE_URL.size, id.size))
+  end
+
+  def repo_path(url)
+    url.slice(FEDORA_BASE_URL.size, url.size)
   end
 
   def iiif_base_url
@@ -90,5 +96,17 @@ module ApplicationHelper
     else
       args[:value].gsub(coord_pattern, '')
     end
+  end
+
+  def mirador_viewer_url(document, query)
+    template = Addressable::Template.new(
+      "#{IIIF_BASE_URL}viewer{/version}/mirador.html?manifest=fcrepo:{id}{&iiifURLPrefix,q}"
+    )
+    template.expand(
+      version: MIRADOR_STATIC_VERSION,
+      id: repo_path(document[:id]),
+      iiifURLPrefix: "#{IIIF_BASE_URL}manifests/",
+      q: query
+    ).to_s
   end
 end
