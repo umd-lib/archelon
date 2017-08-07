@@ -20,3 +20,9 @@
 
 # Ignore environment specific files
 .env
+
+# Ignore minitest-ci reports
+test/reports
+
+# Ignore solrlocal.pem SSL cert file, if present
+solrlocal.pem
