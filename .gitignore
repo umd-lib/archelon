@@ -26,3 +26,6 @@ test/reports
 
 # Ignore solrlocal.pem SSL cert file, if present
 solrlocal.pem
+
+# Ignore byebug history
+.byebug_history
