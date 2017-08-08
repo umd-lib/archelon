@@ -1,0 +1,59 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Token:</strong>
+  <%= @download_url.token %>
+</p>
+
+<p>
+  <strong>Url:</strong>
+  <%= @download_url.url %>
+</p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @download_url.title %>
+</p>
+
+<p>
+  <strong>Notes:</strong>
+  <%= @download_url.notes %>
+</p>
+
+<p>
+  <strong>Mimetype:</strong>
+  <%= @download_url.mimetype %>
+</p>
+
+<p>
+  <strong>Creator:</strong>
+  <%= @download_url.creator %>
+</p>
+
+<p>
+  <strong>Enabled:</strong>
+  <%= @download_url.enabled %>
+</p>
+
+<p>
+  <strong>Request ip:</strong>
+  <%= @download_url.request_ip %>
+</p>
+
+<p>
+  <strong>Request user agent:</strong>
+  <%= @download_url.request_user_agent %>
+</p>
+
+<p>
+  <strong>Accessed at:</strong>
+  <%= @download_url.accessed_at %>
+</p>
+
+<p>
+  <strong>Download completed at:</strong>
+  <%= @download_url.download_completed_at %>
+</p>
+
+<%= link_to 'Edit', edit_download_url_path(@download_url) %> |
+<%= link_to 'Back', download_urls_path %>

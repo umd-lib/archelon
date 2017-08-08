@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :download_urls
   get 'static_pages/about'
 
   resources :cas_users

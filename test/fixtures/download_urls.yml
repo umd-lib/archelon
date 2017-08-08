@@ -1,0 +1,27 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  token: MyString
+  url: MyString
+  title: MyString
+  notes: MyText
+  mimetype: MyString
+  creator: MyString
+  enabled: false
+  request_ip: MyString
+  request_user_agent: MyString
+  accessed_at: 2017-08-08 13:46:58
+  download_completed_at: 2017-08-08 13:46:58
+
+two:
+  token: MyString
+  url: MyString
+  title: MyString
+  notes: MyText
+  mimetype: MyString
+  creator: MyString
+  enabled: false
+  request_ip: MyString
+  request_user_agent: MyString
+  accessed_at: 2017-08-08 13:46:58
+  download_completed_at: 2017-08-08 13:46:58

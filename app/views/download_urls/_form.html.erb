@@ -1,0 +1,61 @@
+<%= form_for(@download_url) do |f| %>
+  <% if @download_url.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@download_url.errors.count, "error") %> prohibited this download_url from being saved:</h2>
+
+      <ul>
+      <% @download_url.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :token %><br>
+    <%= f.text_field :token %>
+  </div>
+  <div class="field">
+    <%= f.label :url %><br>
+    <%= f.text_field :url %>
+  </div>
+  <div class="field">
+    <%= f.label :title %><br>
+    <%= f.text_field :title %>
+  </div>
+  <div class="field">
+    <%= f.label :notes %><br>
+    <%= f.text_area :notes %>
+  </div>
+  <div class="field">
+    <%= f.label :mimetype %><br>
+    <%= f.text_field :mimetype %>
+  </div>
+  <div class="field">
+    <%= f.label :creator %><br>
+    <%= f.text_field :creator %>
+  </div>
+  <div class="field">
+    <%= f.label :enabled %><br>
+    <%= f.check_box :enabled %>
+  </div>
+  <div class="field">
+    <%= f.label :request_ip %><br>
+    <%= f.text_field :request_ip %>
+  </div>
+  <div class="field">
+    <%= f.label :request_user_agent %><br>
+    <%= f.text_field :request_user_agent %>
+  </div>
+  <div class="field">
+    <%= f.label :accessed_at %><br>
+    <%= f.datetime_select :accessed_at %>
+  </div>
+  <div class="field">
+    <%= f.label :download_completed_at %><br>
+    <%= f.datetime_select :download_completed_at %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
