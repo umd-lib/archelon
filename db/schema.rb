@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160909124518) do
+ActiveRecord::Schema.define(version: 20170808174658) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       null: false
@@ -35,6 +35,24 @@ ActiveRecord::Schema.define(version: 20160909124518) do
   end
 
   add_index "cas_users", ["cas_directory_id"], name: "index_cas_users_on_cas_directory_id", unique: true
+
+  create_table "download_urls", force: :cascade do |t|
+    t.string   "token"
+    t.string   "url"
+    t.string   "title"
+    t.text     "notes"
+    t.string   "mimetype"
+    t.string   "creator"
+    t.boolean  "enabled"
+    t.string   "request_ip"
+    t.string   "request_user_agent"
+    t.datetime "accessed_at"
+    t.datetime "download_completed_at"
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
+  end
+
+  add_index "download_urls", ["token"], name: "index_download_urls_on_token", unique: true
 
   create_table "searches", force: :cascade do |t|
     t.binary   "query_params"
