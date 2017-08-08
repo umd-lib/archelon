@@ -25,6 +25,7 @@ class DownloadUrlsController < ApplicationController
   # POST /download_urls.json
   def create
     @download_url = DownloadUrl.new(download_url_params)
+    @download_url.creator = current_cas_user.cas_directory_id
 
     respond_to do |format|
       if @download_url.save
@@ -69,6 +70,10 @@ class DownloadUrlsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def download_url_params
-      params.require(:download_url).permit(:token, :url, :title, :notes, :mimetype, :creator, :enabled, :request_ip, :request_user_agent, :accessed_at, :download_completed_at)
+      # "token", and "creator" should not be settable by the user
+      params.require(:download_url).permit(
+        :url, :title, :notes, :mimetype, :enabled, :request_ip,
+        :request_user_agent, :accessed_at, :download_completed_at
+      )
     end
 end

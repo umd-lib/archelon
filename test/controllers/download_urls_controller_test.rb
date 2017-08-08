@@ -19,7 +19,7 @@ class DownloadUrlsControllerTest < ActionController::TestCase
   test "should create download_url" do
     assert_difference('DownloadUrl.count') do
       post :create, download_url: {
-        accessed_at: @download_url.accessed_at, creator: @download_url.creator,
+        accessed_at: @download_url.accessed_at,
         download_completed_at: @download_url.download_completed_at,
         enabled: @download_url.enabled, mimetype: @download_url.mimetype,
         notes: @download_url.notes, request_ip: @download_url.request_ip,
@@ -30,6 +30,55 @@ class DownloadUrlsControllerTest < ActionController::TestCase
     end
 
     assert_redirected_to download_url_path(assigns(:download_url))
+  end
+
+  test 'should add creator on create' do
+    assert_difference('DownloadUrl.count') do
+      post :create, download_url: {
+        accessed_at: @download_url.accessed_at,
+        download_completed_at: @download_url.download_completed_at,
+        enabled: @download_url.enabled, mimetype: @download_url.mimetype,
+        notes: @download_url.notes, request_ip: @download_url.request_ip,
+        request_user_agent: @download_url.request_user_agent,
+        title: @download_url.title,
+        url: @download_url.url
+      }
+    end
+    download_url = DownloadUrl.last
+    assert_equal session[:cas_user], download_url.creator
+  end
+
+  test 'should not be able to set token or creator on create' do
+    token_to_try = '12345'
+    creator_to_try = 'one'
+    assert_difference('DownloadUrl.count') do
+      post :create, download_url: {
+        accessed_at: @download_url.accessed_at,
+        download_completed_at: @download_url.download_completed_at,
+        enabled: @download_url.enabled, mimetype: @download_url.mimetype,
+        notes: @download_url.notes, request_ip: @download_url.request_ip,
+        request_user_agent: @download_url.request_user_agent,
+        title: @download_url.title,
+        url: @download_url.url, token: token_to_try, creator: creator_to_try
+      }
+    end
+    download_url = DownloadUrl.last
+    assert_not_equal token_to_try, download_url.token
+    assert_not_equal creator_to_try, download_url.creator
+  end
+
+  test 'should require a note on create' do
+    assert_no_difference('DownloadUrl.count') do
+      post :create, download_url: {
+        accessed_at: @download_url.accessed_at,
+        download_completed_at: @download_url.download_completed_at,
+        enabled: @download_url.enabled, mimetype: @download_url.mimetype,
+        notes: nil, request_ip: @download_url.request_ip,
+        request_user_agent: @download_url.request_user_agent,
+        title: @download_url.title,
+        url: @download_url.url
+      }
+    end
   end
 
   test "should show download_url" do
