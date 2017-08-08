@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  resources :download_urls
   get 'static_pages/about'
 
   resources :cas_users
@@ -25,6 +24,8 @@ Rails.application.routes.draw do
       delete 'clear'
     end
   end
+
+  resources :download_urls
 
   get 'logout' => 'cas_users#logout'
   get 'about' => 'static_pages#about'
