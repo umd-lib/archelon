@@ -1,7 +1,7 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  token: MyString
+  token: one
   url: MyString
   title: MyString
   notes: MyText
@@ -14,7 +14,7 @@ one:
   download_completed_at: 2017-08-08 13:46:58
 
 two:
-  token: MyString
+  token: two
   url: MyString
   title: MyString
   notes: MyText
