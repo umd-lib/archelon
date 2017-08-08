@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 .navbar-default {
-    border-bottom: 1px solid #9a0c0c; 
+    border-bottom: 1px solid #9a0c0c;
 }
 .logo img {
     height: 50px;
@@ -68,4 +68,27 @@
 .document-metadata > dd > em {
     font-weight: bold;
     font-style: normal;
+}
+
+/* Make dropdown button in navbar consistent with other buttons */
+.navbar-nav .dropdown-toggle {
+    color: #ffffff;
+    background-color: transparent !important;
+    background-image: none !important;
+    border: 0px !important;
+    padding-top: 25.5px;
+    padding-bottom: 25.5px;
+    color: #ffffff;
+}
+
+.navbar-nav .dropdown-toggle:hover {
+    color: #ffffff;
+    background-color: #720909 !important;
+    border-radius: 0px;
+}
+
+.navbar-nav .dropdown-toggle:focus {
+    color: #ffffff;
+    background-color: #720909 !important;
+    border-radius: 0px;
 }
