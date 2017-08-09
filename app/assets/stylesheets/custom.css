@@ -92,3 +92,10 @@
     background-color: #720909 !important;
     border-radius: 0px;
 }
+
+#download_url_title_input {
+  width: 100%;
+}
+#download_url_notes_input {
+  width: 100%;
+}

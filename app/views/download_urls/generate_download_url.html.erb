@@ -1,0 +1,35 @@
+<h1>Generate Download Url</h1>
+
+<%= form_for(@download_url, url: create_download_url_path(document_url: @download_url.url)) do |f| %>
+  <% if @download_url.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@download_url.errors.count, "error") %> prohibited the Download URL from being created:</h2>
+
+      <ul>
+      <% @download_url.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :url %><br>
+    <%= @download_url.url %>
+  </div>
+
+  <div class="field">
+    <%= f.label :title %><br>
+    <%= f.text_field :title, readonly: true, id: 'download_url_title_input' %>
+  </div>
+  <div class="field">
+    <%= f.label :notes %><br>
+    <%= f.text_area :notes, id: 'download_url_notes_input' %>
+  </div>
+  <div class="actions">
+    <%= f.submit class: 'btn btn-success' %>
+    <%= link_to 'Cancel', (@download_url.new_record? ? download_urls_path : download_url_path(@download_url)), class: 'btn btn-danger' %>
+  </div>
+<% end %>
+
+

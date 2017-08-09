@@ -103,4 +103,16 @@ class DownloadUrlsControllerTest < ActionController::TestCase
 
     assert_redirected_to download_urls_path
   end
+
+  test 'generate_download_url should raise 404 RoutingError if document cannot be found' do
+    assert_raises(ActionController::RoutingError) do
+      get :generate_download_url, document_url: 'document does not exist'
+    end
+  end
+
+  test 'create_download_url should raise 404 RoutingError if document cannot be found' do
+    assert_raises(ActionController::RoutingError) do
+      get :create_download_url, document_url: 'document does not exist'
+    end
+  end
 end
