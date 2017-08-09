@@ -33,6 +33,11 @@ Rails.application.routes.draw do
   get path: '/download_urls/show/:token', controller: 'download_urls',
       action: 'show_download_url', as: 'show_download_url'
 
+  get path: '/retrieve/:token', controller: 'retrieve', action: 'retrieve',
+      as: 'retrieve'
+  get path: '/retrieve/do/:token', controller: 'retrieve', action: 'do_retrieve',
+      as: 'do_retrieve'
+
   get 'logout' => 'cas_users#logout'
   get 'about' => 'static_pages#about'
 

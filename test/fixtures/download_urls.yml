@@ -7,7 +7,7 @@ one:
   notes: MyText
   mimetype: MyString
   creator: MyString
-  enabled: false
+  enabled: true
   request_ip: MyString
   request_user_agent: MyString
   accessed_at: 2017-08-08 13:46:58
@@ -20,7 +20,7 @@ two:
   notes: MyText
   mimetype: MyString
   creator: MyString
-  enabled: false
+  enabled: true
   request_ip: MyString
   request_user_agent: MyString
   accessed_at: 2017-08-08 13:46:58
