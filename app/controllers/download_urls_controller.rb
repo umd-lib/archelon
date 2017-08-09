@@ -55,9 +55,10 @@ class DownloadUrlsController < ApplicationController
 
     @download_url = DownloadUrl.new(download_url_params)
     @download_url.url = solr_document[:id]
-    @download_url.mimetype = solr_document[:mimetype]
+    @download_url.mimetype = solr_document[:mime_type]
     @download_url.creator = current_cas_user.cas_directory_id
     @download_url.enabled = true
+    @download_url.expires_at = 7.days.from_now
 
     respond_to do |format|
       if @download_url.save
@@ -110,7 +111,7 @@ class DownloadUrlsController < ApplicationController
         file_of_result = fetch(pcdm_file_of)
         file_of_document = file_of_result[1]
         file_of_title = file_of_document[:display_title]
-        @download_url.title += " - #{file_of_title}"
+        title += " - #{file_of_title}"
       end
       title
     end

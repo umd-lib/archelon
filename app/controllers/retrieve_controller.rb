@@ -4,13 +4,16 @@ class RetrieveController < ApplicationController
     @token = params['token']
     download_url = DownloadUrl.find_by(token: @token)
 
-    render 'retrieve' if verify_download_url(download_url, Time.now)
+    return unless verify_download_url(download_url)
+
+    render 'retrieve'
   end
 
   def do_retrieve
     @token = params['token']
     download_url = DownloadUrl.find_by(token: @token)
-    verify_download_url(download_url, Time.now)
+    return unless verify_download_url(download_url)
+
     download_url.enabled = false
     download_url.accessed_at = Time.now
     download_url.request_ip = request.ip
@@ -19,8 +22,7 @@ class RetrieveController < ApplicationController
 
     fedora_url = download_url.url
 
-    # Use OpenURI explicity so that we can mock it in tests
-    web_contents = OpenURI.open(fedora_url) {|f| f.read }
+    web_contents = open(fedora_url) {|f| f.read }
 
     send_data web_contents,
               filename: "foo",
@@ -31,10 +33,15 @@ class RetrieveController < ApplicationController
 
   private
 
-    def verify_download_url(download_url, current_time)
+    def verify_download_url(download_url)
       not_found unless download_url
       unless download_url.enabled?
         render 'disabled', layout: false
+        return false
+      end
+
+      if download_url.expired?
+        render 'expired', layout: false
         return false
       end
       true

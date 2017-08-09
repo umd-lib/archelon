@@ -26,4 +26,13 @@ class DownloadUrlTest < ActiveSupport::TestCase
     download_url.notes = 'abc'
     assert download_url.valid?
   end
+
+  test 'expired? should correctly indicate expire status' do
+    download_url = download_urls(:one)
+    download_url.expires_at = 7.days.from_now
+    refute download_url.expired?
+
+    download_url.expires_at = 1.second.ago
+    assert download_url.expired?
+  end
 end
