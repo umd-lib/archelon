@@ -24,8 +24,8 @@
 # Ignore minitest-ci reports
 test/reports
 
-# Ignore solrlocal.pem SSL cert file, if present
-solrlocal.pem
+# Ignore any SSL pem files in root
+*.pem
 
 # Ignore byebug history
 .byebug_history
