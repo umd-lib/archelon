@@ -12,6 +12,6 @@ class ApplicationController < ActionController::Base
 
   # Causes a "404 - Not Found" error page to be displayed.
   def not_found
-    raise ActionController::RoutingError.new('Not Found')
+    raise ActionController::RoutingError, 'Not Found'
   end
 end

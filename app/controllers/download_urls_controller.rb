@@ -24,7 +24,7 @@ class DownloadUrlsController < ApplicationController
 
   # POST /download_urls
   # POST /download_urls.json
-  def create
+  def create # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     @download_url = DownloadUrl.new(download_url_params)
     @download_url.creator = current_cas_user.cas_directory_id
 
@@ -45,20 +45,14 @@ class DownloadUrlsController < ApplicationController
     not_found unless solr_document
     @download_url = DownloadUrl.new
     @download_url.url = solr_document[:id]
-    @download_url.title = solr_document[:display_title]
-    pcdm_file_of = solr_document[:pcdm_file_of]
-    if pcdm_file_of
-      file_of_result = fetch(pcdm_file_of)
-      file_of_document = file_of_result[1]
-      file_of_title = file_of_document[:display_title]
-      @download_url.title += " - #{file_of_title}"
-    end
+    @download_url.title = create_default_title(solr_document)
   end
 
   # POST /download_urls/create/:document_url
-  def create_download_url
+  def create_download_url # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     solr_document = find_solr_document(params['document_url'])
     not_found unless solr_document
+
     @download_url = DownloadUrl.new(download_url_params)
     @download_url.url = solr_document[:id]
     @download_url.mimetype = solr_document[:mimetype]
@@ -67,7 +61,10 @@ class DownloadUrlsController < ApplicationController
 
     respond_to do |format|
       if @download_url.save
-        format.html { redirect_to show_download_url_path(token: @download_url.token), notice: 'Download url was successfully created.' }
+        format.html do
+          redirect_to show_download_url_path(token: @download_url.token),
+                      notice: 'Download url was successfully created.'
+        end
       else
         format.html { render :generate_download_url }
       end
@@ -79,8 +76,6 @@ class DownloadUrlsController < ApplicationController
     token = params[:token]
     @download_url = DownloadUrl.find_by(token: token)
   end
-
-
 
   # PATCH/PUT /download_urls/1
   # PATCH/PUT /download_urls/1.json
@@ -107,6 +102,18 @@ class DownloadUrlsController < ApplicationController
   end
 
   private
+
+    def create_default_title(solr_document)
+      title = solr_document[:display_title]
+      pcdm_file_of = solr_document[:pcdm_file_of]
+      if pcdm_file_of
+        file_of_result = fetch(pcdm_file_of)
+        file_of_document = file_of_result[1]
+        file_of_title = file_of_document[:display_title]
+        @download_url.title += " - #{file_of_title}"
+      end
+      title
+    end
 
     # Retrieves the Solr document with the given URL, or nil if the Solr
     # document can't be found.

@@ -15,6 +15,10 @@ AllCops:
 Metrics/LineLength:
   Max: 120
 
+Metrics/ClassLength:
+  Exclude:
+    - 'test/**/*'
+
 # The following configuration exclude checks that seem
 # silly, or conflict with the way Rails naturally does
 # things.
@@ -22,12 +26,11 @@ Style/Documentation:
   Exclude:
     - 'app/controllers/*_controller.rb'
     - 'app/helpers/*_helper.rb'
-    - 'test/test_helper.rb'
-    - 'test/controllers/*_controller_test.rb'
+    - 'test/**/*'
 
 Style/ClassAndModuleChildren:
   Exclude:
-    - 'test/test_helper.rb'
+    - 'test/**/*'
 
 Style/IndentationConsistency:
   EnforcedStyle: rails
