@@ -11,8 +11,8 @@ module ApplicationHelper
 
   def mirador_displayable?(document)
     rdf_types = document._source[:rdf_type]
-    return true if rdf_types.include? PCDM_OBJECT
-    return true if rdf_types.include?(PCDM_FILE) && (ALLOWED_MIME_TYPE == document._source[:mime_type])
+    component = document._source[:component]
+    return true if rdf_types.include?(PCDM_OBJECT) && (component != 'Article')
     false
   end
 
