@@ -22,7 +22,8 @@ class RetrieveController < ApplicationController
 
     fedora_url = download_url.url
 
-    web_contents = open(fedora_url) {|f| f.read }
+    # Use Kernel explicity so that we can mock it in tests
+    web_contents = Kernel.open(fedora_url) {|f| f.read }
 
     send_data web_contents,
               filename: "foo",

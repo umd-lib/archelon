@@ -54,15 +54,6 @@ class RetrieveControllerTest < ActionController::TestCase
     download_url = download_urls(:one)
     assert download_url.enabled?
 
-    # Create mock to handle block for OpenURI.open method
-    #mock = Minitest::Mock.new
-    # def mock.read
-    # end
-
-    # OpenURI.stub :open, '', mock do
-    #   get :do_retrieve, token: download_url.token
-    # end
-
     mock_network do
       get :do_retrieve, token: download_url.token
     end
@@ -73,12 +64,20 @@ class RetrieveControllerTest < ActionController::TestCase
 
   private
 
+    # Mocks the Kernel.open call, so that it won't actually make a network
+    # call. Returns an empty String.
+    #
+    # Usage:
+    #
+    # mock_network do
+    #   <Code that calls "open">
+    # end
     def mock_network
       mock = Minitest::Mock.new
       def mock.read
       end
 
-      OpenURI.stub :open, '', mock do
+      Kernel.stub :open, '', mock do
         yield
       end
     end
