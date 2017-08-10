@@ -5,7 +5,7 @@ class DownloadUrlsController < ApplicationController # rubocop:disable Metrics/C
   # GET /download_urls
   # GET /download_urls.json
   def index
-    @download_urls = DownloadUrl.all
+    @download_urls = DownloadUrl.paginate(page: params[:page])
   end
 
   # GET /download_urls/1

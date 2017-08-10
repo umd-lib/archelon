@@ -24,6 +24,7 @@ Requires:
 ```
 > rake db:migrate
 ```
+**Note:** Sample "Download URL" data can be added by running ```rake db:reset_with_sample_data```
 
 3) Create a `.env` file from the `env_example` file and set the solr url to point to a working solr url.
 

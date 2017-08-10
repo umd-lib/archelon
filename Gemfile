@@ -47,6 +47,13 @@ gem 'dotenv-rails', '~> 2.1.1'
 # clipboard - Uses clipboard.js to provide "Copy to Clipboard" functionality
 gem 'clipboard-rails', '~>1.7.1'
 
+# Pagination
+gem 'will_paginate', '~> 3.1.0'
+gem 'will_paginate-bootstrap', '~> 1.0.0'
+
+# Used by Rake tasks to generate sample data
+gem 'faker', '~> 1.8'
+
 # RFC-complient URI and URI template handling
 gem 'addressable', '~> 2.5'
 
