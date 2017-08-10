@@ -1,6 +1,11 @@
 require 'test_helper'
 
 class RetrieveControllerTest < ActionController::TestCase
+  def setup
+    # RetreiveController actions should not require authentication
+    CASClient::Frameworks::Rails::Filter.fake(nil)
+  end
+
   test 'should get retrieve' do
     download_url = download_urls(:one)
     get :retrieve, token: download_url.token
@@ -59,6 +64,10 @@ class RetrieveControllerTest < ActionController::TestCase
 
     download_url.reload
     refute download_url.enabled?
+  end
+
+  def teardown
+    CASClient::Frameworks::Rails::Filter.fake(DEFAULT_TEST_USER)
   end
 
   private

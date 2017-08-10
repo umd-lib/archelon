@@ -1,4 +1,6 @@
 class RetrieveController < ApplicationController
+  skip_before_action :authenticate
+
   # GET /retrieve/:token
   def retrieve
     @token = params['token']
@@ -6,7 +8,7 @@ class RetrieveController < ApplicationController
 
     return unless verify_download_url(download_url)
 
-    render 'retrieve'
+    render 'retrieve', layout: false
   end
 
   def do_retrieve # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
