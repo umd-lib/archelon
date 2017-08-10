@@ -29,7 +29,7 @@ class RetrieveController < ApplicationController
 
     send_data web_contents,
               filename: 'foo', # TODO: figure out a real filename
-              type: download_url.mimetype
+              type: download_url.mime_type
     download_url.download_completed_at = Time.zone.now
     download_url.save
   end

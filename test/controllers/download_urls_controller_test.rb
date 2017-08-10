@@ -21,7 +21,7 @@ class DownloadUrlsControllerTest < ActionController::TestCase
       post :create, download_url: {
         accessed_at: @download_url.accessed_at,
         download_completed_at: @download_url.download_completed_at,
-        enabled: @download_url.enabled, mimetype: @download_url.mimetype,
+        enabled: @download_url.enabled, mime_type: @download_url.mime_type,
         notes: @download_url.notes, request_ip: @download_url.request_ip,
         request_user_agent: @download_url.request_user_agent,
         title: @download_url.title,
@@ -37,7 +37,7 @@ class DownloadUrlsControllerTest < ActionController::TestCase
       post :create, download_url: {
         accessed_at: @download_url.accessed_at,
         download_completed_at: @download_url.download_completed_at,
-        enabled: @download_url.enabled, mimetype: @download_url.mimetype,
+        enabled: @download_url.enabled, mime_type: @download_url.mime_type,
         notes: @download_url.notes, request_ip: @download_url.request_ip,
         request_user_agent: @download_url.request_user_agent,
         title: @download_url.title,
@@ -55,7 +55,7 @@ class DownloadUrlsControllerTest < ActionController::TestCase
       post :create, download_url: {
         accessed_at: @download_url.accessed_at,
         download_completed_at: @download_url.download_completed_at,
-        enabled: @download_url.enabled, mimetype: @download_url.mimetype,
+        enabled: @download_url.enabled, mime_type: @download_url.mime_type,
         notes: @download_url.notes, request_ip: @download_url.request_ip,
         request_user_agent: @download_url.request_user_agent,
         title: @download_url.title,
@@ -72,7 +72,7 @@ class DownloadUrlsControllerTest < ActionController::TestCase
       post :create, download_url: {
         accessed_at: @download_url.accessed_at,
         download_completed_at: @download_url.download_completed_at,
-        enabled: @download_url.enabled, mimetype: @download_url.mimetype,
+        enabled: @download_url.enabled, mime_type: @download_url.mime_type,
         notes: nil, request_ip: @download_url.request_ip,
         request_user_agent: @download_url.request_user_agent,
         title: @download_url.title,
@@ -95,7 +95,7 @@ class DownloadUrlsControllerTest < ActionController::TestCase
     patch :update, id: @download_url, download_url: {
       accessed_at: @download_url.accessed_at, creator: @download_url.creator,
       download_completed_at: @download_url.download_completed_at,
-      enabled: @download_url.enabled, mimetype: @download_url.mimetype,
+      enabled: @download_url.enabled, mime_type: @download_url.mime_type,
       notes: @download_url.notes, request_ip: @download_url.request_ip,
       request_user_agent: @download_url.request_user_agent,
       title: @download_url.title, token: @download_url.token,

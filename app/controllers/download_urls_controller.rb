@@ -55,7 +55,7 @@ class DownloadUrlsController < ApplicationController # rubocop:disable Metrics/C
 
     @download_url = DownloadUrl.new(download_url_params)
     @download_url.url = solr_document[:id]
-    @download_url.mimetype = solr_document[:mime_type]
+    @download_url.mime_type = solr_document[:mime_type]
     @download_url.creator = current_cas_user.cas_directory_id
     @download_url.enabled = true
     @download_url.expires_at = 7.days.from_now
@@ -136,7 +136,7 @@ class DownloadUrlsController < ApplicationController # rubocop:disable Metrics/C
     def download_url_params
       # "token", and "creator" should not be settable by the user
       params.require(:download_url).permit(
-        :url, :title, :notes, :mimetype, :enabled, :request_ip,
+        :url, :title, :notes, :mime_type, :enabled, :request_ip,
         :request_user_agent, :accessed_at, :download_completed_at
       )
     end

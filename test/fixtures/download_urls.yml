@@ -5,7 +5,7 @@ one:
   url: MyString
   title: MyString
   notes: MyText
-  mimetype: MyString
+  mime_type: MyString
   creator: MyString
   enabled: true
   request_ip: MyString
@@ -19,7 +19,7 @@ two:
   url: MyString
   title: MyString
   notes: MyText
-  mimetype: MyString
+  mime_type: MyString
   creator: MyString
   enabled: true
   request_ip: MyString
@@ -33,7 +33,7 @@ expired:
   url: http://www.example.com/expired
   title: Expired
   notes: This is an expired download URL
-  mimetype: image/png
+  mime_type: image/png
   creator: MyString
   enabled: true
   request_ip:

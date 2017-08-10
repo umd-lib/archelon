@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170809194525) do
+ActiveRecord::Schema.define(version: 20170810141511) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       null: false
@@ -41,7 +41,7 @@ ActiveRecord::Schema.define(version: 20170809194525) do
     t.string   "url"
     t.string   "title"
     t.text     "notes"
-    t.string   "mimetype"
+    t.string   "mime_type"
     t.string   "creator"
     t.boolean  "enabled"
     t.string   "request_ip"
