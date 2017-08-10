@@ -24,6 +24,9 @@
 # Ignore minitest-ci reports
 test/reports
 
+# Ignore simplecov output
+coverage
+
 # Ignore any SSL pem files in root
 *.pem
 
