@@ -49,7 +49,6 @@ class RetrieveControllerTest < ActionController::TestCase
     assert_template 'expired'
   end
 
-
   test 'download_url should be disabled after access' do
     download_url = download_urls(:one)
     assert download_url.enabled?
@@ -81,5 +80,4 @@ class RetrieveControllerTest < ActionController::TestCase
         yield
       end
     end
-
 end

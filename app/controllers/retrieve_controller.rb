@@ -9,13 +9,13 @@ class RetrieveController < ApplicationController
     render 'retrieve'
   end
 
-  def do_retrieve
+  def do_retrieve # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     @token = params['token']
     download_url = DownloadUrl.find_by(token: @token)
     return unless verify_download_url(download_url)
 
     download_url.enabled = false
-    download_url.accessed_at = Time.now
+    download_url.accessed_at = Time.zone.now
     download_url.request_ip = request.ip
     download_url.request_user_agent = request.user_agent
     download_url.save
@@ -23,12 +23,12 @@ class RetrieveController < ApplicationController
     fedora_url = download_url.url
 
     # Use Kernel explicity so that we can mock it in tests
-    web_contents = Kernel.open(fedora_url) {|f| f.read }
+    web_contents = Kernel.open(fedora_url, &:read)
 
     send_data web_contents,
-              filename: "foo",
+              filename: 'foo', # TODO: figure out a real filename
               type: download_url.mimetype
-    download_url.download_completed_at = Time.now
+    download_url.download_completed_at = Time.zone.now
     download_url.save
   end
 
@@ -47,5 +47,4 @@ class RetrieveController < ApplicationController
       end
       true
     end
-
 end

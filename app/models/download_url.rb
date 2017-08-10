@@ -5,6 +5,6 @@ class DownloadUrl < ActiveRecord::Base
   validates :notes, presence: true
 
   def expired?
-    expires_at < Time.now
+    expires_at < Time.zone.now
   end
 end

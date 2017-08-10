@@ -1,4 +1,4 @@
-class DownloadUrlsController < ApplicationController
+class DownloadUrlsController < ApplicationController # rubocop:disable Metrics/ClassLength
   before_action :set_download_url, only: [:show, :edit, :update, :destroy]
   include Blacklight::SearchHelper
 
