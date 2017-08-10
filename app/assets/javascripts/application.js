@@ -23,6 +23,13 @@
 
 //= require_tree .
 
+/* Bootstrap dropdown functionality.
+   Not 100% sure why this is needed, but had to add it after
+   adding "require bootstrap.min.js" for the clipboard-rails gem */
+$(document).ready(function() {
+    $(".dropdown-toggle").dropdown();
+});
+
 /* See https://github.com/sadiqmmm/clipboard-rails */
 $(document).ready(function(){
 
