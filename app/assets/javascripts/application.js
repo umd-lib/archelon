@@ -12,8 +12,49 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require turbolinks//
+//= require turbolinks
+
 // Required by Blacklight
 //= require blacklight/blacklight
 
+// For "clipboard-rails" gem
+//= require bootstrap.min.js
+//= require clipboard
+
 //= require_tree .
+
+/* See https://github.com/sadiqmmm/clipboard-rails */
+$(document).ready(function(){
+
+  // Tooltip
+  $('.clipboard-btn').tooltip({
+    trigger: 'click',
+    placement: 'bottom'
+  });
+
+  function setTooltip(btn, message) {
+    $(btn).tooltip('hide')
+      .attr('data-original-title', message)
+      .tooltip('show');
+  }
+
+  function hideTooltip(btn) {
+    setTimeout(function() {
+      $(btn).tooltip('hide');
+    }, 1000);
+  }
+
+  // Clipboard
+  var clipboard = new Clipboard('.clipboard-btn');
+
+  clipboard.on('success', function(e) {
+    setTooltip(e.trigger, 'Copied!');
+    hideTooltip(e.trigger);
+  });
+
+  clipboard.on('error', function(e) {
+    setTooltip(e.trigger, 'Failed!');
+    hideTooltip(e.trigger);
+  });
+});
+

@@ -67,6 +67,7 @@ GEM
       sass (>= 3.3.4)
     builder (3.2.2)
     byebug (9.0.5)
+    clipboard-rails (1.7.1)
     coffee-rails (4.1.1)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.1.x)
@@ -225,6 +226,7 @@ DEPENDENCIES
   addressable (~> 2.5)
   blacklight (~> 6.0)
   byebug
+  clipboard-rails (~> 1.7.1)
   coffee-rails (~> 4.1.0)
   dotenv-rails (~> 2.1.1)
   jbuilder (~> 2.0)

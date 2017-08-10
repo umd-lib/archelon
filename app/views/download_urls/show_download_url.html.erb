@@ -4,7 +4,11 @@
 
 <p>Please provide the following URL to your patron:</p>
 
-<p class="download_url">http://example.com/<%= @download_url.token %></p>
+<p id="download_url">http://example.com/<%= @download_url.token %></p>
+
+<button class="clipboard-btn" data-clipboard-action="copy" data-clipboard-target="#download_url">
+    Copy to clipboard
+</button>
 
 <p>This URL will only work for once, and will automatically expire in one week.</p>
 
