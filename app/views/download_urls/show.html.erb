@@ -55,5 +55,9 @@
   <%= @download_url.download_completed_at %>
 </p>
 
-<%= link_to 'Edit', edit_download_url_path(@download_url) %> |
-<%= link_to 'Back', download_urls_path %>
+<% if @download_url.enabled? %>
+  <%= link_to 'Disable', disable_download_url_path(token: @download_url.token),
+              method: :put, class: 'btn btn-danger', data: { confirm: 'Are you sure?' } %>
+<% end %>
+
+<%= link_to 'List Download Urls', download_urls_path, class: 'btn btn-default' %>

@@ -123,4 +123,14 @@ class DownloadUrlsControllerTest < ActionController::TestCase
       get :create_download_url, document_url: 'document does not exist'
     end
   end
+
+  test 'disable should disable an enabled download_url' do
+    @download_url = download_urls(:one)
+    assert @download_url.enabled?
+
+    put :disable, token: @download_url.token
+
+    @download_url.reload
+    refute @download_url.enabled?
+  end
 end

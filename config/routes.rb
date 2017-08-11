@@ -32,6 +32,8 @@ Rails.application.routes.draw do
        action: 'create_download_url', as: 'create_download_url'
   get path: '/download_urls/show/:token', controller: 'download_urls',
       action: 'show_download_url', as: 'show_download_url'
+  put path: '/download_urls/disable/:token', controller: 'download_urls',
+      action: 'disable', as: 'disable_download_url'
 
   get path: '/retrieve/:token', controller: 'retrieve', action: 'retrieve',
       as: 'retrieve'

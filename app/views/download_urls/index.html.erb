@@ -1,5 +1,3 @@
-<p id="notice"><%= notice %></p>
-
 <h1>Download Urls</h1>
 
 <%= will_paginate @download_urls, renderer: BootstrapPagination::Rails %>
@@ -27,6 +25,10 @@
         <td><%= download_url.accessed_at %></td>
         <td><%= download_url.enabled %></td>
         <td><%= link_to 'Show', download_url %></td>
+        <% if download_url.enabled? %>
+          <td><%= link_to 'Disable', disable_download_url_path(token: download_url.token),
+                          method: :put, data: { confirm: 'Are you sure?' } %></td>
+        <% end %>
         <td><%= link_to 'Edit', edit_download_url_path(download_url) %></td>
         <td><%= link_to 'Destroy', download_url, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>

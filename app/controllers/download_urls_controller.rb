@@ -80,6 +80,25 @@ class DownloadUrlsController < ApplicationController # rubocop:disable Metrics/C
     @download_url = DownloadUrl.find_by(token: token)
   end
 
+  # PUT /download_urls/disable/:token
+  def disable
+    token = params[:token]
+    notice_msg = nil
+    @download_url = DownloadUrl.find_by(token: token)
+    if @download_url && @download_url.enabled?
+      @download_url.enabled = false
+      @download_url.save!
+      notice_msg = 'Download Url was disabled'
+    end
+
+    # Replace with redirect_back_to in Rails 5
+    if request.env['HTTP_REFERER'].present?
+      redirect_to :back, notice: notice_msg
+    else
+      redirect_to download_urls_url, notice: notice_msg
+    end
+  end
+
   # PATCH/PUT /download_urls/1
   # PATCH/PUT /download_urls/1.json
   def update
