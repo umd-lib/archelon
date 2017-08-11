@@ -26,6 +26,7 @@ namespace :db do
       download_url.mime_type = Faker::File.mime_type
       download_url.creator = cas_users[Random.rand(num_cas_users)].cas_directory_id
       download_url.created_at = Faker::Time.between(14.days.ago, Time.zone.now)
+      download_url.updated_at = Faker::Time.between(download_url.created_at, Time.zone.now)
       download_url.expires_at = download_url.created_at + 7.days
       download_url.enabled = true if Random.rand > 0.8
       unless download_url.enabled
