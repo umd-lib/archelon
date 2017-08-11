@@ -36,7 +36,7 @@ class RetrieveController < ApplicationController
 
   private
 
-    def verify_download_url(download_url)
+    def verify_download_url(download_url) # rubocop:disable Metrics/MethodLength
       not_found unless download_url
       unless download_url.enabled?
         render 'disabled', layout: false
@@ -44,6 +44,11 @@ class RetrieveController < ApplicationController
       end
 
       if download_url.expired?
+        # Disable the URL is the expiration date has passed
+        if download_url.enabled?
+          download_url.enabled = false
+          download_url.save
+        end
         render 'expired', layout: false
         return false
       end

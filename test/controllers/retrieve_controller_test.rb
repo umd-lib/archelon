@@ -66,6 +66,21 @@ class RetrieveControllerTest < ActionController::TestCase
     refute download_url.enabled?
   end
 
+  test '"do_retrieve" action should disable download_url if download_url is expired' do
+    download_url = download_urls(:one)
+    download_url.expires_at = 1.day.ago
+    download_url.enabled = true
+    download_url.save!
+
+    mock_network do
+      get :do_retrieve, token: download_url.token
+    end
+
+    assert_template 'expired'
+    download_url.reload
+    refute download_url.enabled?
+  end
+
   def teardown
     CASClient::Frameworks::Rails::Filter.fake(DEFAULT_TEST_USER)
   end
