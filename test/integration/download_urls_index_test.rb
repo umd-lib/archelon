@@ -15,8 +15,8 @@ class DownloadUrlsIndexTest < ActionDispatch::IntegrationTest
 
     @sort_columns.each do |sort_column|
       %w(asc desc).each do |sort_direction|
-        q_param = { s: sort_column + ' ' + sort_direction }
-        get download_urls_path, q: q_param
+        rq_param = { s: sort_column + ' ' + sort_direction }
+        get download_urls_path, rq: rq_param
         assert_template 'download_urls/index'
         assert_select 'ul.pagination'
 
@@ -25,13 +25,13 @@ class DownloadUrlsIndexTest < ActionDispatch::IntegrationTest
         page = response.body
 
         last_result_index = 0
-        results = DownloadUrl.ransack(q_param).result.paginate(page: 1)
+        results = DownloadUrl.ransack(rq_param).result.paginate(page: 1)
         results.each do |entry|
           entry_path = download_url_path(entry)
           entry_index = page.index(entry_path)
           assert_not_nil entry_index,
                          "'#{entry_path}' could not be found when sorting '#{sort_column} #{sort_direction}'"
-          assert last_result_index < entry_index, "Failed for '#{q_param[:s]}'"
+          assert last_result_index < entry_index, "Failed for '#{rq_param[:s]}'"
           assert_select 'tr td a[href=?]', entry_path
           last_result_index = entry_index
         end

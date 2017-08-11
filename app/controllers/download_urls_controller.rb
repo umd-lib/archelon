@@ -5,9 +5,9 @@ class DownloadUrlsController < ApplicationController
   # GET /download_urls
   # GET /download_urls.json
   def index
-    @q = DownloadUrl.ransack(params[:q])
-    @q.sorts = 'created_at desc' if @q.sorts.empty?
-    @download_urls = @q.result.paginate(page: params[:page])
+    @rq = DownloadUrl.ransack(params[:rq])
+    @rq.sorts = 'created_at desc' if @rq.sorts.empty?
+    @download_urls = @rq.result.paginate(page: params[:page])
   end
 
   # GET /download_urls/1
