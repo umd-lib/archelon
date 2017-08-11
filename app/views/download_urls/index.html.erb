@@ -11,7 +11,7 @@
       <th>Expires</th>
       <th>Accessed</th>
       <th>Enabled</th>
-      <th colspan="3"></th>
+      <th colspan="2"></th>
     </tr>
   </thead>
 
@@ -25,12 +25,12 @@
         <td><%= download_url.accessed_at %></td>
         <td><%= download_url.enabled %></td>
         <td><%= link_to 'Show', download_url %></td>
-        <% if download_url.enabled? %>
-          <td><%= link_to 'Disable', disable_download_url_path(token: download_url.token),
-                          method: :put, data: { confirm: 'Are you sure?' } %></td>
-        <% end %>
-        <td><%= link_to 'Edit', edit_download_url_path(download_url) %></td>
-        <td><%= link_to 'Destroy', download_url, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td>
+          <% if download_url.enabled? %>
+            <%= link_to 'Disable', disable_download_url_path(token: download_url.token),
+                            method: :put, data: { confirm: 'Are you sure?' } %>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>

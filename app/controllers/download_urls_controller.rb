@@ -1,5 +1,5 @@
-class DownloadUrlsController < ApplicationController # rubocop:disable Metrics/ClassLength
-  before_action :set_download_url, only: [:show, :edit, :update, :destroy]
+class DownloadUrlsController < ApplicationController
+  before_action :set_download_url, only: [:show]
   include Blacklight::SearchHelper
 
   # GET /download_urls
@@ -18,10 +18,6 @@ class DownloadUrlsController < ApplicationController # rubocop:disable Metrics/C
   # GET /download_urls/new
   def new
     @download_url = DownloadUrl.new
-  end
-
-  # GET /download_urls/1/edit
-  def edit
   end
 
   # POST /download_urls
@@ -81,7 +77,7 @@ class DownloadUrlsController < ApplicationController # rubocop:disable Metrics/C
   end
 
   # PUT /download_urls/disable/:token
-  def disable
+  def disable # rubocop:disable Metrics/MethodLength
     token = params[:token]
     notice_msg = nil
     @download_url = DownloadUrl.find_by(token: token)
@@ -96,30 +92,6 @@ class DownloadUrlsController < ApplicationController # rubocop:disable Metrics/C
       redirect_to :back, notice: notice_msg
     else
       redirect_to download_urls_url, notice: notice_msg
-    end
-  end
-
-  # PATCH/PUT /download_urls/1
-  # PATCH/PUT /download_urls/1.json
-  def update
-    respond_to do |format|
-      if @download_url.update(download_url_params)
-        format.html { redirect_to @download_url, notice: 'Download url was successfully updated.' }
-        format.json { render :show, status: :ok, location: @download_url }
-      else
-        format.html { render :edit }
-        format.json { render json: @download_url.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # DELETE /download_urls/1
-  # DELETE /download_urls/1.json
-  def destroy
-    @download_url.destroy
-    respond_to do |format|
-      format.html { redirect_to download_urls_url, notice: 'Download url was successfully destroyed.' }
-      format.json { head :no_content }
     end
   end
 

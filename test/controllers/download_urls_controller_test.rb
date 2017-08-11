@@ -86,32 +86,6 @@ class DownloadUrlsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test 'should get edit' do
-    get :edit, id: @download_url
-    assert_response :success
-  end
-
-  test 'should update download_url' do
-    patch :update, id: @download_url, download_url: {
-      accessed_at: @download_url.accessed_at, creator: @download_url.creator,
-      download_completed_at: @download_url.download_completed_at,
-      enabled: @download_url.enabled, mime_type: @download_url.mime_type,
-      notes: @download_url.notes, request_ip: @download_url.request_ip,
-      request_user_agent: @download_url.request_user_agent,
-      title: @download_url.title, token: @download_url.token,
-      url: @download_url.url
-    }
-    assert_redirected_to download_url_path(assigns(:download_url))
-  end
-
-  test 'should destroy download_url' do
-    assert_difference('DownloadUrl.count', -1) do
-      delete :destroy, id: @download_url
-    end
-
-    assert_redirected_to download_urls_path
-  end
-
   test 'generate_download_url should raise 404 RoutingError if document cannot be found' do
     assert_raises(ActionController::RoutingError) do
       get :generate_download_url, document_url: 'document does not exist'
