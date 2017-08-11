@@ -74,6 +74,7 @@ class DownloadUrlsController < ApplicationController
   def show_download_url
     token = params[:token]
     @download_url = DownloadUrl.find_by(token: token)
+    @retrieve_url = ENV['RETRIEVE_BASE_URL'] + token
   end
 
   # PUT /download_urls/disable/:token
