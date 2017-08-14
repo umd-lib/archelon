@@ -23,11 +23,13 @@
 
 //= require_tree .
 
-/* Bootstrap dropdown functionality.
+/* Bootstrap dropdown functionality for "Manage" menu
    Not 100% sure why this is needed, but had to add it after
-   adding "require bootstrap.min.js" for the clipboard-rails gem */
+   adding "require bootstrap.min.js" for the clipboard-rails gem.
+   Need to use a specific class "menu-dropdown" as otherwise it interferes
+   with the facet "remove" buttons in Blacklight */
    $(document).on('turbolinks:load', function() {
-    $(".dropdown-toggle").dropdown();
+    $(".menu-dropdown").dropdown();
 });
 
 /* See https://github.com/sadiqmmm/clipboard-rails */
