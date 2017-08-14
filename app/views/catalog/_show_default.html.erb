@@ -1,6 +1,7 @@
+<%= render "mirador/show", document: document unless document['component'] == 'article' %>
 <% doc_presenter = show_presenter(document) %>
 <%# default partial to display solr document fields in catalog show view -%>
-<dl class="dl-horizontal  dl-invert">
+<dl class="dl-horizontal dl-invert" id="metadata">
   <% document_show_fields(document).each do |field_name, field| %>
     <% if should_render_show_field? document, field %>
       <dt class="blacklight-<%= field_name.parameterize %>">
@@ -17,7 +18,7 @@
             <span class="badge"><%= subset.size %></span>
           </strong>
           <ul class="multivalued-field-value">
-            <% subset.sort{|a,b| a['title'] <=> b['title']}.each do |v| %>
+            <% subset.sort{|a,b| a['display_title'] <=> b['display_title']}.each do |v| %>
               <li><%= link_to v['display_title'], solr_document_path(v['id']) %></li>
             <% end %>
           </ul>
@@ -44,5 +45,4 @@
       <% end %>
     <% end -%>
   <% end -%>
-  <%= render "mirador/show", document: document unless document['component'] == 'article' %>
 </dl>
