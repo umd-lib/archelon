@@ -99,3 +99,27 @@
 #download_url_notes_input {
   width: 100%;
 }
+
+/* forms */
+input, textarea, select, .uneditable-input {
+  border: 1px solid #bbb;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.btn {
+  width: unset
+}
+
+input {
+  height: auto !important;
+}
+
+#error_explanation {
+  color: red;
+}
+
+.field_with_errors .form-control {
+  /* color is state-danger-text */
+  border: 2px solid #a94442;
+}

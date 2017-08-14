@@ -65,6 +65,9 @@ class DownloadUrlsController < ApplicationController
                       notice: 'Download url was successfully created.'
         end
       else
+        # Title is not a form parameter, so we have to re-create it in order
+        # for it to display when an error occurs
+        @download_url.title = create_default_title(solr_document)
         format.html { render :generate_download_url }
       end
     end
