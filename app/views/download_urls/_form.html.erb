@@ -1,15 +1,5 @@
 <%= form_for(@download_url) do |f| %>
-  <% if @download_url.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@download_url.errors.count, "error") %> prohibited this download_url from being saved:</h2>
-
-      <ul>
-      <% @download_url.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <%= render partial: "shared/error_messages", locals: {object: @download_url} %>
 
   <div class="field">
     <%= f.label :token %><br>

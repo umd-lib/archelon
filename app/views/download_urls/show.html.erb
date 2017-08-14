@@ -1,12 +1,14 @@
 <p id="notice"><%= notice %></p>
 
+<%= render partial: "retrieve_url", locals: {object: @download_url} %>
+
 <p>
   <strong>Token:</strong>
   <%= @download_url.token %>
 </p>
 
 <p>
-  <strong>Url:</strong>
+  <strong>Fedora Url:</strong>
   <%= @download_url.url %>
 </p>
 

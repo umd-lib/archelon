@@ -123,3 +123,7 @@ input {
   /* color is state-danger-text */
   border: 2px solid #a94442;
 }
+
+#retrieve_url {
+  text-align: center;
+}

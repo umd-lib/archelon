@@ -77,7 +77,6 @@ class DownloadUrlsController < ApplicationController
   def show_download_url
     token = params[:token]
     @download_url = DownloadUrl.find_by(token: token)
-    @retrieve_url = ENV['RETRIEVE_BASE_URL'] + token
   end
 
   # PUT /download_urls/disable/:token
@@ -101,6 +100,7 @@ class DownloadUrlsController < ApplicationController
 
   private
 
+    # Returns the default value for the "title" field of the DownloadUrl object.
     def create_default_title(solr_document)
       title = solr_document[:display_title]
       pcdm_file_of = solr_document[:pcdm_file_of]
