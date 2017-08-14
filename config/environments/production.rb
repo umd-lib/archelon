@@ -80,4 +80,7 @@ Rails.application.configure do
   # FCREPO & IIIF URLs
   config.fcrepo_base_url = ENV['FCREPO_BASE_URL']
   config.iiif_base_url = ENV['IIIF_BASE_URL']
+
+  # Mirador version
+  config.mirador_static_version = ENV['MIRADOR_STATIC_VERSION']
 end

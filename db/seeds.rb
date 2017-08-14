@@ -1,7 +1,9 @@
 ['all', Rails.env].each do |seed|
   seed_file = "#{Rails.root}/db/seeds/#{seed}.rb"
-  if File.exists?(seed_file)
-    puts "*** Loading #{seed} seed data"
-    require seed_file
-  end
+  next unless File.exist?(seed_file)
+
+  # rubocop:disable Rails/Output
+  puts "*** Loading #{seed} seed data"
+  # rubocop:enable Rails/Output
+  require seed_file
 end

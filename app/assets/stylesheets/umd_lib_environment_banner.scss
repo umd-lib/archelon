@@ -1,0 +1,20 @@
+// https://confluence.umd.edu/display/LIB/Create+Environment+Banners
+.environment-banner {
+    height: 25px;
+    padding: 2px 25px;
+
+    &#environment-local {
+        background: #008000;
+        color: #fff;
+    }
+
+    &#environment-development {
+        background: #fff100;
+        color: #000;
+    }
+    
+    &#environment-staging {
+        background: #0000ff;
+        color: #fff;
+    }
+}
