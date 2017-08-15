@@ -19,6 +19,8 @@ class RetrieveControllerTest < ActionController::TestCase
 
     get :retrieve, token: download_url.token
     assert_template 'disabled'
+    assert_template 'retrieve'
+    assert_response 410 # HTTP "Gone" status
   end
 
   test '"retrieve" action should display expired page if download_url is expired' do
@@ -28,6 +30,8 @@ class RetrieveControllerTest < ActionController::TestCase
 
     get :retrieve, token: download_url.token
     assert_template 'expired'
+    assert_template 'retrieve'
+    assert_response 410 # HTTP "Gone" status
   end
 
   test '"do_retrieve" action should display disabled page if download_url is not enabled' do
@@ -40,6 +44,8 @@ class RetrieveControllerTest < ActionController::TestCase
     end
 
     assert_template 'disabled'
+    assert_template 'retrieve'
+    assert_response 410 # HTTP "Gone" status
   end
 
   test '"do_retrieve" action should display expired page if download_url is expired' do
@@ -52,6 +58,8 @@ class RetrieveControllerTest < ActionController::TestCase
     end
 
     assert_template 'expired'
+    assert_template 'retrieve'
+    assert_response 410 # HTTP "Gone" status
   end
 
   test 'download_url should be disabled after access' do
@@ -77,6 +85,8 @@ class RetrieveControllerTest < ActionController::TestCase
     end
 
     assert_template 'expired'
+    assert_template 'retrieve'
+    assert_response 410 # HTTP "Gone" status
     download_url.reload
     refute download_url.enabled?
   end

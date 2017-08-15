@@ -13,7 +13,7 @@
     padding-top: 15px;
     float: left;
 }
-.navbar-brand-um a, .navbar-brand-um a:hover, .navbar-brand-um a:active {
+.navbar-brand-um a, .navbar-brand-um a:hover, .navbar-brand-um a:active, .navbar-brand-um div.nolink {
     color: #fff;
     font-size: 2em;
     text-decoration: none;
