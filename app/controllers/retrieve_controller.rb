@@ -24,12 +24,19 @@ class RetrieveController < ApplicationController
 
     fedora_url = download_url.url
 
-    # Use Kernel explicity so that we can mock it in tests
-    web_contents = Kernel.open(fedora_url, &:read)
+    http = HTTP.get(fedora_url)
+    data = http.body
 
-    send_data web_contents,
-              filename: 'foo', # TODO: figure out a real filename
-              type: download_url.mime_type
+    headers['Content-Type'] = http['mime-type']
+    headers['Content-disposition'] = http['Content-Disposition']
+    headers['Cache-Control'] ||= 'no-cache'
+    headers.delete('Content-Length')
+    headers['Content-Length'] = http['Content-Length']
+
+    self.response_body = data
+
+    # This download time is only approximate, and will likely be inaccurate
+    # for large downloads.
     download_url.download_completed_at = Time.zone.now
     download_url.save
   end

@@ -57,6 +57,8 @@ gem 'ransack', '~> 1.8.3'
 # Used by Rake tasks to generate sample data
 gem 'faker', '~> 1.8'
 
+gem 'http', '~> 2.2.2'
+
 # RFC-complient URI and URI template handling
 gem 'addressable', '~> 2.5'
 

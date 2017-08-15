@@ -87,20 +87,26 @@ class RetrieveControllerTest < ActionController::TestCase
 
   private
 
-    # Mocks the Kernel.open call, so that it won't actually make a network
+    # Mocks the HTTP.get call, so that it won't actually make a network
     # call. Returns an empty String.
     #
     # Usage:
     #
     # mock_network do
-    #   <Code that calls "open">
+    #   <Code that calls "get">
     # end
-    def mock_network
+    def mock_network # rubocop:disable Metrics/MethodLength
       mock = Minitest::Mock.new
       def mock.read
       end
+      mock_response = HTTP::Response.new(
+        version: 'HTTP/1.1',
+        uri: URI('https://example.com').to_s,
+        status: '200',
+        body: ''
+      )
 
-      Kernel.stub :open, '', mock do
+      HTTP.stub :get, mock_response, mock do
         yield
       end
     end

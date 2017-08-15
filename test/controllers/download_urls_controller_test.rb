@@ -101,8 +101,8 @@ class DownloadUrlsControllerTest < ActionController::TestCase
   test 'show_download_url should assign the retrieve url' do
     get :show_download_url, token: @download_url.token
     retrieve_base_url = ENV['RETRIEVE_BASE_URL']
-    refute retrieve_base_url.blank?
-    assert_equal retrieve_base_url + @download_url.token, assigns(:retrieve_url)
+    refute assigns(:download_url).nil?
+    assert_equal retrieve_base_url + @download_url.token, assigns(:download_url).retrieve_url
   end
 
   test 'disable should disable an enabled download_url' do
