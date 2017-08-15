@@ -17,20 +17,16 @@
 // Required by Blacklight
 //= require blacklight/blacklight
 
+// Blacklight loads some Bootstrap plugins, so we can't just add
+// bootstrap.min.js to get other Bootstrap functionality (Bootstrap
+// don't like it when the plugins are loaded twice). The following
+// Bootstrap plugins are needed by the "clipboard" functionality.
+//= require bootstrap/tooltip
+
 // For "clipboard-rails" gem
-//= require bootstrap.min.js
 //= require clipboard
 
 //= require_tree .
-
-/* Bootstrap dropdown functionality for "Manage" menu
-   Not 100% sure why this is needed, but had to add it after
-   adding "require bootstrap.min.js" for the clipboard-rails gem.
-   Need to use a specific class "menu-dropdown" as otherwise it interferes
-   with the facet "remove" buttons in Blacklight */
-   $(document).on('turbolinks:load', function() {
-    $(".menu-dropdown").dropdown();
-});
 
 /* See https://github.com/sadiqmmm/clipboard-rails */
 $(document).on('turbolinks:load', function(){
