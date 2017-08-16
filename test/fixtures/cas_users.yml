@@ -11,3 +11,4 @@ two:
 test_user:
   cas_directory_id: test_user
   name: Test User
+  admin: true

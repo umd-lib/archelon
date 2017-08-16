@@ -39,4 +39,12 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+  # FCREPO & IIIF URLs
+  # Setting to 'not set' to avoid possibly mangling an FCREPO server
+  config.fcrepo_base_url = 'not set'
+  config.iiif_base_url = 'not set'
+
+  # Mirador version
+  config.mirador_static_version = ENV['MIRADOR_STATIC_VERSION'] || '1.1.0'
 end
