@@ -58,6 +58,9 @@ class DownloadUrlsController < ApplicationController
     @download_url.creator = current_cas_user.cas_directory_id
     @download_url.enabled = true
     @download_url.expires_at = 7.days.from_now
+    # Title is not a form parameter, so we have to re-create it in order
+    # for it to saved to the model
+    @download_url.title = create_default_title(solr_document)
 
     respond_to do |format|
       if @download_url.save
@@ -66,9 +69,6 @@ class DownloadUrlsController < ApplicationController
                       notice: 'Download url was successfully created.'
         end
       else
-        # Title is not a form parameter, so we have to re-create it in order
-        # for it to display when an error occurs
-        @download_url.title = create_default_title(solr_document)
         format.html { render :generate_download_url }
       end
     end
