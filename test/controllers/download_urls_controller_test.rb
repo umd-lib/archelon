@@ -113,4 +113,21 @@ class DownloadUrlsControllerTest < ActionController::TestCase
     @download_url.reload
     refute @download_url.enabled?
   end
+
+  test 'index should allow filtering by "enabled" status' do
+    get :index, rq: { enabled_eq: 1 }
+
+    download_urls = assigns(:download_urls)
+    assert download_urls.count > 0
+    assert download_urls.all?(&:enabled?)
+  end
+
+  test 'index should allow filtering by creator' do
+    creator = @download_url.creator
+    get :index, rq: { creator_eq: creator }
+
+    download_urls = assigns(:download_urls)
+    assert download_urls.count > 0
+    assert download_urls.all? { |d| d.creator == creator }
+  end
 end
