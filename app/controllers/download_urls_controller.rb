@@ -8,6 +8,7 @@ class DownloadUrlsController < ApplicationController
     @rq = DownloadUrl.ransack(params[:rq])
     @rq.sorts = 'created_at desc' if @rq.sorts.empty?
     @download_urls = @rq.result.paginate(page: params[:page])
+    @creators = DownloadUrl.select('creator').uniq.order(:creator)
   end
 
   # GET /download_urls/1

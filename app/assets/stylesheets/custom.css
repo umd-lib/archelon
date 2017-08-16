@@ -101,7 +101,7 @@
 }
 
 /* forms */
-input, textarea, select, .uneditable-input {
+textarea {
   border: 1px solid #bbb;
   width: 100%;
   margin-bottom: 15px;
@@ -126,4 +126,15 @@ input {
 
 #retrieve_url {
   text-align: center;
+}
+
+#download_url_search {
+  /* Set to match the default Bootstrap pagination margin */
+  margin: 20px 0;
+}
+
+#download_url_search .form-group {
+  /* Set to match the default Bootstrap pagination margin */
+  padding-left: 10px;
+  padding-right: 10px;
 }

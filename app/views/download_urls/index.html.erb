@@ -1,6 +1,30 @@
 <h1>Download Urls</h1>
 
-<%= will_paginate @download_urls, renderer: BootstrapPagination::Rails %>
+
+<div class="row">
+  <div class="btn-toolbar">
+    <div class="col-md-6">
+        <div class="btn-group"><%= will_paginate @download_urls, renderer: BootstrapPagination::Rails %></div>
+    </div>
+    <div class="col-md-6">
+      <%= search_form_for @rq, class: "form-inline pull-right" do |f| %>
+        <div class="form-group">
+        <%= f.check_box("enabled_eq", id: 'rq_enabled', class: "form-control checkbox") %>
+        <%= f.label( 'enabled', 'Enabled Only' ) %>
+        </div>
+
+        <div class="form-group">
+        <%= f.label( 'creator_eq', 'Creator:' ) %>
+        <%= f.collection_select(:creator_eq, @creators, :creator, :creator, { include_blank: true }, class: "form-control") %>
+        </div>
+
+        <div class="form-group">
+          <button type="submit" class="btn btn-default">Apply Filter</button>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
 
 <table class="table">
   <thead>
@@ -37,4 +61,3 @@
 </table>
 
 <%= will_paginate @download_urls, renderer: BootstrapPagination::Rails %>
-
