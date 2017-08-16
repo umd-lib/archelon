@@ -126,7 +126,7 @@ class DownloadUrlsControllerTest < ActionController::TestCase
     # mock_find_solr_document do
     #   <Code that calls "find_solr_document">
     # end
-    def mock_find_solr_document # rubocop:disable Metrics/MethodLength
+    def mock_find_solr_document
       mock = Minitest::Mock.new
 
       mock_response = SolrDocument.new(

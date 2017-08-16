@@ -121,7 +121,7 @@ class DownloadUrlsController < ApplicationController
     def query_params
       unless params.blank?
         rq_params = params[:rq]
-        rq_params.delete_if { |key, value| key == 'enabled_eq' && value == "0" } if rq_params
+        rq_params.delete_if { |key, value| key == 'enabled_eq' && value == '0' } if rq_params
       end
     end
 end
