@@ -25,7 +25,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :download_urls, except: [:edit, :update, :destroy]
+  resources :download_urls, only: [:index, :show]
   get path: '/download_urls/generate/:document_url', controller: 'download_urls',
       action: 'generate_download_url', as: 'generate_download_url'
   post path: '/download_urls/create', controller: 'download_urls',

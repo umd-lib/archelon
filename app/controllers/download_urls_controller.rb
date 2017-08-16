@@ -16,28 +16,6 @@ class DownloadUrlsController < ApplicationController
   def show
   end
 
-  # GET /download_urls/new
-  def new
-    @download_url = DownloadUrl.new
-  end
-
-  # POST /download_urls
-  # POST /download_urls.json
-  def create # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-    @download_url = DownloadUrl.new(download_url_params)
-    @download_url.creator = current_cas_user.cas_directory_id
-
-    respond_to do |format|
-      if @download_url.save
-        format.html { redirect_to @download_url, notice: 'Download url was successfully created.' }
-        format.json { render :show, status: :created, location: @download_url }
-      else
-        format.html { render :new }
-        format.json { render json: @download_url.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
   # GET /download_urls/generate/:document_url
   def generate_download_url
     solr_document = find_solr_document(params['document_url'])
