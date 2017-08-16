@@ -92,7 +92,7 @@ module ApplicationHelper
   def strip_word_coordinates(args)
     coord_pattern = /\|\d+,\d+,\d+,\d+/
     if args[:value].is_a? Array
-      args[:value].map { |v| v.gsub(coord_pattern, '')}.join('... ').html_safe
+      args[:value].map { |v| v.gsub(coord_pattern, '') }.join('... ').html_safe
     else
       args[:value].gsub(coord_pattern, '')
     end
