@@ -27,7 +27,7 @@ class RetrieveController < ApplicationController
     http = HTTP.get(fedora_url)
     data = http.body
 
-    headers['Content-Type'] = http['mime-type']
+    headers['Content-Type'] = download_url.mime_type
     headers['Content-disposition'] = http['Content-Disposition']
     headers['Cache-Control'] ||= 'no-cache'
     headers.delete('Content-Length')

@@ -44,6 +44,15 @@ Requires:
 
 See [archelon-vagrant] for running Archelon application in a Vagrant environment.
 
+## File Retrieval configuration
+
+Archelon has the ability to create one-time use URLs, which allow a Fedora binary file to be downloaded. The random token used for the URLs, and other information, is stored in the DownloadUrl model.
+
+It is assumed that the URL that patrons use to retrieve the files will not reference the Archelon server directly. Instead it is anticipated that a new IP and Apache virtual host, which proxies back to Archelon, will be used.
+
+The base URL of the virtual host (i.e., the entire URL except for the random token) should be set up in the "RETRIEVE_BASE_URL" in the ".env" file. See the "env_example" file for an example. The base URL should be proxied to the \<ARCHELON_SERVER_URL>/retrieve path.
+ 
+
 ## File downloads and concurrent operation
 
 Archelon has the ability to create one-time use URLs for downloading files from Fedora. Since downloading files may take considerable time, it is necessary that the production Archelon server support concurrent operations.
