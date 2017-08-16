@@ -5,7 +5,7 @@ class DownloadUrlsController < ApplicationController
   # GET /download_urls
   # GET /download_urls.json
   def index
-    @rq = DownloadUrl.ransack(params[:rq])
+    @rq = DownloadUrl.ransack(query_params)
     @rq.sorts = 'created_at desc' if @rq.sorts.empty?
     @download_urls = @rq.result.paginate(page: params[:page])
     @creators = DownloadUrl.select('creator').uniq.order(:creator)
@@ -115,5 +115,13 @@ class DownloadUrlsController < ApplicationController
         :url, :title, :notes, :mime_type, :enabled, :request_ip,
         :request_user_agent, :accessed_at, :download_completed_at
       )
+    end
+
+    # Removes "enabled_eq" if it is 0.
+    def query_params
+      unless params.blank?
+        rq_params = params[:rq]
+        rq_params.delete_if { |key, value| key == 'enabled_eq' && value == "0" } if rq_params
+      end
     end
 end
