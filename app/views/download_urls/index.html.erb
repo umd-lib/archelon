@@ -15,7 +15,7 @@
 
         <div class="form-group">
         <%= f.label( 'creator_eq', 'Creator:' ) %>
-        <%= f.collection_select(:creator_eq, @creators, :creator, :creator, { include_blank: true }, class: "form-control") %>
+        <%= f.collection_select(:creator_eq, @creators, :creator, :creator, { include_blank: '<All>' }, class: "form-control") %>
         </div>
 
         <div class="form-group">
