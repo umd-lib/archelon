@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite time='0.324096' skipped='0' failures='0' errors='0' name="CasAuthorizationTest" assertions='2' tests='2'>
-  <testcase time='0.261830' name="test_existing_cas_user_can_access_application" assertions='1'>
-  </testcase>
-  <testcase time='0.062266' name="test_non-existent_cas_user_cannot_access_application" assertions='1'>
-  </testcase>
-</testsuite>

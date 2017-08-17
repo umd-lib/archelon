@@ -25,6 +25,21 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :download_urls, only: [:index, :show]
+  get path: '/download_urls/generate/:document_url', controller: 'download_urls',
+      action: 'generate_download_url', as: 'generate_download_url'
+  post path: '/download_urls/create', controller: 'download_urls',
+       action: 'create_download_url', as: 'create_download_url'
+  get path: '/download_urls/show/:token', controller: 'download_urls',
+      action: 'show_download_url', as: 'show_download_url'
+  put path: '/download_urls/disable/:token', controller: 'download_urls',
+      action: 'disable', as: 'disable_download_url'
+
+  get path: '/retrieve/:token', controller: 'retrieve', action: 'retrieve',
+      as: 'retrieve'
+  get path: '/retrieve/do/:token', controller: 'retrieve', action: 'do_retrieve',
+      as: 'do_retrieve'
+
   get 'logout' => 'cas_users#logout'
   get 'about' => 'static_pages#about'
 

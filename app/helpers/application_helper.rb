@@ -89,6 +89,11 @@ module ApplicationHelper
     safe_join(value.map { |v| link_to v, solr_document_path(v) }, ', ')
   end
 
+  def generate_download_url_link(document)
+    url = document[:id]
+    link_to 'Generate Download URL', generate_download_url_path(document_url: url)
+  end
+
   def strip_word_coordinates(args)
     coord_pattern = /\|\d+,\d+,\d+,\d+/
     if args[:value].is_a? Array

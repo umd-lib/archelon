@@ -5,6 +5,7 @@
       <li><%= view_in_fedora_link(@document) %></li>
       <% if @document[:rdf_type].include? 'fedora:Binary' %>
         <li><%= link_to 'Download', @document.id, target: '_blank' %></li>
+        <li><%= generate_download_url_link(@document) %></li>
       <% end %>
     </ul>
   </div>

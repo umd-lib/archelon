@@ -21,3 +21,6 @@
 
 en:
   hello: "Hello world"
+  activerecord:
+    models:
+      download_url: Download URL

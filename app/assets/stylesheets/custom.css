@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 .navbar-default {
-    border-bottom: 1px solid #9a0c0c; 
+    border-bottom: 1px solid #9a0c0c;
 }
 .logo img {
     height: 50px;
@@ -13,7 +13,7 @@
     padding-top: 15px;
     float: left;
 }
-.navbar-brand-um a, .navbar-brand-um a:hover, .navbar-brand-um a:active {
+.navbar-brand-um a, .navbar-brand-um a:hover, .navbar-brand-um a:active, .navbar-brand-um div.nolink {
     color: #fff;
     font-size: 2em;
     text-decoration: none;
@@ -68,4 +68,73 @@
 .document-metadata > dd > em {
     font-weight: bold;
     font-style: normal;
+}
+
+/* Make dropdown button in navbar consistent with other buttons */
+.navbar-nav .dropdown-toggle {
+    color: #ffffff;
+    background-color: transparent !important;
+    background-image: none !important;
+    border: 0px !important;
+    padding-top: 25.5px;
+    padding-bottom: 25.5px;
+    color: #ffffff;
+}
+
+.navbar-nav .dropdown-toggle:hover {
+    color: #ffffff;
+    background-color: #720909 !important;
+    border-radius: 0px;
+}
+
+.navbar-nav .dropdown-toggle:focus {
+    color: #ffffff;
+    background-color: #720909 !important;
+    border-radius: 0px;
+}
+
+#download_url_title_input {
+  width: 100%;
+}
+#download_url_notes_input {
+  width: 100%;
+}
+
+/* forms */
+textarea {
+  border: 1px solid #bbb;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.btn {
+  width: unset
+}
+
+input {
+  height: auto !important;
+}
+
+#error_explanation {
+  color: red;
+}
+
+.field_with_errors .form-control {
+  /* color is state-danger-text */
+  border: 2px solid #a94442;
+}
+
+#retrieve_url {
+  text-align: center;
+}
+
+#download_url_search {
+  /* Set to match the default Bootstrap pagination margin */
+  margin: 20px 0;
+}
+
+#download_url_search .form-group {
+  /* Set to match the default Bootstrap pagination margin */
+  padding-left: 10px;
+  padding-right: 10px;
 }

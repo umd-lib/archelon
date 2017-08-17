@@ -17,6 +17,6 @@ class CasAuthorizationTest < ActionDispatch::IntegrationTest
 
   def teardown
     # Restore normal "test_user"
-    CASClient::Frameworks::Rails::Filter.fake('test_user')
+    CASClient::Frameworks::Rails::Filter.fake(DEFAULT_TEST_USER)
   end
 end
