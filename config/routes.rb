@@ -27,7 +27,7 @@ Rails.application.routes.draw do
 
   resources :download_urls, only: [:index, :show]
   get path: '/download_urls/generate/:document_url', controller: 'download_urls',
-      action: 'generate_download_url', as: 'generate_download_url'
+      action: 'generate_download_url', as: 'generate_download_url', constraints: { document_url: /.*/ }
   post path: '/download_urls/create', controller: 'download_urls',
        action: 'create_download_url', as: 'create_download_url'
   get path: '/download_urls/show/:token', controller: 'download_urls',
