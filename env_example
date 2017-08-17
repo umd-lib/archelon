@@ -7,7 +7,7 @@
 
 # --- config/blacklight.yml
 # URL of the solr running in the fcrepo-vagrant
-SOLR_URL=http://192.168.40.11:8983/solr/fedora4
+SOLR_URL=https://192.168.40.11:8984/solr/fedora4
 
 # --- config/environments/*.rb
 # URL of the fcrepo running in the fcrepo-vagrant
