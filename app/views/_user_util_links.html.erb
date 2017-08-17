@@ -2,24 +2,24 @@
   <ul class="nav navbar-nav">
     <li><%= link_to 'Home', root_path %></li>
     <li><%= link_to 'About', about_path %></li>
-    <% if current_cas_user.admin? %>
-      <li>
-        <div class="btn-group">
-          <button type="button" class="btn dropdown-toggle menu-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Manage <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu">
+    <li>
+      <div class="btn-group">
+        <button type="button" class="btn dropdown-toggle menu-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Manage <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <% if current_cas_user.admin? %>
             <li><%= link_to 'Users', controller: 'cas_users', action: 'index' %></li>
-            <li><%= link_to 'Download Urls', controller: 'download_urls', action: 'index' %></li>
-          </ul>
-        </div>
-      </li>
-    <% end %>
-      <li>
-        <%= link_to current_cas_user.name, '/cas_users/' + current_cas_user.id.to_s %>
-      </li>
-      <li>
-        <%= link_to t('blacklight.header_links.logout'), logout_path %>
-      </li>
-    </ul>
+          <% end %>
+          <li><%= link_to 'Download Urls', controller: 'download_urls', action: 'index' %></li>
+        </ul>
+      </div>
+    </li>
+    <li>
+      <%= link_to current_cas_user.name, '/cas_users/' + current_cas_user.id.to_s %>
+    </li>
+    <li>
+      <%= link_to t('blacklight.header_links.logout'), logout_path %>
+    </li>
+  </ul>
 </div>
