@@ -12,7 +12,7 @@ class DownloadUrlsControllerTest < ActionController::TestCase
   end
 
   test 'should add creator on create' do
-    mock_find_solr_document do
+    stub_find_solr_document do
       assert_difference('DownloadUrl.count') do
         post :create_download_url, download_url: {
           accessed_at: @download_url.accessed_at,
@@ -32,7 +32,7 @@ class DownloadUrlsControllerTest < ActionController::TestCase
   test 'should not be able to set token or creator on create' do
     token_to_try = '12345'
     creator_to_try = 'one'
-    mock_find_solr_document do
+    stub_find_solr_document do
       assert_difference('DownloadUrl.count') do
         post :create_download_url, download_url: {
           accessed_at: @download_url.accessed_at,
@@ -51,7 +51,7 @@ class DownloadUrlsControllerTest < ActionController::TestCase
   end
 
   test 'should require a note on create' do
-    mock_find_solr_document do
+    stub_find_solr_document do
       assert_no_difference('DownloadUrl.count') do
         post :create_download_url, download_url: {
           accessed_at: @download_url.accessed_at,
@@ -118,24 +118,22 @@ class DownloadUrlsControllerTest < ActionController::TestCase
 
   private
 
-    # Mocks the DownloadUrlsController.find_solr_document call, so that it
+    # Stubs the DownloadUrlsController.find_solr_document call, so that it
     # won't actually make a network call. Returns a sample SolrDocument
     #
     # Usage:
     #
-    # mock_find_solr_document do
+    # stub_find_solr_document do
     #   <Code that calls "find_solr_document">
     # end
-    def mock_find_solr_document
-      mock = Minitest::Mock.new
-
-      mock_response = SolrDocument.new(
+    def stub_find_solr_document
+      stub_response = SolrDocument.new(
         id: 'http://www.example.com',
         mime_type: 'image/jp2',
         display_title: 'Example'
       )
 
-      @controller.stub :find_solr_document, mock_response, mock do
+      @controller.stub :find_solr_document, stub_response do
         yield
       end
     end

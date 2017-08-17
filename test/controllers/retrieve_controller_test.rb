@@ -39,7 +39,7 @@ class RetrieveControllerTest < ActionController::TestCase
     download_url.enabled = false
     download_url.save!
 
-    mock_network do
+    stub_network do
       get :do_retrieve, token: download_url.token
     end
 
@@ -53,7 +53,7 @@ class RetrieveControllerTest < ActionController::TestCase
     download_url.expires_at = 1.day.ago
     download_url.save!
 
-    mock_network do
+    stub_network do
       get :do_retrieve, token: download_url.token
     end
 
@@ -66,7 +66,7 @@ class RetrieveControllerTest < ActionController::TestCase
     download_url = download_urls(:one)
     assert download_url.enabled?
 
-    mock_network do
+    stub_network do
       get :do_retrieve, token: download_url.token
     end
 
@@ -80,7 +80,7 @@ class RetrieveControllerTest < ActionController::TestCase
     download_url.enabled = true
     download_url.save!
 
-    mock_network do
+    stub_network do
       get :do_retrieve, token: download_url.token
     end
 
@@ -97,26 +97,23 @@ class RetrieveControllerTest < ActionController::TestCase
 
   private
 
-    # Mocks the HTTP.get call, so that it won't actually make a network
-    # call. Returns an empty String.
+    # Stubs the HTTP.get call, so that it won't actually make a network
+    # call. Returns an HTTP:Response with a body of an empty String.
     #
     # Usage:
     #
-    # mock_network do
+    # stub_network do
     #   <Code that calls "get">
     # end
-    def mock_network # rubocop:disable Metrics/MethodLength
-      mock = Minitest::Mock.new
-      def mock.read
-      end
-      mock_response = HTTP::Response.new(
+    def stub_network # rubocop:disable Metrics/MethodLength
+      stub_response = HTTP::Response.new(
         version: 'HTTP/1.1',
         uri: URI('https://example.com').to_s,
         status: '200',
         body: ''
       )
 
-      HTTP.stub :get, mock_response, mock do
+      HTTP.stub :get, stub_response do
         yield
       end
     end
