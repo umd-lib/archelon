@@ -44,7 +44,7 @@ class DownloadUrlsController < ApplicationController
       if @download_url.save
         format.html do
           redirect_to show_download_url_path(token: @download_url.token),
-                      notice: 'Download url was successfully created.'
+                      notice: 'Download URL was successfully created.'
         end
       else
         format.html { render :generate_download_url }
@@ -66,7 +66,7 @@ class DownloadUrlsController < ApplicationController
     if @download_url && @download_url.enabled?
       @download_url.enabled = false
       @download_url.save!
-      notice_msg = 'Download Url was disabled'
+      notice_msg = 'Download URL was disabled'
     end
 
     # Replace with redirect_back_to in Rails 5

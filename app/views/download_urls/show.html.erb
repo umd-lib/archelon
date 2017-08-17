@@ -1,5 +1,3 @@
-<p id="notice"><%= notice %></p>
-
 <%= render partial: "retrieve_url", locals: {object: @download_url} %>
 
 <p>
@@ -8,7 +6,7 @@
 </p>
 
 <p>
-  <strong>Fedora Url:</strong>
+  <strong>Fedora URL:</strong>
   <%= @download_url.url %>
 </p>
 
@@ -62,4 +60,4 @@
               method: :put, class: 'btn btn-danger', data: { confirm: 'Are you sure?' } %>
 <% end %>
 
-<%= link_to 'List Download Urls', download_urls_path, class: 'btn btn-default' %>
+<%= link_to 'List Download URLs', download_urls_path, class: 'btn btn-default' %>

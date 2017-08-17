@@ -2,7 +2,7 @@ require 'test_helper'
 
 class RetrieveControllerTest < ActionController::TestCase
   def setup
-    # RetreiveController actions should not require authentication
+    # RetrieveController actions should not require authentication
     CASClient::Frameworks::Rails::Filter.fake(nil)
   end
 
@@ -105,7 +105,7 @@ class RetrieveControllerTest < ActionController::TestCase
     # stub_network do
     #   <Code that calls "get">
     # end
-    def stub_network # rubocop:disable Metrics/MethodLength
+    def stub_network
       stub_response = HTTP::Response.new(
         version: 'HTTP/1.1',
         uri: URI('https://example.com').to_s,
