@@ -94,12 +94,15 @@ module ApplicationHelper
     link_to 'Generate Download URL', generate_download_url_path(document_url: url)
   end
 
-  def strip_word_coordinates(args)
-    coord_pattern = /\|\d+,\d+,\d+,\d+/
+  def format_extracted_text(args)
     if args[:value].is_a? Array
-      args[:value].map { |v| v.gsub(coord_pattern, '') }.join('... ').html_safe
+      args[:value].map { |v| format_extracted_text(value: v) }.join('... ').html_safe
     else
-      args[:value].gsub(coord_pattern, '')
+      # to strip out the embedded word corrdinates
+      coord_pattern = /\|\d+,\d+,\d+,\d+/
+      # to remove {SOFT HYPHEN}{NEWLINE}
+      hyphen_pattern = /\u{AD}\n/
+      args[:value].gsub(coord_pattern, '').gsub(hyphen_pattern, '')
     end
   end
 

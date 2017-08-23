@@ -105,7 +105,7 @@ class CatalogController < ApplicationController
     config.add_index_field 'object_type', label: 'Object Type'
     config.add_index_field 'component', label: 'Component'
     config.add_index_field 'author', label: 'Author'
-    config.add_index_field 'extracted_text', label: 'OCR', highlight: true, helper_method: :strip_word_coordinates
+    config.add_index_field 'extracted_text', label: 'OCR', highlight: true, helper_method: :format_extracted_text, solr_params: { 'hl.fragsize' => 500 }
     config.add_index_field 'created_by', label: 'Created By'
     config.add_index_field 'created', label: 'Created'
     config.add_index_field 'last_modified', label: 'Last Modified'
