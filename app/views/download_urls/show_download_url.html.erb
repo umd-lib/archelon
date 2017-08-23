@@ -4,7 +4,7 @@
 
 <%= render partial: "retrieve_url", locals: {object: @download_url} %>
 
-<p>This URL will only work for once, and will automatically expire on <%= @download_url.expires_at.strftime("%m/%d/%Y") %>.</p>
+<p>This URL will only work once, and will automatically expire on <%= @download_url.expires_at.strftime("%m/%d/%Y") %>.</p>
 
 <%= link_to 'Back', download_urls_path, class: "btn btn-default" %>
 
