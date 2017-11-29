@@ -69,14 +69,3 @@
     font-weight: bold;
     font-style: normal;
 }
-
-/* footer */
-footer {
-    background-color: #eee;
-    border-top: 1px solid #9A0C0C;
-    color: #555;
-    padding: 10px 0;
-}
-footer a:link, footer a:visited {
-    color: #555;
-}
