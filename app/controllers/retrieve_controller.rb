@@ -16,16 +16,17 @@ class RetrieveController < ApplicationController
     download_url = DownloadUrl.find_by(token: @token)
     return unless verify_download_url(download_url)
 
+    fedora_url = download_url.url
+    ctx = OpenSSL::SSL::SSLContext.new
+    ctx.verify_mode = Rails.configuration.fcrepo_ssl_verify_mode
+    http = HTTP.get(fedora_url, ssl_context: ctx)
+    data = http.body
+
     download_url.enabled = false
     download_url.accessed_at = Time.zone.now
     download_url.request_ip = request.ip
     download_url.request_user_agent = request.user_agent
     download_url.save
-
-    fedora_url = download_url.url
-
-    http = HTTP.get(fedora_url)
-    data = http.body
 
     headers['Content-Type'] = download_url.mime_type
     headers['Content-disposition'] = http['Content-Disposition']
