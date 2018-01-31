@@ -19,6 +19,11 @@ class RetrieveController < ApplicationController
     fedora_url = download_url.url
     ctx = OpenSSL::SSL::SSLContext.new
     ctx.verify_mode = Rails.configuration.fcrepo_ssl_verify_mode
+
+    if ctx.verify_mode == OpenSSL::SSL::VERIFY_PEER
+      ctx.ca_file = Rails.configuration.ssl_ca_file
+    end
+
     http = HTTP.get(fedora_url, ssl_context: ctx)
     data = http.body
 

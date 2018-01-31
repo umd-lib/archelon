@@ -25,5 +25,6 @@ module FcrepoSearch
 
     # Default to doing SSL certificate verification
     config.fcrepo_ssl_verify_mode = OpenSSL::SSL::VERIFY_PEER
+    config.ssl_ca_file = ENV["SSL_CERT_FILE"] || '/etc/ssl/certs/ca-bundle.crt'
   end
 end
