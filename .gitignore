@@ -20,3 +20,15 @@
 
 # Ignore environment specific files
 .env
+
+# Ignore minitest-ci reports
+test/reports
+
+# Ignore simplecov output
+coverage
+
+# Ignore any SSL pem files in root
+*.pem
+
+# Ignore byebug history
+.byebug_history

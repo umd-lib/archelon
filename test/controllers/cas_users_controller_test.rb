@@ -46,4 +46,36 @@ class CasUsersControllerTest < ActionController::TestCase
 
     assert_redirected_to cas_users_path
   end
+
+  test 'non-admin users should not have access to index, new, create, edit, update,destroy' do
+    run_as_user(cas_users(:one)) do
+      get :index
+      assert_response :forbidden
+
+      get :new
+      assert_response :forbidden
+
+      post :create, cas_user: { cas_directory_id: 'newuser', name: 'New User' }
+      assert_response :forbidden
+
+      get :edit, id: @cas_user
+      assert_response :forbidden
+
+      patch :update, id: @cas_user, cas_user: { cas_directory_id: @cas_user.cas_directory_id, name: @cas_user.name }
+      assert_response :forbidden
+
+      delete :destroy, id: @cas_user
+      assert_response :forbidden
+    end
+  end
+
+  test 'non-admin users should not have access to show, except for own record' do
+    run_as_user(cas_users(:one)) do
+      get :show, id: @cas_user
+      assert_response :success
+
+      get :show, id: cas_users(:two)
+      assert_response :forbidden
+    end
+  end
 end

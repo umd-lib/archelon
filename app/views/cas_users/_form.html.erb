@@ -1,28 +1,19 @@
 <%= form_for(@cas_user) do |f| %>
-  <% if @cas_user.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@cas_user.errors.count, "error") %> prohibited this cas_user from being saved:</h2>
+  <%= render partial: "shared/error_messages", locals: {object: @cas_user} %>
 
-      <ul>
-      <% @cas_user.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="field">
     <%= f.label :cas_directory_id, 'Directory ID' %><br>
-    <%= f.text_field :cas_directory_id %>
-  </div>
-  <div class="field">
+    <%= f.text_field :cas_directory_id, class: 'form-control' %>
+
     <%= f.label :name %><br>
-    <%= f.text_field :name %>
-  </div>
-  <div class="field">
-    <%= f.label :admin %><br>
-    <%= f.check_box :admin %>
-  </div>
+    <%= f.text_field :name, class: 'form-control' %>
+
+    <div class="form-check">
+    <%= f.label :admin, class: "form-check-label" do %>
+      Admin
+      <%= f.check_box :admin, class: 'form-check-input' %>
+    <% end %>
+    </div>
+
   <div class="actions">
     <%= f.submit 'Save', class: 'btn btn-success' %>
     <%= link_to 'Cancel', (@cas_user.new_record? ? cas_users_path : cas_user_path(@cas_user)), class: 'btn btn-danger' %>

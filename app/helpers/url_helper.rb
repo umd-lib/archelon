@@ -6,7 +6,7 @@ module UrlHelper
   # link_to_document(doc, 'VIEW', :counter => 3)
   # Overrides the Blacklight default behavior in order to not include the '/track' url suffix in the results view.
   # The /track url do not work with constraints: { id: /.*/ } configured in the routes.rb
-  def link_to_document(doc, field_or_opts = nil, opts = { counter: nil })
+  def link_to_document(doc, field_or_opts = nil, opts = { counter: nil }) # rubocop:disable Metrics/MethodLength
     if field_or_opts.is_a? Hash
       opts = field_or_opts
     else

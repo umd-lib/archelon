@@ -7,7 +7,7 @@
 
 # --- config/blacklight.yml
 # URL of the solr running in the fcrepo-vagrant
-SOLR_URL=http://192.168.40.11:8983/solr/fedora4
+SOLR_URL=https://192.168.40.11:8984/solr/fedora4
 
 # --- config/environments/*.rb
 # URL of the fcrepo running in the fcrepo-vagrant
@@ -20,3 +20,8 @@ IIIF_BASE_URL = 'https://iiiflocal/'
 # --- config/environments/*.rb
 # version of the Mirador Static Viewer
 MIRADOR_STATIC_VERSION = '1.1.0'
+
+# Base URL for retrieving files via download urls.
+# This should include the entire URL except for the token
+RETRIEVE_BASE_URL=http://127.0.0.1:3000/retrieve/
+

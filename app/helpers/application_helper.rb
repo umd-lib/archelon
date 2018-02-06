@@ -11,8 +11,8 @@ module ApplicationHelper
 
   def mirador_displayable?(document)
     rdf_types = document._source[:rdf_type]
-    return true if rdf_types.include? PCDM_OBJECT
-    return true if rdf_types.include?(PCDM_FILE) && (ALLOWED_MIME_TYPE == document._source[:mime_type])
+    component = document._source[:component]
+    return true if rdf_types.include?(PCDM_OBJECT) && (component != 'Article')
     false
   end
 
@@ -89,12 +89,20 @@ module ApplicationHelper
     safe_join(value.map { |v| link_to v, solr_document_path(v) }, ', ')
   end
 
-  def strip_word_coordinates(args)
-    coord_pattern = /\|\d+,\d+,\d+,\d+/
+  def generate_download_url_link(document)
+    url = document[:id]
+    link_to 'Generate Download URL', generate_download_url_path(document_url: url)
+  end
+
+  def format_extracted_text(args)
     if args[:value].is_a? Array
-      args[:value].map { |v| v.gsub(coord_pattern, '')}.join('... ').html_safe
+      args[:value].map { |v| format_extracted_text(value: v) }.join('... ').html_safe
     else
-      args[:value].gsub(coord_pattern, '')
+      # to strip out the embedded word corrdinates
+      coord_pattern = /\|\d+,\d+,\d+,\d+/
+      # to remove {SOFT HYPHEN}{NEWLINE}
+      hyphen_pattern = /\u{AD}\n/
+      args[:value].gsub(coord_pattern, '').gsub(hyphen_pattern, '')
     end
   end
 
