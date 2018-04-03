@@ -81,7 +81,7 @@ group :test do
   gem 'minitest-ci', '~> 3.0.3'
 
   # Code analysis tools
-  gem 'rubocop', '~> 0.39.0', require: false
+  gem 'rubocop', '~> 0.54.0', require: false
   gem 'rubocop-checkstyle_formatter', '~> 0.2.0', require: false
 
   gem 'simplecov', require: false
