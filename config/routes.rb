@@ -1,4 +1,4 @@
-Rails.application.routes.draw do
+Rails.application.routes.draw do # rubocop:disable Metrics/BlockLength
   get 'static_pages/about'
 
   resources :cas_users
@@ -25,7 +25,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :download_urls, only: [:index, :show]
+  resources :download_urls, only: %i[index show]
   get path: '/download_urls/generate/:document_url', controller: 'download_urls',
       action: 'generate_download_url', as: 'generate_download_url', constraints: { document_url: /.*/ }
   post path: '/download_urls/create', controller: 'download_urls',

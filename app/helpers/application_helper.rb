@@ -96,7 +96,7 @@ module ApplicationHelper
 
   def format_extracted_text(args)
     if args[:value].is_a? Array
-      args[:value].map { |v| format_extracted_text(value: v) }.join('... ').html_safe
+      args[:value].map { |v| format_extracted_text(value: v) }.join('... ').html_safe # rubocop:disable Rails/OutputSafety, Metrics/LineLength - I assume the .html_safe is intended
     else
       # to strip out the embedded word corrdinates
       coord_pattern = /\|\d+,\d+,\d+,\d+/

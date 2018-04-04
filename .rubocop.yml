@@ -5,11 +5,11 @@ Rails:
 # Exclude auto-generated files
 AllCops:
   Exclude:
-    - 'bin/setup'
-    - 'bin/spring'
+    - 'bin/*'
     - 'config/application.rb'
     - 'db/schema.rb'
     - 'db/migrate/*'
+    - 'db/seeds.rb'
 
 # Increase max allowed line length
 Metrics/LineLength:
@@ -32,5 +32,15 @@ Style/ClassAndModuleChildren:
   Exclude:
     - 'test/**/*'
 
-Style/IndentationConsistency:
+Layout/IndentationConsistency:
   EnforcedStyle: rails
+
+Style/EmptyMethod:
+  EnforcedStyle: expanded
+
+Rails/UnknownEnv:
+  Environments:
+    - production
+    - development
+    - test
+    - vagrant

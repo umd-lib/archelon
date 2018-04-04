@@ -1,9 +1,10 @@
 # frozen_string_literal: true
+
 class CatalogController < ApplicationController
   include Blacklight::Catalog
-  before_action :make_current_query_accessible, only: [:show, :index]
+  before_action :make_current_query_accessible, only: %i[show index] # rubocop:disable Rails/LexicallyScopedActionFilter
 
-  configure_blacklight do |config|
+  configure_blacklight do |config| # rubocop:disable Metrics/BlockLength
     ## Class for sending and receiving requests from a search index
     # config.repository_class = Blacklight::Solr::Repository
     #

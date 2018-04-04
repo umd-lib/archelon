@@ -1,5 +1,5 @@
 # Load the Rails application.
-require File.expand_path('../application', __FILE__)
+require File.expand_path('application', __dir__)
 
 # enable detailed CAS logging
 cas_logger = CASClient::Logger.new(::Rails.root.to_s + '/log/cas.log')
