@@ -113,7 +113,7 @@ class DownloadUrlsControllerTest < ActionController::TestCase
 
     download_urls = assigns(:download_urls)
     assert download_urls.count > 0
-    assert download_urls.all? { |d| d.creator == creator }
+    assert(download_urls.all?) { |d| d.creator == creator }
   end
 
   private

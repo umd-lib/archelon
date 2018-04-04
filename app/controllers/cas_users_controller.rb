@@ -1,6 +1,6 @@
 class CasUsersController < ApplicationController
-  before_action :set_cas_user, only: [:show, :edit, :update, :destroy]
-  before_action :verify_admin, only: [:index, :new, :create, :edit, :update, :destroy]
+  before_action :set_cas_user, only: %i[show edit update destroy]
+  before_action :verify_admin, only: %i[index new create edit update destroy]
   before_action :verify_self_or_admin, only: [:show]
 
   # GET /cas_users
@@ -81,15 +81,13 @@ class CasUsersController < ApplicationController
 
     # Verify current user is an admin before all actions except :show
     def verify_admin
-      unless current_cas_user.admin?
-        render(file: File.join(Rails.root, 'public/403.html'), status: :forbidden, layout: false)
-      end
+      return if current_cas_user.admin?
+      render(file: Rails.root.join('public', '403.html'), status: :forbidden, layout: false)
     end
 
     # Verify current user is an admin before all actions except :show
     def verify_self_or_admin
-      if !current_cas_user.admin? && (current_cas_user.id != @cas_user.id)
-        render(file: File.join(Rails.root, 'public/403.html'), status: :forbidden, layout: false)
-      end
+      return unless !current_cas_user.admin? && (current_cas_user.id != @cas_user.id)
+      render(file: Rails.root.join('public', '403.html'), status: :forbidden, layout: false)
     end
 end
