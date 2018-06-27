@@ -21,7 +21,7 @@
 
 en:
   hello: "Hello world"
-  solr_is_down: "Unable to connect to the solr index." 
+  solr_is_down: "Unable to connect to Solr index. Search functionality is unavailable at this time."
   activerecord:
     models:
       download_url: Download URL

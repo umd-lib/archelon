@@ -4,10 +4,8 @@ class CatalogController < ApplicationController
   include Blacklight::Catalog
   before_action :make_current_query_accessible, only: %i[show index] # rubocop:disable Rails/LexicallyScopedActionFilter
 
-  rescue_from Blacklight::Exceptions::ECONNREFUSED do |_e|
-    flash[:error] = I18n.t(:solr_is_down)
-    redirect_to(about_url)
-  end
+  rescue_from Blacklight::Exceptions::ECONNREFUSED, with: :solr_connection_error
+  rescue_from Blacklight::Exceptions::InvalidRequest, with: :solr_connection_error
 
   configure_blacklight do |config| # rubocop:disable Metrics/BlockLength
     ## Class for sending and receiving requests from a search index
@@ -199,6 +197,11 @@ class CatalogController < ApplicationController
   end
 
   private
+
+    def solr_connection_error
+      flash[:error] = I18n.t(:solr_is_down)
+      redirect_to(about_url)
+    end
 
     def make_current_query_accessible
       @current_query = params[:q]
