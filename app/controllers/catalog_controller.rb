@@ -125,7 +125,6 @@ class CatalogController < ApplicationController
     config.add_show_field 'display_title', label: 'Title'
     config.add_show_field 'author', label: 'Author'
     config.add_show_field 'type', label: 'Type'
-    config.add_show_field 'rdf_type', label: 'RDF Type', helper_method: :rdf_type_list
     config.add_show_field 'date', label: 'Date'
     config.add_show_field 'pcdm_collection', label: 'Collection', helper_method: :collection_from_subquery
     config.add_show_field 'pcdm_member_of', label: 'Member Of', helper_method: :parent_from_subquery
@@ -153,6 +152,7 @@ class CatalogController < ApplicationController
     config.add_show_field 'created_by', label: 'Created By'
     config.add_show_field 'created', label: 'Created'
     config.add_show_field 'last_modified', label: 'Last Modified'
+    config.add_show_field 'rdf_type', label: 'RDF Type', helper_method: :rdf_type_list
 
     # "fielded" search configuration. Used by pulldown among other places.
     # For supported keys in hash, see rdoc for Blacklight::SearchFields
