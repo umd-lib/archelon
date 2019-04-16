@@ -78,7 +78,6 @@ class CatalogController < ApplicationController
     config.add_facet_field 'collection_title_facet', label: 'Collection', limit: 10, collapse: false
     config.add_facet_field 'author_not_tokenized', label: 'Author', limit: 10
     config.add_facet_field 'type', label: 'Type', limit: 10
-    config.add_facet_field 'object_type_not_tokenized', label: 'Object Type', limit: 10
     config.add_facet_field 'component_not_tokenized', label: 'Component', limit: 10
     config.add_facet_field 'rdf_type', label: 'RDF Type', limit: 10
     # config.add_facet_field 'pub_date', label: 'Publication Year', single: true
@@ -107,7 +106,6 @@ class CatalogController < ApplicationController
     lambda { |_context, _field, document|
       document[:rdf_type].include?('oa:Annotation')
     }
-    config.add_index_field 'object_type', label: 'Object Type'
     config.add_index_field 'component', label: 'Component'
     config.add_index_field 'author', label: 'Author'
     # rubocop:disable Metrics/LineLength
@@ -135,7 +133,6 @@ class CatalogController < ApplicationController
     # rubocop:enable Metrics/LineLength
     config.add_show_field 'pcdm_file_of', label: 'File Of', helper_method: :file_parent_from_subquery
     config.add_show_field 'pcdm_files', label: 'Files', helper_method: :files_from_subquery
-    config.add_show_field 'object_type', label: 'Object Type'
     config.add_show_field 'component', label: 'Component'
     config.add_show_field 'issue_volume', label: 'Volume'
     config.add_show_field 'issue_issue', label: 'Issue Number'
