@@ -75,7 +75,7 @@ class CatalogController < ApplicationController
     # :index_range can be an array or range of prefixes that will be used to create the navigation
     # (note: It is case sensitive when searching values)
 
-    config.add_facet_field 'collection_title_facet', label: 'Collection', limit: 10
+    config.add_facet_field 'collection_title_facet', label: 'Collection', limit: 10, collapse: false
     config.add_facet_field 'author_not_tokenized', label: 'Author', limit: 10
     config.add_facet_field 'type', label: 'Type', limit: 10
     config.add_facet_field 'object_type_not_tokenized', label: 'Object Type', limit: 10
