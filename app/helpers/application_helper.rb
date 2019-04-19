@@ -108,7 +108,7 @@ module ApplicationHelper
 
   # remove the pairtree from the path
   def compress_path(path)
-    path.gsub('/', ':').gsub(/:(..):(..):(..):(..):\1\2\3\4/, '::\1\2\3\4')
+    path.tr('/', ':').gsub(/:(..):(..):(..):(..):\1\2\3\4/, '::\1\2\3\4')
   end
 
   def mirador_viewer_url(document, query)
