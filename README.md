@@ -14,36 +14,71 @@ Requires:
 1. Checkout the code and install the dependencies:
 
   ```
-  > git clone git@github.com:umd-lib/archelon.git
-  > cd archelon
-  > bundle install
+  git clone git@github.com:umd-lib/archelon.git
+  cd archelon
+  bundle install
   ```
 
 2. Set up the database:
 
   ```
-  > rake db:migrate
+  rake db:migrate
   ```
 
   **Note:** Sample "Download URL" data can be added by running `rake db:reset_with_sample_data`
 
-3. Create a `.env` file from the `env_example` file and set the solr url to point to a working solr url.
+3. Create a `.env` file from the `env_example` file and fill in appropriate values for the environment variables.
 
 4. Add your directory ID to whitelist
 
   ```
-  > rake 'db:add_admin_cas_user[your_directory_id, Your Name]'
+  rake 'db:add_admin_cas_user[your_directory_id, Your Name]'
   ```
 
 5. Run the web application:
 
   ```
-  > rails server
+  rails server
   ```
 
 If you are going to run Archelon against a Solr or Fedora server that uses self-signed SSL certificates for HTTPS, see the section [SSL setup](#ssl-setup).
 
 See [archelon-vagrant] for running Archelon application in a Vagrant environment.
+
+## Docker
+
+Archelon comes with a [Dockerfile](Dockerfile) that can be used to build a docker image:
+
+```
+docker build -t archelon .
+```
+
+To run an instance of this image against the dev fcrepo, Solr, and IIIF servers, and populate the database with seed data:
+
+```
+id=$(docker run -d --rm -p 3000:3000 \
+    -e SOLR_URL=https://solrdev.lib.umd.edu/solr/fedora4 \
+    -e FCREPO_BASE_URL=https://fcrepodev.lib.umd.edu/fcrepo/rest/ \
+    -e IIIF_BASE_URL=https://iiifdev.lib.umd.edu/ \
+    -e MIRADOR_STATIC_VERSION=1.2.0 \
+    -e RETRIEVE_BASE_URL=http://localhost:3000/retrieve/ \
+    archelon)
+
+docker exec "$id" bundle exec rake \
+    'db:add_admin_cas_user[your_directory_id, Your Name]'
+```
+
+To watch the logs:
+
+```
+docker logs -f "$id"
+```
+
+To stop the running docker container:
+
+```
+docker kill "$id"
+```
 
 ## File Retrieval configuration
 
@@ -51,7 +86,7 @@ Archelon has the ability to create one-time use URLs, which allow a Fedora binar
 
 It is assumed that the URL that patrons use to retrieve the files will not reference the Archelon server directly. Instead it is anticipated that a new IP and Apache virtual host, which proxies back to Archelon, will be used.
 
-The base URL of the virtual host (i.e., the entire URL except for the random token) should be set up in the `RETRIEVE_BASE_URL` in the *.env* file. See the [env_example](env_example) file for an example. The base URL should be proxied to the `<ARCHELON_SERVER_URL>/retrieve` path.
+The base URL of the virtual host (i.e., the entire URL except for the random token, but including a trailing slash) should be set in the `RETRIEVE_BASE_URL` environment variable. This base URL should be proxied to the `<ARCHELON_SERVER_URL>/retrieve/` path.
  
 
 ## File downloads and concurrent operation
@@ -69,31 +104,31 @@ In the development environment, there are two issues regarding concurrent operat
 
 To test concurrent operations in development mode, do the following:
 
-1) Install the "puma" gem into the Gemfile, by adding the following line:
+1. Install the "puma" gem into the Gemfile, by adding the following line:
 
-```
-gem 'puma', '~> 3.9.1'
-```
+  ```
+  gem 'puma', '~> 3.9.1'
+  ```
 
-2) Run Bundler to install the gem:
+2. Run Bundler to install the gem:
 
-```
-> bundle install
-```
+  ```
+  bundle install
+  ```
 
-3) Edit the "config/application.rb" file, and add the following line to application setting:
+3. Edit the "config/application.rb" file, and add the following line to application setting:
 
-```
-    config.allow_concurrency=true
-```
+  ```
+  config.allow_concurrency=true
+  ```
 
-4) Run the following command to use the puma server:
+4. Run the following command to use the puma server:
 
-```
-> puma --port=3000 --workers 3
-```
+  ```
+  puma --port=3000 --workers 3
+  ```
 
-The "--port=3000" sets the port to the webrick standard of 3000, and the "--workers 3" sets the number of concurrent workers.
+  The `--port=3000` sets the port to the webrick standard of 3000, and the `--workers 3` sets the number of concurrent workers.
 
 ## SSL setup
 
