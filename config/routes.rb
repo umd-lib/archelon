@@ -42,6 +42,7 @@ Rails.application.routes.draw do # rubocop:disable Metrics/BlockLength
 
   get 'logout' => 'cas_users#logout'
   get 'about' => 'static_pages#about'
+  get 'help' => 'static_pages#help'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
