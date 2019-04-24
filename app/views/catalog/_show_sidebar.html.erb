@@ -11,7 +11,9 @@
   </div>
 <% end %>
 
-<% pages = doc_presenter.field_value('pcdm_members').select{|member| member['component'] == 'Page'} %>
+<% pages = doc_presenter.field_value('pcdm_members')
+  .select{|member| member['component'] == 'Page'}
+  .sort{|a,b| a['page_number'] <=> b['page_number'] } %>
 <% unless pages.empty? %>
   <div class="panel panel-default">
     <div class="panel-heading">Select Page for More Options</div>
