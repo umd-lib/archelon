@@ -140,7 +140,7 @@ class CatalogController < ApplicationController
     config.add_show_field 'issue_lccn', label: 'LCCN'
     config.add_show_field 'page_number', label: 'Number'
     config.add_show_field 'page_reel', label: 'Reel'
-    config.add_show_field 'page_issue', label: 'Issue'
+    config.add_show_field 'containing_issue', label: 'Issue'
     config.add_show_field 'page_sequence', label: 'Sequence'
     config.add_show_field 'annotation_source', label: 'Pages', helper_method: :annotation_source_from_subquery
     config.add_show_field 'size', label: 'Size'
