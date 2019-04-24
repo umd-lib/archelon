@@ -25,6 +25,14 @@ module FcrepoSearch
 
     # Default to doing SSL certificate verification
     config.fcrepo_ssl_verify_mode = OpenSSL::SSL::VERIFY_PEER
-    config.ssl_ca_file = ENV["SSL_CERT_FILE"] || '/etc/ssl/certs/ca-bundle.crt'
+    if ENV.has_key? 'SSL_CERT_FILE'
+      config.ssl_ca_file = ENV['SSL_CERT_FILE']
+    elsif File.file? '/etc/ssl/certs/ca-bundle.crt'
+      # RedHat/CentOS path
+      config.ssl_ca_file = '/etc/ssl/certs/ca-bundle.crt'
+    elsif File.file? '/etc/ssl/certs/ca-certificates.crt'
+      # Debian/Ubuntu path
+      config.ssl_ca_file = '/etc/ssl/certs/ca-certificates.crt'
+    end
   end
 end
