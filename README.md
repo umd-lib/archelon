@@ -93,7 +93,7 @@ Create the Solr core as per the configuration in `.solr_wrapper.yml`:
 bundle exec rake solr:create_collection
 ```
 
-Load sample data included in the solr package:
+Load sample data included in the solr package: (Start the Solr server before this step)
 
 ```
 bundle exec rake solr:rebuild_index seed_file=/path/to/sample_solr_data.yml

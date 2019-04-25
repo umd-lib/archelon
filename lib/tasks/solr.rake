@@ -33,7 +33,7 @@ namespace :solr do # rubocop:disable Metrics/BlockLength
   end
 
   desc "Put sample data into solr"
-  task :rebuild_index => :environment do
+  task rebuild_index: :environment do
     require 'yaml'
     if ENV['seed_file'].nil?
       abort "You must specify the seed_file.  Example: rake solr:rebuild_index seed_file=/path/to/seed/file"
