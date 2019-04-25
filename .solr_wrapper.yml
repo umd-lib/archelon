@@ -1,0 +1,10 @@
+# Place any default configuration for solr_wrapper here
+port: 8983
+version: 6.4.0
+validate: false
+collection:
+  # Ensure this is a valid path containing the Solr core configs
+  dir: /apps/git/fedora4-core/solr_export
+  name: fedora4
+  persist: true
+
