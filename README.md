@@ -84,8 +84,9 @@ docker kill "$id"
 
 ### Initial Setup
 
-Verify that the `.solr_wrapper.yml` file is up to date. The `collection > dir` property in the file needs to point to a Solr core directory containing the configuration files. The [fedora4-core](https://bitbucket.org/umd-lib/fedora4-core/src) repository includes a script to generate solr package that can be used here.
+Verify that the `.solr_wrapper.yml` file is up to date. The `collection > dir` property in the file needs to point to a Solr core directory containing the configuration files. In addition, the `.env` file must have its `SOLR_URL` set to `http://localhost:8983/solr/fedora4`.
 
+The [fedora4-core](https://bitbucket.org/umd-lib/fedora4-core) repository includes a script to generate solr package that can be used here.
 
 Create the Solr core as per the configuration in `.solr_wrapper.yml`:
 
@@ -93,13 +94,20 @@ Create the Solr core as per the configuration in `.solr_wrapper.yml`:
 bundle exec rake solr:create_collection
 ```
 
-Load sample data included in the solr package: (Start the Solr server before this step)
+Start the solr server:
+
+```
+bundle exec rake solr:start_server
+```
+
+Load sample data included in the solr package:
 
 ```
 bundle exec rake solr:rebuild_index seed_file=/path/to/sample_solr_data.yml
 ```
 
 ### Usage
+
 Start the solr server:
 
 ```
