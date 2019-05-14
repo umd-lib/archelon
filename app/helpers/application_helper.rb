@@ -96,7 +96,7 @@ module ApplicationHelper
 
   def format_extracted_text(args)
     if args[:value].is_a? Array
-      args[:value].map { |v| format_extracted_text(value: v) }.join('... ').html_safe
+      args[:value].map { |v| format_extracted_text(value: v) }.join('... ').html_safe # rubocop:disable Rails/OutputSafety, Metrics/LineLength - I assume the .html_safe is intended
     else
       # to strip out the embedded word corrdinates
       coord_pattern = /\|\d+,\d+,\d+,\d+/
@@ -106,13 +106,18 @@ module ApplicationHelper
     end
   end
 
+  # remove the pairtree from the path
+  def compress_path(path)
+    path.tr('/', ':').gsub(/:(..):(..):(..):(..):\1\2\3\4/, '::\1\2\3\4')
+  end
+
   def mirador_viewer_url(document, query)
     template = Addressable::Template.new(
-      "#{IIIF_BASE_URL}viewer{/version}/mirador.html?manifest=fcrepo:{id}{&iiifURLPrefix,q}"
+      "#{IIIF_BASE_URL}viewer{/version}/mirador.html?manifest=fcrepo:{+id}{&iiifURLPrefix,q}"
     )
     template.expand(
       version: MIRADOR_STATIC_VERSION,
-      id: repo_path(document[:id]),
+      id: compress_path(repo_path(document[:id])),
       iiifURLPrefix: "#{IIIF_BASE_URL}manifests/",
       q: query
     ).to_s

@@ -1,12 +1,12 @@
 # lib/tasks/sample_data.rake
-namespace :db do
+namespace :db do # rubocop:disable Metrics/BlockLength
   desc 'Drop, create, migrate, seed and populate sample data'
-  task reset_with_sample_data: [:drop, :create, :migrate, :seed, :populate_sample_data] do
+  task reset_with_sample_data: %i[drop create migrate seed populate_sample_data] do
     puts 'Ready to go!'
   end
 
   desc 'Populates the database with sample data'
-  task populate_sample_data: :environment do
+  task populate_sample_data: :environment do # rubocop:disable Metrics/BlockLength
     num_cas_users = 10
     num_cas_users.times do
       cas_user = CasUser.new

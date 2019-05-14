@@ -13,10 +13,12 @@
         <dd class="blacklight-<%= field_name.parameterize %>">
         <% unique_component_types(doc_presenter.field_value(field_name)).each do |component| %>
           <% subset = doc_presenter.field_value(field_name).select{|member| member['component'] == component} %>
-          <strong>
-            <%= component.pluralize subset.size %>
-            <span class="badge"><%= subset.size %></span>
-          </strong>
+          <% unless component.nil? %>
+            <strong>
+              <%= component.pluralize subset.size %>
+              <span class="badge"><%= subset.size %></span>
+            </strong>
+          <% end %>
           <ul class="multivalued-field-value">
             <% subset.sort{|a,b| a['display_title'] <=> b['display_title']}.each do |v| %>
               <li><%= link_to v['display_title'], solr_document_path(v['id']) %></li>

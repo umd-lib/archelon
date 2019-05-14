@@ -1,11 +1,13 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.6'
+gem 'rails', '~> 4.2'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0', '>= 5.0.6'
+# see https://nvd.nist.gov/vuln/detail/CVE-2019-8331
+gem "bootstrap-sass", ">= 3.4.1"
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .coffee assets and views
@@ -33,8 +35,8 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 # Blacklight Gems
 gem 'blacklight', '~> 6.0'
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw]
 gem 'therubyracer'
+gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw]
 
 # CAS Authentication
 # April 25, 2016: Need to use GitHub instead of Gem
@@ -77,11 +79,11 @@ group :development do
 end
 
 group :test do
-  gem 'minitest-reporters', '~> 1.1.8'
   gem 'minitest-ci', '~> 3.0.3'
+  gem 'minitest-reporters', '~> 1.1.8'
 
   # Code analysis tools
-  gem 'rubocop', '~> 0.39.0', require: false
+  gem 'rubocop', '~> 0.54.0', require: false
   gem 'rubocop-checkstyle_formatter', '~> 0.2.0', require: false
 
   gem 'simplecov', require: false

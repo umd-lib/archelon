@@ -1,9 +1,13 @@
 # frozen_string_literal: true
+
 class CatalogController < ApplicationController
   include Blacklight::Catalog
-  before_action :make_current_query_accessible, only: [:show, :index]
+  before_action :make_current_query_accessible, only: %i[show index] # rubocop:disable Rails/LexicallyScopedActionFilter
 
-  configure_blacklight do |config|
+  rescue_from Blacklight::Exceptions::ECONNREFUSED, with: :solr_connection_error
+  rescue_from Blacklight::Exceptions::InvalidRequest, with: :solr_connection_error
+
+  configure_blacklight do |config| # rubocop:disable Metrics/BlockLength
     ## Class for sending and receiving requests from a search index
     # config.repository_class = Blacklight::Solr::Repository
     #
@@ -71,10 +75,10 @@ class CatalogController < ApplicationController
     # :index_range can be an array or range of prefixes that will be used to create the navigation
     # (note: It is case sensitive when searching values)
 
+    config.add_facet_field 'collection_title_facet', label: 'Collection', limit: 10, collapse: false, sort: 'index'
     config.add_facet_field 'author_not_tokenized', label: 'Author', limit: 10
     config.add_facet_field 'type', label: 'Type', limit: 10
-    config.add_facet_field 'object_type_not_tokenized', label: 'Object Type', limit: 10
-    config.add_facet_field 'component_not_tokenized', label: 'Component', limit: 10
+    config.add_facet_field 'component_not_tokenized', label: 'Resource Type', limit: 10
     config.add_facet_field 'rdf_type', label: 'RDF Type', limit: 10
     # config.add_facet_field 'pub_date', label: 'Publication Year', single: true
     # config.add_facet_field 'subject_topic_facet', label: 'Topic', limit: 20, index_range: 'A'..'Z'
@@ -102,8 +106,7 @@ class CatalogController < ApplicationController
     lambda { |_context, _field, document|
       document[:rdf_type].include?('oa:Annotation')
     }
-    config.add_index_field 'object_type', label: 'Object Type'
-    config.add_index_field 'component', label: 'Component'
+    config.add_index_field 'component', label: 'Resource Type'
     config.add_index_field 'author', label: 'Author'
     # rubocop:disable Metrics/LineLength
     config.add_index_field 'extracted_text', label: 'OCR', highlight: true, helper_method: :format_extracted_text, solr_params: { 'hl.fragsize' => 500 }
@@ -120,7 +123,6 @@ class CatalogController < ApplicationController
     config.add_show_field 'display_title', label: 'Title'
     config.add_show_field 'author', label: 'Author'
     config.add_show_field 'type', label: 'Type'
-    config.add_show_field 'rdf_type', label: 'RDF Type', helper_method: :rdf_type_list
     config.add_show_field 'date', label: 'Date'
     config.add_show_field 'pcdm_collection', label: 'Collection', helper_method: :collection_from_subquery
     config.add_show_field 'pcdm_member_of', label: 'Member Of', helper_method: :parent_from_subquery
@@ -131,15 +133,14 @@ class CatalogController < ApplicationController
     # rubocop:enable Metrics/LineLength
     config.add_show_field 'pcdm_file_of', label: 'File Of', helper_method: :file_parent_from_subquery
     config.add_show_field 'pcdm_files', label: 'Files', helper_method: :files_from_subquery
-    config.add_show_field 'object_type', label: 'Object Type'
-    config.add_show_field 'component', label: 'Component'
+    config.add_show_field 'component', label: 'Resource Type'
     config.add_show_field 'issue_volume', label: 'Volume'
     config.add_show_field 'issue_issue', label: 'Issue Number'
     config.add_show_field 'issue_edition', label: 'Edition'
     config.add_show_field 'issue_lccn', label: 'LCCN'
     config.add_show_field 'page_number', label: 'Number'
     config.add_show_field 'page_reel', label: 'Reel'
-    config.add_show_field 'page_issue', label: 'Issue'
+    config.add_show_field 'containing_issue', label: 'Issue'
     config.add_show_field 'page_sequence', label: 'Sequence'
     config.add_show_field 'annotation_source', label: 'Pages', helper_method: :annotation_source_from_subquery
     config.add_show_field 'size', label: 'Size'
@@ -148,6 +149,7 @@ class CatalogController < ApplicationController
     config.add_show_field 'created_by', label: 'Created By'
     config.add_show_field 'created', label: 'Created'
     config.add_show_field 'last_modified', label: 'Last Modified'
+    config.add_show_field 'rdf_type', label: 'RDF Type', helper_method: :rdf_type_list
 
     # "fielded" search configuration. Used by pulldown among other places.
     # For supported keys in hash, see rdoc for Blacklight::SearchFields
@@ -193,6 +195,11 @@ class CatalogController < ApplicationController
   end
 
   private
+
+    def solr_connection_error
+      flash[:error] = I18n.t(:solr_is_down)
+      redirect_to(about_url)
+    end
 
     def make_current_query_accessible
       @current_query = params[:q]

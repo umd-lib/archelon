@@ -7,7 +7,7 @@ SimpleCov.formatters = [
 SimpleCov.start
 
 ENV['RAILS_ENV'] ||= 'test'
-require File.expand_path('../../config/environment', __FILE__)
+require File.expand_path('../config/environment', __dir__)
 require 'rails/test_help'
 
 # Require minitest Mock functionality
@@ -27,15 +27,12 @@ class ActiveSupport::TestCase
   CASClient::Frameworks::Rails::Filter.fake(DEFAULT_TEST_USER)
 
   # Runs the contents of a block using the given user as the current_user.
-  # rubocop:disable Lint/RescueException
   def run_as_user(user)
     CASClient::Frameworks::Rails::Filter.fake(user.cas_directory_id)
 
     begin
-
       yield
-
-    rescue Exception => e
+    rescue Exception => e # rubocop:disable Lint/RescueException
       raise e
     ensure
       # Restore fake user

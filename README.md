@@ -6,43 +6,79 @@ Archelon is a Rails-based search interface for the Fedora 4 repository. It uses 
 
 Requires:
 
-* Ruby 2.2.4
+* Ruby 2.6.3
 * Bundler
 
 ### Setup
 
-1) Checkout the code and install the dependencies:
+1. Checkout the code and install the dependencies:
 
-```
-> git clone git@github.com:umd-lib/archelon.git
-> cd archelon
-> bundle install
-```
+  ```
+  git clone git@github.com:umd-lib/archelon.git
+  cd archelon
+  bundle install
+  ```
 
-2) Set up the database:
+2. Set up the database:
 
-```
-> rake db:migrate
-```
-**Note:** Sample "Download URL" data can be added by running ```rake db:reset_with_sample_data```
+  ```
+  rake db:migrate
+  ```
 
-3) Create a `.env` file from the `env_example` file and set the solr url to point to a working solr url.
+  **Note:** Sample "Download URL" data can be added by running `rake db:reset_with_sample_data`
 
-4) Add your directory ID to whitelist
+3. Create a `.env` file from the `env_example` file and fill in appropriate values for the environment variables.
 
-```
-> rake 'db:add_admin_cas_user[your_directory_id, Your Name]'
-```
+4. Add your directory ID to whitelist
 
-### Run the web application
+  ```
+  rake 'db:add_admin_cas_user[your_directory_id, Your Name]'
+  ```
 
-5) To run the web application:
+5. Run the web application:
 
-```
-> rails server
-```
+  ```
+  rails server
+  ```
+
+If you are going to run Archelon against a Solr or Fedora server that uses self-signed SSL certificates for HTTPS, see the section [SSL setup](#ssl-setup).
 
 See [archelon-vagrant] for running Archelon application in a Vagrant environment.
+
+## Docker
+
+Archelon comes with a [Dockerfile](Dockerfile) that can be used to build a docker image:
+
+```
+docker build -t archelon .
+```
+
+To run an instance of this image against the dev fcrepo, Solr, and IIIF servers, and populate the database with seed data:
+
+```
+id=$(docker run -d --rm -p 3000:3000 \
+    -e SOLR_URL=https://solrdev.lib.umd.edu/solr/fedora4 \
+    -e FCREPO_BASE_URL=https://fcrepodev.lib.umd.edu/fcrepo/rest/ \
+    -e IIIF_BASE_URL=https://iiifdev.lib.umd.edu/ \
+    -e MIRADOR_STATIC_VERSION=1.2.0 \
+    -e RETRIEVE_BASE_URL=http://localhost:3000/retrieve/ \
+    archelon)
+
+docker exec "$id" bundle exec rake \
+    'db:add_admin_cas_user[your_directory_id, Your Name]'
+```
+
+To watch the logs:
+
+```
+docker logs -f "$id"
+```
+
+To stop the running docker container:
+
+```
+docker kill "$id"
+```
 
 ## File Retrieval configuration
 
@@ -50,7 +86,7 @@ Archelon has the ability to create one-time use URLs, which allow a Fedora binar
 
 It is assumed that the URL that patrons use to retrieve the files will not reference the Archelon server directly. Instead it is anticipated that a new IP and Apache virtual host, which proxies back to Archelon, will be used.
 
-The base URL of the virtual host (i.e., the entire URL except for the random token) should be set up in the "RETRIEVE_BASE_URL" in the ".env" file. See the "env_example" file for an example. The base URL should be proxied to the \<ARCHELON_SERVER_URL>/retrieve path.
+The base URL of the virtual host (i.e., the entire URL except for the random token, but including a trailing slash) should be set in the `RETRIEVE_BASE_URL` environment variable. This base URL should be proxied to the `<ARCHELON_SERVER_URL>/retrieve/` path.
  
 
 ## File downloads and concurrent operation
@@ -68,33 +104,33 @@ In the development environment, there are two issues regarding concurrent operat
 
 To test concurrent operations in development mode, do the following:
 
-1) Install the "puma" gem into the Gemfile, by adding the following line:
+1. Install the "puma" gem into the Gemfile, by adding the following line:
 
-```
-gem 'puma', '~> 3.9.1'
-```
+  ```
+  gem 'puma', '~> 3.9.1'
+  ```
 
-2) Run Bundler to install the gem:
+2. Run Bundler to install the gem:
 
-```
-> bundle install
-```
+  ```
+  bundle install
+  ```
 
-3) Edit the "config/application.rb" file, and add the following line to application setting:
+3. Edit the "config/application.rb" file, and add the following line to application setting:
 
-```
-    config.allow_concurrency=true
-```
+  ```
+  config.allow_concurrency=true
+  ```
 
-4) Run the following command to use the puma server:
+4. Run the following command to use the puma server:
 
-```
-> SSL_CERT_FILE=solrlocal_and_fcrepolocal.pem puma --port=3000 --workers 3
-```
+  ```
+  puma --port=3000 --workers 3
+  ```
 
-The "SSL_CERT_FILE=solrlocal_and_fcrepolocal.pem" is needed when using the fcrepo-vagrant environment (see below), the "--port=3000" sets the port to the webrick standard of 3000, and the "--workers 3" sets the number of concurrent workers.
+  The `--port=3000` sets the port to the webrick standard of 3000, and the `--workers 3` sets the number of concurrent workers.
 
-## fcrepo-vagrant setup
+## SSL setup
 
 For development, Archelon is typically run in conjunction with the servers provided by the [fcrepo-vagrant] multi-machine Vagrant setup. This setup uses self-signed SSL certificates to enable HTTPS.
 
@@ -102,52 +138,45 @@ Rails needs to be able to verify these self-signed certificates. If it cannot, "
 
 In order to avoid this error:
 
-1) Create "pem" files for both the "solrlocal" and "fcrepolocal" machines, by running the following commands:
+1. Create PEM files for both the "solrlocal" and "fcrepolocal" machines, by running the following commands:
 
-**Note:** The "solrlocal" and "fcrepolocal" servers must be running.
+  **Note:** The "solrlocal" and "fcrepolocal" servers must be running.
 
-```
-echo -n \
-    | openssl s_client -connect solrlocal:8984 -tls1 \
-    | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' \
-    > solrlocal.pem
-```
-and
+  ```
+  echo -n \
+      | openssl s_client -connect solrlocal:8984 -tls1 \
+      | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' \
+      > solrlocal.pem
+  ```
 
-```
-echo -n \
-    | openssl s_client -connect fcrepolocal:443 -tls1 \
-    | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' \
-    > fcrepolocal.pem
-```
+  and
 
-This will create two files "solrlocal.pem" and "fcrepolocal.pem" in the current directory, which contain SSL certificates.
-
-2) Combine the two "pem" files from the previous step in to a single "pem" file:
-
-```
-cat solrlocal.pem fcrepolocal.pem > solrlocal_and_fcrepolocal.pem
+  ```
+  echo -n \
+      | openssl s_client -connect fcrepolocal:443 -tls1 \
+      | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' \
+      > fcrepolocal.pem
 ```
 
-To use the "solrlocal_and_fcrepolocal.pem" file with Rails either:
+  This will create two files "solrlocal.pem" and "fcrepolocal.pem" in the current directory, which contain SSL certificates.
 
-a) Create an "SSL_CERT_FILE" environment variable in the terminal environment:
+2. Combine the two "pem" files from the previous step in to a single "pem" file:
 
-```
-export SSL_CERT_FILE=<PATH_TO_PEM_FILE>/solrlocal_and_fcrepolocal.pem
-```
-when \<PATH_TO_PEM_FILE> is the full path to the directory containing the file, or
+  ```
+  cat solrlocal.pem fcrepolocal.pem \
+      > solrlocal_and_fcrepolocal.pem
+  ```
 
-b) Running the Rails application prepended with the "SSL_CERT_FILE" environment variable:
+3. To use the `solrlocal_and_fcrepolocal.pem` file with Rails, set the `SSL_CERT_FILE` environment variable:
 
-```
-SSL_CERT_FILE=solrlocal_and_fcrepolocal.pem rails server
-```
-**Note:** If using the second method, the Rails tests should also be run with "SSL_CERT_FILE" prepended, i.e.:
-
-```
-SSL_CERT_FILE=solrlocal_and_fcrepolocal.pem rake test
-```
+  ```
+  export SSL_CERT_FILE=/path/to/solrlocal_and_fcrepolocal.pem
+  rails server
+  
+  # or
+  
+  SSL_CERT_FILE=/path/to/solrlocal_and_fcrepolocal.pem rails server
+  ```
 
 ## License
 

@@ -3,7 +3,7 @@ require 'test_helper'
 # Integration test for the DownloadUrl index page
 class DownloadUrlsIndexTest < ActionDispatch::IntegrationTest
   def setup
-    @sort_columns = %w(created_at)
+    @sort_columns = %w[created_at]
   end
 
   test 'index including pagination and sorting' do
@@ -14,7 +14,7 @@ class DownloadUrlsIndexTest < ActionDispatch::IntegrationTest
     assert_select 'a.sort_link', count: @sort_columns.size
 
     @sort_columns.each do |sort_column|
-      %w(asc desc).each do |sort_direction|
+      %w[asc desc].each do |sort_direction|
         rq_param = { s: sort_column + ' ' + sort_direction }
         get download_urls_path, rq: rq_param
         assert_template 'download_urls/index'
