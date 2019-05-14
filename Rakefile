@@ -5,4 +5,6 @@ require File.expand_path('config/application', __dir__)
 
 Rails.application.load_tasks
 
-require 'solr_wrapper/rake_task'
+if Rails.env.development? || Rails.env.test?
+  require 'solr_wrapper/rake_task'
+end
