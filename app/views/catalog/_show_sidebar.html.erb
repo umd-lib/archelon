@@ -19,12 +19,34 @@
     <div class="panel-heading">Select Page for More Options</div>
     <div class="panel-body">
       <ul class="nav">
-        <% pages.each do |v| %>
+        <% pages.first(8).each do |v| %>
           <li><%= link_to "Page #{v['page_number']}", solr_document_path(v['id']) %></li>
+        <% end %>
+        <% if pages.length > 8 %>
+          <li><a href="#pages" data-toggle="modal">more »</a></li>
         <% end %>
       </ul>
     </div>
   </div>
+  <% if pages.length > 8 %>
+    <div class="modal" id="pages" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Select Page for More Options</h4>
+          </div>
+          <div class="modal-body">
+            <ul class="nav">
+              <% pages.each do |v| %>
+                <li><%= link_to "Page #{v['page_number']}", solr_document_path(v['id']) %></li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
 <% end %>
 
 <% files = doc_presenter.field_value('pcdm_files') %>
