@@ -34,5 +34,8 @@ module FcrepoSearch
       # Debian/Ubuntu path
       config.ssl_ca_file = '/etc/ssl/certs/ca-certificates.crt'
     end
+
+    # CAS URL
+    config.cas_url = "https://login.umd.edu/cas"
   end
 end

@@ -15,6 +15,7 @@ class SessionsController < ApplicationController
   def destroy
     session[:cas_user] = nil
     session[:unauthorized_user] = nil
-    render(file: Rails.root.join('public', '403.html'), status: :forbidden, layout: false)
+    cas_logout_url = Rails.application.config.cas_url + '/logout'
+    redirect_to cas_logout_url
   end
 end
