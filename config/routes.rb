@@ -2,6 +2,7 @@ Rails.application.routes.draw do # rubocop:disable Metrics/BlockLength
   get 'static_pages/about'
 
   resources :cas_users
+  get '/cas_users/:id/history' => 'cas_users#show_history'
 
   mount Blacklight::Engine => '/'
   root to: 'catalog#index'
