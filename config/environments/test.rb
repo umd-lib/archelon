@@ -47,4 +47,7 @@ Rails.application.configure do
 
   # Mirador version
   config.mirador_static_version = ENV['MIRADOR_STATIC_VERSION'] || '1.1.0'
+
+  # Fix failing test
+  config.ssl_ca_file = '/dummy/path'
 end

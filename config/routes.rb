@@ -40,7 +40,11 @@ Rails.application.routes.draw do # rubocop:disable Metrics/BlockLength
   get path: '/retrieve/do/:token', controller: 'retrieve', action: 'do_retrieve',
       as: 'do_retrieve'
 
-  get 'logout' => 'cas_users#logout'
+  get 'login', to: redirect('/auth/cas'), as: 'login'
+  get 'logout', to: 'sessions#destroy', as: 'logout'
+  get 'auth/:provider/callback', to: 'sessions#create'
+  get 'auth/failure', to: redirect('/')
+  
   get 'about' => 'static_pages#about'
   get 'help' => 'static_pages#help'
 
