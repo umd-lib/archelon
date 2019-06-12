@@ -63,10 +63,6 @@ class CasUsersController < ApplicationController
     end
   end
 
-  def logout
-    CASClient::Frameworks::Rails::Filter.logout(self)
-  end
-
   private
 
     # Use callbacks to share common setup or constraints between actions.
