@@ -2,7 +2,8 @@ require 'test_helper'
 
 class CasUsersControllerTest < ActionController::TestCase
   setup do
-    @cas_user = cas_users(:one)
+    @cas_user = cas_users(:test_admin)
+    mock_cas_login(@cas_user.cas_directory_id)
   end
 
   test 'should get index' do
@@ -71,7 +72,7 @@ class CasUsersControllerTest < ActionController::TestCase
 
   test 'non-admin users should not have access to show, except for own record' do
     run_as_user(cas_users(:one)) do
-      get :show, id: @cas_user
+      get :show, id: cas_users(:one)
       assert_response :success
 
       get :show, id: cas_users(:two)

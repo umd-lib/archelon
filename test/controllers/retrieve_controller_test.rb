@@ -3,7 +3,7 @@ require 'test_helper'
 class RetrieveControllerTest < ActionController::TestCase
   def setup
     # RetrieveController actions should not require authentication
-    CASClient::Frameworks::Rails::Filter.fake(nil)
+    session[:cas_user] = nil
   end
 
   test 'should get retrieve' do
@@ -92,7 +92,7 @@ class RetrieveControllerTest < ActionController::TestCase
   end
 
   def teardown
-    CASClient::Frameworks::Rails::Filter.fake(DEFAULT_TEST_USER)
+    mock_cas_login(DEFAULT_TEST_USER)
   end
 
   private

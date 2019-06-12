@@ -1,6 +1,11 @@
 require 'test_helper'
 
 class CatalogControllerTest < ActionController::TestCase
+  setup do
+    @cas_user = cas_users(:one)
+    mock_cas_login(@cas_user.cas_directory_id)
+  end
+  
   test 'should give warning and redirect if solr is down' do
     raise_e = -> { raise Blacklight::Exceptions::ECONNREFUSED }
     @controller.stub(:index, raise_e) do

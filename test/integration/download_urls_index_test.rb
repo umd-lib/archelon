@@ -4,10 +4,12 @@ require 'test_helper'
 class DownloadUrlsIndexTest < ActionDispatch::IntegrationTest
   def setup
     @sort_columns = %w[created_at]
+    cas_login('test_user')
   end
 
   test 'index including pagination and sorting' do
     get download_urls_path
+    assert_response :success
     assert_template 'download_urls/index'
 
     # Verify sort links

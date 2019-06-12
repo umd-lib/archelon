@@ -3,6 +3,8 @@ require 'test_helper'
 class DownloadUrlsControllerTest < ActionController::TestCase
   setup do
     @download_url = download_urls(:one)
+    @cas_user = cas_users(:test_admin)
+    mock_cas_login(@cas_user.cas_directory_id)
   end
 
   test 'should get index' do

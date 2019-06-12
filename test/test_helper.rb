@@ -24,11 +24,33 @@ class ActiveSupport::TestCase
 
   # Default user for testing has Admin privileges
   DEFAULT_TEST_USER = 'test_admin'.freeze
-  CASClient::Frameworks::Rails::Filter.fake(DEFAULT_TEST_USER)
+
+  OmniAuth.config.test_mode = true
+  OmniAuth.config.mock_auth[:cas] = {
+    :provider => 'cas',
+    :uid => DEFAULT_TEST_USER
+  }
+
+  def cas_login(cas_directory_id)
+    OmniAuth.config.mock_auth[:cas] = {
+      :provider => 'cas',
+      :uid => cas_directory_id
+    }
+    get "/auth/cas/callback"
+  end
+
+  def mock_cas_login(cas_directory_id)
+    OmniAuth.config.mock_auth[:cas] = {
+      :provider => 'cas',
+      :uid => cas_directory_id
+    }
+    request.env["omniauth.auth"] = OmniAuth.config.mock_auth[:cas]
+    session[:cas_user] = cas_directory_id
+  end
 
   # Runs the contents of a block using the given user as the current_user.
   def run_as_user(user)
-    CASClient::Frameworks::Rails::Filter.fake(user.cas_directory_id)
+    mock_cas_login(user.cas_directory_id)
 
     begin
       yield
@@ -36,7 +58,9 @@ class ActiveSupport::TestCase
       raise e
     ensure
       # Restore fake user
-      CASClient::Frameworks::Rails::Filter.fake(ActiveSupport::TestCase::DEFAULT_TEST_USER)
+      mock_cas_login(DEFAULT_TEST_USER)
+    end
+  end
     end
   end
 end
