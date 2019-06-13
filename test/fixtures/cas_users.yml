@@ -10,6 +10,21 @@ two:
   name: Two
   user_type: user
 
+prior_admin:
+  cas_directory_id: prior_admin
+  name: Prior Admin
+  user_type: admin
+
+prior_user1:
+  cas_directory_id: prior_user1
+  name: Prior User1
+  user_type: user
+
+prior_user2:
+  cas_directory_id: prior_user2
+  name: Prior User2
+  user_type: user
+
 test_user:
   cas_directory_id: test_user
   name: Test User

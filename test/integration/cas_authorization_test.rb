@@ -83,6 +83,42 @@ class CasAuthorizationTest < ActionDispatch::IntegrationTest
     assert CasUser.find_by(cas_directory_id: 'new_unauth_user2').unauthorized?
   end
 
+  test 'existing admin cas_user type is updated based on Grouper group changes during login' do
+    ldap_attrs = {
+      name: "Prior Admin",
+      groups: [GROUPER_USER_GROUP]
+    }
+    assert CasUser.find_by(cas_directory_id: 'prior_admin').admin?
+    CasUser.stub :ldap_attributes, ldap_attrs do
+      cas_login('prior_admin')
+    end
+    assert CasUser.find_by(cas_directory_id: 'prior_admin').user?
+  end
+
+  test 'existing cas_user type is updated based on Grouper group changes during login' do
+    ldap_attrs = {
+      name: "Prior User1",
+      groups: [GROUPER_ADMIN_GROUP]
+    }
+    assert CasUser.find_by(cas_directory_id: 'prior_user1').user?
+    CasUser.stub :ldap_attributes, ldap_attrs do
+      cas_login('prior_user1')
+    end
+    assert CasUser.find_by(cas_directory_id: 'prior_user1').admin?
+  end
+
+  test 'existing authorized cas_user should be unauthorized if no longer belong to Archelon Grouper groups' do
+    ldap_attrs = {
+      name: "Prior User2",
+      groups: ["SOME_OTHER_GROUP"]
+    }
+    assert CasUser.find_by(cas_directory_id: 'prior_user2').user?
+    CasUser.stub :ldap_attributes, ldap_attrs do
+      cas_login('prior_user2')
+    end
+    assert CasUser.find_by(cas_directory_id: 'prior_user2').unauthorized?
+  end
+
   test 'non-existent cas_user cannot access application' do
     cas_login('no_such_user')
 
