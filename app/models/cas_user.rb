@@ -8,7 +8,7 @@ class CasUser < ActiveRecord::Base
     ldap_attrs = ldap_attributes(auth[:uid])
     where(cas_directory_id: auth[:uid]).first_or_initialize.tap do |user|
       user.cas_directory_id = auth[:uid]
-      update_name(user, ldap_attrs)
+      update_name(user, ldap_attrs) unless user.name
       update_user_type(user, ldap_attrs)
 			user.save!
 		end
