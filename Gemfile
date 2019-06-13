@@ -41,6 +41,9 @@ gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw]
 # CAS Authentication
 gem 'omniauth-cas', '~> 1.1.1'
 
+# LDAP
+gem 'net-ldap', '~> 0.16.1'
+
 # dotenv - For storing production configuration parameters
 gem 'dotenv-rails', '~> 2.1.1'
 
