@@ -13,12 +13,11 @@
 <% if current_cas_user.admin? %>
 
 <p>
-  <strong>Admin:</strong>
-  <%= @cas_user.admin %>
+  <strong>Type:</strong>
+  <%= @cas_user.user_type %>
 </p>
 <% end %>
 
 <div class="actions">
-  <%= link_to 'Edit', edit_cas_user_path(@cas_user), class: 'btn btn-success' if current_cas_user.admin? %>
   <%= link_to 'List Users', cas_users_path, class: 'btn btn-default' %>
 </div>
