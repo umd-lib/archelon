@@ -17,8 +17,9 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    session[:cas_user] = nil
-    session[:unauthorized_user] = nil
+    session.delete(:cas_user)
+    session.delete(:admin_id)
+    session.delete(:admin_referring_page)
     cas_logout_url = Rails.application.config.cas_url + '/logout'
     redirect_to cas_logout_url
   end
@@ -28,9 +29,11 @@ class SessionsController < ApplicationController
     if impersonating? && impersonating_admin_id == user.id
       sign_in(user)
       session.delete(:admin_id)
+      redirect_to session[:admin_referring_page] and return if session[:admin_referring_page]
     else
       if user && (can_login_as?(user))
         session[:admin_id] = current_cas_user.id
+        session[:admin_referring_page] = request.headers["HTTP_REFERER"]
         sign_in(user)
       else
         flash[:notice] = "You do not have permission to access this page"
