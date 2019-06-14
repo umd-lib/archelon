@@ -34,3 +34,8 @@ test_admin:
   cas_directory_id: test_admin
   name: Test Admin
   user_type: admin
+
+test_admin2:
+  cas_directory_id: test_admin2
+  name: Test Admin
+  user_type: admin
