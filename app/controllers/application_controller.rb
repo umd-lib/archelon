@@ -25,9 +25,14 @@ class ApplicationController < ActionController::Base
   end
   helper_method :impersonating_admin_id
 
+  def impersonating_admin
+    CasUser.find(impersonating_admin_id)
+  end
+  helper_method :impersonating_admin
+
   def real_user
     return current_cas_user unless impersonating?
-    CasUser.find(impersonating_admin_id)
+    impersonating_admin
   end
   helper_method :real_user
 

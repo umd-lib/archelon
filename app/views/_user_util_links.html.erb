@@ -23,7 +23,7 @@
     </li>
     <% if impersonating? %>
       <li>
-        <%= link_to 'Back to Admin', admin_user_login_as_path(impersonating_admin_id) %>
+        <%= link_to 'Back to "' + impersonating_admin.name + '"', admin_user_login_as_path(impersonating_admin_id) %>
       </li>
     <% end %>
   </ul>
