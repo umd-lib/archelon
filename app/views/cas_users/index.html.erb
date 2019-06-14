@@ -20,6 +20,11 @@
         <td><%= cas_user.user_type %></td>
         <td><%= link_to 'Show', cas_user %></td>
         <td><%= link_to 'Destroy', cas_user, method: :delete, data: { confirm: 'Please remove Archelon Grouper roles of the user to ensure access is restricted. Confirm delete?' } %></td>
+        <td>
+          <% if can_login_as?(cas_user) %>
+            <%= link_to 'Sign In As', admin_user_login_as_path(cas_user.id) %>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>

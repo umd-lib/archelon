@@ -14,4 +14,20 @@ class ApplicationController < ActionController::Base
   def not_found
     raise ActionController::RoutingError, 'Not Found'
   end
+
+  def impersonating?
+    session[:admin_id].present?
+  end
+  helper_method :impersonating?
+
+  def impersonating_admin_id
+    session[:admin_id]
+  end
+  helper_method :impersonating_admin_id
+
+  def can_login_as?(user)
+    current_cas_user.admin? && user.user? && (user.id != current_cas_user.id)
+  end
+  helper_method :can_login_as?
+
 end
