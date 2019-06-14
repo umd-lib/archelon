@@ -18,6 +18,8 @@
 </p>
 <% end %>
 
-<div class="actions">
-  <%= link_to 'List Users', cas_users_path, class: 'btn btn-default' %>
-</div>
+<% if current_cas_user.admin? %>
+  <div class="actions">
+    <%= link_to 'List Users', cas_users_path, class: 'btn btn-default' %>
+  </div>
+<% end %>
