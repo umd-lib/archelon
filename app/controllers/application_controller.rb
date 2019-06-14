@@ -25,6 +25,12 @@ class ApplicationController < ActionController::Base
   end
   helper_method :impersonating_admin_id
 
+  def real_user
+    return current_cas_user unless impersonating?
+    CasUser.find(impersonating_admin_id)
+  end
+  helper_method :real_user
+
   def can_login_as?(user)
     current_cas_user.admin? && user.user? && (user.id != current_cas_user.id)
   end
