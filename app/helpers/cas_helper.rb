@@ -12,13 +12,13 @@ module CasHelper
   end
 
   def logged_in?
-    session[:cas_user] || session[:unauthorized_user]
+    session[:cas_user]
   end
 
   private
 
     # Returns true if entry is authorized, false otherwise.
     def allow_access
-      !current_cas_user.nil?
+      !current_cas_user.nil? && !current_cas_user.unauthorized?
     end
 end
