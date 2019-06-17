@@ -92,3 +92,5 @@ group :test do
 end
 
 gem 'rsolr', '~> 1.0'
+
+gem "sparql-client", "~> 3.0"

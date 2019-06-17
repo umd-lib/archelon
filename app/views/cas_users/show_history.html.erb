@@ -1,0 +1,39 @@
+<% content_for :page_title, "User History: #{@cas_user.cas_directory_id}" %>
+
+<h1><%= content_for :page_title %></h1>
+
+<%= form_tag '', method: 'get' do %>
+  Find events from the past
+  <%= number_field_tag :days, @days, size: 4, min: 1 %>
+  days.
+  <%= submit_tag 'Go', class: 'btn btn-primary' %>
+<% end %>
+<table class="table">
+  <thead>
+  <tr>
+    <th>Timestamp</th>
+    <th>Event Type</th>
+    <th>Resource</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% if @events.empty? %>
+    <tr>
+      <td colspan="3">No events found for this user in the past <%= @days %> days</td>
+    </tr>
+  <% else %>
+    <% @events.each do |event| %>
+      <tr>
+        <td><%= event[:timestamp] %></td>
+        <td><%= link_to event[:type_description], event[:type].to_s %></td>
+        <td><%= link_to event[:resource], "/catalog/#{CGI.escape(event[:resource])}" %></td>
+      </tr>
+    <% end %>
+  <% end%>
+  </tbody>
+</table>
+
+<div class="actions">
+  <%= link_to 'List Users', cas_users_path, class: 'btn btn-default' %>
+  <%= link_to 'User Profile', @cas_user, class: 'btn btn-success' %>
+</div>

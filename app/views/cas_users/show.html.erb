@@ -1,4 +1,6 @@
-<p id="notice"><%= notice %></p>
+<% content_for :page_title, "User Profile: #{@cas_user.cas_directory_id}" %>
+
+<h1><%= content_for :page_title %></h1>
 
 <p>
   <strong>Directory ID:</strong>
@@ -11,7 +13,6 @@
 </p>
 
 <% if current_cas_user.admin? %>
-
 <p>
   <strong>Type:</strong>
   <%= @cas_user.user_type %>
@@ -20,4 +21,7 @@
 
 <div class="actions">
   <%= link_to 'List Users', cas_users_path, class: 'btn btn-default' %>
+  <%= link_to 'User History', { controller: 'cas_users', action: 'show_history' }, class: 'btn btn-success' %>
 </div>
+
+
