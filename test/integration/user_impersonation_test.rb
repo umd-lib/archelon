@@ -11,16 +11,16 @@ class UserImpersonationTest < ActionDispatch::IntegrationTest
     assert session[:cas_user], non_admin_user.cas_directory_id
   end
 
-  test 'admin user is returned to the correct page when impersonation is stopped' do
+  test 'admin user should remain on current page when impersonation is stopped' do
     admin_user = cas_users(:test_admin)
     cas_login(admin_user.cas_directory_id)
     non_admin_user = cas_users(:test_user)
 
-    referring_page = '/some/page'
-    get admin_user_login_as_path(user_id: non_admin_user.id), nil, { HTTP_REFERER: referring_page}
+    get admin_user_login_as_path(user_id: non_admin_user.id)
     assert session[:cas_user], non_admin_user.cas_directory_id
-
-    get admin_user_login_as_path(user_id: admin_user.id)
+    
+    referring_page = '/some/page'
+    get admin_user_login_as_path(user_id: admin_user.id), nil, { HTTP_REFERER: referring_page}
     assert_redirected_to referring_page
   end
 
