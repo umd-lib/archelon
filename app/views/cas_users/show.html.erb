@@ -20,8 +20,8 @@
 <% end %>
 
 <div class="actions">
-  <%= link_to 'List Users', cas_users_path, class: 'btn btn-default' %>
+  <% if current_cas_user.admin? %>
+    <%= link_to 'List Users', cas_users_path, class: 'btn btn-default' %>
+  <% end %>
   <%= link_to 'User History', { controller: 'cas_users', action: 'show_history' }, class: 'btn btn-success' %>
 </div>
-
-

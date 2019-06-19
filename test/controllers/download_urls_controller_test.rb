@@ -31,6 +31,30 @@ class DownloadUrlsControllerTest < ActionController::TestCase
     assert_equal session[:cas_user], download_url.creator
   end
 
+  test 'should add the "real" user as creator while impersonating' do
+    user_one = cas_users(:one)
+    stub_find_solr_document do
+      assert_difference('DownloadUrl.count') do
+        impersonate_as_user(user_one) do
+          assert_equal session[:cas_user], user_one.cas_directory_id
+          post :create_download_url, download_url: {
+            accessed_at: @download_url.accessed_at,
+            download_completed_at: @download_url.download_completed_at,
+            enabled: @download_url.enabled, mime_type: @download_url.mime_type,
+            notes: @download_url.notes, request_ip: @download_url.request_ip,
+            request_user_agent: @download_url.request_user_agent,
+            title: @download_url.title,
+            url: @download_url.url
+          }
+        end
+      end
+    end
+    download_url = DownloadUrl.last
+    assert_equal session[:cas_user], @cas_user.cas_directory_id
+    assert_equal session[:cas_user], download_url.creator
+    assert_not_equal user_one.cas_directory_id, download_url.creator
+  end
+
   test 'should not be able to set token or creator on create' do
     token_to_try = '12345'
     creator_to_try = 'one'
