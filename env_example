@@ -25,3 +25,10 @@ MIRADOR_STATIC_VERSION = '1.1.0'
 # This should include the entire URL except for the token
 RETRIEVE_BASE_URL=http://127.0.0.1:3000/retrieve/
 
+# --- config/ldap.yml
+# LDAP Authentication Credentials
+LDAP_BIND_DN=
+LDAP_BIND_PASSWORD=
+
+# SPAQRL endpoint for querying the repository's audit history
+AUDIT_SPARQL_ENDPOINT_URL=

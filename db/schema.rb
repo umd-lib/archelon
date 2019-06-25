@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170810141511) do
+ActiveRecord::Schema.define(version: 20190612201137) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       null: false
@@ -29,9 +29,9 @@ ActiveRecord::Schema.define(version: 20170810141511) do
   create_table "cas_users", force: :cascade do |t|
     t.string   "cas_directory_id"
     t.string   "name"
-    t.datetime "created_at",                       null: false
-    t.datetime "updated_at",                       null: false
-    t.boolean  "admin",            default: false
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+    t.string   "user_type"
   end
 
   add_index "cas_users", ["cas_directory_id"], name: "index_cas_users_on_cas_directory_id", unique: true

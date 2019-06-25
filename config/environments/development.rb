@@ -45,4 +45,6 @@ Rails.application.configure do
 
   # Mirador version
   config.mirador_static_version = ENV['MIRADOR_STATIC_VERSION'] || '1.1.0'
+
+  config.audit_sparql_endpoint = ENV['AUDIT_SPARQL_ENDPOINT_URL']
 end

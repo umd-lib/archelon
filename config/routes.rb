@@ -2,6 +2,7 @@ Rails.application.routes.draw do # rubocop:disable Metrics/BlockLength
   get 'static_pages/about'
 
   resources :cas_users
+  get '/cas_users/:id/history' => 'cas_users#show_history'
 
   mount Blacklight::Engine => '/'
   root to: 'catalog#index'
@@ -40,7 +41,12 @@ Rails.application.routes.draw do # rubocop:disable Metrics/BlockLength
   get path: '/retrieve/do/:token', controller: 'retrieve', action: 'do_retrieve',
       as: 'do_retrieve'
 
-  get 'logout' => 'cas_users#logout'
+  get 'login', to: redirect('/auth/cas'), as: 'login'
+  get 'admin/user/login_as/:user_id', to: 'sessions#login_as', as: 'admin_user_login_as'
+  get 'logout', to: 'sessions#destroy', as: 'logout'
+  get 'auth/:provider/callback', to: 'sessions#create'
+  get 'auth/failure', to: redirect('/')
+  
   get 'about' => 'static_pages#about'
   get 'help' => 'static_pages#help'
 

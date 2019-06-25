@@ -33,7 +33,7 @@ class DownloadUrlsController < ApplicationController
     @download_url = DownloadUrl.new(download_url_params)
     @download_url.url = solr_document[:id]
     @download_url.mime_type = solr_document[:mime_type]
-    @download_url.creator = current_cas_user.cas_directory_id
+    @download_url.creator = real_user.cas_directory_id
     @download_url.enabled = true
     @download_url.expires_at = 7.days.from_now
     # Title is not a form parameter, so we have to re-create it in order

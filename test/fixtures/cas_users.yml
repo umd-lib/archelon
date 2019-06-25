@@ -3,16 +3,39 @@
 one:
   cas_directory_id: one
   name: One
+  user_type: user
 
 two:
   cas_directory_id: two
   name: Two
+  user_type: user
+
+prior_admin:
+  cas_directory_id: prior_admin
+  name: Prior Admin
+  user_type: admin
+
+prior_user1:
+  cas_directory_id: prior_user1
+  name: Prior User1
+  user_type: user
+
+prior_user2:
+  cas_directory_id: prior_user2
+  name: Prior User2
+  user_type: user
 
 test_user:
   cas_directory_id: test_user
   name: Test User
+  user_type: user
 
 test_admin:
   cas_directory_id: test_admin
   name: Test Admin
-  admin: true
+  user_type: admin
+
+test_admin2:
+  cas_directory_id: test_admin2
+  name: Test Admin
+  user_type: admin

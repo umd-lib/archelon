@@ -39,9 +39,10 @@ gem 'therubyracer'
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw]
 
 # CAS Authentication
-# April 25, 2016: Need to use GitHub instead of Gem
-# See https://github.com/rubycas/rubycas-client-rails/issues/27
-gem 'rubycas-client', git: 'https://github.com/rubycas/rubycas-client.git', branch: 'master'
+gem 'omniauth-cas', '~> 1.1.1'
+
+# LDAP
+gem 'net-ldap', '~> 0.16.1'
 
 # dotenv - For storing production configuration parameters
 gem 'dotenv-rails', '~> 2.1.1'
@@ -91,3 +92,5 @@ group :test do
 end
 
 gem 'rsolr', '~> 1.0'
+
+gem "sparql-client", "~> 3.0"

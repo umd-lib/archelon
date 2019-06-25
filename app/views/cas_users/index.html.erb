@@ -1,5 +1,3 @@
-<p id="notice"><%= notice %></p>
-
 <h1>Users</h1>
 
 <table class="table">
@@ -7,25 +5,25 @@
     <tr>
       <th>Directory ID</th>
       <th>Name</th>
-      <th>Admin</th>
+      <th>Type</th>
       <th colspan="3"></th>
+      <th colspan="2"></th>
     </tr>
   </thead>
 
   <tbody>
     <% @cas_users.each do |cas_user| %>
       <tr>
-        <td><%= cas_user.cas_directory_id %></td>
+        <td><%= link_to cas_user.cas_directory_id, cas_user %></td>
         <td><%= cas_user.name %></td>
-        <td><%= cas_user.admin %></td>
-        <td><%= link_to 'Show', cas_user %></td>
-        <td><%= link_to 'Edit', edit_cas_user_path(cas_user) %></td>
-        <td><%= link_to 'Destroy', cas_user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= cas_user.user_type %></td>
+        <td><%= link_to 'Destroy', cas_user, method: :delete, data: { confirm: 'Please remove Archelon Grouper roles of the user to ensure access is restricted. Confirm delete?' } %></td>
+        <td>
+          <% if can_login_as?(cas_user) %>
+            <%= link_to 'Sign In As', admin_user_login_as_path(cas_user.id) %>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>
 </table>
-
-<br>
-
-<%= link_to 'New User', new_cas_user_path, class: 'btn btn-success' %>
