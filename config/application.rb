@@ -39,3 +39,14 @@ module FcrepoSearch
     config.cas_url = "https://login.umd.edu/cas"
   end
 end
+
+module Blacklight::Solr
+  class Repository < Blacklight::AbstractRepository
+    protected
+      # set the SSL CA certs path for Solr connections
+      def build_connection
+        conn = Faraday.new ssl: { ca_path: Rails.configuration.ssl_ca_file }
+        RSolr.connect conn, connection_config
+      end
+  end
+end
