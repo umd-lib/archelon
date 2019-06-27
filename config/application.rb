@@ -45,8 +45,12 @@ module Blacklight::Solr
     protected
       # set the SSL CA certs path for Solr connections
       def build_connection
-        conn = Faraday.new ssl: { ca_path: Rails.configuration.ssl_ca_file }
-        RSolr.connect conn, connection_config
+        if Rails.configuration.ssl_ca_file
+          conn = Faraday.new ssl: { ca_path: Rails.configuration.ssl_ca_file }
+          RSolr.connect conn, connection_config
+        else
+          RSolr.connect connection_config
+        end
       end
   end
 end
