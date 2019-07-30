@@ -84,5 +84,11 @@ Rails.application.configure do
   # Mirador version
   config.mirador_static_version = ENV['MIRADOR_STATIC_VERSION']
 
-  config.audit_sparql_endpoint = ENV['AUDIT_SPARQL_ENDPOINT_URL']
+  config.audit_database = {
+      dbname: ENV['AUDIT_DATABASE_NAME'],
+      host: ENV['AUDIT_DATABASE_HOST'],
+      port: ENV['AUDIT_DATABASE_PORT'],
+      user: ENV['AUDIT_DATABASE_USERNAME'],
+      password: ENV['AUDIT_DATABASE_PASSWORD'],
+  }
 end

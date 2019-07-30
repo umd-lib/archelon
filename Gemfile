@@ -65,6 +65,8 @@ gem 'http', '~> 2.2.2'
 # RFC-complient URI and URI template handling
 gem 'addressable', '~> 2.5'
 
+gem 'pg'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'

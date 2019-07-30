@@ -11,7 +11,8 @@
 <table class="table">
   <thead>
   <tr>
-    <th>Timestamp</th>
+    <th>Date</th>
+    <th>Time</th>
     <th>Event Type</th>
     <th>Resource</th>
   </tr>
@@ -22,12 +23,15 @@
       <td colspan="3">No events found for this user in the past <%= @days %> days</td>
     </tr>
   <% else %>
+    <% prev_date = nil %>
     <% @events.each do |event| %>
       <tr>
-        <td><%= event[:timestamp] %></td>
+        <td><%= event[:date] unless prev_date == event[:date]%></td>
+        <td><%= event[:time] %></td>
         <td><%= link_to event[:type_description], event[:type].to_s %></td>
         <td><%= link_to event[:resource], "/catalog/#{CGI.escape(event[:resource])}" %></td>
       </tr>
+      <% prev_date = event[:date] %>
     <% end %>
   <% end%>
   </tbody>
