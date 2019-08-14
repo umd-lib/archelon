@@ -24,6 +24,10 @@ class CatalogController < ApplicationController
       fq: ['is_pcdm:true']
     }
 
+    config.fetch_many_document_params = {
+      fl: '*'
+    }
+
     # solr path which will be added to solr base url before the other solr params.
     config.solr_path = 'search'
     config.document_solr_path = 'document'
