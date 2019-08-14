@@ -88,3 +88,5 @@ end
 gem 'rsolr', '~> 1.0'
 
 gem "sparql-client", "~> 3.0"
+
+gem 'stomp'

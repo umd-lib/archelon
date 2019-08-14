@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190612201137) do
+ActiveRecord::Schema.define(version: 20190812194529) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       null: false
@@ -49,6 +49,18 @@ ActiveRecord::Schema.define(version: 20190612201137) do
     t.datetime "updated_at",            null: false
     t.datetime "expires_at"
     t.index ["token"], name: "index_download_urls_on_token", unique: true
+  end
+
+  create_table "export_jobs", force: :cascade do |t|
+    t.string   "format"
+    t.integer  "cas_user_id"
+    t.datetime "timestamp"
+    t.string   "name"
+    t.integer  "item_count"
+    t.string   "status"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["cas_user_id"], name: "index_export_jobs_on_cas_user_id"
   end
 
   create_table "searches", force: :cascade do |t|

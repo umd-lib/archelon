@@ -266,6 +266,7 @@ GEM
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
     sqlite3 (1.3.13)
+    stomp (1.4.8)
     therubyracer (0.12.3)
       libv8 (~> 3.16.14.15)
       ref
@@ -334,6 +335,7 @@ DEPENDENCIES
   sparql-client (~> 3.0)
   spring
   sqlite3 (~> 1.3.13)
+  stomp
   therubyracer
   turbolinks
   tzinfo-data
