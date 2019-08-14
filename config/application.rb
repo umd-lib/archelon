@@ -33,6 +33,9 @@ module FcrepoSearch
     elsif File.file? '/etc/ssl/certs/ca-certificates.crt'
       # Debian/Ubuntu path
       config.ssl_ca_file = '/etc/ssl/certs/ca-certificates.crt'
+    elsif File.file? '/etc/openssl/cert.pem'
+      # Mac OS X path
+      config.ssl_ca_file = '/etc/openssl/cert.pem'
     end
 
     # CAS URL
