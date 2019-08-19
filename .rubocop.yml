@@ -1,6 +1,4 @@
-# Enables Rails cops
-Rails:
-  Enabled: true
+require: rubocop-rails
 
 # Exclude auto-generated files
 AllCops:
@@ -33,7 +31,7 @@ Style/ClassAndModuleChildren:
     - 'test/**/*'
 
 Layout/IndentationConsistency:
-  EnforcedStyle: rails
+  EnforcedStyle: indented_internal_methods
 
 Style/EmptyMethod:
   EnforcedStyle: expanded
