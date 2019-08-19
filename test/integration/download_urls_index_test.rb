@@ -18,7 +18,7 @@ class DownloadUrlsIndexTest < ActionDispatch::IntegrationTest
     @sort_columns.each do |sort_column|
       %w[asc desc].each do |sort_direction|
         rq_param = { s: sort_column + ' ' + sort_direction }
-        get download_urls_path, rq: rq_param
+        get download_urls_path, params: { rq: rq_param }
         assert_template 'download_urls/index'
         assert_select 'ul.pagination'
 

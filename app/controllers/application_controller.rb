@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
   # Adds a few additional behaviors into the application controller
   include Blacklight::Controller
   layout 'blacklight'
+  skip_after_action :discard_flash_if_xhr
 
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.

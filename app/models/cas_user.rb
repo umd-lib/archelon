@@ -1,5 +1,5 @@
 # A user of the application
-class CasUser < ActiveRecord::Base
+class CasUser < ApplicationRecord
   enum user_type: { admin: "admin", user: "user", unauthorized: "unauthorized"}
   validates :cas_directory_id, presence: true, uniqueness: { case_sensitive: false }
   validates :name, presence: true

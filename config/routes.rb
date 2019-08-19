@@ -27,18 +27,18 @@ Rails.application.routes.draw do # rubocop:disable Metrics/BlockLength
   end
 
   resources :download_urls, only: %i[index show]
-  get path: '/download_urls/generate/:document_url', controller: 'download_urls',
+  get '/download_urls/generate/:document_url', controller: 'download_urls',
       action: 'generate_download_url', as: 'generate_download_url', constraints: { document_url: /.*/ }
-  post path: '/download_urls/create', controller: 'download_urls',
+  post '/download_urls/create', controller: 'download_urls',
        action: 'create_download_url', as: 'create_download_url'
-  get path: '/download_urls/show/:token', controller: 'download_urls',
+  get '/download_urls/show/:token', controller: 'download_urls',
       action: 'show_download_url', as: 'show_download_url'
-  put path: '/download_urls/disable/:token', controller: 'download_urls',
+  put '/download_urls/disable/:token', controller: 'download_urls',
       action: 'disable', as: 'disable_download_url'
 
-  get path: '/retrieve/:token', controller: 'retrieve', action: 'retrieve',
+  get '/retrieve/:token', controller: 'retrieve', action: 'retrieve',
       as: 'retrieve'
-  get path: '/retrieve/do/:token', controller: 'retrieve', action: 'do_retrieve',
+  get '/retrieve/do/:token', controller: 'retrieve', action: 'do_retrieve',
       as: 'do_retrieve'
 
   get 'login', to: redirect('/auth/cas'), as: 'login'

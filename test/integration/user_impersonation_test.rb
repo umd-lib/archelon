@@ -20,7 +20,7 @@ class UserImpersonationTest < ActionDispatch::IntegrationTest
     assert session[:cas_user], non_admin_user.cas_directory_id
     
     referring_page = '/some/page'
-    get admin_user_login_as_path(user_id: admin_user.id), nil, { HTTP_REFERER: referring_page}
+    get admin_user_login_as_path(user_id: admin_user.id), headers: { HTTP_REFERER: referring_page}
     assert_redirected_to referring_page
   end
 
