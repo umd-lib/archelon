@@ -25,7 +25,7 @@ class ActiveSupport::TestCase
   # Add more helper methods to be used by all tests here...
 
   # Default user for testing has Admin privileges
-  DEFAULT_TEST_USER = 'test_admin'.freeze
+  DEFAULT_TEST_USER = 'test_admin'
 
   OmniAuth.config.test_mode = true
   OmniAuth.config.mock_auth[:cas] = {

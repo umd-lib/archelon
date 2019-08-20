@@ -6,9 +6,9 @@ require 'addressable/template'
 module ApplicationHelper
   FEDORA_BASE_URL = Rails.application.config.fcrepo_base_url
   IIIF_BASE_URL = Rails.application.config.iiif_base_url
-  PCDM_OBJECT = 'pcdm:Object'.freeze
-  PCDM_FILE = 'pcdm:File'.freeze
-  ALLOWED_MIME_TYPE = 'image/tiff'.freeze
+  PCDM_OBJECT = 'pcdm:Object'
+  PCDM_FILE = 'pcdm:File'
+  ALLOWED_MIME_TYPE = 'image/tiff'
   MIRADOR_STATIC_VERSION = Rails.application.config.mirador_static_version
 
   def mirador_displayable?(document)
