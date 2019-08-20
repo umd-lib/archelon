@@ -41,7 +41,7 @@ class CasUser < ApplicationRecord
     end
 
     def self.ldap_attributes(uid)
-      filter = Net::LDAP::Filter.eq( 'uid', uid)
+      filter = Net::LDAP::Filter.eq('uid', uid)
       first_entry = LDAP.search(:base => LDAP_BASE, :filter => filter, :attributes => LDAP_ATTRIBUTES).first
       return {
         name: first_entry[LDAP_NAME_ATTR].first,
