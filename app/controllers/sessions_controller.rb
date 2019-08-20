@@ -5,7 +5,7 @@ class SessionsController < ApplicationController
 
   def create
     @user = CasUser.find_or_create_from_auth_hash(request.env['omniauth.auth'])
-    if @user == nil
+    if @user.nil?
       session[:unauthorized_user] = true
       render(file: Rails.root.join('public', '403.html'), status: :forbidden, layout: false) and return
     else
