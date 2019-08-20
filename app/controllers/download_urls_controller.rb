@@ -65,7 +65,7 @@ class DownloadUrlsController < ApplicationController
     token = params[:token]
     notice_msg = nil
     @download_url = DownloadUrl.find_by(token: token)
-    if @download_url && @download_url.enabled?
+    if @download_url&.enabled?
       @download_url.enabled = false
       @download_url.save!
       notice_msg = 'Download URL was disabled'
@@ -125,6 +125,6 @@ class DownloadUrlsController < ApplicationController
       return if params.blank?
 
       rq_params = params[:rq]
-      rq_params.delete_if { |key, value| key == 'enabled_eq' && value == '0' } if rq_params
+      rq_params&.delete_if { |key, value| key == 'enabled_eq' && value == '0' }
     end
 end

@@ -38,7 +38,7 @@ class CasUser < ApplicationRecord
     end
 
     def self.ldap_attrs_value(result, key)
-      return result[key] if result && result.key?(key)
+      return result[key] if result&.key?(key)
     end
 
     def self.ldap_attributes(uid)
