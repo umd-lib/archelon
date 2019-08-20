@@ -57,7 +57,7 @@ class CasUsersController < ApplicationController
           timestamp: row['timestamp'],
           type: row['event_type'],
           type_description: short_name_for[row['event_type']],
-          resource: row['resource_uri'],
+          resource: row['resource_uri']
         }
       end
     end
