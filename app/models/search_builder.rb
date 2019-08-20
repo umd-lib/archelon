@@ -7,6 +7,7 @@ class SearchBuilder < Blacklight::SearchBuilder
 
   def allow_annotations_if_query_non_empty(solr_parameters)
     return if solr_parameters[:q].blank?
+
     solr_parameters[:fq].delete('is_pcdm:true') if solr_parameters[:fq].include? 'is_pcdm:true'
     solr_parameters[:fq] << 'is_pcdm:true OR rdf_type:oa\:Annotation'
   end

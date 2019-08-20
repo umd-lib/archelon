@@ -13,6 +13,7 @@ module UMDLibEnvironmentBannerHelper
 
   def environment_name
     return 'Local' if Rails.env.development? || Rails.env.vagrant?
+
     hostname = `hostname -s`
     return 'Development' if hostname =~ /dev$/
     return 'Staging' if hostname =~ /stage$/

@@ -35,6 +35,7 @@ class ApplicationController < ActionController::Base
 
   def real_user
     return current_cas_user unless impersonating?
+
     impersonating_admin
   end
   helper_method :real_user

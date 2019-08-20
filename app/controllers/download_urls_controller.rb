@@ -102,6 +102,7 @@ class DownloadUrlsController < ApplicationController
       results = fetch([document_url])
       solr_documents = results[1]
       return solr_documents.first if solr_documents.any?
+
       nil
     end
 
@@ -122,6 +123,7 @@ class DownloadUrlsController < ApplicationController
     # Removes "enabled_eq" if it is 0.
     def query_params
       return if params.blank?
+
       rq_params = params[:rq]
       rq_params.delete_if { |key, value| key == 'enabled_eq' && value == '0' } if rq_params
     end

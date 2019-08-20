@@ -20,6 +20,7 @@ class CasUser < ApplicationRecord
     def self.update_name(user, ldap_attrs)
       name = ldap_attrs_value(ldap_attrs, :name)
       return if !name && user.name
+
       user.name = user.cas_directory_id and return if !name
       user.name = name
     end
@@ -27,8 +28,10 @@ class CasUser < ApplicationRecord
     def self.update_user_type(user, ldap_attrs)
       groups = ldap_attrs_value(ldap_attrs, :groups)
       return if !groups && user.user_type
+
       user.user_type = :unauthorized
       return if !groups
+
       user.user_type = :user if groups.include?(GROUPER_USER_GROUP)
       user.user_type = :admin if groups.include?(GROUPER_ADMIN_GROUP)
     end
