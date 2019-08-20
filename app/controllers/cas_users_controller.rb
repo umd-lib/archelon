@@ -30,7 +30,7 @@ class CasUsersController < ApplicationController
       'http://id.loc.gov/vocabulary/preservation/eventType/del' => 'Delete Resource'
     }
 
-    history_query = <<-END
+    history_query = <<-END_QUERY
       SELECT
         timestamp,
         event_type,
@@ -40,7 +40,7 @@ class CasUsersController < ApplicationController
       FROM history
       WHERE username = $1 AND timestamp > $2
       ORDER BY timestamp DESC
-    END
+    END_QUERY
 
     # TODO: put the connection setup somewhere central
     conn = PG.connect(Rails.configuration.audit_database)
