@@ -73,7 +73,7 @@ class RetrieveControllerTest < ActionController::TestCase
     end
 
     download_url.reload
-    refute download_url.enabled?
+    assert_not download_url.enabled?
   end
 
   test '"do_retrieve" action should disable download_url if download_url is expired' do
@@ -90,7 +90,7 @@ class RetrieveControllerTest < ActionController::TestCase
     assert_template 'retrieve'
     assert_response 410 # HTTP "Gone" status
     download_url.reload
-    refute download_url.enabled?
+    assert_not download_url.enabled?
   end
 
   def teardown

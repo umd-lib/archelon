@@ -122,7 +122,7 @@ class DownloadUrlsControllerTest < ActionController::TestCase
   test 'show_download_url should assign the retrieve url' do
     get :show_download_url, params: { token: @download_url.token }
     retrieve_base_url = ENV['RETRIEVE_BASE_URL']
-    refute assigns(:download_url).nil?
+    assert_not assigns(:download_url).nil?
     assert_equal retrieve_base_url + @download_url.token, assigns(:download_url).retrieve_url
   end
 
@@ -132,7 +132,7 @@ class DownloadUrlsControllerTest < ActionController::TestCase
     put :disable, params: { token: @download_url.token }
 
     @download_url.reload
-    refute @download_url.enabled?
+    assert_not @download_url.enabled?
   end
 
   test 'index should allow filtering by "enabled" status' do

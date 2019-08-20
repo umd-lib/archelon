@@ -20,10 +20,10 @@ class DownloadUrlTest < ActiveSupport::TestCase
     assert download_url.valid?
 
     download_url.notes = nil
-    refute download_url.valid?
+    assert_not download_url.valid?
 
     download_url.notes = ''
-    refute download_url.valid?
+    assert_not download_url.valid?
 
     download_url.notes = 'abc'
     assert download_url.valid?
@@ -32,7 +32,7 @@ class DownloadUrlTest < ActiveSupport::TestCase
   test 'expired? should correctly indicate expire status' do
     download_url = download_urls(:one)
     download_url.expires_at = 7.days.from_now
-    refute download_url.expired?
+    assert_not download_url.expired?
 
     download_url.expires_at = 1.second.ago
     assert download_url.expired?

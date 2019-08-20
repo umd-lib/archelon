@@ -13,7 +13,7 @@ class CatalogControllerTest < ActionController::TestCase
     @controller.stub(:index, raise_e) do
       get :index
       assert_redirected_to(about_url)
-      refute flash.empty?
+      assert_not flash.empty?
       assert_equal flash[:error], I18n.t(:solr_is_down)
     end
   end
@@ -23,7 +23,7 @@ class CatalogControllerTest < ActionController::TestCase
     @controller.stub(:index, raise_e) do
       get :index
       assert_redirected_to(about_url)
-      refute flash.empty?
+      assert_not flash.empty?
       assert_equal flash[:error], I18n.t(:solr_is_down)
     end
   end
