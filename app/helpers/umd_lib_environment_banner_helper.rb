@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module UMDLibEnvironmentBannerHelper
   # https://confluence.umd.edu/display/LIB/Create+Environment+Banners
   def umd_lib_environment_banner
@@ -11,6 +13,7 @@ module UMDLibEnvironmentBannerHelper
 
   def environment_name
     return 'Local' if Rails.env.development? || Rails.env.vagrant?
+
     hostname = `hostname -s`
     return 'Development' if hostname =~ /dev$/
     return 'Staging' if hostname =~ /stage$/

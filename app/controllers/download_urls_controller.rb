@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DownloadUrlsController < ApplicationController
   before_action :set_download_url, only: [:show]
   include Blacklight::SearchHelper
@@ -63,7 +65,7 @@ class DownloadUrlsController < ApplicationController
     token = params[:token]
     notice_msg = nil
     @download_url = DownloadUrl.find_by(token: token)
-    if @download_url && @download_url.enabled?
+    if @download_url&.enabled?
       @download_url.enabled = false
       @download_url.save!
       notice_msg = 'Download URL was disabled'
@@ -100,6 +102,7 @@ class DownloadUrlsController < ApplicationController
       results = fetch([document_url])
       solr_documents = results[1]
       return solr_documents.first if solr_documents.any?
+
       nil
     end
 
@@ -120,7 +123,8 @@ class DownloadUrlsController < ApplicationController
     # Removes "enabled_eq" if it is 0.
     def query_params
       return if params.blank?
+
       rq_params = params[:rq]
-      rq_params.delete_if { |key, value| key == 'enabled_eq' && value == '0' } if rq_params
+      rq_params&.delete_if { |key, value| key == 'enabled_eq' && value == '0' }
     end
 end

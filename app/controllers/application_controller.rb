@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ApplicationController < ActionController::Base
   include CasHelper
   before_action :authenticate
@@ -33,6 +35,7 @@ class ApplicationController < ActionController::Base
 
   def real_user
     return current_cas_user unless impersonating?
+
     impersonating_admin
   end
   helper_method :real_user
@@ -41,5 +44,4 @@ class ApplicationController < ActionController::Base
     current_cas_user.admin? && user.user? && (user.id != current_cas_user.id)
   end
   helper_method :can_login_as?
-
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # A DownloadUrl for retrieving Fedora document
 class DownloadUrl < ApplicationRecord
   include Tokenable

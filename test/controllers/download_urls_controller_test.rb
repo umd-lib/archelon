@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class DownloadUrlsControllerTest < ActionController::TestCase
@@ -17,15 +19,15 @@ class DownloadUrlsControllerTest < ActionController::TestCase
     stub_find_solr_document do
       assert_difference('DownloadUrl.count') do
         post :create_download_url, params: {
-            download_url: {
-                accessed_at: @download_url.accessed_at,
-                download_completed_at: @download_url.download_completed_at,
-                enabled: @download_url.enabled, mime_type: @download_url.mime_type,
-                notes: @download_url.notes, request_ip: @download_url.request_ip,
-                request_user_agent: @download_url.request_user_agent,
-                title: @download_url.title,
-                url: @download_url.url
-            }
+          download_url: {
+            accessed_at: @download_url.accessed_at,
+            download_completed_at: @download_url.download_completed_at,
+            enabled: @download_url.enabled, mime_type: @download_url.mime_type,
+            notes: @download_url.notes, request_ip: @download_url.request_ip,
+            request_user_agent: @download_url.request_user_agent,
+            title: @download_url.title,
+            url: @download_url.url
+          }
         }
       end
     end
@@ -40,15 +42,15 @@ class DownloadUrlsControllerTest < ActionController::TestCase
         impersonate_as_user(user_one) do
           assert_equal session[:cas_user], user_one.cas_directory_id
           post :create_download_url, params: {
-              download_url: {
-                  accessed_at: @download_url.accessed_at,
-                  download_completed_at: @download_url.download_completed_at,
-                  enabled: @download_url.enabled, mime_type: @download_url.mime_type,
-                  notes: @download_url.notes, request_ip: @download_url.request_ip,
-                  request_user_agent: @download_url.request_user_agent,
-                  title: @download_url.title,
-                  url: @download_url.url
-              }
+            download_url: {
+              accessed_at: @download_url.accessed_at,
+              download_completed_at: @download_url.download_completed_at,
+              enabled: @download_url.enabled, mime_type: @download_url.mime_type,
+              notes: @download_url.notes, request_ip: @download_url.request_ip,
+              request_user_agent: @download_url.request_user_agent,
+              title: @download_url.title,
+              url: @download_url.url
+            }
           }
         end
       end
@@ -65,15 +67,15 @@ class DownloadUrlsControllerTest < ActionController::TestCase
     stub_find_solr_document do
       assert_difference('DownloadUrl.count') do
         post :create_download_url, params: {
-            download_url: {
-                accessed_at: @download_url.accessed_at,
-                download_completed_at: @download_url.download_completed_at,
-                enabled: @download_url.enabled, mime_type: @download_url.mime_type,
-                notes: @download_url.notes, request_ip: @download_url.request_ip,
-                request_user_agent: @download_url.request_user_agent,
-                title: @download_url.title,
-                url: @download_url.url, token: token_to_try, creator: creator_to_try
-            }
+          download_url: {
+            accessed_at: @download_url.accessed_at,
+            download_completed_at: @download_url.download_completed_at,
+            enabled: @download_url.enabled, mime_type: @download_url.mime_type,
+            notes: @download_url.notes, request_ip: @download_url.request_ip,
+            request_user_agent: @download_url.request_user_agent,
+            title: @download_url.title,
+            url: @download_url.url, token: token_to_try, creator: creator_to_try
+          }
         }
       end
     end
@@ -86,15 +88,15 @@ class DownloadUrlsControllerTest < ActionController::TestCase
     stub_find_solr_document do
       assert_no_difference('DownloadUrl.count') do
         post :create_download_url, params: {
-            download_url: {
-                accessed_at: @download_url.accessed_at,
-                download_completed_at: @download_url.download_completed_at,
-                enabled: @download_url.enabled, mime_type: @download_url.mime_type,
-                notes: nil, request_ip: @download_url.request_ip,
-                request_user_agent: @download_url.request_user_agent,
-                title: @download_url.title,
-                url: @download_url.url
-            }
+          download_url: {
+            accessed_at: @download_url.accessed_at,
+            download_completed_at: @download_url.download_completed_at,
+            enabled: @download_url.enabled, mime_type: @download_url.mime_type,
+            notes: nil, request_ip: @download_url.request_ip,
+            request_user_agent: @download_url.request_user_agent,
+            title: @download_url.title,
+            url: @download_url.url
+          }
         }
       end
     end
@@ -120,7 +122,7 @@ class DownloadUrlsControllerTest < ActionController::TestCase
   test 'show_download_url should assign the retrieve url' do
     get :show_download_url, params: { token: @download_url.token }
     retrieve_base_url = ENV['RETRIEVE_BASE_URL']
-    refute assigns(:download_url).nil?
+    assert_not assigns(:download_url).nil?
     assert_equal retrieve_base_url + @download_url.token, assigns(:download_url).retrieve_url
   end
 
@@ -130,14 +132,14 @@ class DownloadUrlsControllerTest < ActionController::TestCase
     put :disable, params: { token: @download_url.token }
 
     @download_url.reload
-    refute @download_url.enabled?
+    assert_not @download_url.enabled?
   end
 
   test 'index should allow filtering by "enabled" status' do
     get :index, params: { rq: { enabled_eq: 1 } }
 
     download_urls = assigns(:download_urls)
-    assert download_urls.count > 0
+    assert download_urls.count.positive?
     assert download_urls.all?(&:enabled?)
   end
 
@@ -146,7 +148,7 @@ class DownloadUrlsControllerTest < ActionController::TestCase
     get :index, params: { rq: { creator_eq: creator } }
 
     download_urls = assigns(:download_urls)
-    assert download_urls.count > 0
+    assert download_urls.count.positive?
     assert(download_urls.all?) { |d| d.creator == creator }
   end
 

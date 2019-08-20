@@ -75,7 +75,8 @@ group :test do
   gem 'minitest-reporters', '~> 1.1.8'
 
   # Code analysis tools
-  gem 'rubocop', '~> 0.54.0', require: false
+  gem 'rubocop', '~> 0.74.0', require: false
+  gem 'rubocop-rails', '~> 2.3.0', require: false
   gem 'rubocop-checkstyle_formatter', '~> 0.2.0', require: false
 
   gem 'simplecov', require: false

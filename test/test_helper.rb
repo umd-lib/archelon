@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'simplecov'
 require 'simplecov-rcov'
 SimpleCov.formatters = [
@@ -23,33 +25,33 @@ class ActiveSupport::TestCase
   # Add more helper methods to be used by all tests here...
 
   # Default user for testing has Admin privileges
-  DEFAULT_TEST_USER = 'test_admin'.freeze
+  DEFAULT_TEST_USER = 'test_admin'
 
   OmniAuth.config.test_mode = true
   OmniAuth.config.mock_auth[:cas] = {
-    :provider => 'cas',
-    :uid => DEFAULT_TEST_USER
+    provider: 'cas',
+    uid: DEFAULT_TEST_USER
   }
 
   def cas_login(cas_directory_id)
     OmniAuth.config.mock_auth[:cas] = {
-      :provider => 'cas',
-      :uid => cas_directory_id
+      provider: 'cas',
+      uid: cas_directory_id
     }
-    get "/auth/cas/callback"
+    get '/auth/cas/callback'
   end
 
   def mock_cas_login(cas_directory_id)
     OmniAuth.config.mock_auth[:cas] = {
-      :provider => 'cas',
-      :uid => cas_directory_id
+      provider: 'cas',
+      uid: cas_directory_id
     }
-    request.env["omniauth.auth"] = OmniAuth.config.mock_auth[:cas]
+    request.env['omniauth.auth'] = OmniAuth.config.mock_auth[:cas]
     session[:cas_user] = cas_directory_id
   end
 
   # Runs the contents of a block using the given user as the current_user.
-  def impersonate_as_user(user)
+  def impersonate_as_user(user) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     current_admin_user = CasUser.find_by(cas_directory_id: session[:cas_user])
     session[:admin_id] = current_admin_user.id
     session[:cas_user] = user.cas_directory_id
@@ -78,5 +80,4 @@ class ActiveSupport::TestCase
       mock_cas_login(DEFAULT_TEST_USER)
     end
   end
-
 end

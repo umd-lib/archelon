@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class SessionsControllerTest < ActionController::TestCase
@@ -8,7 +10,7 @@ class SessionsControllerTest < ActionController::TestCase
 
   test 'should redirect to cas logout url on session destory' do
     get :destroy
-    cas_logout_url = Rails.application.config.cas_url + "/logout"
+    cas_logout_url = Rails.application.config.cas_url + '/logout'
     assert_redirected_to(cas_logout_url)
   end
 end
