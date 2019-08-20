@@ -15,14 +15,11 @@ class CasUsersController < ApplicationController
   end
 
   def show_history
-    #byebug
     @days = params.key?(:days) ? params[:days].to_i : 90
     @events = audit_events_for_user(@cas_user.cas_directory_id, @days)
   end
 
-  def audit_events(filter, bindings)
-    offset = bindings.delete(:offset)
-    limit = bindings.delete(:limit)
+  def audit_events(bindings)
     short_name_for = {
       'http://id.loc.gov/vocabulary/preservation/eventType/cre' => 'Create Resource',
       'http://id.loc.gov/vocabulary/preservation/eventType/ing' => 'Ingest Resource',
@@ -30,33 +27,42 @@ class CasUsersController < ApplicationController
       'http://fedora.info/definitions/v4/audit#contentRemoval' => 'Content Removal',
       'http://id.loc.gov/vocabulary/preservation/eventType/del' => 'Delete Resource'
     }
-    sparql = SPARQL::Client.new(Rails.configuration.audit_sparql_endpoint)
-    premis = RDF::Vocabulary.new('http://www.loc.gov/premis/rdf/v1#')
-    query = sparql.select(:event, :agent, :resource, :timestamp, :type)
-      .prefix(xsd: RDF::URI('http://www.w3.org/2001/XMLSchema#'))
-      .where(
-        [:event, premis.hasEventRelatedAgent, :agent],
-        [:event, premis.hasEventRelatedObject, :resource],
-        [:event, premis.hasEventDateTime, :timestamp],
-        [:event, premis.hasEventType, :type],
-      )
-      .filter(filter)
-      .order(timestamp: :desc)
-      .values(bindings.keys, bindings.values)
 
-    query = query.offset(offset) unless offset.nil?
-    query = query.limit(limit) unless limit.nil?
+    history_query = <<-END
+      SELECT
+        timestamp,
+        event_type,
+        resource_uri,
+        to_char(timestamp, 'YYYY-MM-DD') as date,
+        to_char(timestamp, 'FMHH:MI:SS am TZ') as time
+      FROM history
+      WHERE username = $1 AND timestamp > $2
+      ORDER BY timestamp DESC
+    END
 
-    query.each_solution.map(&:to_h).each do |event|
-      type_uri = event[:type].to_s
-      event[:type_description] = short_name_for.key?(type_uri) ? short_name_for[type_uri] : type_uri
+    # TODO: put the connection setup somewhere central
+    conn = PG.connect(Rails.configuration.audit_database)
+
+    # the TZ environment variable overrides the default time zone
+    tz = ENV.key?('TZ') ? ENV['TZ'] : Time.zone.name
+    conn.exec("SET timezone = '#{conn.escape(tz)}'")
+
+    conn.exec_params(history_query, [ bindings[:user], bindings[:oldest]] ) do |result|
+      result.map do |row|
+        {
+            date: row['date'],
+            time: row['time'],
+            timestamp: row['timestamp'],
+            type: row['event_type'],
+            type_description: short_name_for[row['event_type']],
+            resource: row['resource_uri'],
+        }
+      end
     end
   end
 
   def audit_events_for_user(username, days_back)
-    audit_events '?timestamp > xsd:dateTime(?oldest) && ?agent = ?user',
-      user: username,
-      oldest: (DateTime.now - days_back.days).to_s
+    audit_events user: username, oldest: (DateTime.now - days_back.days).to_s
   end
 
   # DELETE /cas_users/1
