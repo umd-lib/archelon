@@ -28,6 +28,11 @@ module UrlHelper
     return unless doc[:annotation_source_info] && doc[:annotation_source_info][:docs]
 
     pages = doc[:annotation_source_info][:docs]
+    # rubocop:disable Rails/HelperInstanceVariable
+    # Disabling this offense for now, because it is not clear how to fix it.
+    # Probably do want to revisit this at some point and determine if there
+    # is a better way to retrieve the current query.
     safe_join(pages.map { |page| link_to page[:display_title], solr_document_path(page[:id], q: @current_query) }, ', ')
+    # rubocop:enable Rails/HelperInstanceVariable
   end
 end
