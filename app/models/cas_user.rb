@@ -22,7 +22,7 @@ class CasUser < ApplicationRecord
       name = ldap_attrs_value(ldap_attrs, :name)
       return if !name && user.name
 
-      user.name = user.cas_directory_id and return if !name
+      user.name = user.cas_directory_id and return unless name
       user.name = name
     end
 
@@ -31,7 +31,7 @@ class CasUser < ApplicationRecord
       return if !groups && user.user_type
 
       user.user_type = :unauthorized
-      return if !groups
+      return unless groups
 
       user.user_type = :user if groups.include?(GROUPER_USER_GROUP)
       user.user_type = :admin if groups.include?(GROUPER_ADMIN_GROUP)
