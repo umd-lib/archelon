@@ -25,7 +25,7 @@ class SessionsController < ApplicationController
     redirect_to cas_logout_url
   end
 
-  def login_as
+  def login_as # rubocop:disable Metrics/MethodLength
     user = CasUser.find(params[:user_id])
     if impersonating? && impersonating_admin_id == user.id
       sign_in(user)

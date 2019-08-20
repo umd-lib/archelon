@@ -21,7 +21,7 @@ class CasUsersController < ApplicationController
     @events = audit_events_for_user(@cas_user.cas_directory_id, @days)
   end
 
-  def audit_events(bindings)
+  def audit_events(bindings) # rubocop:disable Metrics/MethodLength
     short_name_for = {
       'http://id.loc.gov/vocabulary/preservation/eventType/cre' => 'Create Resource',
       'http://id.loc.gov/vocabulary/preservation/eventType/ing' => 'Ingest Resource',
