@@ -1,0 +1,28 @@
+<% if @jobs.count > 0 %>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Format</th>
+        <th>Timestamp</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+    <% @jobs.each do |job| %>
+      <tr>
+        <td><%= job.id %></td>
+        <td><%= job.name %></td>
+        <td><%= job.format%></td>
+        <td><%= job.timestamp %></td>
+        <td><%= job.status %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No Export jobs found</p>
+<% end %>
+
+<%= link_to 'New Export Job', new_export_job_url, class: 'btn btn-primary' %>

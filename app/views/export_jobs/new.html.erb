@@ -1,0 +1,17 @@
+<h1>Export Job Options</h1>
+<%= form_for(@job) do |f| %>
+  <div>
+    <%= f.label :name %>
+    <%= f.text_field :name, size: 40 %>
+  </div>
+  <div>
+    <%= f.label :format %>
+    <%= f.select :format, ExportJob::FORMATS %>
+  </div>
+  <div>
+    <%= text_area_tag :uris %>
+  </div>
+  <div>
+    <%= f.submit class: 'btn btn-primary' %>
+  </div>
+<% end %>
