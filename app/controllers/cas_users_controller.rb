@@ -52,12 +52,12 @@ class CasUsersController < ApplicationController
     conn.exec_params(history_query, [bindings[:user], bindings[:oldest]]) do |result|
       result.map do |row|
         {
-            date: row['date'],
-            time: row['time'],
-            timestamp: row['timestamp'],
-            type: row['event_type'],
-            type_description: short_name_for[row['event_type']],
-            resource: row['resource_uri'],
+          date: row['date'],
+          time: row['time'],
+          timestamp: row['timestamp'],
+          type: row['event_type'],
+          type_description: short_name_for[row['event_type']],
+          resource: row['resource_uri'],
         }
       end
     end
