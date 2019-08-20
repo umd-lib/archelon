@@ -21,7 +21,7 @@ class CasUser < ApplicationRecord
     name = ldap_attrs_value(ldap_attrs, :name)
     return if !name && user.name
 
-    user.name = user.cas_directory_id and return unless name
+    user.name = user.cas_directory_id and return unless name # rubocop:disable Style/AndOr
     user.name = name
   end
 

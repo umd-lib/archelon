@@ -7,7 +7,7 @@ class SessionsController < ApplicationController
     @user = CasUser.find_or_create_from_auth_hash(request.env['omniauth.auth'])
     if @user.nil?
       session[:unauthorized_user] = true
-      render(file: Rails.root.join('public', '403.html'), status: :forbidden, layout: false) and return
+      render(file: Rails.root.join('public', '403.html'), status: :forbidden, layout: false) and return # rubocop:disable Style/AndOr, Metrics/LineLength
     else
       sign_in(@user)
       redirect_to root_path
@@ -30,7 +30,7 @@ class SessionsController < ApplicationController
     if impersonating? && impersonating_admin_id == user.id
       sign_in(user)
       session.delete(:admin_id)
-      redirect_to request.headers['HTTP_REFERER'] and return if request.headers['HTTP_REFERER']
+      redirect_to request.headers['HTTP_REFERER'] and return if request.headers['HTTP_REFERER'] # rubocop:disable Style/AndOr, Metrics/LineLength
     elsif user && can_login_as?(user)
       session[:admin_id] = current_cas_user.id
       sign_in(user)
