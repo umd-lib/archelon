@@ -12,8 +12,8 @@ class CasUser < ApplicationRecord
       user.cas_directory_id = auth[:uid]
       update_name(user, ldap_attrs) unless user.name
       update_user_type(user, ldap_attrs)
-			user.save!
-		end
+      user.save!
+    end
   end
 
   private
