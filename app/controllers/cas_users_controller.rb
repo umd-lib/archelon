@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class CasUsersController < ApplicationController
-  before_action :set_cas_user, only: %i[show show_history edit update destroy]
-  before_action :verify_admin, only: %i[index new create edit update destroy]
+  before_action :set_cas_user, only: %i[show show_history destroy]
+  before_action :verify_admin, only: %i[index destroy]
   before_action :verify_self_or_admin, only: %i[show show_history]
 
   # GET /cas_users
