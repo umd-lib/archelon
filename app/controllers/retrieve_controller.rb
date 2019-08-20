@@ -52,7 +52,7 @@ class RetrieveController < ApplicationController
     def verify_download_url(download_url) # rubocop:disable Metrics/MethodLength
       not_found unless download_url
       unless download_url.enabled?
-        render 'disabled', layout: 'retrieve', status: 410
+        render 'disabled', layout: 'retrieve', status: :gone
         return false
       end
 
@@ -63,7 +63,7 @@ class RetrieveController < ApplicationController
           download_url.save
         end
         @download_url = download_url
-        render 'expired', layout: 'retrieve', status: 410
+        render 'expired', layout: 'retrieve', status: :gone
         return false
       end
       true
