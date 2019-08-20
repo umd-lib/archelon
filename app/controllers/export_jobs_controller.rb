@@ -41,7 +41,8 @@ class ExportJobsController < ApplicationController
         ArchelonExportJobId: job.id,
         ArchelonExportJobUsername: job.cas_user.cas_directory_id,
         ArchelonExportJobFormat: job.format,
-        ArchelonExportJobTimestamp: job.timestamp
+        ArchelonExportJobTimestamp: job.timestamp,
+        persistent: 'true'
       }
     end
 end
