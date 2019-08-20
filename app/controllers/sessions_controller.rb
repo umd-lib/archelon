@@ -32,7 +32,7 @@ class SessionsController < ApplicationController
       session.delete(:admin_id)
       redirect_to request.headers['HTTP_REFERER'] and return if request.headers['HTTP_REFERER']
     else
-      if user && (can_login_as?(user))
+      if user && can_login_as?(user)
         session[:admin_id] = current_cas_user.id
         sign_in(user)
       else
