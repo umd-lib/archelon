@@ -49,7 +49,7 @@ class CasUsersController < ApplicationController
     tz = ENV.key?('TZ') ? ENV['TZ'] : Time.zone.name
     conn.exec("SET timezone = '#{conn.escape(tz)}'")
 
-    conn.exec_params(history_query, [ bindings[:user], bindings[:oldest]]) do |result|
+    conn.exec_params(history_query, [bindings[:user], bindings[:oldest]]) do |result|
       result.map do |row|
         {
             date: row['date'],
