@@ -38,7 +38,7 @@ class ActiveSupport::TestCase
       :provider => 'cas',
       :uid => cas_directory_id
     }
-    get "/auth/cas/callback"
+    get '/auth/cas/callback'
   end
 
   def mock_cas_login(cas_directory_id)
@@ -46,7 +46,7 @@ class ActiveSupport::TestCase
       :provider => 'cas',
       :uid => cas_directory_id
     }
-    request.env["omniauth.auth"] = OmniAuth.config.mock_auth[:cas]
+    request.env['omniauth.auth'] = OmniAuth.config.mock_auth[:cas]
     session[:cas_user] = cas_directory_id
   end
 

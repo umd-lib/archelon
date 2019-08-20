@@ -2,7 +2,7 @@
 
 # A user of the application
 class CasUser < ApplicationRecord
-  enum user_type: { admin: "admin", user: "user", unauthorized: "unauthorized"}
+  enum user_type: { admin: 'admin', user: 'user', unauthorized: 'unauthorized'}
   validates :cas_directory_id, presence: true, uniqueness: { case_sensitive: false }
   validates :name, presence: true
 
@@ -38,7 +38,7 @@ class CasUser < ApplicationRecord
     end
 
     def self.ldap_attributes(uid)
-      filter = Net::LDAP::Filter.eq( "uid", uid)
+      filter = Net::LDAP::Filter.eq( 'uid', uid)
       first_entry = LDAP.search(:base => LDAP_BASE, :filter => filter, :attributes => LDAP_ATTRIBUTES).first
       return {
         name: first_entry[LDAP_NAME_ATTR].first,

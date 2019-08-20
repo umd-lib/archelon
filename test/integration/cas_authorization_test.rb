@@ -13,7 +13,7 @@ class CasAuthorizationTest < ActionDispatch::IntegrationTest
 
   test 'new cas_user with User Grouper group can access application' do
     ldap_attrs = {
-      name: "New CAS User",
+      name: 'New CAS User',
       groups: [GROUPER_USER_GROUP]
     }
     CasUser.stub :ldap_attributes, ldap_attrs do
@@ -26,7 +26,7 @@ class CasAuthorizationTest < ActionDispatch::IntegrationTest
 
   test 'new cas_user can with User Grouper group has assigned "user" type' do
     ldap_attrs = {
-      name: "New CAS User",
+      name: 'New CAS User',
       groups: [GROUPER_USER_GROUP]
     }
     CasUser.stub :ldap_attributes, ldap_attrs do
@@ -37,7 +37,7 @@ class CasAuthorizationTest < ActionDispatch::IntegrationTest
 
   test 'new cas_user can with Admin Grouper group can access application' do
     ldap_attrs = {
-      name: "New Admin CAS User",
+      name: 'New Admin CAS User',
       groups: [GROUPER_ADMIN_GROUP]
     }
     CasUser.stub :ldap_attributes, ldap_attrs do
@@ -51,7 +51,7 @@ class CasAuthorizationTest < ActionDispatch::IntegrationTest
 
   test 'new cas_user can with Admin Grouper group has "admin" type' do
     ldap_attrs = {
-      name: "New Admin CAS User",
+      name: 'New Admin CAS User',
       groups: [GROUPER_ADMIN_GROUP]
     }
     CasUser.stub :ldap_attributes, ldap_attrs do
@@ -62,8 +62,8 @@ class CasAuthorizationTest < ActionDispatch::IntegrationTest
 
   test 'new cas_user without Grouper groups cannot access application' do
     ldap_attrs = {
-      name: "Unauthorized User",
-      groups: ["SOME_OTHER_GROUP"]
+      name: 'Unauthorized User',
+      groups: ['SOME_OTHER_GROUP']
     }
     CasUser.stub :ldap_attributes, ldap_attrs do
       cas_login('new_unauth_user1')
@@ -75,8 +75,8 @@ class CasAuthorizationTest < ActionDispatch::IntegrationTest
 
   test 'new cas_user without Grouper groups has "unauthorized" type' do
     ldap_attrs = {
-      name: "Unauthorized User",
-      groups: ["SOME_OTHER_GROUP"]
+      name: 'Unauthorized User',
+      groups: ['SOME_OTHER_GROUP']
     }
     CasUser.stub :ldap_attributes, ldap_attrs do
       cas_login('new_unauth_user2')
@@ -87,7 +87,7 @@ class CasAuthorizationTest < ActionDispatch::IntegrationTest
 
   test 'existing admin cas_user type is updated based on Grouper group changes during login' do
     ldap_attrs = {
-      name: "Prior Admin",
+      name: 'Prior Admin',
       groups: [GROUPER_USER_GROUP]
     }
     assert CasUser.find_by(cas_directory_id: 'prior_admin').admin?
@@ -99,7 +99,7 @@ class CasAuthorizationTest < ActionDispatch::IntegrationTest
 
   test 'existing cas_user type is updated based on Grouper group changes during login' do
     ldap_attrs = {
-      name: "Prior User1",
+      name: 'Prior User1',
       groups: [GROUPER_ADMIN_GROUP]
     }
     assert CasUser.find_by(cas_directory_id: 'prior_user1').user?
@@ -111,8 +111,8 @@ class CasAuthorizationTest < ActionDispatch::IntegrationTest
 
   test 'existing authorized cas_user should be unauthorized if no longer belong to Archelon Grouper groups' do
     ldap_attrs = {
-      name: "Prior User2",
-      groups: ["SOME_OTHER_GROUP"]
+      name: 'Prior User2',
+      groups: ['SOME_OTHER_GROUP']
     }
     assert CasUser.find_by(cas_directory_id: 'prior_user2').user?
     CasUser.stub :ldap_attributes, ldap_attrs do
