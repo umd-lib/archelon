@@ -44,5 +44,4 @@ class ApplicationController < ActionController::Base
     current_cas_user.admin? && user.user? && (user.id != current_cas_user.id)
   end
   helper_method :can_login_as?
-
 end

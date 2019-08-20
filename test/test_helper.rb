@@ -80,5 +80,4 @@ class ActiveSupport::TestCase
       mock_cas_login(DEFAULT_TEST_USER)
     end
   end
-
 end

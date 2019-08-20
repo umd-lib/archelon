@@ -48,5 +48,4 @@ class CasUser < ApplicationRecord
         groups: first_entry[LDAP_GROUPS_ATTR]
       } if first_entry
     end
-
 end

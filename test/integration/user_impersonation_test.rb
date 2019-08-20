@@ -3,7 +3,6 @@
 require 'test_helper'
 # Integration test for CAS authorization functionality
 class UserImpersonationTest < ActionDispatch::IntegrationTest
-
   test 'admin user can impersonate non-admin user' do
     admin_user = cas_users(:test_admin)
     cas_login(admin_user.cas_directory_id)
@@ -25,7 +24,6 @@ class UserImpersonationTest < ActionDispatch::IntegrationTest
     get admin_user_login_as_path(user_id: admin_user.id), headers: { HTTP_REFERER: referring_page}
     assert_redirected_to referring_page
   end
-
 
   test 'admin user cannot impersonate admin user' do
     admin_user = cas_users(:test_admin)
