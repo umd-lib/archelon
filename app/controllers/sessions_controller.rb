@@ -31,13 +31,11 @@ class SessionsController < ApplicationController
       sign_in(user)
       session.delete(:admin_id)
       redirect_to request.headers['HTTP_REFERER'] and return if request.headers['HTTP_REFERER']
+    elsif user && can_login_as?(user)
+      session[:admin_id] = current_cas_user.id
+      sign_in(user)
     else
-      if user && can_login_as?(user)
-        session[:admin_id] = current_cas_user.id
-        sign_in(user)
-      else
-        flash[:notice] = 'You do not have permission to access this page'
-      end
+      flash[:notice] = 'You do not have permission to access this page'
     end
     redirect_to root_path
   end
