@@ -51,7 +51,7 @@ class ActiveSupport::TestCase
   end
 
   # Runs the contents of a block using the given user as the current_user.
-  def impersonate_as_user(user) # rubocop:disable Metrics/MethodLength
+  def impersonate_as_user(user) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     current_admin_user = CasUser.find_by(cas_directory_id: session[:cas_user])
     session[:admin_id] = current_admin_user.id
     session[:cas_user] = user.cas_directory_id
