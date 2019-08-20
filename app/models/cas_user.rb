@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # A user of the application
 class CasUser < ApplicationRecord
   enum user_type: { admin: "admin", user: "user", unauthorized: "unauthorized"}
@@ -18,7 +20,7 @@ class CasUser < ApplicationRecord
     def self.update_name(user, ldap_attrs)
       name = ldap_attrs_value(ldap_attrs, :name)
       return if !name && user.name
-      user.name = user.cas_directory_id and return if !name 
+      user.name = user.cas_directory_id and return if !name
       user.name = name
     end
 

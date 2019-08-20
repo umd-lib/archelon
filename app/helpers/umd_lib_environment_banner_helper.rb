@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module UMDLibEnvironmentBannerHelper
   # https://confluence.umd.edu/display/LIB/Create+Environment+Banners
   def umd_lib_environment_banner

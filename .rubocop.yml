@@ -12,6 +12,7 @@ AllCops:
     - 'db/migrate/*'
     - 'lib/**/*'
     - 'db/seeds.rb'
+    - '**/*.jbuilder'
 
 # Increase max allowed line length
 Metrics/LineLength:

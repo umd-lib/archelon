@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 # Integration test for CAS authorization functionality
 class UserImpersonationTest < ActionDispatch::IntegrationTest
@@ -18,7 +20,7 @@ class UserImpersonationTest < ActionDispatch::IntegrationTest
 
     get admin_user_login_as_path(user_id: non_admin_user.id)
     assert session[:cas_user], non_admin_user.cas_directory_id
-    
+
     referring_page = '/some/page'
     get admin_user_login_as_path(user_id: admin_user.id), headers: { HTTP_REFERER: referring_page}
     assert_redirected_to referring_page

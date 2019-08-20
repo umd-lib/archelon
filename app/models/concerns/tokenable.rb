@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # As suggested in https://stackoverflow.com/a/12109098
 # Should be replaced by "has_secure_token" in Rails 5
 module Tokenable

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DownloadUrlsController < ApplicationController
   before_action :set_download_url, only: [:show]
   include Blacklight::SearchHelper

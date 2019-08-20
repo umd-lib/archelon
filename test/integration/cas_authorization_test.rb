@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 # Integration test for CAS authorization functionality
 class CasAuthorizationTest < ActionDispatch::IntegrationTest
@@ -41,7 +43,7 @@ class CasAuthorizationTest < ActionDispatch::IntegrationTest
     CasUser.stub :ldap_attributes, ldap_attrs do
       cas_login('new_admin_cas_user1')
     end
-    
+
     get root_path
     assert_response :success
     assert_template 'catalog/index'
@@ -79,7 +81,7 @@ class CasAuthorizationTest < ActionDispatch::IntegrationTest
     CasUser.stub :ldap_attributes, ldap_attrs do
       cas_login('new_unauth_user2')
     end
-  
+
     assert CasUser.find_by(cas_directory_id: 'new_unauth_user2').unauthorized?
   end
 

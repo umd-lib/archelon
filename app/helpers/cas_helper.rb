@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module CasHelper
   def authenticate
     redirect_to login_path and return if !logged_in? && !request.env["omniauth.auth"]
