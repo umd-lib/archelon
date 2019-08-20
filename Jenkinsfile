@@ -144,7 +144,7 @@ pipeline {
           recordIssues(tools: [ruboCop(reportEncoding: 'UTF-8')], unstableTotalAll: 1)
 
           publishHTML (target: [
-            allowMissing: false,
+            allowMissing: true,
             alwaysLinkToLastBuild: false,
             keepAll: true,
             reportDir: 'coverage/rcov',
