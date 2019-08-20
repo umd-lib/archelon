@@ -83,7 +83,7 @@ module ApplicationHelper
   def view_in_fedora_link(document)
     url = document[:id]
     url += '/fcr:metadata' if document[:rdf_type].include? 'fedora:Binary'
-    link_to 'View in Fedora', url, target: '_blank'
+    link_to 'View in Fedora', url, target: '_blank', rel: 'noopener'
   end
 
   def link_to_document_view(args)
