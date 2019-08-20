@@ -17,6 +17,7 @@ class CasUser < ApplicationRecord
   end
 
   private
+
     def self.update_name(user, ldap_attrs)
       name = ldap_attrs_value(ldap_attrs, :name)
       return if !name && user.name
