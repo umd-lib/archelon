@@ -1,4 +1,6 @@
+# frozen_string_literal: true
+
+require './lib/utils/stomp_client'
+
 # Only start Stomp connection when Rails server is actually running
-if defined?(Rails::Server)
-  STOMP_CLIENT = Stomp::Client.new(hosts: [Rails.configuration.stomp_server])
-end
+STOMP_CLIENT = StompClient.instance if defined?(Rails::Server)
