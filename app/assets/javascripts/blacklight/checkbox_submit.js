@@ -101,6 +101,7 @@
                 error: function() {
                    label.removeAttr("disabled");
                    checkbox.removeAttr("disabled");
+                   checkbox.prop("indeterminate", false);
                    options.error.call();
                 },
                 success: function(data, status, xhr) {
@@ -110,11 +111,13 @@
                     checked = ! checked;
                     update_state_for(checked);
                     label.removeAttr("disabled");
+                    checkbox.prop("indeterminate", false);
                     checkbox.removeAttr("disabled");
                     options.success.call(form, checked, xhr.responseJSON);
                   } else {
                     label.removeAttr("disabled");
                     checkbox.removeAttr("disabled");
+                    checkbox.prop("indeterminate", false);
                     options.error.call();
                   }
                 }
@@ -132,7 +135,7 @@
             //css_class is added to elements added, plus used for id base
             css_class: "bl_checkbox_submit",
             error: function() {
-              alert("Error");
+              alert("Error - Unable to update selection state on an item");
             },
             success: function() {} //callback
   };

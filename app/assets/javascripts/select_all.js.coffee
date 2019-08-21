@@ -25,7 +25,9 @@ $(document).ajaxStop ->
 $(document).on "turbolinks:load", ->
   $("#bookmarks_selectall").on "change", (e) ->
     if @checked
+      $("label.toggle_bookmark:not(.checked) input.toggle_bookmark").prop("indeterminate", true);
       $("label.toggle_bookmark:not(.checked) input.toggle_bookmark").click()
     else
+      $("label.toggle_bookmark:not(.checked) input.toggle_bookmark").prop("indeterminate", true);
       $("label.toggle_bookmark.checked input.toggle_bookmark").click()
     return
