@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
 require 'test_helper'
-require_relative './mock_stomp_client'
 
-STOMP_CLIENT = MockStompClient.instance
 class ExportJobsControllerTest < ActionController::TestCase
   setup do
     @cas_user = cas_users(:test_admin)
     mock_cas_login(@cas_user.cas_directory_id)
+
+    # Mock the Stomp client
+    stub_const('STOMP_CLIENT', double(Object.new, publish: nil))
 
     Rails.application.configure do
       config.queues = {
@@ -18,6 +19,8 @@ class ExportJobsControllerTest < ActionController::TestCase
   end
 
   test 'create new export job' do
+    expect(STOMP_CLIENT).to receive(:publish)
+
     assert_difference('ExportJob.count') do
       uris = 'http://example.com/1\nhttp://example.com/2'
       params = {}
