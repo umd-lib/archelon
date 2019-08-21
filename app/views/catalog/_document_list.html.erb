@@ -1,5 +1,6 @@
 
 <% # container for all documents in index list view -%>
 <div id="documents" class="documents-<%= document_index_view_type %>">
+  <%= render "select_all" %>
   <%= render documents, :as => :document %>
 </div>
