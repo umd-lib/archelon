@@ -86,3 +86,35 @@ footer {
 #common-links {
     text-align: right;
 }
+
+.select-box {
+  float: left;
+}
+
+.select-box * div{
+  padding-top: 0 !important;
+}
+
+.select-box * label{
+  min-width: 0 !important;
+}
+
+.select-box * input{
+  margin-top: 2px !important;
+}
+
+.select-all {
+  margin-right: 4px !important;
+}
+
+.bookmarksTools {
+  padding-bottom: 15px;
+}
+
+.bookmarksTools > li {
+  padding-right: 10px;
+}
+
+.bookmarksTools > li > a {
+  padding: 8px 12px;
+}

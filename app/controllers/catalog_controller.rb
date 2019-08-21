@@ -46,6 +46,9 @@ class CatalogController < ApplicationController
     #  # q: '{!term f=id v=$id}'
     # }
 
+    # Remove default right-side rendering of blacklight bookmark select checkbox
+    config.index.document_actions.delete(:bookmark)
+
     # solr field configuration for search results/index views
     config.index.title_field = 'display_title'
 
