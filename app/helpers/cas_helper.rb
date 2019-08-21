@@ -14,6 +14,10 @@ module CasHelper
     CasUser.find_by(cas_directory_id: session[:cas_user])
   end
 
+  def current_user
+    current_cas_user
+  end
+
   def logged_in?
     session[:cas_user]
   end

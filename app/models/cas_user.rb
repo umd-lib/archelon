@@ -2,6 +2,9 @@
 
 # A user of the application
 class CasUser < ApplicationRecord
+  # Connects this user object to Blacklights Bookmarks.
+  include Blacklight::User
+
   enum user_type: { admin: 'admin', user: 'user', unauthorized: 'unauthorized' }
   validates :cas_directory_id, presence: true, uniqueness: { case_sensitive: false }
   validates :name, presence: true
