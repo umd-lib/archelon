@@ -18,7 +18,7 @@ Rails.application.routes.draw do # rubocop:disable Metrics/BlockLength
     concerns :exportable
   end
 
-  resources :bookmarks do
+  resources :bookmarks, constraints: { id: /.*/ } do
     concerns :exportable
 
     collection do
