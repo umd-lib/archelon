@@ -23,6 +23,7 @@ Rails.application.routes.draw do # rubocop:disable Metrics/BlockLength
 
     collection do
       delete 'clear'
+      get 'export'
     end
   end
 

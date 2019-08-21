@@ -11,4 +11,9 @@ class BookmarksController < CatalogController
 
   # Hide Citation link in the Bookmarks view
   blacklight_config.show.document_actions[:citation].if = false
+
+  add_show_tools_partial(:export, callback: :export)
+
+  def export_selection(documents)
+  end
 end
