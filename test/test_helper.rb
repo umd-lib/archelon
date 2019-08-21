@@ -14,6 +14,7 @@ require 'rails/test_help'
 
 # Require minitest Mock functionality
 require 'minitest/autorun'
+require 'rspec/mocks/minitest_integration'
 
 require 'minitest/reporters'
 Minitest::Reporters.use!
