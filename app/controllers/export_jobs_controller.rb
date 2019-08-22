@@ -2,7 +2,12 @@
 
 class ExportJobsController < ApplicationController
   def index
-    @jobs = ExportJob.where(cas_user: current_cas_user).order('timestamp DESC')
+    @jobs =
+      if current_cas_user.admin?
+        ExportJob.all.order('timestamp DESC')
+      else
+        ExportJob.where(cas_user: current_cas_user).order('timestamp DESC')
+      end
   end
 
   def new
