@@ -1,6 +1,7 @@
 # archelon
 
-Archelon is a Rails-based search interface for the Fedora 4 repository. It uses the Blacklight gem for providing the search functionality.
+Archelon is a Rails-based search interface for the Fedora 4 repository. It uses
+the Blacklight gem for providing the search functionality.
 
 ## Quick Start
 
@@ -25,35 +26,35 @@ Requires:
   rake db:migrate
   ```
 
-  **Note:** Sample "Download URL" data can be added by running `rake db:reset_with_sample_data`
+  **Note:** Sample "Download URL" data can be added by running
+  `rake db:reset_with_sample_data`
 
-3. Create a `.env` file from the `env_example` file and fill in appropriate values for the environment variables.
+3. Create a `.env` file from the `env_example` file and fill in appropriate
+   values for the environment variables.
 
-4. Add your directory ID to whitelist
-
-  ```
-  rake 'db:add_admin_cas_user[your_directory_id, Your Name]'
-  ```
-
-5. Run the web application:
+4. Run the web application:
 
   ```
   rails server
   ```
 
-If you are going to run Archelon against a Solr or Fedora server that uses self-signed SSL certificates for HTTPS, see the section [SSL setup](#ssl-setup).
+If you are going to run Archelon against a Solr or Fedora server that uses
+self-signed SSL certificates for HTTPS, see the section [SSL setup](#ssl-setup).
 
-See [archelon-vagrant] for running Archelon application in a Vagrant environment.
+See [archelon-vagrant] for running Archelon application in a Vagrant
+environment.
 
 ## Docker
 
-Archelon comes with a [Dockerfile](Dockerfile) that can be used to build a docker image:
+Archelon comes with a [Dockerfile](Dockerfile) that can be used to build a
+docker image:
 
 ```
 docker build -t archelon .
 ```
 
-To run an instance of this image against the dev fcrepo, Solr, and IIIF servers, and populate the database with seed data:
+To run an instance of this image against the dev fcrepo, Solr, and IIIF servers,
+and populate the database with seed data:
 
 ```
 id=$(docker run -d --rm -p 3000:3000 \
@@ -63,9 +64,6 @@ id=$(docker run -d --rm -p 3000:3000 \
     -e MIRADOR_STATIC_VERSION=1.2.0 \
     -e RETRIEVE_BASE_URL=http://localhost:3000/retrieve/ \
     archelon)
-
-docker exec "$id" bundle exec rake \
-    'db:add_admin_cas_user[your_directory_id, Your Name]'
 ```
 
 To watch the logs:
@@ -84,9 +82,13 @@ docker kill "$id"
 
 ### Initial Setup
 
-Verify that the `.solr_wrapper.yml` file is up to date. The `collection > dir` property in the file needs to point to a Solr core directory containing the configuration files. In addition, the `.env` file must have its `SOLR_URL` set to `http://localhost:8983/solr/fedora4`.
+Verify that the `.solr_wrapper.yml` file is up to date. The `collection > dir`
+property in the file needs to point to a Solr core directory containing the
+configuration files. In addition, the `.env` file must have its `SOLR_URL` set
+to `http://localhost:8983/solr/fedora4`.
 
-The [fedora4-core](https://bitbucket.org/umd-lib/fedora4-core) repository includes a script to generate solr package that can be used here.
+The [fedora4-core](https://bitbucket.org/umd-lib/fedora4-core) repository
+includes a script to generate solr package that can be used here.
 
 Create the Solr core as per the configuration in `.solr_wrapper.yml`:
 
@@ -126,28 +128,41 @@ Clean and reinstall setup:
 bundle exec rake solr:clean
 ```
 
-
 ## File Retrieval configuration
 
-Archelon has the ability to create one-time use URLs, which allow a Fedora binary file to be downloaded. The random token used for the URLs, and other information, is stored in the DownloadUrl model.
+Archelon has the ability to create one-time use URLs, which allow a Fedora
+binary file to be downloaded. The random token used for the URLs, and other
+information, is stored in the DownloadUrl model.
 
-It is assumed that the URL that patrons use to retrieve the files will not reference the Archelon server directly. Instead it is anticipated that a new IP and Apache virtual host, which proxies back to Archelon, will be used.
+It is assumed that the URL that patrons use to retrieve the files will not
+reference the Archelon server directly. Instead it is anticipated that a new IP
+and Apache virtual host, which proxies back to Archelon, will be used.
 
-The base URL of the virtual host (i.e., the entire URL except for the random token, but including a trailing slash) should be set in the `RETRIEVE_BASE_URL` environment variable. This base URL should be proxied to the `<ARCHELON_SERVER_URL>/retrieve/` path.
- 
+The base URL of the virtual host (i.e., the entire URL except for the random
+token, but including a trailing slash) should be set in the `RETRIEVE_BASE_URL`
+environment variable. This base URL should be proxied to the
+`<ARCHELON_SERVER_URL>/retrieve/` path.
 
 ## File downloads and concurrent operation
 
-Archelon has the ability to create one-time use URLs for downloading files from Fedora. Since downloading files may take considerable time, it is necessary that the production Archelon server support concurrent operations.
+Archelon has the ability to create one-time use URLs for downloading files from
+Fedora. Since downloading files may take considerable time, it is necessary that
+the production Archelon server support concurrent operations.
 
-File downloads are sent as a "streaming" response, so file downloads should start almost immediately, regardless of the size of the file. If large file downloads take a long time to start, it might be being buffered by the Rails server. For example, see the [Passenger Phusion documentation](passenger-phusion) regarding the "PassengerBufferResponse" setting.
+File downloads are sent as a "streaming" response, so file downloads should
+start almost immediately, regardless of the size of the file. If large file
+downloads take a long time to start, it might be being buffered by the Rails
+server. For example, see the
+[Passenger Phusion documentation](passenger-phusion) regarding the
+"PassengerBufferResponse" setting.
 
 ### Concurrent operation in the development environment
 
-In the development environment, there are two issues regarding concurrent operations:
+In the development environment, there are two issues regarding concurrent
+operations:
 
- * The standard "webrick" server does not support concurrent operations
- * Rails disables concurrent operation when using the development environment.
+* The standard "webrick" server does not support concurrent operations
+* Rails disables concurrent operation when using the development environment.
 
 To test concurrent operations in development mode, do the following:
 
@@ -163,7 +178,8 @@ To test concurrent operations in development mode, do the following:
   bundle install
   ```
 
-3. Edit the "config/application.rb" file, and add the following line to application setting:
+3. Edit the "config/application.rb" file, and add the following line to
+   application setting:
 
   ```
   config.allow_concurrency=true
@@ -175,17 +191,23 @@ To test concurrent operations in development mode, do the following:
   puma --port=3000 --workers 3
   ```
 
-  The `--port=3000` sets the port to the webrick standard of 3000, and the `--workers 3` sets the number of concurrent workers.
+  The `--port=3000` sets the port to the webrick standard of 3000, and the
+  `--workers 3` sets the number of concurrent workers.
 
 ## SSL setup
 
-For development, Archelon is typically run in conjunction with the servers provided by the [fcrepo-vagrant] multi-machine Vagrant setup. This setup uses self-signed SSL certificates to enable HTTPS.
+For development, Archelon is typically run in conjunction with the servers
+provided by the [fcrepo-vagrant] multi-machine Vagrant setup. This setup uses
+self-signed SSL certificates to enable HTTPS.
 
-Rails needs to be able to verify these self-signed certificates. If it cannot, "OpenSSL::SSL::SSLError" with an explanation "certificate verify failed" will be displayed in the browser.
+Rails needs to be able to verify these self-signed certificates. If it cannot,
+"OpenSSL::SSL::SSLError" with an explanation "certificate verify failed" will be
+displayed in the browser.
 
 In order to avoid this error:
 
-1. Create PEM files for both the "solrlocal" and "fcrepolocal" machines, by running the following commands:
+1. Create PEM files for both the "solrlocal" and "fcrepolocal" machines, by
+   running the following commands:
 
   **Note:** The "solrlocal" and "fcrepolocal" servers must be running.
 
@@ -205,7 +227,8 @@ In order to avoid this error:
       > fcrepolocal.pem
 ```
 
-  This will create two files "solrlocal.pem" and "fcrepolocal.pem" in the current directory, which contain SSL certificates.
+  This will create two files "solrlocal.pem" and "fcrepolocal.pem" in the
+  current directory, which contain SSL certificates.
 
 2. Combine the two "pem" files from the previous step in to a single "pem" file:
 
@@ -214,20 +237,22 @@ In order to avoid this error:
       > solrlocal_and_fcrepolocal.pem
   ```
 
-3. To use the `solrlocal_and_fcrepolocal.pem` file with Rails, set the `SSL_CERT_FILE` environment variable:
+3. To use the `solrlocal_and_fcrepolocal.pem` file with Rails, set the
+   `SSL_CERT_FILE` environment variable:
 
   ```
   export SSL_CERT_FILE=/path/to/solrlocal_and_fcrepolocal.pem
   rails server
-  
+
   # or
-  
+
   SSL_CERT_FILE=/path/to/solrlocal_and_fcrepolocal.pem rails server
   ```
 
 ## License
 
-See the [LICENSE](LICENSE.md) file for license rights and limitations (Apache 2.0).
+See the [LICENSE](LICENSE.md) file for license rights and limitations
+(Apache 2.0).
 
 [archelon-vagrant]: https://github.com/umd-lib/archelon-vagrant
 [fcrepo-vagrant]: https://github.com/umd-lib/fcrepo-vagrant
