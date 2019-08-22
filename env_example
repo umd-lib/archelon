@@ -36,3 +36,29 @@ AUDIT_DATABASE_HOST=192.168.40.12
 AUDIT_DATABASE_PORT=5432
 AUDIT_DATABASE_USERNAME=archelon
 AUDIT_DATABASE_PASSWORD=archelon
+
+# --- config/database.yml
+# (Production only - not needed for local development)
+# The type of database
+ARCHELON_DATABASE_ADAPTER=postgresql
+
+# The name of the database
+ARCHELON_DATABASE_NAME=archelon
+
+# The encoding to use
+ARCHELON_DATABASE_ENCODING=utf8
+
+# The username used to connect to the database
+ARCHELON_DATABASE_USERNAME=archelon
+
+# The password used to connect to the database
+ARCHELON_DATABASE_PASSWORD=
+
+# The host for the database
+ARCHELON_DATABASE_HOST=
+
+# The port for the database
+ARCHELON_DATABASE_PORT=5432
+
+# Pool size
+ARCHELON_DATABASE_POOL=10
