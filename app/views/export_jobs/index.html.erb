@@ -16,6 +16,10 @@
     </thead>
     <tbody>
     <% @jobs.each do |job| %>
+        <%
+          status = job.status
+          status_css_code = "export_job_status_#{status.parameterize(separator: "_")}"
+        %>
       <tr>
         <td><%= job.id %></td>
         <td><%= job.name %></td>
@@ -23,7 +27,7 @@
         <td><%= job.timestamp %></td>
         <td><%= job.item_count %></td>
         <td><%= job.format%></td>
-        <td><%= job.status %></td>
+        <td class="<%= status_css_code %>"><%= status %></td>
         <td><%# Placeholder for download link%></td>
       </tr>
     <% end %>
