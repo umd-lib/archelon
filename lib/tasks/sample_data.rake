@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # lib/tasks/sample_data.rake
 namespace :db do # rubocop:disable Metrics/BlockLength
   desc 'Drop, create, migrate, seed and populate sample data'
@@ -12,7 +14,7 @@ namespace :db do # rubocop:disable Metrics/BlockLength
       cas_user = CasUser.new
       cas_user.cas_directory_id = Faker::Internet.user_name
       cas_user.name = Faker::Name.name
-      cas_user.user_type = Random.rand > 0.7 ? "admin" : "user"
+      cas_user.user_type = Random.rand > 0.7 ? 'admin' : 'user'
       cas_user.save!
     end
 
