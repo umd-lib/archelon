@@ -14,8 +14,16 @@
 
 # Ignore all logfiles and tempfiles.
 /log/*
+/tmp/*
 !/log/.keep
-/tmp
+!/tmp/.keep
+
+# Ignore Byebug command history file.
+/node_modules
+/yarn-error.log
+
+.byebug_history
+
 /public/assets
 
 # Ignore environment specific files
