@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # lib/tasks/sample_data.rake
 namespace :db do # rubocop:disable Metrics/BlockLength
   desc 'Drop, create, migrate, seed and populate sample data'
@@ -12,7 +14,7 @@ namespace :db do # rubocop:disable Metrics/BlockLength
       cas_user = CasUser.new
       cas_user.cas_directory_id = Faker::Internet.user_name
       cas_user.name = Faker::Name.name
-      cas_user.user_type = Random.rand > 0.7 ? "admin" : "user"
+      cas_user.user_type = Random.rand > 0.7 ? 'admin' : 'user'
       cas_user.save!
     end
 
@@ -37,6 +39,25 @@ namespace :db do # rubocop:disable Metrics/BlockLength
         download_url.enabled = false
       end
       download_url.save!
+    end
+
+    num_export_jobs = 25
+    job_statuses = ['In Progress', 'Ready', 'Failed']
+    num_export_jobs.times do
+      cas_user = cas_users[Random.rand(num_cas_users)]
+      timestamp = Faker::Time.between(14.days.ago, Time.zone.now)
+      job_name = "#{cas_user.cas_directory_id}-#{timestamp.iso8601}"
+      item_count = Random.rand(10)
+      status = job_statuses[Random.rand(job_statuses.size)]
+
+      export_job = ExportJob.new
+      export_job.name = job_name
+      export_job.cas_user = cas_user
+      export_job.timestamp = timestamp
+      export_job.item_count = item_count
+      export_job.format = 'CSV'
+      export_job.status = status
+      export_job.save!
     end
   end
 end

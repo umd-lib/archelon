@@ -10,7 +10,6 @@ AllCops:
     - 'config/**/*'
     - 'db/schema.rb'
     - 'db/migrate/*'
-    - 'lib/**/*'
     - 'db/seeds.rb'
     - '**/*.jbuilder'
 

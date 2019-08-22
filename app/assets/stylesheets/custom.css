@@ -138,3 +138,16 @@ input {
   padding-left: 10px;
   padding-right: 10px;
 }
+
+.export_job_status_in_progress {
+  color: #000000;
+  font-weight: bold;
+}
+
+.export_job_status_failed {
+  color: #d83935;
+}
+
+.export_job_status_ready {
+  color: #03ab3a;
+}

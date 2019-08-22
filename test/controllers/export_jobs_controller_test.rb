@@ -50,4 +50,35 @@ class ExportJobsControllerTest < ActionController::TestCase
     assert_equal I18n.t(:active_mq_is_down), flash[:error]
     assert_redirected_to export_jobs_path
   end
+
+  test "index page should show only user's jobs when user is not an admin" do
+    assert ExportJob.count > 1, 'Test requires at least two export jobs'
+
+    @cas_user = cas_users(:test_user)
+    mock_cas_login(@cas_user.cas_directory_id)
+
+    # Set up an export job for the user
+    export_job = ExportJob.first
+    export_job.cas_user = @cas_user
+    export_job.save!
+
+    assert @cas_user.user?, 'Test requires a non-admin user'
+
+    get :index
+    jobs = assigns(:jobs)
+    assert jobs.count.positive?, 'User must have at least one export job.'
+    assert jobs.count < ExportJob.count, 'There must be some jobs not belonging to user.'
+    jobs.each do |j|
+      assert_equal @cas_user, j.cas_user
+    end
+  end
+
+  test 'index page should show all jobs when user is an admin' do
+    assert ExportJob.count.positive?, 'Test requires at least one export job'
+    assert @cas_user.admin?, 'Test requires an admin user'
+
+    get :index
+    jobs = assigns(:jobs)
+    assert_equal ExportJob.count, jobs.count
+  end
 end
