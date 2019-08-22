@@ -14,8 +14,9 @@ class StompClientTest < Minitest::Test
 
   def test_update_export_job_when_message_received
     mock = MockStompClient.instance
-    job = ExportJob.new(name: 'test job')
-    job.save
+    cas_user = CasUser.first
+    job = ExportJob.new(name: 'test job', cas_user: cas_user)
+    job.save!
     message = create_message(job.id)
     mock.update_export_job(message)
     job.reload
@@ -24,8 +25,9 @@ class StompClientTest < Minitest::Test
 
   def test_update_export_job_when_error_received
     mock = MockStompClient.instance
-    job = ExportJob.new(name: 'test job')
-    job.save
+    cas_user = CasUser.first
+    job = ExportJob.new(name: 'test job', cas_user: cas_user)
+    job.save!
     message = create_message(job.id)
     mock.update_export_job(message)
     job.reload
