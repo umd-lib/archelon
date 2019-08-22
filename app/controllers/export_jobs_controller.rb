@@ -10,14 +10,20 @@ class ExportJobsController < ApplicationController
     @job = ExportJob.new(name: default_name)
   end
 
-  def create
+  def create # rubocop:disable Metrics/MethodLength, Metrics/AbcSize,
     uris = uris_to_export
     return unless uris
 
     @job = create_job(params.require(:export_job).permit(:name, :format))
     return unless @job.save
 
-    STOMP_CLIENT.publish Rails.configuration.queues[:export_jobs], uris.join("\n"), headers(@job)
+    begin
+      STOMP_CLIENT.publish Rails.configuration.queues[:export_jobs], uris.join("\n"), headers(@job)
+    rescue Stomp::Error::NoCurrentConnection
+      @job.status = 'Error'
+      @job.save
+      flash[:error] = I18n.t(:active_mq_is_down)
+    end
 
     redirect_to action: 'index', status: :see_other
   end

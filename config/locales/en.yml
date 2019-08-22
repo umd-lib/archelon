@@ -22,6 +22,7 @@
 en:
   hello: "Hello world"
   solr_is_down: "Unable to connect to Solr index. Search functionality is unavailable at this time."
+  active_mq_is_down: "Unable to connect to Active MQ. Export functionality is unavailable at this time."
   activerecord:
     models:
       download_url: Download URL

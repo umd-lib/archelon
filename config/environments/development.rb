@@ -60,7 +60,8 @@ Rails.application.configure do
   }
 
   config.queues = {
-      export_jobs: '/queue/exportjobs'
+      export_jobs: '/queue/exportjobs',
+      export_jobs_completed: '/queue/exportjobs.completed'
   }
 
 end

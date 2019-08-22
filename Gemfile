@@ -83,6 +83,9 @@ group :test do
   gem 'simplecov-rcov', require: false
 
   gem 'rails-controller-testing'
+
+  gem 'rspec'
+  gem 'rspec-mocks', '~> 3.8.1'
 end
 
 gem 'rsolr', '~> 1.0'
