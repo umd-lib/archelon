@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class ExportJobsController < ApplicationController
+  before_action :cancel_workflow?, only: %i[create review]
+  before_action :selected_items?, only: %i[new create review]
+
   def index
     @jobs =
       if current_cas_user.admin?
@@ -11,14 +14,18 @@ class ExportJobsController < ApplicationController
   end
 
   def new
-    default_name = "#{current_cas_user.cas_directory_id}-#{Time.now.iso8601}"
-    @job = ExportJob.new(name: default_name)
+    name = params[:name] || "#{current_cas_user.cas_directory_id}-#{Time.now.iso8601}"
+    format = params[:_format] || 'CSV'
+    @job = ExportJob.new(name: name, format: format)
   end
 
-  def create # rubocop:disable Metrics/MethodLength, Metrics/AbcSize,
-    uris = uris_to_export
-    return unless uris
+  def review
+    @selection_count = current_user.bookmarks.count
+    @job = ExportJob.new(params.require(:export_job).permit(:name, :format))
+  end
 
+  def create # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+    uris = current_user.bookmarks.map(&:document_id)
     @job = create_job(params.require(:export_job).permit(:name, :format))
     return unless @job.save
 
@@ -29,11 +36,21 @@ class ExportJobsController < ApplicationController
       @job.save
       flash[:error] = I18n.t(:active_mq_is_down)
     end
-
     redirect_to action: 'index', status: :see_other
   end
 
   private
+
+    def cancel_workflow?
+      redirect_to controller: :bookmarks, action: :index if params[:commit] == 'Cancel'
+    end
+
+    def selected_items?
+      return unless current_user.bookmarks.count.zero?
+
+      flash[:error] = I18n.t(:needs_selected_items)
+      redirect_to controller: :bookmarks, action: :index
+    end
 
     def create_job(args)
       args[:timestamp] = Time.zone.now
