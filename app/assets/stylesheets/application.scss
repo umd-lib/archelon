@@ -118,3 +118,16 @@ footer {
 .bookmarksTools > li > a {
   padding: 8px 12px;
 }
+
+// Bootstrap 4 CSS Class
+.p-3 {
+  padding: $spacer !important;
+}
+
+.ml-5 {
+  margin-left: $spacer * 3 !important;
+}
+
+.font-weight-normal {
+  font-weight: normal !important;
+}

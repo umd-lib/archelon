@@ -1,0 +1,36 @@
+<h1>Export Job Options</h1>
+<%= form_for(@job) do |f| %>
+  <%= f.hidden_field :name, value: @job.name %>
+  <%= f.hidden_field :format, value: @job.format %>
+  <div class="p-3 ">
+    <div class="row form-group">
+      <div class="col-xs-2">
+        <strong>Export Format:</strong>
+      </div>
+      <div class="col-xs-10">
+        <%= @job.format %>
+      </div>
+    </div>
+    <div class="row form-group">
+      <div class="col-xs-2">
+        <strong>Job Name:</strong>
+      </div>
+      <div class="col-xs-10">
+        <%= @job.name %>
+      </div>
+    </div>
+    <div class="row form-group">
+      <div class="col-xs-2">
+        <strong>Number of Records:</strong>
+      </div>
+      <div class="col-xs-10">
+        <%= @selection_count %>
+      </div>
+    </div>
+  </div>
+    <div>
+      <%= link_to "Back", new_export_job_path({name: @job.name, _format: @job.format}), class: 'btn btn-danger' %>
+      <%= f.submit "Cancel", class: 'btn btn-danger' %>
+      <%= f.submit "Submit Job", class: 'btn btn-primary' %>
+    </div>
+<% end %>

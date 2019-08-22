@@ -23,6 +23,7 @@ en:
   hello: "Hello world"
   solr_is_down: "Unable to connect to Solr index. Search functionality is unavailable at this time."
   active_mq_is_down: "Unable to connect to Active MQ. Export functionality is unavailable at this time."
+  needs_selected_items: "To create a export job, you need to select items first!"
   activerecord:
     models:
       download_url: Download URL
