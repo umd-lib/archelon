@@ -23,7 +23,7 @@
       <tr>
         <td><%= job.id %></td>
         <td><%= job.name %></td>
-        <td><%= job.cas_user.name%></td>
+        <td><%= job.cas_user&.name%></td>
         <td><%= job.timestamp %></td>
         <td><%= job.item_count %></td>
         <td><%= job.format%></td>
