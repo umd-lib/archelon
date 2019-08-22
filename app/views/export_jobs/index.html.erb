@@ -1,12 +1,17 @@
+<h1>Export Queue</h1>
+
 <% if @jobs.count > 0 %>
   <table class="table">
     <thead>
       <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Format</th>
+        <th>Job ID</th>
+        <th>Job Name</th>
+        <th>User</th>
         <th>Timestamp</th>
+        <th># of Records</th>
+        <th>Format</th>
         <th>Status</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -14,9 +19,12 @@
       <tr>
         <td><%= job.id %></td>
         <td><%= job.name %></td>
-        <td><%= job.format%></td>
+        <td><%= job.cas_user.name%></td>
         <td><%= job.timestamp %></td>
+        <td><%= job.item_count %></td>
+        <td><%= job.format%></td>
         <td><%= job.status %></td>
+        <td><%# Placeholder for download link%></td>
       </tr>
     <% end %>
     </tbody>

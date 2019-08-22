@@ -2,7 +2,7 @@
 
 one:
   format: MyString
-  cas_user_id: 
+  cas_user: one
   timestamp: 2019-08-12 15:45:29
   name: MyString
   item_count: 1
@@ -10,7 +10,7 @@ one:
 
 two:
   format: MyString
-  cas_user_id: 
+  cas_user: two
   timestamp: 2019-08-12 15:45:29
   name: MyString
   item_count: 1
