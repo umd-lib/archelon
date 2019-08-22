@@ -8,7 +8,7 @@ SimpleCov.formatters = [
 ]
 SimpleCov.start
 
-require File.expand_path('../config/environment', __dir__)
+require_relative '../config/environment'
 require 'rails/test_help'
 require 'minitest/reporters'
 Minitest::Reporters.use!
