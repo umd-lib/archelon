@@ -11,13 +11,19 @@ SimpleCov.start
 ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../config/environment', __dir__)
 require 'rails/test_help'
+require 'minitest/reporters'
+Minitest::Reporters.use!
 
 # Require minitest Mock functionality
 require 'minitest/autorun'
 require 'rspec/mocks/minitest_integration'
 
-require 'minitest/reporters'
-Minitest::Reporters.use!
+# This is a workaround for https://github.com/kern/minitest-reporters/issues/230
+# This workaround can be removed once we upgrade to Rails v5.1.6
+Minitest.load_plugins
+Minitest.extensions.delete('rails')
+Minitest.extensions.unshift('rails')
+# End of workaround
 
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
