@@ -37,7 +37,7 @@ class StompClientTest < Minitest::Test
     headers = {}
     headers['ArchelonExportJobId'] = job_id.to_s
     headers['ArchelonExportJobStatus'] = 'Ready'
-    message.command='MESSAGE'
+    message.command = 'MESSAGE'
     message.headers = headers
     message
   end
