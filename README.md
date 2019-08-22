@@ -249,6 +249,11 @@ In order to avoid this error:
   SSL_CERT_FILE=/path/to/solrlocal_and_fcrepolocal.pem rails server
   ```
 
+## Batch Export
+
+The batch export functionality relies on a running [Plastron](plastron)
+instance.
+
 ## License
 
 See the [LICENSE](LICENSE.md) file for license rights and limitations
@@ -257,3 +262,4 @@ See the [LICENSE](LICENSE.md) file for license rights and limitations
 [archelon-vagrant]: https://github.com/umd-lib/archelon-vagrant
 [fcrepo-vagrant]: https://github.com/umd-lib/fcrepo-vagrant
 [passenger-phusion]: https://www.phusionpassenger.com/library/config/apache/reference/#passengerbufferresponse
+[plastron]: https://github.com/umd-lib/plastron
