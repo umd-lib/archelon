@@ -37,6 +37,11 @@ AUDIT_DATABASE_PORT=5432
 AUDIT_DATABASE_USERNAME=archelon
 AUDIT_DATABASE_PASSWORD=archelon
 
+# ActiveMQ/Stomp protocol configuration
+# -- config/environments/*.rb
+STOMP_HOST=
+STOMP_PORT=
+
 # --- config/database.yml
 # (Production only - not needed for local development)
 # The type of database

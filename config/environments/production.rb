@@ -106,4 +106,14 @@ Rails.application.configure do
       user: ENV['AUDIT_DATABASE_USERNAME'],
       password: ENV['AUDIT_DATABASE_PASSWORD'],
   }
+
+  config.stomp_server = {
+      host: ENV['STOMP_HOST'] || '192.168.40.10',
+      port: ENV['STOMP_PORT'] || 61613
+  }
+
+  config.queues = {
+      export_jobs: '/queue/exportjobs',
+      export_jobs_completed: '/queue/exportjobs.completed'
+  }
 end
