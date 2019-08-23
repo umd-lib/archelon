@@ -3,6 +3,10 @@
 require 'test_helper'
 # Integration test for CAS authorization functionality
 class UserImpersonationTest < ActionDispatch::IntegrationTest
+  def setup
+    skip 'Requires LDAP setup'
+  end
+
   test 'admin user can impersonate non-admin user' do
     admin_user = cas_users(:test_admin)
     cas_login(admin_user.cas_directory_id)

@@ -5,6 +5,7 @@ require 'test_helper'
 # Integration test for the DownloadUrl index page
 class DownloadUrlsIndexTest < ActionDispatch::IntegrationTest
   def setup
+    skip 'Requires LDAP setup'
     @sort_columns = %w[created_at]
     cas_login('test_user')
   end

@@ -103,23 +103,28 @@ class DownloadUrlsControllerTest < ActionController::TestCase
   end
 
   test 'should show download_url' do
+    skip if ENV['RETRIEVE_BASE_URL'].nil?
     get :show, params: { id: @download_url }
     assert_response :success
   end
 
   test 'generate_download_url should raise 404 RoutingError if document cannot be found' do
+    skip 'Requires Solr'
     assert_raises(ActionController::RoutingError) do
       get :generate_download_url, params: { document_url: 'document does not exist' }
     end
   end
 
   test 'create_download_url should raise 404 RoutingError if document cannot be found' do
+    skip 'Requires Solr'
     assert_raises(ActionController::RoutingError) do
       get :create_download_url, params: { document_url: 'document does not exist' }
     end
   end
 
   test 'show_download_url should assign the retrieve url' do
+    # Assign a dummy RETRIEVE_BASE_URL so test can run without a .env file
+    ENV['RETRIEVE_BASE_URL'] = 'https://example.com/'
     get :show_download_url, params: { token: @download_url.token }
     retrieve_base_url = ENV['RETRIEVE_BASE_URL']
     assert_not assigns(:download_url).nil?
