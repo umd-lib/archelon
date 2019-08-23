@@ -11,9 +11,11 @@
         <% 
           total_results = @response["response"]["numFound"]
           per_page = search_state.params_for_search[:per_page]
+          page = search_state.params_for_search[:page]
+          bookmark_params = { result_count: total_results, page: page, per_page: per_page }
           link_text = "Select all #{total_results} results" 
         %>
-        <%= link_to link_text, select_all_results_bookmarks_path(result_count: total_results, per_page: per_page), class: 'btn btn-danger btn-sm' %>
+        <%= link_to link_text, select_all_results_bookmarks_path(bookmark_params), class: 'btn btn-danger btn-sm' %>
     </div>
   </div>
 <% end %>

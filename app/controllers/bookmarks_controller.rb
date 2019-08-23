@@ -31,6 +31,8 @@ class BookmarksController < CatalogController
       flash[:notice] = I18n.t(:all_items_selected)
     end
     search_params[:per_page] = params[:per_page]
+    search_params[:page] = params[:page]
+    search_params.delete(:rows)
     redirect_to search_catalog_path(search_params)
   end
 end
