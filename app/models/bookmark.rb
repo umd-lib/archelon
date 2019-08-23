@@ -2,7 +2,7 @@
 
 # Bookmarks / Selected-Items Model
 class Bookmark < ApplicationRecord
-  belongs_to :cas_user, polymorphic: true
+  belongs_to :user, class_name: 'CasUser', polymorphic: true
   belongs_to :document, polymorphic: true
 
   validates :user_id, presence: true

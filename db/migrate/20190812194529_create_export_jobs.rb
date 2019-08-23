@@ -1,4 +1,4 @@
-class CreateExportJobs < ActiveRecord::Migration
+class CreateExportJobs < ActiveRecord::Migration[5.0]
   def change
     create_table :export_jobs do |t|
       t.string :format
