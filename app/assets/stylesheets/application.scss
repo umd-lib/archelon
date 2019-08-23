@@ -124,8 +124,16 @@ footer {
   padding: $spacer !important;
 }
 
+.pl-4 {
+  padding-left: $spacer * 1.5 !important;
+}
+
 .ml-5 {
   margin-left: $spacer * 3 !important;
+}
+
+.mt-n2 {
+  margin-top: -($spacer * .5) !important;
 }
 
 .font-weight-normal {
