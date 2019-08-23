@@ -22,8 +22,8 @@ class ExportJobsControllerTest < ActionController::TestCase
     expect(STOMP_CLIENT).to receive(:publish)
 
     assert_difference('ExportJob.count') do
-      @cas_user.bookmarks.create({document_id: 'http://example.com/1', document_type: 'SolrDocument'})
-      @cas_user.bookmarks.create({document_id: 'http://example.com/2', document_type: 'SolrDocument'})
+      @cas_user.bookmarks.create(document_id: 'http://example.com/1', document_type: 'SolrDocument')
+      @cas_user.bookmarks.create(document_id: 'http://example.com/2', document_type: 'SolrDocument')
       params = {}
       params[:export_job] = { name: 'test1', format: 'CSV' }
 
@@ -38,8 +38,8 @@ class ExportJobsControllerTest < ActionController::TestCase
     expect(STOMP_CLIENT).to receive(:publish).and_raise(Stomp::Error::NoCurrentConnection.new)
 
     assert_difference('ExportJob.count') do
-      @cas_user.bookmarks.create({document_id: 'http://example.com/1', document_type: 'SolrDocument'})
-      @cas_user.bookmarks.create({document_id: 'http://example.com/2', document_type: 'SolrDocument'})
+      @cas_user.bookmarks.create(document_id: 'http://example.com/1', document_type: 'SolrDocument')
+      @cas_user.bookmarks.create(document_id: 'http://example.com/2', document_type: 'SolrDocument')
       params = {}
       params[:export_job] = { name: 'test1', format: 'CSV' }
 
