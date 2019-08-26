@@ -7,15 +7,26 @@
         <%= check_box_tag('bookmarks_selectall', '', all_selected, class: 'select-all') %>
         <%= label_tag 'selectall', t('blacklight.bookmarks.addall.button') %>
     </div>
+    <% if params[:controller] == "catalog" %>
     <div class=" col-xs-3 col-lg-2 mt-n2" style="padding-left: 0;">
         <% 
           total_results = @response["response"]["numFound"]
+            selected_count = current_user.bookmarks.count
+            max_selction = 1000
           per_page = search_state.params_for_search[:per_page]
           page = search_state.params_for_search[:page]
           bookmark_params = { result_count: total_results, page: page, per_page: per_page }
-          link_text = "Select all #{total_results} results" 
         %>
-        <%= link_to link_text, select_all_results_bookmarks_path(bookmark_params), class: 'btn btn-danger btn-sm' %>
+          <%= link_to 'Select all search results',
+              select_all_results_bookmarks_path(bookmark_params), 
+              id: 'select-all-results',
+              class: 'btn btn-danger btn-sm',
+              title: 'Maximum overall selection limit is 1000',
+              'data-total-results': total_results,
+              'data-current-selection-count': selected_count,
+              'data-max-selection-count': max_selction,
+              disabled: selected_count < max_selction ? false : true %>
     </div>
+    <% end %>
   </div>
 <% end %>
