@@ -12,6 +12,9 @@ class BookmarksController < CatalogController
   # Hide Citation link in the Bookmarks view
   blacklight_config.show.document_actions[:citation].if = false
 
+  # Bump max per page to 1000 for bookmarks
+  blacklight_config.max_per_page = 1000
+
   add_show_tools_partial(:export, path: :new_export_job_url, modal: false)
 
   def select_all_results # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
