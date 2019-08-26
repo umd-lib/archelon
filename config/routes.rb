@@ -26,6 +26,7 @@ Rails.application.routes.draw do # rubocop:disable Metrics/BlockLength
     collection do
       delete 'clear'
       get 'export'
+      get 'select_all_results'
     end
   end
 
