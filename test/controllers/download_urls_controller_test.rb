@@ -103,20 +103,26 @@ class DownloadUrlsControllerTest < ActionController::TestCase
   end
 
   test 'should show download_url' do
-    skip if ENV['RETRIEVE_BASE_URL'].nil?
+    # Set a default RETRIEVE_BASE_URL if none is set, so that Jenkins can
+    # run the test.
+    ENV['RETRIEVE_BASE_URL'] = 'http://example.com/' if ENV['RETRIEVE_BASE_URL'].nil?
     get :show, params: { id: @download_url }
     assert_response :success
   end
 
   test 'generate_download_url should raise 404 RoutingError if document cannot be found' do
-    skip 'Requires Solr'
+    error = ActionController::RoutingError.new('Stub', [])
+    allow(@controller).to receive(:find_solr_document).and_raise(error)
+
     assert_raises(ActionController::RoutingError) do
       get :generate_download_url, params: { document_url: 'document does not exist' }
     end
   end
 
   test 'create_download_url should raise 404 RoutingError if document cannot be found' do
-    skip 'Requires Solr'
+    error = ActionController::RoutingError.new('Stub', [])
+    allow(@controller).to receive(:find_solr_document).and_raise(error)
+
     assert_raises(ActionController::RoutingError) do
       get :create_download_url, params: { document_url: 'document does not exist' }
     end
