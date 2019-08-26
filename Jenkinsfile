@@ -125,9 +125,8 @@ pipeline {
             TESTS_TO_RUN="test:system $TESTS_TO_RUN"
           fi
 
-          # Skip tests, because of tests need a Solr Vagrant box
-          # echo "Running 'bundle exec rails $TESTS_TO_RUN'"
-          # bundle exec rails $TESTS_TO_RUN
+          echo "Running 'bundle exec rails $TESTS_TO_RUN'"
+          bundle exec rails $TESTS_TO_RUN
 
           # Run RuboCop
           # Send output to standard out for "Record compiler warnings and static analysis results"
