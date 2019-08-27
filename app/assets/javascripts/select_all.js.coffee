@@ -14,12 +14,39 @@
 
 updateSelectAll = -> $("#bookmarks_selectall").prop "checked", $("input.toggle_bookmark:not(:checked)").size() is 0
 
+updateSelectAllResults = ->
+  sel_link = $("#select-all-results")
+  max_sel = sel_link.data('max-selection-count')
+  current_sel = $('[data-role=bookmark-counter]').text()
+  sel_link.unbind( "click" )
+  if current_sel < max_sel
+    sel_link.removeAttr('disabled')
+    total_res = sel_link.data('total-results')
+    sel_count = $('[data-role=bookmark-counter]').text()
+    if total_res > (max_sel - sel_count)
+      # Display a JS confirm box when only part of the results can be selected
+      sel_link.on "click", (e) ->
+        proceed = confirm("Max selection limit is " + max_sel + "! " +
+                          "Only first " + (max_sel - sel_count) + " result(s) will be selected!\n\n" +
+                          "Do you want to proceed?")
+        if !proceed
+          event.preventDefault()
+          return false
+  else
+    # Disable link click event, if it has "disabled" property
+    sel_link.attr('disabled', 'disabled')
+    sel_link.on "click", (e) ->
+        event.preventDefault()
+        return false
+
 $(document).on "turbolinks:load", ->
   updateSelectAll()
+  updateSelectAllResults()
   return
 
 $(document).ajaxStop ->
   updateSelectAll()
+  updateSelectAllResults()
   return
 
 $(document).on "turbolinks:load", ->
@@ -30,4 +57,7 @@ $(document).on "turbolinks:load", ->
     else
       $("label.toggle_bookmark:not(.checked) input.toggle_bookmark").prop("indeterminate", true);
       $("label.toggle_bookmark.checked input.toggle_bookmark").click()
-    return
+
+  
+  
+  return

@@ -30,12 +30,13 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
-  solr_is_down: "Unable to connect to Solr index. Search functionality is unavailable at this time."
-  active_mq_is_down: "Unable to connect to Active MQ. Export functionality is unavailable at this time."
-  needs_selected_items: "To create a export job, you need to select items first!"
-  already_selected: "All items from this search are already selected!"
-  all_items_selected: "All items from this search are added to your selected items list!"
+  hello: 'Hello world'
+  solr_is_down: 'Unable to connect to Solr index. Search functionality is unavailable at this time.'
+  active_mq_is_down: 'Unable to connect to Active MQ. Export functionality is unavailable at this time.'
+  needs_selected_items: 'To create a export job, you need to select items first!'
+  already_selected: 'All items from this search are already selected!'
+  items_selected: '%{selected_count} item(s) from this search are added to your selected items list!'
+  max_limit: 'Maximum overall selection limit is %{limit}!'
   activerecord:
     models:
       download_url: Download URL
