@@ -52,7 +52,9 @@ pipeline {
            |
            |Check console output at $BUILD_URL to view the results.
            |
-           |There are ${ANALYSIS_ISSUES_COUNT} static analysis issues in this build.'''.stripMargin()
+           |There are ${ANALYSIS_ISSUES_COUNT} static analysis issues in this build.
+           |
+           |There were ${TEST_COUNTS,var="skip"} skipped tests.'''.stripMargin()
   }
 
   stages {
@@ -125,6 +127,9 @@ pipeline {
             TESTS_TO_RUN="test:system $TESTS_TO_RUN"
           fi
 
+          # Configure MiniTest to use JUnit-style reporter
+          export MINITEST_REPORTER=JUnitReporter
+
           echo "Running 'bundle exec rails $TESTS_TO_RUN'"
           bundle exec rails $TESTS_TO_RUN
 
@@ -142,6 +147,10 @@ pipeline {
           // Collect Rubocop reports
           recordIssues(tools: [ruboCop(reportEncoding: 'UTF-8')], unstableTotalAll: 1)
 
+          // Collect JUnit test reports
+          junit '**/test/reports/*.xml'
+
+          // Collecte coverage reports
           publishHTML (target: [
             allowMissing: true,
             alwaysLinkToLastBuild: false,
