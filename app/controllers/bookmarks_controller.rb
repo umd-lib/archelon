@@ -20,12 +20,13 @@ class BookmarksController < CatalogController
   def select_all_results # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     search_params = current_search_session.query_params
     return redirect_back_to_catalog(params, search_params) unless current_user.bookmarks.count < 1000
+
     search_params['rows'] = params[:result_count]
     (@response, @document_list) = search_results(search_params)
     document_ids = @document_list.map(&:id)
     selected_ids = current_user.bookmarks.map(&:document_id)
     missing_ids = document_ids.reject { |doc_id| selected_ids.include?(doc_id) }
-    select_ids = missing_ids.take(1000-current_user.bookmarks.count)
+    select_ids = missing_ids.take(1000 - current_user.bookmarks.count)
     if select_ids.length.zero?
       flash[:notice] = I18n.t(:already_selected)
     else
@@ -39,6 +40,7 @@ class BookmarksController < CatalogController
     end
 
   private
+
     def redirect_back_to_catalog(params, search_params)
     search_params[:per_page] = params[:per_page]
     search_params[:page] = params[:page]
