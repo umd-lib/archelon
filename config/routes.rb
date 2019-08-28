@@ -27,6 +27,7 @@ Rails.application.routes.draw do # rubocop:disable Metrics/BlockLength
       delete 'clear'
       get 'export'
       get 'select_all_results'
+      post 'toggle_multiple_selections'
     end
   end
 
