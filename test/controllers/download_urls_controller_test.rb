@@ -111,20 +111,18 @@ class DownloadUrlsControllerTest < ActionController::TestCase
   end
 
   test 'generate_download_url should raise 404 RoutingError if document cannot be found' do
-    error = ActionController::RoutingError.new('Stub', [])
-    allow(@controller).to receive(:find_solr_document).and_raise(error)
-
-    assert_raises(ActionController::RoutingError) do
-      get :generate_download_url, params: { document_url: 'document does not exist' }
+    @controller.stub(:find_solr_document, nil) do
+      assert_raises(ActionController::RoutingError) do
+        get :generate_download_url, params: { document_url: 'document does not exist' }
+      end
     end
   end
 
   test 'create_download_url should raise 404 RoutingError if document cannot be found' do
-    error = ActionController::RoutingError.new('Stub', [])
-    allow(@controller).to receive(:find_solr_document).and_raise(error)
-
-    assert_raises(ActionController::RoutingError) do
-      get :create_download_url, params: { document_url: 'document does not exist' }
+    @controller.stub(:find_solr_document, nil) do
+      assert_raises(ActionController::RoutingError) do
+        get :create_download_url, params: { document_url: 'document does not exist' }
+      end
     end
   end
 
