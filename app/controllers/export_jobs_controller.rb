@@ -3,6 +3,7 @@
 class ExportJobsController < ApplicationController
   before_action :cancel_workflow?, only: %i[create review]
   before_action :selected_items?, only: %i[new create review]
+  before_action :selected_items_changed?, only: :create
 
   def index
     @jobs =
@@ -20,13 +21,13 @@ class ExportJobsController < ApplicationController
   end
 
   def review
-    @selection_count = current_user.bookmarks.count
     @job = ExportJob.new(params.require(:export_job).permit(:name, :format))
+    @job.item_count = current_user.bookmarks.count
   end
 
   def create # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     uris = current_user.bookmarks.map(&:document_id)
-    @job = create_job(params.require(:export_job).permit(:name, :format))
+    @job = create_job(params.require(:export_job).permit(:name, :format, :item_count))
     return unless @job.save
 
     begin
@@ -50,6 +51,14 @@ class ExportJobsController < ApplicationController
 
       flash[:error] = I18n.t(:needs_selected_items)
       redirect_to controller: :bookmarks, action: :index
+    end
+
+    def selected_items_changed?
+      return if params[:export_job][:item_count] == current_user.bookmarks.count.to_s
+
+      flash[:notice] = I18n.t(:selected_items_changed)
+      review
+      render :review
     end
 
     def create_job(args)
