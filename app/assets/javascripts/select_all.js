@@ -103,16 +103,49 @@ addSelectAllHandler = () => {
   })
 }
 
+disiableSelectAll = () => {
+  $("#bookmarks_selectall").attr("disabled", "disabled")
+}
+
+enableSelectAll = () => {
+  $("#bookmarks_selectall").removeAttr("disabled")
+}
+
+disableUnchecked = () => {
+   $("input.toggle_bookmark:not(:checked)").attr("disabled", "disabled")
+}
+
+enableUnchecked = () => {
+   $("input.toggle_bookmark:not(:checked)").removeAttr("disabled")
+}
+
+enableDisableCheckboxes = () => {
+  count = +($('[data-role="bookmark-counter"]').text())
+  max = $("#select-all-results").data('max-selection-count')
+  unchecked_count = $("input.toggle_bookmark:not(:checked)").length;
+  if (unchecked_count>0) {
+    if(count >= max) {
+      disiableSelectAll()
+      disableUnchecked()
+    } else {
+      enableUnchecked()
+      if((count + unchecked_count) > max) disiableSelectAll()
+      else enableSelectAll()
+    }
+  }
+}
+
 $(document).on("turbolinks:load", () => {
   addSelectAllHandler()
   updateSelectAll()
   updateSelectAllResults()
+  enableDisableCheckboxes()
   return
 })
 
 $(document).ajaxStop(()=> {
   updateSelectAll()
   updateSelectAllResults()
+  enableDisableCheckboxes()
   return
 })
-
