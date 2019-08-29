@@ -27,6 +27,8 @@ RETRIEVE_BASE_URL=http://127.0.0.1:3000/retrieve/
 
 # --- config/ldap.yml
 # LDAP Authentication Credentials
+LDAP_HOST=
+LDAP_PORT=
 LDAP_BIND_DN=
 LDAP_BIND_PASSWORD=
 
