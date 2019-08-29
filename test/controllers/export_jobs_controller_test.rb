@@ -25,7 +25,7 @@ class ExportJobsControllerTest < ActionController::TestCase
       @cas_user.bookmarks.create(document_id: 'http://example.com/1', document_type: 'SolrDocument')
       @cas_user.bookmarks.create(document_id: 'http://example.com/2', document_type: 'SolrDocument')
       params = {}
-      params[:export_job] = { name: 'test1', format: 'CSV' }
+      params[:export_job] = { name: 'test1', format: 'CSV', item_count: 2 }
 
       post :create, params: params
     end
@@ -41,7 +41,7 @@ class ExportJobsControllerTest < ActionController::TestCase
       @cas_user.bookmarks.create(document_id: 'http://example.com/1', document_type: 'SolrDocument')
       @cas_user.bookmarks.create(document_id: 'http://example.com/2', document_type: 'SolrDocument')
       params = {}
-      params[:export_job] = { name: 'test1', format: 'CSV' }
+      params[:export_job] = { name: 'test1', format: 'CSV', item_count: 2 }
 
       post :create, params: params
     end
