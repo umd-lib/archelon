@@ -37,6 +37,7 @@ en:
   already_selected: 'All items from this search are already selected!'
   items_selected: '%{selected_count} item(s) from this search are added to your selected items list!'
   max_limit: 'Maximum overall selection limit is %{limit}!'
+  selected_items_changed: 'Selected items has changed! Please review!'
   activerecord:
     models:
       download_url: Download URL

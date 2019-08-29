@@ -2,6 +2,7 @@
 <%= form_for(@job) do |f| %>
   <%= f.hidden_field :name, value: @job.name %>
   <%= f.hidden_field :format, value: @job.format %>
+  <%= f.hidden_field :item_count, value: @job.item_count %>
   <div class="p-3 ">
     <div class="row form-group">
       <div class="col-xs-2">
@@ -24,7 +25,7 @@
         <strong>Number of Records:</strong>
       </div>
       <div class="col-xs-10">
-        <%= @selection_count %>
+        <%= @job.item_count %>
       </div>
     </div>
   </div>
