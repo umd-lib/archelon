@@ -15,8 +15,9 @@ class CasAuthorizationTest < ActionDispatch::IntegrationTest
   end
 
   # LDAP call will return the given CAS user ldap_attrs map
-  def stub_ldap_response(ldap_attrs)
-    expect(CasUser).to receive(:ldap_attributes).and_return(ldap_attrs)
+  def stub_ldap_response(name:, groups:)
+    user_type = LdapUserAttributes.user_type_from_groups(groups)
+    expect(LdapUserAttributes).to receive(:create).and_return(LdapUserAttributes.send(:new, name, user_type))
   end
 
   test 'existing cas_user can access application' do
