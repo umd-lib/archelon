@@ -61,4 +61,57 @@ class LdapUserAttributesTest < ActiveSupport::TestCase
       assert_equal :unauthorized, ldap_user_attributes.user_type
     end
   end
+
+  test 'LDAP_OVERRIDE should set the user_type value and LDAP is not searched' do
+    Rails.env = 'development'
+    stub_const('LDAP_OVERRIDE', 'user')
+
+    ldap_user_attributes = LdapUserAttributes.create('foo')
+    assert 'foo', ldap_user_attributes.name
+    assert 'user', ldap_user_attributes.user_type
+    expect(LDAP).not_to receive(:search)
+
+    stub_const('LDAP_OVERRIDE', 'barbaz')
+    ldap_user_attributes = LdapUserAttributes.create('foo')
+    assert 'foo', ldap_user_attributes.name
+    assert 'barbaz', ldap_user_attributes.user_type
+    expect(LDAP).not_to receive(:search)
+  end
+
+  test 'ldap_override? should only work in Rails development environment' do
+    stub_const('LDAP_OVERRIDE', 'user')
+
+    assert_not_equal 'development', Rails.env
+    assert_not LdapUserAttributes.ldap_override?
+
+    Rails.env = 'development'
+    assert_equal 'development', Rails.env
+    assert LdapUserAttributes.ldap_override?
+
+    Rails.env = 'production'
+    assert_equal 'production', Rails.env
+    assert_not LdapUserAttributes.ldap_override?
+  end
+
+  test 'ldap_override? should only work with LDAP_OVERRIDE containing a non-nil and non-blank value' do
+    Rails.env = 'development'
+    assert_equal 'development', Rails.env
+
+    stub_const('LDAP_OVERRIDE', 'user')
+    assert LdapUserAttributes.ldap_override?
+
+    stub_const('LDAP_OVERRIDE', nil)
+    assert_not LdapUserAttributes.ldap_override?
+
+    stub_const('LDAP_OVERRIDE', '')
+    assert_not LdapUserAttributes.ldap_override?
+
+    stub_const('LDAP_OVERRIDE', '   ')
+    assert_not LdapUserAttributes.ldap_override?
+  end
+
+  def teardown
+    # Ensure that is reset Rails.env to 'test'
+    Rails.env = 'test'
+  end
 end

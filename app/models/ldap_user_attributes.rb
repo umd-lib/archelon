@@ -22,6 +22,9 @@ class LdapUserAttributes
   def self.create(cas_directory_id)
     @cas_directory_id = cas_directory_id
 
+    # Possible skip LDAP search (intended to only work in development environment)
+    return new(cas_directory_id, LDAP_OVERRIDE) if ldap_override?
+
     filter = Net::LDAP::Filter.eq('uid', cas_directory_id)
     first_entry = LDAP.search(base: LDAP_BASE, filter: filter, attributes: LDAP_ATTRIBUTES)&.first
     return unless first_entry
@@ -30,6 +33,11 @@ class LdapUserAttributes
     groups = first_entry[LDAP_GROUPS_ATTR]
     user_type = user_type_from_groups(groups)
     new(name, user_type)
+  end
+
+  # Returns true if the LDAP search should be skipped
+  def self.ldap_override?
+    Rails.env.development? && LDAP_OVERRIDE.present?
   end
 
   # Returns a user type, based on the given list of Grouper groups
