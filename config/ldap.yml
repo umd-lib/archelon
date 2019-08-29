@@ -13,6 +13,8 @@ default: &default
 
 development:
   <<: *default
+  # If set, skip LDAP search, and use LDAP_OVERRIDE as the user type
+  ldap_override: <%= ENV['LDAP_OVERRIDE'] %>
 
 vagrant:
   <<: *default

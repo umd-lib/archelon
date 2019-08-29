@@ -63,6 +63,7 @@ id=$(docker run -d --rm -p 3000:3000 \
     -e IIIF_BASE_URL=https://iiifdev.lib.umd.edu/ \
     -e MIRADOR_STATIC_VERSION=1.2.0 \
     -e RETRIEVE_BASE_URL=http://localhost:3000/retrieve/ \
+    -e LDAP_OVERRIDE=admin \
     archelon)
 ```
 
@@ -77,6 +78,9 @@ To stop the running docker container:
 ```
 docker kill "$id"
 ```
+
+See the "LDAP Override" section below for more information about the
+"LDAP_OVERRIDE" environment variable.
 
 ## Embedded Solr
 
@@ -253,6 +257,20 @@ In order to avoid this error:
 
 The batch export functionality relies on a running [Plastron](plastron)
 instance.
+
+## LDAP Override
+
+By default, Archelon determines the user type for a user ("admin", "user" or
+"unauthorized") using the list of Grouper groups in the "memberOf" attribute
+returned from an LDAP server for that user.
+
+The local development environment (or Docker container) can be run without
+connecting to an LDAP server using the "LDAP_OVERRIDE" environment variable.
+The "LDAP_OVERRIDE" environment variable specifies the user type for any user
+that logs in, i.e., either "admin" or "user".
+
+The "LDAP_OVERRIDE" environment variable only works in the "development"
+Rails environment.
 
 ## About CVE-2015-9284
 
