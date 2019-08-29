@@ -89,6 +89,7 @@
         update_state_for(checked);
         
         checkbox.click(function() {
+            checked = (form.find("input[name=_method][value=delete]").length != 0);
             span.text(form.attr('data-inprogress'));
             label.attr("disabled", "disabled");  
             checkbox.attr("disabled", "disabled");

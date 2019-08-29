@@ -17,6 +17,20 @@ class BookmarksController < CatalogController
 
   add_show_tools_partial(:export, path: :new_export_job_url, modal: false)
 
+  def toggle_multiple_selections # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+    item_ids = params[:document_ids]
+    if params[:mode] == 'select'
+      selected_ids = current_user.bookmarks.map(&:document_id)
+      missing_ids = item_ids.reject { |doc_id| selected_ids.include?(doc_id) }
+      missing_ids.each do |id|
+        current_user.bookmarks.create(document_id: id, document_type: blacklight_config.document_model.to_s)
+      end
+    else
+      current_user.bookmarks.where(document_id: item_ids).delete_all
+    end
+    render json: { bookmarks: { count: current_user.bookmarks.count } }.to_json
+  end
+
   def select_all_results # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     search_params = current_search_session.query_params
     return redirect_back_to_catalog(params, search_params) unless current_user.bookmarks.count < 1000
@@ -31,8 +45,7 @@ class BookmarksController < CatalogController
       flash[:notice] = I18n.t(:already_selected)
     else
       select_ids.each do |id|
-        bookmark = { document_id: id, document_type: blacklight_config.document_model.to_s }
-        current_user.bookmarks.create(bookmark)
+        current_user.bookmarks.create(document_id: id, document_type: blacklight_config.document_model.to_s)
       end
       flash[:notice] = I18n.t(:items_selected, selected_count: select_ids.length)
     end

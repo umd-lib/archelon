@@ -6,6 +6,9 @@
           end %>
         <%= check_box_tag('bookmarks_selectall', '', all_selected, class: 'select-all') %>
         <%= label_tag 'selectall', t('blacklight.bookmarks.addall.button') %>
+        <%= form_tag( toggle_multiple_selections_bookmarks_path, method: :post, id: 'select-all') do %>
+          <%# For select all ajax requests %>
+        <% end %>
     </div>
     <% if params[:controller] == "catalog" %>
     <div class=" col-xs-3 col-lg-2 mt-n2" style="padding-left: 0;">
