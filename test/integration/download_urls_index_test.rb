@@ -6,7 +6,7 @@ require 'test_helper'
 class DownloadUrlsIndexTest < ActionDispatch::IntegrationTest
   def setup
     @sort_columns = %w[created_at]
-    cas_login('test_user')
+    mock_cas_login_for_integration_tests('test_user')
   end
 
   test 'index including pagination and sorting' do

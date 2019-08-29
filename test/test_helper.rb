@@ -44,6 +44,7 @@ class ActiveSupport::TestCase
       provider: 'cas',
       uid: cas_directory_id
     }
+
     get '/auth/cas/callback'
   end
 
@@ -54,6 +55,15 @@ class ActiveSupport::TestCase
     }
     request.env['omniauth.auth'] = OmniAuth.config.mock_auth[:cas]
     session[:cas_user] = cas_directory_id
+  end
+
+  def mock_cas_login_for_integration_tests(cas_directory_id)
+    allow(CasUser)
+      .to receive(:find_or_create_from_auth_hash)
+      .with(anything)
+      .and_return(CasUser.find_by(cas_directory_id: cas_directory_id))
+
+    cas_login(cas_directory_id)
   end
 
   # Runs the contents of a block using the given user as the current_user.
