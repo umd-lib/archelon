@@ -1,8 +1,8 @@
 # config/ldap.yml
 # LDAP server and grouper groups configuration settings
 default: &default
-  host: directory.umd.edu
-  port: 389
+  host: <%= ENV['LDAP_HOST'] %>
+  port: <%= ENV['LDAP_PORT'] %>
   bind_dn: <%= ENV['LDAP_BIND_DN'] %>
   bind_password: <%= ENV['LDAP_BIND_PASSWORD'] %>
   base: ou=people,dc=umd,dc=edu
