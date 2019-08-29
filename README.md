@@ -254,12 +254,24 @@ In order to avoid this error:
 The batch export functionality relies on a running [Plastron](plastron)
 instance.
 
+## About CVE-2015-9284
+
+GitHub (or a vulnerability scanner such as "bundler-audit"), may report that
+this application is vulnerable to CVE-2015-9284, due to its use of the
+"omniauth" gem. More information about this vulnerablity can be found at:
+
+[https://github.com/omniauth/omniauth/wiki/Resolving-CVE-2015-9284][cve-2015-9284]
+
+As configured, this application uses CAS for authenication. As the application
+does not use OAuth it is not vulnerable to CVE-2015-9284.
+
 ## License
 
 See the [LICENSE](LICENSE.md) file for license rights and limitations
 (Apache 2.0).
 
 [archelon-vagrant]: https://github.com/umd-lib/archelon-vagrant
+[cve-2015-9284]: https://github.com/omniauth/omniauth/wiki/Resolving-CVE-2015-9284
 [fcrepo-vagrant]: https://github.com/umd-lib/fcrepo-vagrant
 [passenger-phusion]: https://www.phusionpassenger.com/library/config/apache/reference/#passengerbufferresponse
 [plastron]: https://github.com/umd-lib/plastron
