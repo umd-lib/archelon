@@ -13,7 +13,7 @@ GROUPER_ADMIN_GROUP = LDAP_CONFIG['grouper_admin_group']
 GROUPER_USER_GROUP = LDAP_CONFIG['grouper_user_group']
 
 # Initialize LDAP object
-LDAP = Net::LDAP.new
+LDAP = Net::LDAP.new(encryption: :simple_tls)
 LDAP.host = LDAP_CONFIG['host']
 LDAP.port = LDAP_CONFIG['port']
 LDAP.auth LDAP_CONFIG['bind_dn'], LDAP_CONFIG['bind_password']
