@@ -4,7 +4,13 @@
 class ExportJob < ApplicationRecord
   belongs_to :cas_user
 
-  FORMATS = %w[CSV Turtle].freeze
+  CSV_FORMAT = 'text/csv'
+  TURTLE_FORMAT = 'text/turtle'
+
+  FORMATS = {
+    CSV_FORMAT => 'CSV',
+    TURTLE_FORMAT => 'Turtle'
+  }.freeze
 
   # statuses
   IN_PROGRESS = 'In Progress'

@@ -19,6 +19,7 @@
         <%
           status = job.status
           status_css_code = "export_job_status_#{status.parameterize(separator: "_")}"
+          format_label = ExportJob::FORMATS[job.format] || job.format
         %>
       <tr>
         <td><%= job.id %></td>
@@ -26,7 +27,7 @@
         <td><%= job.cas_user&.name%></td>
         <td><%= job.timestamp %></td>
         <td><%= job.item_count %></td>
-        <td><%= job.format%></td>
+        <td><span title="<%= job.format %>"><%= format_label %></span></td>
         <td class="<%= status_css_code %>"><%= status %></td>
         <td><%# Placeholder for download link%></td>
       </tr>
