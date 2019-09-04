@@ -16,7 +16,7 @@ class ExportJobsController < ApplicationController
 
   def new
     name = params[:name] || "#{current_cas_user.cas_directory_id}-#{Time.now.iso8601}"
-    format = params[:_format] || 'CSV'
+    format = params[:_format] || ExportJob::CSV_FORMAT
     @job = ExportJob.new(name: name, format: format)
   end
 
