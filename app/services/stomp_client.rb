@@ -31,6 +31,7 @@ class StompClient
     export_job = ExportJob.find(export_job_id)
     export_job_status = headers['ArchelonExportJobStatus']
     export_job.status = export_job_status
+    export_job.download_url = headers['ArchelonExportJobDownloadUrl']
     export_job.save
   end
 end
