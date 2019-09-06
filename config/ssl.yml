@@ -1,0 +1,17 @@
+default: &default
+  verify_mode: <%= OpenSSL::SSL::VERIFY_PEER %>
+  client_certs:
+    - cert: <%= ENV['FCREPO_CLIENT_CERT'] %>
+      key: <%= ENV['FCREPO_CLIENT_KEY'] %>
+  ca_file: <%= ENV['SSL_CERT_FILE'] %>
+
+development:
+  <<: *default
+  verify_mode: <%= OpenSSL::SSL::VERIFY_NONE %>
+
+test:
+  <<: *default
+  verify_mode: <%= OpenSSL::SSL::VERIFY_NONE %>
+
+production:
+  <<: *default

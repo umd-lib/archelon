@@ -45,7 +45,4 @@ Rails.application.configure do
 
   # Mirador version
   config.mirador_static_version = ENV['MIRADOR_STATIC_VERSION'] || '1.1.0'
-
-  # skip SSL cert verification, since fcrepolocal uses a self-signed cert
-  config.fcrepo_ssl_verify_mode = OpenSSL::SSL::VERIFY_NONE
 end
