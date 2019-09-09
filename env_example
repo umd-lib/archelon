@@ -69,3 +69,9 @@ ARCHELON_DATABASE_PORT=5432
 
 # Pool size
 ARCHELON_DATABASE_POOL=10
+
+# --- config/ssl.yml
+# These should point to an SSL client cert that has:
+# - read permissions to the /exports container
+FCREPO_CLIENT_CERT=
+FCREPO_CLIENT_KEY=
