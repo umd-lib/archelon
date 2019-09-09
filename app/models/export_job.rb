@@ -12,10 +12,19 @@ class ExportJob < ApplicationRecord
     TURTLE_FORMAT => 'Turtle'
   }.freeze
 
+  FORMAT_EXTENSIONS = {
+    CSV_FORMAT => '.csv',
+    TURTLE_FORMAT => '.ttl'
+  }.freeze
+
   # statuses
   IN_PROGRESS = 'In Progress'
   READY = 'Ready'
   FAILED = 'Failed'
 
   STATUSES = [IN_PROGRESS, READY, FAILED].freeze
+
+  def filename
+    name + FORMAT_EXTENSIONS[format]
+  end
 end

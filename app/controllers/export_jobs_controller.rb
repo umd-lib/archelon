@@ -31,13 +31,19 @@ class ExportJobsController < ApplicationController
     return unless @job.save
 
     begin
-      STOMP_CLIENT.publish Rails.configuration.queues[:export_jobs], uris.join("\n"), headers(@job)
+      STOMP_CLIENT.publish Rails.configuration.queues[:export_jobs], uris.join("\n"), message_headers(@job)
     rescue Stomp::Error::NoCurrentConnection
       @job.status = 'Error'
       @job.save
       flash[:error] = I18n.t(:active_mq_is_down)
     end
     redirect_to action: 'index', status: :see_other
+  end
+
+  def download
+    job = ExportJob.find(params[:id])
+    response = HTTP.get(job.download_url, ssl_context: SSL_CONTEXT)
+    send_data response.body, type: job.format, filename: job.filename
   end
 
   private
@@ -68,11 +74,7 @@ class ExportJobsController < ApplicationController
       ExportJob.new(args)
     end
 
-    def uris_to_export
-      params[:uris].to_s.split("\n").map(&:strip).reject(&:empty?)
-    end
-
-    def headers(job)
+    def message_headers(job)
       {
         ArchelonExportJobName: job.name,
         ArchelonExportJobId: job.id,
