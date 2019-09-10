@@ -11,12 +11,13 @@ class StompClient
 
   # Initializes the client, and subscribes to queues
   def initialize
-    Rails.logger.debug "Initializing STOMP client with server: #{Rails.configuration.stomp_server}"
-    @stomp_client = Stomp::Client.new(hosts: [Rails.configuration.stomp_server])
+    stomp_server = Rails.configuration.stomp_server
+    export_jobs_completed_queue = Rails.configuration.queues[:export_jobs_completed]
+    Rails.logger.debug "Initializing STOMP client with server: #{stomp_server}"
+    @stomp_client = Stomp::Client.new(hosts: [stomp_server])
 
-    Rails.logger.debug "STOMP client subscribing to #{Rails.configuration.queues[:export_jobs_completed]}"
-    @stomp_client.subscribe Rails.configuration.queues[:export_jobs_completed] do |stomp_msg|
-      Rails.logger.debug 'Received STOMP message'
+    Rails.logger.debug "STOMP client subscribing to #{export_jobs_completed_queue}"
+    @stomp_client.subscribe export_jobs_completed_queue do |stomp_msg|
       update_export_job(stomp_msg)
     end
   end
