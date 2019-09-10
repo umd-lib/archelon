@@ -7,7 +7,13 @@ SSL_CONFIG = YAML.load(template.result(binding))[Rails.env]
 SSL_CONTEXT = OpenSSL::SSL::SSLContext.new
 
 SSL_CONTEXT.verify_mode = SSL_CONFIG['verify_mode']
-SSL_CONTEXT.ca_file = SSL_CONFIG['ca_file'] if SSL_CONFIG['ca_file']
+if SSL_CONFIG['ca_file']
+  SSL_CONTEXT.ca_file = SSL_CONFIG['ca_file']
+else
+  cert_store = OpenSSL::X509::Store.new
+  cert_store.set_default_paths
+  SSL_CONTEXT.cert_store = cert_store
+end
 
 SSL_CONFIG['client_certs'].each do |config|
   if config['cert'] && config['key']
