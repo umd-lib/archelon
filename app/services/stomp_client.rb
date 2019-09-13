@@ -11,15 +11,31 @@ class StompClient
 
   # Initializes the client, and subscribes to queues
   def initialize
-    stomp_server = Rails.configuration.stomp_server
-    export_jobs_completed_queue = Rails.configuration.queues[:export_jobs_completed]
-    Rails.logger.debug "Initializing STOMP client with server: #{stomp_server}"
-    @stomp_client = Stomp::Client.new(hosts: [stomp_server])
+    connect max_reconnect_attempts: 10
+  end
 
+  def connect(opts = {})
+    stomp_server = Rails.configuration.stomp_server
+    Rails.logger.debug "Initializing STOMP client with server: #{stomp_server}"
+    begin
+      @stomp_client = Stomp::Client.new(hosts: [stomp_server], **opts)
+      subscribe
+    rescue Stomp::Error::MaxReconnectAttempts
+      Rails.logger.error "Unable to connect to STOMP message broker at #{stomp_server}"
+    end
+  end
+
+  def subscribe
+    export_jobs_completed_queue = Rails.configuration.queues[:export_jobs_completed]
     Rails.logger.debug "STOMP client subscribing to #{export_jobs_completed_queue}"
     @stomp_client.subscribe export_jobs_completed_queue do |stomp_msg|
       update_export_job(stomp_msg)
     end
+  end
+
+  # Checks if the client is connected
+  def connected?
+    @stomp_client && !@stomp_client.closed?
   end
 
   # Publishes the given message to the given destination with the given
