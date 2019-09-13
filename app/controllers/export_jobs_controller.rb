@@ -2,6 +2,7 @@
 
 class ExportJobsController < ApplicationController
   before_action :cancel_workflow?, only: %i[create review]
+  before_action :stomp_client_connected?, only: %i[new create review]
   before_action :selected_items?, only: %i[new create review]
   before_action :selected_items_changed?, only: :create
 
@@ -57,6 +58,17 @@ class ExportJobsController < ApplicationController
 
       flash[:error] = I18n.t(:needs_selected_items)
       redirect_to controller: :bookmarks, action: :index
+    end
+
+    def stomp_client_connected?
+      return if STOMP_CLIENT.connected?
+
+      # try to reconnect
+      STOMP_CLIENT.connect max_reconnect_attempts: 3
+      return if STOMP_CLIENT.connected?
+
+      flash[:error] = I18n.t(:active_mq_is_down)
+      redirect_to controller: 'bookmarks'
     end
 
     def selected_items_changed?
