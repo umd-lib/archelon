@@ -8,7 +8,7 @@ class ExportJobsControllerTest < ActionController::TestCase
     mock_cas_login(@cas_user.cas_directory_id)
 
     # Mock the Stomp client
-    stub_const('STOMP_CLIENT', double(Object.new, publish: nil))
+    stub_const('STOMP_CLIENT', double(Object.new, publish: nil, connected?: true))
 
     Rails.application.configure do
       config.queues = {
