@@ -21,7 +21,7 @@ class BookmarksController < CatalogController
     item_ids = params[:document_ids].uniq
     if params[:mode] == 'select'
       limit_exceeded = (item_ids.length + current_user.bookmarks.count) > 1000
-      render json: {}, status: 422 and return if limit_exceeded
+      render json: {}, status: :unprocessable_entity && return if limit_exceeded
       selected_ids = current_user.bookmarks.map(&:document_id)
       missing_ids = item_ids.reject { |doc_id| selected_ids.include?(doc_id) }
       missing_ids.each do |id|
