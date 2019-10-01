@@ -6,6 +6,7 @@ en:
       bookmarks: 'Manage Selected Items'
 
     bookmarks:
+      page_title: 'Selected Items - Archelon'
       title: 'Selected Items'
       no_bookmarks: 'You have not selected any items'
       addall:
