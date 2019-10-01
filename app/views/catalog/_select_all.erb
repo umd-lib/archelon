@@ -1,6 +1,6 @@
 <% if current_or_guest_user %>
   <div class="row">
-    <div class=" col-xs-3 col-lg-2 pl-4" style="padding-left: 0;">
+    <div class=" col-xs-5 col-lg-3 pl-4">
         <% all_selected = @document_list.all? do |d|
             current_or_guest_user.bookmarks.where({document_id: d.id, document_type: blacklight_config.solr_document_model.to_s}).exists?
           end %>
@@ -20,7 +20,7 @@
           page = search_state.params_for_search[:page]
           bookmark_params = { result_count: total_results, page: page, per_page: per_page }
         %>
-          <%= link_to 'Select all search results',
+          <%= link_to t('blacklight.bookmarks.addallresults.button'),
               select_all_results_bookmarks_path(bookmark_params), 
               id: 'select-all-results',
               class: 'btn btn-danger btn-sm',

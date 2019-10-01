@@ -9,7 +9,9 @@ en:
       title: 'Selected Items'
       no_bookmarks: 'You have not selected any items'
       addall:
-        button: 'Select All'
+        button: 'Select all on page'
+      addallresults:
+        button: 'Select all search results'
       add:
         button: 'Select'
         success:
