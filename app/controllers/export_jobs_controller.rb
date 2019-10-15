@@ -43,8 +43,7 @@ class ExportJobsController < ApplicationController
 
   def download
     job = ExportJob.find(params[:id])
-    response = HTTP.get(job.download_url, ssl_context: SSL_CONTEXT)
-    send_data response.body, type: job.format, filename: job.filename
+    send_data(*job.download_file)
   end
 
   private

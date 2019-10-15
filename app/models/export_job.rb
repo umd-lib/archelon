@@ -14,7 +14,8 @@ class ExportJob < ApplicationRecord
 
   FORMAT_EXTENSIONS = {
     CSV_FORMAT => '.csv',
-    TURTLE_FORMAT => '.ttl'
+    TURTLE_FORMAT => '.ttl',
+    'application/zip' => '.zip'
   }.freeze
 
   # statuses
@@ -24,7 +25,31 @@ class ExportJob < ApplicationRecord
 
   STATUSES = [IN_PROGRESS, READY, FAILED].freeze
 
-  def filename
-    name + FORMAT_EXTENSIONS[format]
+  def download_file
+    response = HTTP.get(download_url, ssl_context: SSL_CONTEXT)
+    mime_type = response.content_type.mime_type
+    [
+      response.body,
+      {
+        type: mime_type,
+        filename: filename(content_disposition(response.headers), mime_type)
+      }
+    ]
   end
+
+  private
+
+    def content_disposition(headers)
+      return nil unless headers.key? :content_disposition
+
+      Mechanize::HTTP::ContentDispositionParser.parse(headers[:content_disposition])
+    end
+
+    def filename(content_disposition, mime_type)
+      if content_disposition
+        content_disposition.filename || name + FORMAT_EXTENSIONS[mime_type]
+      else
+        name + FORMAT_EXTENSIONS[mime_type]
+      end
+    end
 end
