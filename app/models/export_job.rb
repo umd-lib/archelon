@@ -44,8 +44,6 @@ class ExportJob < ApplicationRecord
   private
 
     def content_disposition(headers)
-      return nil unless headers.key? :content_disposition
-
       Mechanize::HTTP::ContentDispositionParser.parse(headers[:content_disposition])
     end
 
