@@ -37,7 +37,8 @@ class BookmarksController < CatalogController
     search_params = current_search_session.query_params
     return redirect_back_to_catalog(params, search_params) unless current_user.bookmarks.count < 1000
 
-    search_params['rows'] = params[:result_count]
+    search_params[:rows] = params[:result_count]
+    search_params[:exportable_only] = true
     (@response, @document_list) = search_results(search_params)
     document_ids = @document_list.map(&:id)
     selected_ids = current_user.bookmarks.map(&:document_id)
@@ -49,8 +50,10 @@ class BookmarksController < CatalogController
       select_ids.each do |id|
         current_user.bookmarks.create(document_id: id, document_type: blacklight_config.document_model.to_s)
       end
-      flash[:notice] = I18n.t(:items_selected, selected_count: select_ids.length)
+      count = select_ids.length
+      flash[:notice] = I18n.t(:items_selected, selected_count: count, items: count == 1 ? 'item' : 'items')
     end
+    search_params.delete :exportable_only
     redirect_back_to_catalog(params, search_params)
   end
 

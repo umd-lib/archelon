@@ -25,6 +25,10 @@ class ExportJob < ApplicationRecord
 
   STATUSES = [IN_PROGRESS, READY, FAILED].freeze
 
+  def self.exportable_types
+    %w[Image Issue Letter]
+  end
+
   def download_file
     response = HTTP.get(download_url, ssl_context: SSL_CONTEXT)
     mime_type = response.content_type.mime_type
