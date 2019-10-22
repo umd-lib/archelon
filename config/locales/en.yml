@@ -33,11 +33,11 @@ en:
   hello: 'Hello world'
   solr_is_down: 'Unable to connect to Solr index. Search functionality is unavailable at this time.'
   active_mq_is_down: 'Unable to connect to Active MQ. Export functionality is unavailable at this time.'
-  needs_selected_items: 'To create a export job, you need to select items first!'
-  already_selected: 'All items from this search are already selected!'
-  items_selected: '%{selected_count} item(s) from this search are added to your selected items list!'
-  max_limit: 'Maximum overall selection limit is %{limit}!'
-  selected_items_changed: 'Selected items has changed! Please review!'
+  needs_selected_items: 'To create a export job, you must select items first.'
+  already_selected: 'All exportable items from this search are already selected.'
+  items_selected: 'Added %{selected_count} exportable %{items} from this search to your selected items list.'
+  max_limit: 'Maximum overall selection limit is %{limit}.'
+  selected_items_changed: 'Selected items has changed. Please review.'
   activerecord:
     models:
       download_url: Download URL
