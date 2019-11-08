@@ -1,8 +1,7 @@
 # config/initializers/ldap.rb
 
 # Load the configuration
-template = ERB.new File.new("#{Rails.root}/config/ldap.yml").read
-LDAP_CONFIG = YAML.load(template.result(binding))[Rails.env]
+LDAP_CONFIG = Archelon::Application.config_for :ldap
 
 # LDAP and Grouper Constants from configuration
 LDAP_NAME_ATTR = LDAP_CONFIG['name_attr']

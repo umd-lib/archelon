@@ -1,8 +1,7 @@
 # Configures an SSL context for use with HTTPS connections
 
 # Load the configuration
-template = ERB.new File.new("#{Rails.root}/config/ssl.yml").read
-SSL_CONFIG = YAML.load(template.result(binding))[Rails.env]
+SSL_CONFIG = Archelon::Application.config_for :ssl
 
 SSL_CONTEXT = OpenSSL::SSL::SSLContext.new
 

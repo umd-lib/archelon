@@ -33,6 +33,7 @@
 
 # Ignore environment specific files
 .env
+.env.local
 
 # Ignore minitest-ci reports
 test/reports

@@ -74,14 +74,4 @@ Rails.application.configure do
       password: ENV['AUDIT_DATABASE_PASSWORD'] || 'archelon',
   }
 
-  config.stomp_server = {
-      host: ENV['STOMP_HOST'] || '192.168.40.10',
-      port: ENV['STOMP_PORT'] || 61613
-  }
-
-  config.queues = {
-      export_jobs: '/queue/exportjobs',
-      export_jobs_completed: '/queue/exportjobs.completed'
-  }
-
 end
