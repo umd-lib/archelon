@@ -3,6 +3,13 @@
     <li><%= link_to 'Home', root_path %></li>
     <li><%= link_to 'Help', help_path %></li>
     <li>
+      <%= link_to bookmarks_path, id:'bookmarks_nav', class: 'nav-link' do %>
+        <%= t('blacklight.header_links.bookmarks') %>
+        <span class="badge badge-secondary" data-role='bookmark-counter'><%= current_or_guest_user.bookmarks.count %></span>
+      <% end %>
+    </li>
+    
+    <li>
       <div class="btn-group">
         <button type="button" class="btn dropdown-toggle menu-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Manage <span class="caret"></span>
@@ -12,6 +19,7 @@
             <li><%= link_to 'Users', controller: 'cas_users', action: 'index' %></li>
           <% end %>
           <li><%= link_to 'Download URLs', controller: 'download_urls', action: 'index' %></li>
+          <li><%= link_to 'Export Queue', controller: 'export_jobs', action: 'index' %></li>
         </ul>
       </div>
     </li>

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ApplicationController < ActionController::Base
   include CasHelper
   before_action :authenticate
@@ -5,10 +7,7 @@ class ApplicationController < ActionController::Base
   # Adds a few additional behaviors into the application controller
   include Blacklight::Controller
   layout 'blacklight'
-
-  # Prevent CSRF attacks by raising an exception.
-  # For APIs, you may want to use :null_session instead.
-  protect_from_forgery with: :exception
+  skip_after_action :discard_flash_if_xhr
 
   # Causes a "404 - Not Found" error page to be displayed.
   def not_found
@@ -32,6 +31,7 @@ class ApplicationController < ActionController::Base
 
   def real_user
     return current_cas_user unless impersonating?
+
     impersonating_admin
   end
   helper_method :real_user
@@ -40,5 +40,4 @@ class ApplicationController < ActionController::Base
     current_cas_user.admin? && user.user? && (user.id != current_cas_user.id)
   end
   helper_method :can_login_as?
-
 end

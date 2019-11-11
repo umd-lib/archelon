@@ -11,6 +11,7 @@ LDAP_ATTRIBUTES = [LDAP_NAME_ATTR,LDAP_GROUPS_ATTR]
 LDAP_BASE = LDAP_CONFIG['base']
 GROUPER_ADMIN_GROUP = LDAP_CONFIG['grouper_admin_group']
 GROUPER_USER_GROUP = LDAP_CONFIG['grouper_user_group']
+LDAP_OVERRIDE = LDAP_CONFIG['ldap_override']
 
 # Initialize LDAP object
 LDAP = Net::LDAP.new(encryption: :simple_tls)

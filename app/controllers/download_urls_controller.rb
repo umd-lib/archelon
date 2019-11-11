@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DownloadUrlsController < ApplicationController
   before_action :set_download_url, only: [:show]
   include Blacklight::SearchHelper
@@ -8,7 +10,7 @@ class DownloadUrlsController < ApplicationController
     @rq = DownloadUrl.ransack(query_params)
     @rq.sorts = 'created_at desc' if @rq.sorts.empty?
     @download_urls = @rq.result.paginate(page: params[:page])
-    @creators = DownloadUrl.select('creator').uniq.order(:creator)
+    @creators = DownloadUrl.select('creator').distinct.order(:creator)
   end
 
   # GET /download_urls/1
@@ -59,22 +61,17 @@ class DownloadUrlsController < ApplicationController
   end
 
   # PUT /download_urls/disable/:token
-  def disable # rubocop:disable Metrics/MethodLength
+  def disable
     token = params[:token]
     notice_msg = nil
     @download_url = DownloadUrl.find_by(token: token)
-    if @download_url && @download_url.enabled?
+    if @download_url&.enabled?
       @download_url.enabled = false
       @download_url.save!
       notice_msg = 'Download URL was disabled'
     end
 
-    # Replace with redirect_back_to in Rails 5
-    if request.env['HTTP_REFERER'].present?
-      redirect_to :back, notice: notice_msg
-    else
-      redirect_to download_urls_url, notice: notice_msg
-    end
+    redirect_back fallback_location: download_urls_url, notice: notice_msg
   end
 
   private
@@ -100,6 +97,7 @@ class DownloadUrlsController < ApplicationController
       results = fetch([document_url])
       solr_documents = results[1]
       return solr_documents.first if solr_documents.any?
+
       nil
     end
 
@@ -120,7 +118,8 @@ class DownloadUrlsController < ApplicationController
     # Removes "enabled_eq" if it is 0.
     def query_params
       return if params.blank?
+
       rq_params = params[:rq]
-      rq_params.delete_if { |key, value| key == 'enabled_eq' && value == '0' } if rq_params
+      rq_params&.delete_if { |key, value| key == 'enabled_eq' && value == '0' }
     end
 end

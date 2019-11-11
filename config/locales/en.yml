@@ -16,12 +16,28 @@
 #
 # This would use the information in config/locales/es.yml.
 #
+# The following keys must be escaped otherwise they will not be retrieved by
+# the default I18n backend:
+#
+# true, false, on, off, yes, no
+#
+# Instead, surround them with single quotes.
+#
+# en:
+#   'true': 'foo'
+#
 # To learn more, please read the Rails Internationalization guide
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
-  solr_is_down: "Unable to connect to Solr index. Search functionality is unavailable at this time."
+  hello: 'Hello world'
+  solr_is_down: 'Unable to connect to Solr index. Search functionality is unavailable at this time.'
+  active_mq_is_down: 'Unable to connect to Active MQ. Export functionality is unavailable at this time.'
+  needs_selected_items: 'To create a export job, you must select items first.'
+  already_selected: 'All exportable items from this search are already selected.'
+  items_selected: 'Added %{selected_count} exportable %{items} from this search to your selected items list.'
+  max_limit: 'Maximum overall selection limit is %{limit}.'
+  selected_items_changed: 'Selected items has changed. Please review.'
   activerecord:
     models:
       download_url: Download URL

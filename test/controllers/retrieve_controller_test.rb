@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class RetrieveControllerTest < ActionController::TestCase
@@ -8,7 +10,7 @@ class RetrieveControllerTest < ActionController::TestCase
 
   test 'should get retrieve' do
     download_url = download_urls(:one)
-    get :retrieve, token: download_url.token
+    get :retrieve, params: { token: download_url.token }
     assert_response :success
   end
 
@@ -17,7 +19,7 @@ class RetrieveControllerTest < ActionController::TestCase
     download_url.enabled = false
     download_url.save!
 
-    get :retrieve, token: download_url.token
+    get :retrieve, params: { token: download_url.token }
     assert_template 'disabled'
     assert_template 'retrieve'
     assert_response 410 # HTTP "Gone" status
@@ -28,7 +30,7 @@ class RetrieveControllerTest < ActionController::TestCase
     download_url.expires_at = 1.day.ago
     download_url.save!
 
-    get :retrieve, token: download_url.token
+    get :retrieve, params: { token: download_url.token }
     assert_template 'expired'
     assert_template 'retrieve'
     assert_response 410 # HTTP "Gone" status
@@ -40,7 +42,7 @@ class RetrieveControllerTest < ActionController::TestCase
     download_url.save!
 
     stub_network do
-      get :do_retrieve, token: download_url.token
+      get :do_retrieve, params: { token: download_url.token }
     end
 
     assert_template 'disabled'
@@ -54,7 +56,7 @@ class RetrieveControllerTest < ActionController::TestCase
     download_url.save!
 
     stub_network do
-      get :do_retrieve, token: download_url.token
+      get :do_retrieve, params: { token: download_url.token }
     end
 
     assert_template 'expired'
@@ -67,11 +69,11 @@ class RetrieveControllerTest < ActionController::TestCase
     assert download_url.enabled?
 
     stub_network do
-      get :do_retrieve, token: download_url.token
+      get :do_retrieve, params: { token: download_url.token }
     end
 
     download_url.reload
-    refute download_url.enabled?
+    assert_not download_url.enabled?
   end
 
   test '"do_retrieve" action should disable download_url if download_url is expired' do
@@ -81,14 +83,14 @@ class RetrieveControllerTest < ActionController::TestCase
     download_url.save!
 
     stub_network do
-      get :do_retrieve, token: download_url.token
+      get :do_retrieve, params: { token: download_url.token }
     end
 
     assert_template 'expired'
     assert_template 'retrieve'
     assert_response 410 # HTTP "Gone" status
     download_url.reload
-    refute download_url.enabled?
+    assert_not download_url.enabled?
   end
 
   def teardown

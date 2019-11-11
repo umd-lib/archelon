@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 # Integration test for the DownloadUrl index page
 class DownloadUrlsIndexTest < ActionDispatch::IntegrationTest
   def setup
     @sort_columns = %w[created_at]
-    cas_login('test_user')
+    mock_cas_login_for_integration_tests('test_user')
   end
 
   test 'index including pagination and sorting' do
@@ -18,7 +20,7 @@ class DownloadUrlsIndexTest < ActionDispatch::IntegrationTest
     @sort_columns.each do |sort_column|
       %w[asc desc].each do |sort_direction|
         rq_param = { s: sort_column + ' ' + sort_direction }
-        get download_urls_path, rq: rq_param
+        get download_urls_path, params: { rq: rq_param }
         assert_template 'download_urls/index'
         assert_select 'ul.pagination'
 

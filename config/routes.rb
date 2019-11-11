@@ -1,4 +1,6 @@
 Rails.application.routes.draw do # rubocop:disable Metrics/BlockLength
+  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+
   get 'static_pages/about'
 
   resources :cas_users
@@ -18,90 +20,46 @@ Rails.application.routes.draw do # rubocop:disable Metrics/BlockLength
     concerns :exportable
   end
 
-  resources :bookmarks do
+  resources :bookmarks, constraints: { id: /.*/ } do
     concerns :exportable
 
     collection do
       delete 'clear'
+      get 'export'
+      get 'select_all_results'
+      post 'toggle_multiple_selections'
     end
   end
 
   resources :download_urls, only: %i[index show]
-  get path: '/download_urls/generate/:document_url', controller: 'download_urls',
+  get '/download_urls/generate/:document_url', controller: 'download_urls',
       action: 'generate_download_url', as: 'generate_download_url', constraints: { document_url: /.*/ }
-  post path: '/download_urls/create', controller: 'download_urls',
+  post '/download_urls/create', controller: 'download_urls',
        action: 'create_download_url', as: 'create_download_url'
-  get path: '/download_urls/show/:token', controller: 'download_urls',
+  get '/download_urls/show/:token', controller: 'download_urls',
       action: 'show_download_url', as: 'show_download_url'
-  put path: '/download_urls/disable/:token', controller: 'download_urls',
+  put '/download_urls/disable/:token', controller: 'download_urls',
       action: 'disable', as: 'disable_download_url'
 
-  get path: '/retrieve/:token', controller: 'retrieve', action: 'retrieve',
+  get '/retrieve/:token', controller: 'retrieve', action: 'retrieve',
       as: 'retrieve'
-  get path: '/retrieve/do/:token', controller: 'retrieve', action: 'do_retrieve',
+  get '/retrieve/do/:token', controller: 'retrieve', action: 'do_retrieve',
       as: 'do_retrieve'
+
+  resources :export_jobs do
+    collection do
+      post 'review'
+      get 'review', to: 'export_jobs#new'
+      get ':id/file', to: 'export_jobs#download', as: 'download'
+    end
+  end
 
   get 'login', to: redirect('/auth/cas'), as: 'login'
   get 'admin/user/login_as/:user_id', to: 'sessions#login_as', as: 'admin_user_login_as'
   get 'logout', to: 'sessions#destroy', as: 'logout'
   get 'auth/:provider/callback', to: 'sessions#create'
   get 'auth/failure', to: redirect('/')
-  
+
   get 'about' => 'static_pages#about'
   get 'help' => 'static_pages#help'
-
-  # The priority is based upon order of creation: first created -> highest priority.
-  # See how all your routes lay out with "rake routes".
-
-  # You can have the root of your site routed with "root"
-  # root 'welcome#index'
-
-  # Example of regular route:
-  #   get 'products/:id' => 'catalog#view'
-
-  # Example of named route that can be invoked with purchase_url(id: product.id)
-  #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
-
-  # Example resource route (maps HTTP verbs to controller actions automatically):
-  #   resources :products
-
-  # Example resource route with options:
-  #   resources :products do
-  #     member do
-  #       get 'short'
-  #       post 'toggle'
-  #     end
-  #
-  #     collection do
-  #       get 'sold'
-  #     end
-  #   end
-
-  # Example resource route with sub-resources:
-  #   resources :products do
-  #     resources :comments, :sales
-  #     resource :seller
-  #   end
-
-  # Example resource route with more complex sub-resources:
-  #   resources :products do
-  #     resources :comments
-  #     resources :sales do
-  #       get 'recent', on: :collection
-  #     end
-  #   end
-
-  # Example resource route with concerns:
-  #   concern :toggleable do
-  #     post 'toggle'
-  #   end
-  #   resources :posts, concerns: :toggleable
-  #   resources :photos, concerns: :toggleable
-
-  # Example resource route within a namespace:
-  #   namespace :admin do
-  #     # Directs /admin/products/* to Admin::ProductsController
-  #     # (app/controllers/admin/products_controller.rb)
-  #     resources :products
-  #   end
 end

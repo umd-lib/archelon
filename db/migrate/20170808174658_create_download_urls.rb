@@ -1,4 +1,4 @@
-class CreateDownloadUrls < ActiveRecord::Migration
+class CreateDownloadUrls < ActiveRecord::Migration[4.2]
   def change
     create_table :download_urls do |t|
       t.string :token

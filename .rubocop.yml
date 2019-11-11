@@ -1,15 +1,17 @@
-# Enables Rails cops
-Rails:
-  Enabled: true
+require: rubocop-rails
 
 # Exclude auto-generated files
 AllCops:
   Exclude:
-    - 'bin/*'
-    - 'config/application.rb'
+    - 'config.ru'
+    - 'Gemfile'
+    - 'Rakefile'
+    - 'bin/**/*'
+    - 'config/**/*'
     - 'db/schema.rb'
     - 'db/migrate/*'
     - 'db/seeds.rb'
+    - '**/*.jbuilder'
 
 # Increase max allowed line length
 Metrics/LineLength:
@@ -33,7 +35,7 @@ Style/ClassAndModuleChildren:
     - 'test/**/*'
 
 Layout/IndentationConsistency:
-  EnforcedStyle: rails
+  EnforcedStyle: indented_internal_methods
 
 Style/EmptyMethod:
   EnforcedStyle: expanded

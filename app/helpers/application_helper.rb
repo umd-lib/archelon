@@ -1,18 +1,21 @@
+# frozen_string_literal: true
+
 require 'erb'
 require 'addressable/template'
 
 module ApplicationHelper
   FEDORA_BASE_URL = Rails.application.config.fcrepo_base_url
   IIIF_BASE_URL = Rails.application.config.iiif_base_url
-  PCDM_OBJECT = 'pcdm:Object'.freeze
-  PCDM_FILE = 'pcdm:File'.freeze
-  ALLOWED_MIME_TYPE = 'image/tiff'.freeze
+  PCDM_OBJECT = 'pcdm:Object'
+  PCDM_FILE = 'pcdm:File'
+  ALLOWED_MIME_TYPE = 'image/tiff'
   MIRADOR_STATIC_VERSION = Rails.application.config.mirador_static_version
 
   def mirador_displayable?(document)
     rdf_types = document._source[:rdf_type]
     component = document._source[:component]
     return true if rdf_types.include?(PCDM_OBJECT) && (component != 'Article')
+
     false
   end
 
@@ -80,7 +83,7 @@ module ApplicationHelper
   def view_in_fedora_link(document)
     url = document[:id]
     url += '/fcr:metadata' if document[:rdf_type].include? 'fedora:Binary'
-    link_to 'View in Fedora', url, target: '_blank'
+    link_to 'View in Fedora', url, target: '_blank', rel: 'noopener'
   end
 
   def link_to_document_view(args)

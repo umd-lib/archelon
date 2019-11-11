@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 # A DownloadUrl for retrieving Fedora document
-class DownloadUrl < ActiveRecord::Base
+class DownloadUrl < ApplicationRecord
   include Tokenable
 
   validates :notes, presence: true

@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class CasUsersController < ApplicationController
-  before_action :set_cas_user, only: %i[show show_history edit update destroy]
-  before_action :verify_admin, only: %i[index new create edit update destroy]
+  before_action :set_cas_user, only: %i[show show_history destroy]
+  before_action :verify_admin, only: %i[index destroy]
   before_action :verify_self_or_admin, only: %i[show show_history]
 
   # GET /cas_users
@@ -19,7 +21,7 @@ class CasUsersController < ApplicationController
     @events = audit_events_for_user(@cas_user.cas_directory_id, @days)
   end
 
-  def audit_events(bindings)
+  def audit_events(bindings) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     short_name_for = {
       'http://id.loc.gov/vocabulary/preservation/eventType/cre' => 'Create Resource',
       'http://id.loc.gov/vocabulary/preservation/eventType/ing' => 'Ingest Resource',
@@ -28,7 +30,7 @@ class CasUsersController < ApplicationController
       'http://id.loc.gov/vocabulary/preservation/eventType/del' => 'Delete Resource'
     }
 
-    history_query = <<-END
+    history_query = <<-END_QUERY
       SELECT
         timestamp,
         event_type,
@@ -38,7 +40,7 @@ class CasUsersController < ApplicationController
       FROM history
       WHERE username = $1 AND timestamp > $2
       ORDER BY timestamp DESC
-    END
+    END_QUERY
 
     # TODO: put the connection setup somewhere central
     conn = PG.connect(Rails.configuration.audit_database)
@@ -47,15 +49,15 @@ class CasUsersController < ApplicationController
     tz = ENV.key?('TZ') ? ENV['TZ'] : Time.zone.name
     conn.exec("SET timezone = '#{conn.escape(tz)}'")
 
-    conn.exec_params(history_query, [ bindings[:user], bindings[:oldest]] ) do |result|
+    conn.exec_params(history_query, [bindings[:user], bindings[:oldest]]) do |result|
       result.map do |row|
         {
-            date: row['date'],
-            time: row['time'],
-            timestamp: row['timestamp'],
-            type: row['event_type'],
-            type_description: short_name_for[row['event_type']],
-            resource: row['resource_uri'],
+          date: row['date'],
+          time: row['time'],
+          timestamp: row['timestamp'],
+          type: row['event_type'],
+          type_description: short_name_for[row['event_type']],
+          resource: row['resource_uri']
         }
       end
     end
@@ -90,12 +92,14 @@ class CasUsersController < ApplicationController
     # Verify current user is an admin before all actions except :show
     def verify_admin
       return if current_cas_user.admin?
+
       render(file: Rails.root.join('public', '403.html'), status: :forbidden, layout: false)
     end
 
     # Verify current user is an admin before all actions except :show
     def verify_self_or_admin
       return unless !current_cas_user.admin? && (current_cas_user.id != @cas_user.id)
+
       render(file: Rails.root.join('public', '403.html'), status: :forbidden, layout: false)
     end
 end

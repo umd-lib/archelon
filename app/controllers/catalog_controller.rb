@@ -24,6 +24,10 @@ class CatalogController < ApplicationController
       fq: ['is_pcdm:true']
     }
 
+    config.fetch_many_document_params = {
+      fl: '*'
+    }
+
     # solr path which will be added to solr base url before the other solr params.
     config.solr_path = 'search'
     config.document_solr_path = 'document'
@@ -41,6 +45,9 @@ class CatalogController < ApplicationController
     #  # rows: 1,
     #  # q: '{!term f=id v=$id}'
     # }
+
+    # Remove default right-side rendering of blacklight bookmark select checkbox
+    config.index.document_actions.delete(:bookmark)
 
     # solr field configuration for search results/index views
     config.index.title_field = 'display_title'

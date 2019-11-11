@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RetrieveController < ApplicationController
   skip_before_action :authenticate
 
@@ -17,12 +19,7 @@ class RetrieveController < ApplicationController
     return unless verify_download_url(download_url)
 
     fedora_url = download_url.url
-    ctx = OpenSSL::SSL::SSLContext.new
-    ctx.verify_mode = Rails.configuration.fcrepo_ssl_verify_mode
-
-    ctx.ca_file = Rails.configuration.ssl_ca_file if ctx.verify_mode == OpenSSL::SSL::VERIFY_PEER
-
-    http = HTTP.get(fedora_url, ssl_context: ctx)
+    http = HTTP.get(fedora_url, ssl_context: SSL_CONTEXT)
     data = http.body
 
     download_url.enabled = false
@@ -50,7 +47,7 @@ class RetrieveController < ApplicationController
     def verify_download_url(download_url) # rubocop:disable Metrics/MethodLength
       not_found unless download_url
       unless download_url.enabled?
-        render 'disabled', layout: 'retrieve', status: 410
+        render 'disabled', layout: 'retrieve', status: :gone
         return false
       end
 
@@ -61,7 +58,7 @@ class RetrieveController < ApplicationController
           download_url.save
         end
         @download_url = download_url
-        render 'expired', layout: 'retrieve', status: 410
+        render 'expired', layout: 'retrieve', status: :gone
         return false
       end
       true

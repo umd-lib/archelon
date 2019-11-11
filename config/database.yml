@@ -6,7 +6,7 @@
 #
 default: &default
   adapter: sqlite3
-  pool: 5
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
 
 development:
@@ -25,5 +25,11 @@ test:
   database: db/test.sqlite3
 
 production:
-  <<: *default
-  database: db/production.sqlite3
+  adapter: <%= ENV["ARCHELON_DATABASE_ADAPTER"] %>
+  encoding: <%= ENV["ARCHELON_DATABASE_ENCODING"] %>
+  database: <%= ENV["ARCHELON_DATABASE_NAME"] %>
+  username: <%= ENV["ARCHELON_DATABASE_USERNAME"] %>
+  password: <%= ENV["ARCHELON_DATABASE_PASSWORD"] %>
+  host: <%= ENV["ARCHELON_DATABASE_HOST"] %>
+  port: <%= ENV["ARCHELON_DATABASE_PORT"] %>
+  pool: <%= ENV["ARCHELON_DATABASE_POOL"] %>

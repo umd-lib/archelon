@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class CasUsersControllerTest < ActionController::TestCase
@@ -13,13 +15,13 @@ class CasUsersControllerTest < ActionController::TestCase
   end
 
   test 'should show cas_user' do
-    get :show, id: @cas_user
+    get :show, params: { id: @cas_user }
     assert_response :success
   end
 
   test 'should destroy cas_user' do
     assert_difference('CasUser.count', -1) do
-      delete :destroy, id: @cas_user
+      delete :destroy, params: { id: @cas_user }
     end
 
     assert_redirected_to cas_users_path
@@ -30,17 +32,17 @@ class CasUsersControllerTest < ActionController::TestCase
       get :index
       assert_response :forbidden
 
-      delete :destroy, id: @cas_user
+      delete :destroy, params: { id: @cas_user }
       assert_response :forbidden
     end
   end
 
   test 'non-admin users should not have access to show, except for own record' do
     run_as_user(cas_users(:one)) do
-      get :show, id: cas_users(:one)
+      get :show, params: { id: cas_users(:one) }
       assert_response :success
 
-      get :show, id: cas_users(:two)
+      get :show, params: { id: cas_users(:two) }
       assert_response :forbidden
     end
   end

@@ -1,0 +1,31 @@
+<h1>Export Job Options</h1>
+<%= form_for(@job, url: :review_export_jobs) do |f| %>
+  <div>
+    <div class="form-group">
+      <div>
+        <%= f.label "Choose Export Format:" %>
+      </div>
+      <div class="p-3 ml-5">
+        <% ExportJob::FORMATS.each do |format, label| %>
+          <div>
+          <%= f.radio_button :format, format, class: "form-check-input" %>
+          <%= f.label :format, label, class: "form-check-label font-weight-normal" %>
+          </div> 
+        <% end %>
+      </div>
+    </div>
+    <div class="form-group">
+      <div>
+        <%= f.label "Choose job name:", class: "col-form-label-lg" %>
+      </div>
+      <div class="p-3 ml-5">
+        <%= f.text_field :name, size: 40, class: "form-control" %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= f.submit "Back", disabled: true, class: 'btn btn-danger form-control' %>
+      <%= f.submit "Cancel", class: 'btn btn-danger form-control' %>
+      <%= f.submit "Next", class: 'btn btn-primary form-control' %>
+    </div>
+  </div>
+<% end %>
