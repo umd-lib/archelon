@@ -18,7 +18,7 @@ class BookmarksController < CatalogController
   add_show_tools_partial(:export, path: :new_export_job_url, modal: false)
 
   def toggle_multiple_selections # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
-    item_ids = params[:document_ids].uniq
+    item_ids = params.fetch(:document_ids, []).uniq
     if params[:mode] == 'select'
       limit_exceeded = (item_ids.length + current_user.bookmarks.count) > 1000
       render json: {}, status: :unprocessable_entity && return if limit_exceeded

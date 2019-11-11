@@ -61,7 +61,7 @@ class DownloadUrlsController < ApplicationController
   end
 
   # PUT /download_urls/disable/:token
-  def disable # rubocop:disable Metrics/MethodLength
+  def disable
     token = params[:token]
     notice_msg = nil
     @download_url = DownloadUrl.find_by(token: token)
@@ -71,12 +71,7 @@ class DownloadUrlsController < ApplicationController
       notice_msg = 'Download URL was disabled'
     end
 
-    # Replace with redirect_back_to in Rails 5
-    if request.env['HTTP_REFERER'].present?
-      redirect_to :back, notice: notice_msg
-    else
-      redirect_to download_urls_url, notice: notice_msg
-    end
+    redirect_back fallback_location: download_urls_url, notice: notice_msg
   end
 
   private
