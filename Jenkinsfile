@@ -21,7 +21,15 @@ pipeline {
   //     A comma-separated list of email addresses that should
   //    be the default recipients of Jenkins emails.
 
-  agent any
+  agent {
+    dockerfile {
+      filename 'Dockerfile.ci'
+      // Pass JENKINS_EMAIL_SUBJECT_PREFIX and JENKINS_DEFAULT_EMAIL_RECIPIENTS
+      // into container as "env" arguments, so they are available inside the
+      // Docker container
+      args '-u root --env JENKINS_DEFAULT_EMAIL_RECIPIENTS=$JENKINS_DEFAULT_EMAIL_RECIPIENTS --env JENKINS_EMAIL_SUBJECT_PREFIX=$JENKINS_EMAIL_SUBJECT_PREFIX'
+    }
+  }
 
   options {
     buildDiscarder(
@@ -58,7 +66,7 @@ pipeline {
   }
 
   stages {
-    stage('Initialize') {
+    stage('initialize') {
       steps {
         script {
           // Retrieve the actual Git branch being built for use in email.
@@ -86,85 +94,74 @@ pipeline {
       }
     }
 
-    stage('Build') {
+    stage('build') {
       steps {
-        // Run the build
-        sh '''#!/bin/bash --login
+        sh '''
+          ruby -v
+        '''
+      }
+    }
 
-          # Set "fail on error" in bash
-          set -e
-
-          # Clear the "coverage" and "reports" directories
-          rm -rf coverage
-          rm -rf reports
-
-          # Use the correct ruby and gemset (creating if necessary)
-          # Use the correct ruby and gemset, derived from .ruby-version and .ruby-gemset
-          RUBY_VERSION=$(cat .ruby-version)
-          RUBY_GEMSET=$(cat .ruby-gemset)
-          RVM_GEMSET=$RUBY_VERSION@$RUBY_GEMSET
-
-          rvm --create use "$RVM_GEMSET"
-
+    stage('test') {
+      steps {
+        sh '''
           # Disable Spring, as it should not be needed, and may interfere with tests
           export DISABLE_SPRING=true
-
-          # Do any setup
-          # e.g. possibly do 'rake db:migrate db:test:prepare' here
-          bundle install --without production
-
-          FULL_RAILS_VERSION=`rails -v`
-          RAILS_VERSION=`echo $FULL_RAILS_VERSION | grep -oP "\\d+.\\d+.\\d+"`
-
-          echo FULL_RAILS_VERSION=$FULL_RAILS_VERSION
-          echo RAILS_VERSION=$RAILS_VERSION
-
-          bundle exec rails db:reset
-
-          TESTS_TO_RUN="test"
-          if [ -d "$WORKSPACE/test/system" ]; then
-            # Run system tests if directory exists
-            TESTS_TO_RUN="test:system $TESTS_TO_RUN"
-          fi
 
           # Configure MiniTest to use JUnit-style reporter
           export MINITEST_REPORTER=JUnitReporter
 
-          echo "Running 'bundle exec rails $TESTS_TO_RUN'"
-          bundle exec rails $TESTS_TO_RUN
-
-          # Run RuboCop
-          # Send output to standard out for "Record compiler warnings and static analysis results"
-          # post-build action
-          #
-          # Using "|| true" so that build will be considered successful, even if there are Rubocop
-          # violation.
-          bundle exec rubocop -D --format clang || true
+          bundle exec rails db:reset
+          bundle exec rails test:system test
         '''
+      }
+      post {
+        always {
+          junit '**/test/reports/*.xml'
+        }
+      }
+    }
+
+    stage('static-analysis') {
+      steps {
+        sh '''
+        # Run RuboCop
+        # Send output to standard out for "Record compiler warnings and static analysis results"
+        # post-build action
+        #
+        # Using "|| true" so that build will be considered successful, even if there are Rubocop
+        # violation.
+        bundle exec rubocop -D --format clang || true
+      '''
       }
       post {
         always {
           // Collect Rubocop reports
           recordIssues(tools: [ruboCop(reportEncoding: 'UTF-8')], unstableTotalAll: 1)
 
-          // Collect JUnit test reports
-          junit '**/test/reports/*.xml'
-
-          // Collecte coverage reports
-          publishHTML (target: [
-            allowMissing: true,
-            alwaysLinkToLastBuild: false,
-            keepAll: true,
-            reportDir: 'coverage/rcov',
-            reportFiles: 'index.html',
-            reportName: "RCov Report"
-          ])
+          // Collect coverage reports
+          publishHTML([
+                        allowMissing: false,
+                        alwaysLinkToLastBuild: false,
+                        keepAll: true,
+                        reportDir: 'coverage/rcov',
+                        reportFiles: 'index.html',
+                        reportName: "RCov Report"
+                      ])
         }
       }
     }
 
-    stage('CleanWorkspace') {
+    stage('clean-workspace') {
       steps {
+        // Change permissions of the workspace directory to world-writeable
+        // so Jenkins can delete it. This is needed, because files may be
+        // written to the directory from the Docker container as the "root"
+        // user, which Jenkins would not otherwise be able to clean up.
+        sh '''
+          chmod --recursive 777 $WORKSPACE
+        '''
+
         cleanWs()
       }
     }
