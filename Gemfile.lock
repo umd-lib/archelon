@@ -170,10 +170,8 @@ GEM
     mimemagic (0.3.3)
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)
-    minitest (5.11.3)
-    minitest-ci (3.0.3)
-      minitest (~> 5.0, >= 5.0.6)
-    minitest-reporters (1.1.19)
+    minitest (5.13.0)
+    minitest-reporters (1.4.2)
       ansi
       builder
       minitest (>= 5.0)
@@ -388,8 +386,7 @@ DEPENDENCIES
   jquery-rails
   listen (>= 3.0.5, < 3.2)
   mechanize
-  minitest-ci (~> 3.0.3)
-  minitest-reporters (~> 1.1.8)
+  minitest-reporters
   net-ldap (~> 0.16.1)
   omniauth-cas (~> 1.1.1)
   pg

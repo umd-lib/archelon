@@ -97,8 +97,7 @@ group :test do
  	# Easy installation and use of web drivers to run system tests with browsers
 	gem 'webdrivers'
 
-  gem 'minitest-ci', '~> 3.0.3'
-  gem 'minitest-reporters', '~> 1.1.8'
+  gem 'minitest-reporters'
 
   # Code analysis tools
   gem 'rubocop', '~> 0.74.0', require: false
