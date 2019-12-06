@@ -200,7 +200,7 @@ GEM
     polyamorous (2.3.0)
       activerecord (>= 5.0)
     public_suffix (3.1.1)
-    puma (3.12.1)
+    puma (3.12.2)
     rack (2.0.7)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
@@ -390,7 +390,7 @@ DEPENDENCIES
   net-ldap (~> 0.16.1)
   omniauth-cas (~> 1.1.1)
   pg
-  puma (~> 3.11)
+  puma (~> 3.12)
   rails (~> 5.2.3)
   rails-controller-testing
   ransack
