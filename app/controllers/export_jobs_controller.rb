@@ -32,7 +32,7 @@ class ExportJobsController < ApplicationController
     return unless @job.save
 
     begin
-      STOMP_CLIENT.publish Rails.configuration.queues[:export_jobs], uris.join("\n"), message_headers(@job)
+      STOMP_CLIENT.publish STOMP_CONFIG['export_jobs_queue'], uris.join("\n"), message_headers(@job)
     rescue Stomp::Error::NoCurrentConnection
       @job.status = 'Error'
       @job.save

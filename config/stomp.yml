@@ -1,2 +1,11 @@
 default: &default
-  host:
+  host: <%= ENV['STOMP_HOST'] %>
+  port: <%= ENV['STOMP_PORT'] %>
+  export_jobs_queue: /queue/exportjobs
+  export_jobs_completed_queue: /queue/exportjobs.completed
+
+development:
+  <<: *default
+
+production:
+  <<: *default
