@@ -1,0 +1,20 @@
+<%= form_with(model: vocabulary, local: true) do |form| %>
+  <% if vocabulary.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(vocabulary.errors.count, "error") %> prohibited this vocabulary from being saved:</h2>
+
+      <ul>
+      <% vocabulary.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form.label :name %>
+  <%= form.text_field :name %>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

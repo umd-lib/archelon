@@ -1,0 +1,20 @@
+<h1>Individual: <%= @individual.label %></h1>
+
+<div>
+  <%= link_to @individual.uri, @individual.uri %>
+</div>
+<div>
+  <%= label :individual, :label %>
+  <%= @individual.label %>
+</div>
+<div>
+  <%= label :individual, :same_as %>
+  <%= link_to @individual.same_as, @individual.same_as %>
+</div>
+<div>
+  <%= label :individual, :vocabulary_id %>
+  <%= link_to @individual.vocabulary.name, @individual.vocabulary %>
+</div>
+
+<%= link_to 'Edit', edit_individual_path(@individual) %> |
+<%= link_to 'Back', individuals_path %>

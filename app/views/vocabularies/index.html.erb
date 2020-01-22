@@ -1,0 +1,30 @@
+<h1>Vocabularies</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>URI</th>
+      <th>Types</th>
+      <th>Individuals</th>
+      <th colspan="2"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @vocabularies.each do |vocabulary| %>
+      <tr>
+        <td><%= link_to vocabulary.name, vocabulary %></td>
+        <td><%= vocabulary.uri %></td>
+        <td><%= vocabulary.types.count %></td>
+        <td><%= vocabulary.individuals.count %></td>
+        <td><%= link_to 'Edit', edit_vocabulary_path(vocabulary) %></td>
+        <td><%= link_to 'Destroy', vocabulary, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div>
+<%= link_to 'New Vocabulary', new_vocabulary_path, class: 'btn btn-success' %>
+</div>
