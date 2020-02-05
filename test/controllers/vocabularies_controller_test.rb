@@ -38,7 +38,7 @@ class VocabulariesControllerTest < ActionController::TestCase
   end
 
   test 'should update vocabulary' do
-    patch :update, params: { id: @vocabulary.id, vocabulary: { name: 'abcabc' } }
+    patch :update, params: { id: @vocabulary.id, vocabulary: { name: 'abcabc', description: 'New description' } }
     assert_redirected_to @vocabulary
   end
 

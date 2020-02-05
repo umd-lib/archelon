@@ -6,6 +6,10 @@
   <%= label :vocabulary, :name %>
   <%= @vocabulary.name %>
 </div>
+<div>
+  <%= label :vocabulary, :description %>
+  <%= @vocabulary.description %>
+</div>
 <%= link_to 'Edit', edit_vocabulary_path(@vocabulary), class: 'btn btn-success' %>
 
 <h2>Types <span class="badge badge-secondary"><%= @vocabulary.types.count %></span></h2>
