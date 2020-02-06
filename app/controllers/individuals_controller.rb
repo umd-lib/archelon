@@ -26,12 +26,15 @@ class IndividualsController < ApplicationController
 
   # POST /individuals
   # POST /individuals.json
-  def create
+  def create # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     @individual = Individual.new(individual_params)
 
     respond_to do |format|
       if @individual.save
-        format.html { redirect_to @individual.vocabulary, notice: "Individual #{@individual.label} was successfully created." }
+        format.html do
+          redirect_to @individual.vocabulary,
+                      notice: "Individual #{@individual.label} was successfully created."
+        end
         format.json { render :show, status: :created, location: @individual }
       else
         format.html { render :new }

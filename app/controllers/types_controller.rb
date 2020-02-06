@@ -26,7 +26,7 @@ class TypesController < ApplicationController
 
   # POST /types
   # POST /types.json
-  def create
+  def create # rubocop:disable Metrics/AbcSize
     @type = Type.new(type_params)
 
     respond_to do |format|

@@ -21,7 +21,7 @@ class IndividualsControllerTest < ActionController::TestCase
 
   test 'should create individual' do
     assert_difference('Individual.count') do
-      post :create, params: { individual: { name: 'bar', label: 'Bar', vocabulary_id: vocabularies(:vocab_one)} }
+      post :create, params: { individual: { name: 'bar', label: 'Bar', vocabulary_id: vocabularies(:vocab_one) } }
     end
 
     # redirects back to the parent vocab
