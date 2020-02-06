@@ -10,43 +10,44 @@ class IndividualsControllerTest < ActionController::TestCase
   end
 
   test 'should get index' do
-    get individuals_url
+    get :index
     assert_response :success
   end
 
   test 'should get new' do
-    get new_individual_url
+    get :new
     assert_response :success
   end
 
   test 'should create individual' do
     assert_difference('Individual.count') do
-      post individuals_url, params: { individual: {} }
+      post :create, params: { individual: { name: 'bar', label: 'Bar', vocabulary_id: vocabularies(:vocab_one)} }
     end
 
-    assert_redirected_to individual_url(Individual.last)
+    # redirects back to the parent vocab
+    assert_redirected_to vocabularies(:vocab_one)
   end
 
   test 'should show individual' do
-    get individual_url(@individual)
+    get :show, params: { id: @individual.id }
     assert_response :success
   end
 
   test 'should get edit' do
-    get edit_individual_url(@individual)
+    get :edit, params: { id: @individual.id }
     assert_response :success
   end
 
   test 'should update individual' do
-    patch individual_url(@individual), params: { individual: {} }
-    assert_redirected_to individual_url(@individual)
+    patch :update, params: { id: @individual.id, individual: { label: 'FOOOOO' } }
+    assert_redirected_to @individual
   end
 
   test 'should destroy individual' do
     assert_difference('Individual.count', -1) do
-      delete individual_url(@individual)
+      delete :destroy, params: { id: @individual.id }
     end
 
-    assert_redirected_to individuals_url
+    assert_redirected_to controller: :individuals, action: :index
   end
 end

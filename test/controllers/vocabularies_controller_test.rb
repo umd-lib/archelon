@@ -4,49 +4,49 @@ require 'test_helper'
 
 class VocabulariesControllerTest < ActionController::TestCase
   setup do
-    @vocabulary = vocabularies(:one)
+    @vocabulary = vocabularies(:vocab_one)
     @cas_user = cas_users(:one)
     mock_cas_login(@cas_user.cas_directory_id)
   end
 
   test 'should get index' do
-    get vocabularies_url
+    get :index
     assert_response :success
   end
 
   test 'should get new' do
-    get new_vocabulary_url
+    get :new
     assert_response :success
   end
 
   test 'should create vocabulary' do
     assert_difference('Vocabulary.count') do
-      post vocabularies_url, params: { vocabulary: {} }
+      post :create, params: { vocabulary: { name: 'abc' } }
     end
 
-    assert_redirected_to vocabulary_url(Vocabulary.last)
+    assert_redirected_to Vocabulary.last
   end
 
   test 'should show vocabulary' do
-    get vocabulary_url(@vocabulary)
+    get :show, params: { id: @vocabulary.id }
     assert_response :success
   end
 
   test 'should get edit' do
-    get edit_vocabulary_url(@vocabulary)
+    get :edit, params: { id: @vocabulary.id }
     assert_response :success
   end
 
   test 'should update vocabulary' do
-    patch vocabulary_url(@vocabulary), params: { vocabulary: {} }
-    assert_redirected_to vocabulary_url(@vocabulary)
+    patch :update, params: { id: @vocabulary.id, vocabulary: { name: 'abcabc' } }
+    assert_redirected_to @vocabulary
   end
 
   test 'should destroy vocabulary' do
     assert_difference('Vocabulary.count', -1) do
-      delete vocabulary_url(@vocabulary)
+      delete :destroy, params: { id: @vocabulary.id }
     end
 
-    assert_redirected_to vocabularies_url
+    assert_redirected_to controller: :vocabularies, action: :index
   end
 end
