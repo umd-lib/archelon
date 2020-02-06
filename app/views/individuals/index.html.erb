@@ -1,0 +1,30 @@
+<h1>Individuals</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Label</th>
+      <th>Same as</th>
+      <th>Vocabulary</th>
+      <th>URI</th>
+      <th colspan="2"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @individuals.each do |individual| %>
+      <tr>
+        <td><%= link_to individual.name, individual %></td>
+        <td><%= individual.label %></td>
+        <td><%= link_to individual.same_as, individual.same_as unless individual.same_as.empty? %></td>
+        <td><%= link_to individual.vocabulary.name, individual.vocabulary %></td>
+        <td><%= link_to individual.uri, individual.uri %></td>
+        <td><%= link_to 'Edit', edit_individual_path(individual), class: 'btn btn-sm btn-success' %></td>
+        <td><%= link_to 'Delete', individual, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger' %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to 'New Individual', new_individual_path, class: 'btn btn-success' %>

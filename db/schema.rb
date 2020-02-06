@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_30_175753) do
+ActiveRecord::Schema.define(version: 2020_01_21_200707) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer "user_id", null: false
@@ -64,6 +64,16 @@ ActiveRecord::Schema.define(version: 2019_08_30_175753) do
     t.index ["cas_user_id"], name: "index_export_jobs_on_cas_user_id"
   end
 
+  create_table "individuals", force: :cascade do |t|
+    t.string "name"
+    t.string "label"
+    t.string "same_as"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "vocabulary_id"
+    t.index ["vocabulary_id"], name: "index_individuals_on_vocabulary_id"
+  end
+
   create_table "searches", force: :cascade do |t|
     t.binary "query_params"
     t.integer "user_id"
@@ -71,6 +81,22 @@ ActiveRecord::Schema.define(version: 2019_08_30_175753) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_searches_on_user_id"
+  end
+
+  create_table "types", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "vocabulary_id"
+    t.index ["vocabulary_id"], name: "index_types_on_vocabulary_id"
+  end
+
+  create_table "vocabularies", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "name"
+    t.integer "type_id"
+    t.index ["type_id"], name: "index_vocabularies_on_type_id"
   end
 
 end

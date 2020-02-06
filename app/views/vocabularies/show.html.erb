@@ -1,0 +1,29 @@
+<h1>Vocabulary: <%= @vocabulary.name %></h1>
+<div>
+  <%= link_to @vocabulary.uri, {}, href: @vocabulary.uri %>
+</div>
+<div>
+  <%= label :vocabulary, :name %>
+  <%= @vocabulary.name %>
+</div>
+<%= link_to 'Edit', edit_vocabulary_path(@vocabulary), class: 'btn btn-success' %>
+
+<h2>Types <span class="badge badge-secondary"><%= @vocabulary.types.count %></span></h2>
+<ul>
+  <% @vocabulary.types.each do |type| %>
+    <li><%= link_to type.name, type %></li>
+  <% end %>
+</ul>
+<%= link_to 'New Type', new_type_path(vocabulary: @vocabulary), class: 'btn btn-sm btn-info' %>
+
+<h2>Individuals <span class="badge badge-secondary"><%= @vocabulary.individuals.count %></span></h2>
+<ul>
+  <% @vocabulary.individuals.each do |individual| %>
+    <li><%= link_to "#{individual.label} (#{individual.name})", individual %></li>
+  <% end %>
+</ul>
+<%= link_to 'New Individual', new_individual_path(vocabulary: @vocabulary), class: 'btn btn-sm btn-info' %>
+
+<div>
+  <%= link_to 'All Vocabularies', vocabularies_path %>
+</div>

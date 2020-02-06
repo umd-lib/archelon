@@ -1,0 +1,12 @@
+<h1>Type: <%= @type.name %></h1>
+
+<div>
+  <%= link_to @type.uri, @type.uri %>
+</div>
+<div>
+  <%= label :type, :vocabulary_id %>
+  <%= link_to @type.vocabulary.name, @type.vocabulary %>
+</div>
+
+<%= link_to 'Edit', edit_type_path(@type) %> |
+<%= link_to 'Back', types_path %>

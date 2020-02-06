@@ -1,0 +1,26 @@
+<h1>Types</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Vocabulary</th>
+      <th>URI</th>
+      <th colspan="2"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @types.each do |type| %>
+      <tr>
+        <td><%= link_to type.name, type %></td>
+        <td><%= link_to type.vocabulary.name, type.vocabulary %></td>
+        <td><%= link_to type.uri, type.uri %></td>
+        <td><%= link_to 'Edit', edit_type_path(type), class: 'btn btn-sm btn-success' %></td>
+        <td><%= link_to 'Delete', type, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger' %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to 'New Type', new_type_path, class: 'btn btn-success' %>

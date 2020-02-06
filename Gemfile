@@ -123,3 +123,6 @@ gem "sparql-client", "~> 3.0"
 gem 'stomp'
 
 gem 'mechanize'
+
+gem 'rdf-turtle'
+gem 'json-ld'
