@@ -13,7 +13,7 @@
 </div>
 <div>
   <%= label :individual, :vocabulary_id %>
-  <%= link_to @individual.vocabulary.name, @individual.vocabulary %>
+  <%= link_to @individual.vocabulary.identifier, @individual.vocabulary %>
 </div>
 
 <%= link_to 'Edit', edit_individual_path(@individual) %> |

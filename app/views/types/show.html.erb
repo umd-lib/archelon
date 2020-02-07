@@ -1,11 +1,11 @@
-<h1>Type: <%= @type.name %></h1>
+<h1>Type: <%= @type.identifier %></h1>
 
 <div>
   <%= link_to @type.uri, @type.uri %>
 </div>
 <div>
   <%= label :type, :vocabulary_id %>
-  <%= link_to @type.vocabulary.name, @type.vocabulary %>
+  <%= link_to @type.vocabulary.identifier, @type.vocabulary %>
 </div>
 
 <%= link_to 'Edit', edit_type_path(@type) %> |

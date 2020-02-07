@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_05_205723) do
+ActiveRecord::Schema.define(version: 2020_02_07_183911) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer "user_id", null: false
@@ -65,7 +65,7 @@ ActiveRecord::Schema.define(version: 2020_02_05_205723) do
   end
 
   create_table "individuals", force: :cascade do |t|
-    t.string "name"
+    t.string "identifier"
     t.string "label"
     t.string "same_as"
     t.datetime "created_at", null: false
@@ -84,7 +84,7 @@ ActiveRecord::Schema.define(version: 2020_02_05_205723) do
   end
 
   create_table "types", force: :cascade do |t|
-    t.string "name"
+    t.string "identifier"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "vocabulary_id"
@@ -94,10 +94,8 @@ ActiveRecord::Schema.define(version: 2020_02_05_205723) do
   create_table "vocabularies", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "name"
-    t.integer "type_id"
+    t.string "identifier"
     t.string "description"
-    t.index ["type_id"], name: "index_vocabularies_on_type_id"
   end
 
 end

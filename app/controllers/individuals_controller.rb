@@ -76,6 +76,6 @@ class IndividualsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def individual_params
-      params.require(:individual).permit(:name, :label, :same_as, :vocabulary_id)
+      params.require(:individual).permit(:identifier, :label, :same_as, :vocabulary_id)
     end
 end

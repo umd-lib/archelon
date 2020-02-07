@@ -3,7 +3,7 @@
 <table class="table">
   <thead>
     <tr>
-      <th>Name</th>
+      <th>Identifier</th>
       <th>URI</th>
       <th>Types</th>
       <th>Individuals</th>
@@ -14,7 +14,7 @@
   <tbody>
     <% @vocabularies.each do |vocabulary| %>
       <tr>
-        <td><%= link_to vocabulary.name, vocabulary %></td>
+        <td><%= link_to vocabulary.identifier, vocabulary %></td>
         <td><%= vocabulary.uri %></td>
         <td><%= vocabulary.types.count %></td>
         <td><%= vocabulary.individuals.count %></td>

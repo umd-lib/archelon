@@ -11,10 +11,10 @@
     </div>
   <% end %>
 
-  <%= form.label :name %>
-  <%= form.text_field :name %>
+  <%= form.label :identifier %>
+  <%= form.text_field :identifier %>
   <%= form.label :vocabulary_id %>
-  <%= form.collection_select :vocabulary_id, Vocabulary.all, :id, :name %>
+  <%= form.collection_select :vocabulary_id, Vocabulary.all, :id, :identifier %>
 
   <div class="actions">
     <%= form.submit %>
