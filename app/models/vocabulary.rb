@@ -2,7 +2,14 @@
 
 # A controlled vocabulary that can contain types and individuals.
 class Vocabulary < ApplicationRecord
-  validates :identifier, presence: true, format: { with: /\A[a-z][a-zA-Z0-9_-]*\z/ }
+  validates :identifier,
+            presence: true,
+            format: { with: /\A[a-z][a-zA-Z0-9_-]*\z/ },
+            uniqueness: {
+              message: lambda do |_object, data|
+                "\"#{data[:value]}\" is already used by another vocabulary"
+              end
+            }
 
   has_many :types, dependent: :destroy
   has_many :individuals, dependent: :destroy
