@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_21_200707) do
+ActiveRecord::Schema.define(version: 2020_02_05_205723) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer "user_id", null: false
@@ -96,6 +96,7 @@ ActiveRecord::Schema.define(version: 2020_01_21_200707) do
     t.datetime "updated_at", null: false
     t.string "name"
     t.integer "type_id"
+    t.string "description"
     t.index ["type_id"], name: "index_vocabularies_on_type_id"
   end
 
