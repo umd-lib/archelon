@@ -1,6 +1,7 @@
-<h1>Type: <%= @type.identifier %></h1>
+<h1><%= t 'activerecord.models.type' %>: <%= @type.identifier %></h1>
 
 <div>
+  <%= label :type, :uri %>
   <%= link_to @type.uri, @type.uri %>
 </div>
 <div>

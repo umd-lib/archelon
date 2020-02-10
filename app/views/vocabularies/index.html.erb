@@ -1,12 +1,12 @@
-<h1>Vocabularies</h1>
+<h1><%= ActiveSupport::Inflector.pluralize(t 'activerecord.models.vocabulary') %></h1>
 
 <table class="table">
   <thead>
     <tr>
-      <th>Identifier</th>
-      <th>URI</th>
-      <th>Types</th>
-      <th>Individuals</th>
+      <th><%= t 'activerecord.attributes.vocabulary.identifier' %></th>
+      <th><%= t 'activerecord.attributes.vocabulary.uri' %></th>
+      <th><%= ActiveSupport::Inflector.pluralize(t('activerecord.models.type')) %></th>
+      <th><%= ActiveSupport::Inflector.pluralize(t('activerecord.models.individual')) %></th>
       <th colspan="2"></th>
     </tr>
   </thead>
@@ -26,5 +26,5 @@
 </table>
 
 <div>
-<%= link_to 'New Vocabulary', new_vocabulary_path, class: 'btn btn-success' %>
+  <%= link_to "New #{t 'activerecord.models.vocabulary'}", new_vocabulary_path, class: 'btn btn-success' %>
 </div>

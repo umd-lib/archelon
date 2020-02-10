@@ -1,11 +1,11 @@
-<h1>Types</h1>
+<h1><%= ActiveSupport::Inflector.pluralize(t 'activerecord.models.type') %></h1>
 
 <table class="table">
   <thead>
     <tr>
-      <th>Identifier</th>
-      <th>Vocabulary</th>
-      <th>URI</th>
+      <th><%= t 'activerecord.attributes.type.identifier' %></th>
+      <th><%= t 'activerecord.attributes.type.vocabulary' %></th>
+      <th><%= t 'activerecord.attributes.type.uri' %></th>
       <th colspan="2"></th>
     </tr>
   </thead>
@@ -23,4 +23,6 @@
   </tbody>
 </table>
 
-<%= link_to 'New Type', new_type_path, class: 'btn btn-success' %>
+<div>
+  <%= link_to "New #{t 'activerecord.models.type'}", new_type_path, class: 'btn btn-success' %>
+</div>

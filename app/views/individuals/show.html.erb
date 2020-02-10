@@ -1,6 +1,7 @@
-<h1>Individual: <%= @individual.label %></h1>
+<h1><%= t 'activerecord.models.individual' %>: <%= @individual.label %></h1>
 
 <div>
+  <%= label :individual, :uri %>
   <%= link_to @individual.uri, @individual.uri %>
 </div>
 <div>
