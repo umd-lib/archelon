@@ -7,6 +7,7 @@
 <div>
   <%= label :individual, :label %>
   <%= @individual.label %>
+  <%= "(#{@individual.source})" if @individual.source.present? %>
 </div>
 <div>
   <%= label :individual, :same_as %>
@@ -21,4 +22,4 @@
 
 <div>
   <%= link_to "All #{ActiveSupport::Inflector.pluralize(t('activerecord.models.individual'))}", individuals_path %>
-<div>
+</div>
