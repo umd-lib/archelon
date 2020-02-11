@@ -11,15 +11,11 @@ class VocabulariesController < ApplicationController
 
   # GET /vocabularies/1
   # GET /vocabularies/1.json
-  def show
-    prefixes = {
-      owl: RDF::OWL,
-      rdfs: RDF::RDFS
-    }
+  def show # rubocop:disable Metrics/AbcSize
     respond_to do |format|
       format.html
-      format.json { render plain: @vocabulary.graph.dump(:jsonld, prefixes: prefixes) }
-      format.ttl { render plain: @vocabulary.graph.dump(:ttl, prefixes: prefixes) }
+      format.json { render plain: @vocabulary.graph.dump(:jsonld, prefixes: Vocabulary.PREFIXES) }
+      format.ttl { render plain: @vocabulary.graph.dump(:ttl, prefixes: Vocabulary.PREFIXES) }
       format.nt { render plain: @vocabulary.graph.dump(:ntriples) }
     end
   end
