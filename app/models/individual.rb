@@ -2,12 +2,12 @@
 
 # An individual entity in a vocabulary.
 class Individual < ApplicationRecord
-  validates :name, presence: true, format: { with: /\A[a-zA-Z0-9][a-zA-Z0-9_-]*\z/ }
+  validates :identifier, presence: true, format: { with: /\A[a-zA-Z0-9][a-zA-Z0-9_-]*\z/ }
   validates :label, presence: true
 
   belongs_to :vocabulary
 
   def uri
-    vocabulary.uri + name
+    vocabulary.uri + identifier
   end
 end

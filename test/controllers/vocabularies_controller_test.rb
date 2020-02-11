@@ -21,7 +21,7 @@ class VocabulariesControllerTest < ActionController::TestCase
 
   test 'should create vocabulary' do
     assert_difference('Vocabulary.count') do
-      post :create, params: { vocabulary: { name: 'abc' } }
+      post :create, params: { vocabulary: { identifier: 'abc' } }
     end
 
     assert_redirected_to Vocabulary.last

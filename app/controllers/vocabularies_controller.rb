@@ -82,6 +82,6 @@ class VocabulariesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def vocabulary_params
-      params.require(:vocabulary).permit(:name, :description)
+      params.require(:vocabulary).permit(:identifier, :description)
     end
 end

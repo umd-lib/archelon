@@ -3,7 +3,7 @@
 <table class="table">
   <thead>
     <tr>
-      <th>Name</th>
+      <th>Identifier</th>
       <th>Vocabulary</th>
       <th>URI</th>
       <th colspan="2"></th>
@@ -13,8 +13,8 @@
   <tbody>
     <% @types.each do |type| %>
       <tr>
-        <td><%= link_to type.name, type %></td>
-        <td><%= link_to type.vocabulary.name, type.vocabulary %></td>
+        <td><%= link_to type.identifier, type %></td>
+        <td><%= link_to type.vocabulary.identifier, type.vocabulary %></td>
         <td><%= link_to type.uri, type.uri %></td>
         <td><%= link_to 'Edit', edit_type_path(type), class: 'btn btn-sm btn-success' %></td>
         <td><%= link_to 'Delete', type, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger' %></td>

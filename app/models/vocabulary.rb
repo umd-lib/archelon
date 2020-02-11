@@ -2,13 +2,13 @@
 
 # A controlled vocabulary that can contain types and individuals.
 class Vocabulary < ApplicationRecord
-  validates :name, presence: true, format: { with: /\A[a-z][a-zA-Z0-9_-]*\z/ }
+  validates :identifier, presence: true, format: { with: /\A[a-z][a-zA-Z0-9_-]*\z/ }
 
   has_many :types, dependent: :destroy
   has_many :individuals, dependent: :destroy
 
   def uri
-    "http://vocab.lib.umd.edu/#{name}\#"
+    "http://vocab.lib.umd.edu/#{identifier}\#"
   end
 
   def term_count
