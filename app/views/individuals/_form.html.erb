@@ -11,12 +11,15 @@
     </div>
   <% end %>
 
-  <%= form.label :identifier %>
-  <%= form.text_field :identifier %>
-  <%= form.label :vocabulary_id %>
-  <%= form.collection_select :vocabulary_id, Vocabulary.all, :id, :identifier %>
   <%= form.label :label %>
   <%= form.text_field :label %>
+
+  <%= form.label :vocabulary_id %>
+  <%= form.collection_select :vocabulary_id, Vocabulary.all, :id, :identifier %>
+
+  <%= form.label :identifier %>
+  <%= form.text_field :identifier %>
+
   <%= form.label :same_as %>
   <%= form.text_field :same_as %>
 
