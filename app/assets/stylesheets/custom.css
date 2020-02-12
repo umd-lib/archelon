@@ -151,3 +151,11 @@ input {
 .export_job_status_ready {
   color: #03ab3a;
 }
+
+.panel-vocabulary {
+  margin-top: 10px;
+}
+
+.panel-vocabulary .h2 {
+  margin: 5px;
+}
