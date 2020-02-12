@@ -35,12 +35,14 @@ class VocabulariesController < ApplicationController
 
   # POST /vocabularies
   # POST /vocabularies.json
-  def create
+  def create # rubocop:disable Metrics/MethodLength
     @vocabulary = Vocabulary.new(vocabulary_params)
 
     respond_to do |format|
       if @vocabulary.save
-        format.html { redirect_to @vocabulary, notice: 'Vocabulary was successfully created.' }
+        format.html do
+          redirect_to @vocabulary, notice: "#{t('activerecord.models.vocabulary')} was successfully created."
+        end
         format.json { render :show, status: :created, location: @vocabulary }
       else
         format.html { render :new }
@@ -51,10 +53,12 @@ class VocabulariesController < ApplicationController
 
   # PATCH/PUT /vocabularies/1
   # PATCH/PUT /vocabularies/1.json
-  def update
+  def update # rubocop:disable Metrics/MethodLength
     respond_to do |format|
       if @vocabulary.update(vocabulary_params)
-        format.html { redirect_to @vocabulary, notice: 'Vocabulary was successfully updated.' }
+        format.html do
+          redirect_to @vocabulary, notice: "#{t('activerecord.models.vocabulary')} was successfully updated."
+        end
         format.json { render :show, status: :ok, location: @vocabulary }
       else
         format.html { render :edit }
@@ -68,7 +72,9 @@ class VocabulariesController < ApplicationController
   def destroy
     @vocabulary.destroy
     respond_to do |format|
-      format.html { redirect_to vocabularies_url, notice: 'Vocabulary was successfully destroyed.' }
+      format.html do
+        redirect_to vocabularies_url, notice: "#{t('activerecord.models.vocabulary')} was successfully deleted."
+      end
       format.json { head :no_content }
     end
   end
