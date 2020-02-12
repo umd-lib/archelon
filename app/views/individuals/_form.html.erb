@@ -11,19 +11,32 @@
     </div>
   <% end %>
 
-  <%= form.label :label %>
-  <%= form.text_field :label %>
+  <div class="form-inline">
+    <div class="form-group">
+      <%= form.label :label %>
+      <%= form.text_field :label, class: "form-control" %>
+    </div>
 
-  <%= form.label :vocabulary_id %>
-  <%= form.collection_select :vocabulary_id, Vocabulary.all, :id, :identifier %>
+    <div class="form-group">
+      <%= form.label :vocabulary_id %>
+      <%= form.collection_select :vocabulary_id, Vocabulary.all, :id, :identifier, {}, { class: "form-control" } %>
+    </div>
 
-  <%= form.label :identifier %>
-  <%= form.text_field :identifier %>
+    <div class="form-group">
+      <%= form.label :identifier %>
+      <%= form.text_field :identifier, class: "form-control" %>
+    </div>
 
-  <%= form.label :same_as %>
-  <%= form.text_field :same_as %>
-
-  <div class="actions">
-    <%= form.submit %>
+    <div class="form-group">
+      <%= form.label :same_as %>
+      <%= form.text_field :same_as, class: "form-control" %>
+    </div>
   </div>
+
+  <div class="actions" style="margin: 10px 0px;">
+    <div class="form-group">
+      <%= form.submit class: "btn btn-success" %>
+    </div>
+  </div>
+
 <% end %>

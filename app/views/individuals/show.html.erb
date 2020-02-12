@@ -17,5 +17,8 @@
   <%= link_to @individual.vocabulary.identifier, @individual.vocabulary %>
 </div>
 
-<%= link_to 'Edit', edit_individual_path(@individual) %> |
-<%= link_to 'Back', individuals_path %>
+<%= link_to 'Edit', edit_individual_path(@individual), class: 'btn btn-success' %>
+
+<div>
+  <%= link_to "All #{ActiveSupport::Inflector.pluralize(t('activerecord.models.individual'))}", individuals_path %>
+<div>

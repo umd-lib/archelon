@@ -23,7 +23,7 @@
     <li><%= link_to type.identifier, type %></li>
   <% end %>
 </ul>
-<%= link_to "New #{t 'activerecord.models.type'}", new_type_path(vocabulary: @vocabulary), class: 'btn btn-sm btn-info' %>
+<%= link_to "New #{t 'activerecord.models.type'}", new_type_path(vocabulary: @vocabulary), class: 'btn btn-sm btn-success' %>
 
 <h2>
   <%= ActiveSupport::Inflector.pluralize(t('activerecord.models.individual')) %>
@@ -34,7 +34,7 @@
     <li><%= link_to "#{individual.label} (#{individual.identifier})", individual %></li>
   <% end %>
 </ul>
-<%= link_to "New #{t 'activerecord.models.individual'}", new_individual_path(vocabulary: @vocabulary), class: 'btn btn-sm btn-info' %>
+<%= link_to "New #{t 'activerecord.models.individual'}", new_individual_path(vocabulary: @vocabulary), class: 'btn btn-sm btn-success' %>
 
 <div>
   <%= link_to "All #{ActiveSupport::Inflector.pluralize(t('activerecord.models.vocabulary'))}", vocabularies_path %>
