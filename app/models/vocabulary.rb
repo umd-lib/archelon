@@ -4,7 +4,9 @@
 class Vocabulary < ApplicationRecord
   PREFIXES = {
     owl: RDF::OWL,
-    rdfs: RDF::RDFS
+    rdfs: RDF::RDFS,
+    # according to the docs, this should be included as part of the RDF module...
+    dc: RDF::Vocabulary.new('http://purl.org/dc/elements/1.1/')
   }.freeze
 
   VOCAB_CONTEXT = 'http://vocab.lib.umd.edu/'
@@ -45,9 +47,10 @@ class Vocabulary < ApplicationRecord
       end
     end
 
-    def add_individuals_to(graph)
+    def add_individuals_to(graph) # rubocop:disable Metrics/AbcSize
       individuals.each do |individual|
         individual_uri = RDF::URI(individual.uri)
+        graph << [individual_uri, PREFIXES[:dc].identifier, individual.identifier]
         graph << [individual_uri, RDF::RDFS.label, individual.label]
         graph << [individual_uri, RDF::OWL.sameAs, RDF::URI(individual.same_as)] if individual.same_as.present?
       end
