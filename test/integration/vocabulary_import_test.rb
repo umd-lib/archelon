@@ -4,8 +4,13 @@ require 'test_helper'
 
 # Integration test for vocabulary import functionality
 class VocabularyImportTest < ActiveSupport::TestCase
+  # Placed outside any method, so it runs only once
+  Archelon::Application.load_tasks
+
   def setup
-    Archelon::Application.load_tasks
+    # Need to reenable Rake tasks for each task, as otherwise once it's run it
+    # will remember the arguments
+    Rake::Task['vocab:import'].reenable
   end
 
   test 'successful import' do
@@ -15,14 +20,16 @@ class VocabularyImportTest < ActiveSupport::TestCase
   end
 
   test 'fail with missing args' do
-    Rake::Task['vocab:import'].invoke
-  rescue RuntimeError => e
+    e = assert_raises(RuntimeError) do
+      Rake::Task['vocab:import'].invoke
+    end
     assert_match(/Usage:/, e.message)
   end
 
   test 'fail on bad column names' do
-    Rake::Task['vocab:import'].invoke('test/data/collections-bad_columns.csv', 'collections2')
-  rescue RuntimeError => e
+    e = assert_raises(RuntimeError) do
+      Rake::Task['vocab:import'].invoke('test/data/collections-bad_columns.csv', 'collections2')
+    end
     assert_match(/Required columns are:/, e.message)
   end
 end
