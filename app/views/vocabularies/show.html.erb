@@ -1,4 +1,5 @@
 <h1><%= t 'activerecord.models.vocabulary' %>: <%= @vocabulary.identifier %></h1>
+
 <div>
   <%= label :vocabulary, :uri %>
   <%= link_to @vocabulary.uri, {}, href: @vocabulary.uri %>
@@ -13,28 +14,54 @@
 </div>
 <%= link_to 'Edit', edit_vocabulary_path(@vocabulary), class: 'btn btn-success' %>
 
-<h2>
-  <%= ActiveSupport::Inflector.pluralize(t('activerecord.models.type')) %>
-  <span class="badge badge-secondary"><%= @vocabulary.types.count %></span>
-</h2>
+<div class="row">
+  <div class="col-sm-6">
+    <div class="panel panel-default panel-vocabulary">
+      <div class="panel-heading">
+        <div class="h2">
+          <%= link_to types_path do %>
+            <%= ActiveSupport::Inflector.pluralize(t('activerecord.models.type'))  %>
+            <span class="badge badge-secondary"><%= @vocabulary.types.count %></span>
+          <% end %>
+          <div class="pull-right">
+            <%= link_to "New #{t 'activerecord.models.type'}", new_type_path(vocabulary: @vocabulary), class: 'btn btn-sm btn-success' %>
+          </div>
+        </div>
+      </div>
 
-<ul>
-  <% @vocabulary.types.each do |type| %>
-    <li><%= link_to type.identifier, type %></li>
-  <% end %>
-</ul>
-<%= link_to "New #{t 'activerecord.models.type'}", new_type_path(vocabulary: @vocabulary), class: 'btn btn-sm btn-success' %>
+      <div class="panel-body">
+        <ul>
+          <% @vocabulary.types.each do |type| %>
+            <li><%= link_to type.identifier, type %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
 
-<h2>
-  <%= ActiveSupport::Inflector.pluralize(t('activerecord.models.individual')) %>
-  <span class="badge badge-secondary"><%= @vocabulary.individuals.count %></span>
-</h2>
-<ul>
-  <% @vocabulary.individuals.each do |individual| %>
-    <li><%= link_to "#{individual.label} (#{individual.identifier})", individual %></li>
-  <% end %>
-</ul>
-<%= link_to "New #{t 'activerecord.models.individual'}", new_individual_path(vocabulary: @vocabulary), class: 'btn btn-sm btn-success' %>
+  <div class="col-sm-6">
+    <div class="panel panel-default panel-vocabulary">
+      <div class="panel-heading">
+        <div class="h2">
+          <%= link_to individuals_path do %>
+            <%= ActiveSupport::Inflector.pluralize(t('activerecord.models.individual')) %>
+            <span class="badge badge-secondary"><%= @vocabulary.individuals.count %></span>
+          <% end %>
+          <div class="pull-right">
+            <%= link_to "New #{t 'activerecord.models.individual'}", new_individual_path(vocabulary: @vocabulary), class: 'btn btn-sm btn-success' %>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <ul>
+          <% @vocabulary.individuals.each do |individual| %>
+            <li><%= link_to "#{individual.label} (#{individual.identifier})", individual %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div>
   <%= link_to "All #{ActiveSupport::Inflector.pluralize(t('activerecord.models.vocabulary'))}", vocabularies_path %>
