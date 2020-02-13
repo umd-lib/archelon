@@ -33,7 +33,7 @@ class IndividualsController < ApplicationController
       if @individual.save
         format.html do
           redirect_to @individual.vocabulary,
-                      notice: "Individual #{@individual.label} was successfully created."
+                      notice: "#{t('activerecord.models.individual')} #{@individual.label} was successfully created."
         end
         format.json { render :show, status: :created, location: @individual }
       else
@@ -45,10 +45,12 @@ class IndividualsController < ApplicationController
 
   # PATCH/PUT /individuals/1
   # PATCH/PUT /individuals/1.json
-  def update
+  def update # rubocop:disable Metrics/MethodLength
     respond_to do |format|
       if @individual.update(individual_params)
-        format.html { redirect_to @individual, notice: 'Individual was successfully updated.' }
+        format.html do
+          redirect_to @individual, notice: "#{t('activerecord.models.individual')} was successfully updated."
+        end
         format.json { render :show, status: :ok, location: @individual }
       else
         format.html { render :edit }
@@ -62,7 +64,9 @@ class IndividualsController < ApplicationController
   def destroy
     @individual.destroy
     respond_to do |format|
-      format.html { redirect_to individuals_url, notice: 'Individual was successfully destroyed.' }
+      format.html do
+        redirect_to individuals_url, notice: "#{t('activerecord.models.individual')} was successfully deleted."
+      end
       format.json { head :no_content }
     end
   end
