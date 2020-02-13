@@ -4,7 +4,7 @@
 class Vocabulary < ApplicationRecord
   PREFIXES = {
     owl: RDF::OWL,
-    rdfs: RDF::RDFS,
+    rdfs: RDF::RDFS
   }.freeze
 
   VOCAB_CONTEXT = 'http://vocab.lib.umd.edu/'
