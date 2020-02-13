@@ -18,8 +18,8 @@
         <td><%= vocabulary.uri %></td>
         <td><%= vocabulary.types.count %></td>
         <td><%= vocabulary.individuals.count %></td>
-        <td><%= link_to 'Edit', edit_vocabulary_path(vocabulary) %></td>
-        <td><%= link_to 'Destroy', vocabulary, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Edit', edit_vocabulary_path(vocabulary), class: 'btn btn-sm btn-success' %></td>
+        <td><%= link_to 'Delete', vocabulary, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger' %></td>
       </tr>
     <% end %>
   </tbody>
