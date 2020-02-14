@@ -23,12 +23,18 @@
     </div>
 
     <div class="form-group">
-      <%= form.label :identifier %>
+      <%= form.label :identifier, class: "umd_tooltip" do %>
+        <%= t("activerecord.attributes.individual.identifier") %>
+        <span class="umd_tooltiptext"><%= t("tooltips.identifier") %></span>
+      <% end %>
       <%= form.text_field :identifier, class: "form-control" %>
     </div>
 
     <div class="form-group">
-      <%= form.label :same_as %>
+      <%= form.label :same_as, class: "umd_tooltip" do %>
+        <%= t("activerecord.attributes.individual.same_as") %>
+        <span class="umd_tooltiptext"><%= t("tooltips.same_as") %></span>
+      <% end %>
       <%= form.text_field :same_as, class: "form-control" %>
     </div>
   </div>
