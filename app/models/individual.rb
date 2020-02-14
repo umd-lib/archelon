@@ -18,4 +18,13 @@ class Individual < ApplicationRecord
   def uri
     vocabulary.uri + identifier
   end
+
+  def source
+    return nil if same_as.empty?
+
+    SAME_AS_ABBREVIATIONS.each do |prefix, abbreviation|
+      return abbreviation if same_as.starts_with? prefix
+    end
+    nil
+  end
 end
