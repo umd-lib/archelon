@@ -2,6 +2,13 @@
 
 # A controlled vocabulary that can contain types and individuals.
 class Vocabulary < ApplicationRecord
+  PREFIXES = {
+    owl: RDF::OWL,
+    rdfs: RDF::RDFS
+  }.freeze
+
+  VOCAB_CONTEXT = 'http://vocab.lib.umd.edu/'
+
   validates :identifier,
             presence: true,
             format: { with: /\A[a-z][a-zA-Z0-9_-]*\z/ },
@@ -15,7 +22,7 @@ class Vocabulary < ApplicationRecord
   has_many :individuals, dependent: :destroy
 
   def uri
-    "http://vocab.lib.umd.edu/#{identifier}\#"
+    VOCAB_CONTEXT + identifier + '#'
   end
 
   def term_count
@@ -42,7 +49,7 @@ class Vocabulary < ApplicationRecord
       individuals.each do |individual|
         individual_uri = RDF::URI(individual.uri)
         graph << [individual_uri, RDF::RDFS.label, individual.label]
-        graph << [individual_uri, RDF::OWL.sameAs, RDF::URI(individual.same_as)] unless individual.same_as.empty?
+        graph << [individual_uri, RDF::OWL.sameAs, RDF::URI(individual.same_as)] if individual.same_as.present?
       end
     end
 end

@@ -18,7 +18,7 @@
         <td><%= link_to individual.label, individual %></td>
         <td><%= link_to individual.vocabulary.identifier, individual.vocabulary %></td>
         <td><%= link_to individual.identifier, individual %></td>
-        <td><%= link_to individual.same_as, individual.same_as unless individual.same_as.empty? %></td>
+        <td><%= link_to individual.same_as, individual.same_as unless individual.same_as.blank? %></td>
         <td><%= link_to individual.uri, individual.uri %></td>
         <td><%= link_to 'Edit', edit_individual_path(individual), class: 'btn btn-sm btn-success' %></td>
         <td><%= link_to 'Delete', individual, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger' %></td>
