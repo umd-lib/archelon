@@ -44,6 +44,30 @@ self-signed SSL certificates for HTTPS, see the section [SSL setup](#ssl-setup).
 See [archelon-vagrant] for running Archelon application in a Vagrant
 environment.
 
+## Importing Controlled Vocabularies
+
+Archelon comes with a rake task, [vocab:import](lib/tasks/vocab.rake), to do a
+bulk load of vocabulary terms from a CSV file. Run:
+
+```
+rails vocab:import[filename.csv,vocabulary]
+```
+
+where `filename.csv` is the path to a CSV file containing the vocabulary terms
+to be imported, and `vocabulary` is the string name of the vocabulary to add
+those terms to. This vocabulary will be created if it doesn't already exist.
+
+The CSV file must have the following three columns:
+
+* label
+* identifier
+* uri
+
+Other columns are ignored.
+
+The import task currently only supports creating Individuals (a.k.a. Terms),
+and not Types (a.k.a. Classes).
+
 ## Docker
 
 Archelon comes with a [Dockerfile](Dockerfile) that can be used to build a
