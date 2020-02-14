@@ -9,6 +9,8 @@ class VocabularyImportTest < ActiveSupport::TestCase
     # Need to reenable Rake tasks for each task, as otherwise once it's run it
     # will remember the arguments
     Rake::Task['vocab:import'].reenable
+    # Turn off any console output from the Rake task
+    IO.any_instance.stub(:puts)
   end
 
   test 'successful import' do
