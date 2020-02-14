@@ -6,7 +6,12 @@ class VocabulariesController < ApplicationController
   # GET /vocabularies
   # GET /vocabularies.json
   def index
-    @vocabularies = Vocabulary.all
+    if params[:identifier].present?
+      @vocabulary = Vocabulary.find_by! identifier: params[:identifier]
+      render :show
+    else
+      @vocabularies = Vocabulary.all
+    end
   end
 
   # GET /vocabularies/1
