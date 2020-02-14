@@ -13,7 +13,10 @@
 
   <div class="form-inline">
     <div class="form-group">
-      <%= form.label :identifier %>
+      <%= form.label :identifier, class: "umd_tooltip" do %>
+        <%= t("activerecord.attributes.type.identifier") %>
+        <span class="umd_tooltiptext"><%= t("tooltips.identifier") %></span>
+      <% end %>
       <%= form.text_field :identifier, class: "form-control" %>
     </div>
 

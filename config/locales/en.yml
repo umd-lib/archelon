@@ -59,3 +59,6 @@ en:
       individual: Term
       type: Class
       vocabulary: Vocabulary
+  tooltips:
+    identifier: This will be used as the local id and populate the URI of the local vocabulary term.
+    same_as: This should be a full URI to an external vocabulary such as LC Genre/Form Terms, AAT, LCSH
