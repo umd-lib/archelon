@@ -19,20 +19,23 @@ namespace :vocab do
 
     vocabulary = Vocabulary.find_or_create_by(identifier: args.vocab_identifier)
 
-    data.each do |row|
+    import_count = 0
+    data.each_with_index do |row, index|
       individual = Individual.new(
         vocabulary: vocabulary,
         identifier: row[:identifier],
         label: row[:label],
         same_as: row[:uri]
       )
-      next if individual.save
-
-      individual.errors.each do |field, error|
-        puts row[field]
-        puts "#{field}: #{error}"
+      if individual.save
+        import_count += 1
+      else
+        puts "FAILED import from #{args.filename}:#{index + 2}"
+        individual.errors.each do |field, error|
+          puts "  #{field}: #{error}"
+        end
       end
-      exit
     end
+    puts "Imported #{import_count} terms from #{args.filename} into #{args.vocab_identifier}"
   end
 end

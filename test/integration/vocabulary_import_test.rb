@@ -30,4 +30,10 @@ class VocabularyImportTest < ActiveSupport::TestCase
     end
     assert_match(/Required columns are:/, e.message)
   end
+
+  test 'skip invalid rows' do
+    Rake::Task['vocab:import'].invoke('test/data/collections-bad_rows.csv', 'collections3')
+    vocab = Vocabulary.find_by(identifier: 'collections3')
+    assert_equal 0, vocab.term_count
+  end
 end
