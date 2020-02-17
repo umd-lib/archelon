@@ -21,7 +21,7 @@ class DownloadUrlsController < ApplicationController
   # GET /download_urls/generate/:document_url
   def generate_download_url
     solr_document = find_solr_document(params['document_url'])
-    not_found unless solr_document
+    not_found && return unless solr_document
     @download_url = DownloadUrl.new
     @download_url.url = solr_document[:id]
     @download_url.title = create_default_title(solr_document)
@@ -30,7 +30,7 @@ class DownloadUrlsController < ApplicationController
   # POST /download_urls/create/:document_url
   def create_download_url # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     solr_document = find_solr_document(params['document_url'])
-    not_found unless solr_document
+    not_found && return unless solr_document
 
     @download_url = DownloadUrl.new(download_url_params)
     @download_url.url = solr_document[:id]
