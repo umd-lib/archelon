@@ -14,8 +14,8 @@ class VocabulariesController < ApplicationController
   def show # rubocop:disable Metrics/AbcSize
     respond_to do |format|
       format.html
-      format.json { render plain: @vocabulary.graph.dump(:jsonld, prefixes: Vocabulary.PREFIXES) }
-      format.ttl { render plain: @vocabulary.graph.dump(:ttl, prefixes: Vocabulary.PREFIXES) }
+      format.json { render plain: @vocabulary.graph.dump(:jsonld, prefixes: Vocabulary::PREFIXES.dup) }
+      format.ttl { render plain: @vocabulary.graph.dump(:ttl, prefixes: Vocabulary::PREFIXES.dup) }
       format.nt { render plain: @vocabulary.graph.dump(:ntriples) }
     end
   end
