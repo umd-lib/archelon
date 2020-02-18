@@ -116,6 +116,38 @@ class CasAuthorizationTest < ActionDispatch::IntegrationTest
     assert CasUser.find_by(cas_directory_id: 'prior_user2').unauthorized?
   end
 
+  test 'existing unauthorized user should update to user on login' do
+    user = CasUser.find_by cas_directory_id: 'prior_unauthorized'
+    assert user.unauthorized?
+    assert_not user.user?
+    assert_not user.admin?
+
+    # do the critical steps of a login
+    stub_ldap_response(name: 'Prior Unauthorized', groups: [GROUPER_USER_GROUP])
+    user = CasUser.find_or_create_from_auth_hash(uid: user.cas_directory_id)
+
+    # they should be a user now
+    assert_not user.unauthorized?
+    assert user.user?
+    assert_not user.admin?
+  end
+
+  test 'existing unauthorized user should update to admin on login' do
+    user = CasUser.find_by cas_directory_id: 'prior_unauthorized2'
+    assert user.unauthorized?
+    assert_not user.user?
+    assert_not user.admin?
+
+    # do the critical steps of a login
+    stub_ldap_response(name: 'Prior Unauthorized 2', groups: [GROUPER_ADMIN_GROUP])
+    user = CasUser.find_or_create_from_auth_hash(uid: user.cas_directory_id)
+
+    # they should be an admin now
+    assert_not user.unauthorized?
+    assert_not user.user?
+    assert user.admin?
+  end
+
   test 'non-existent cas_user cannot access application' do
     # In this test, the non-existent CAS user is created by the "cas_login"
     # call, which will check for LDAP attritbutes, so stub LDAP call.

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Retrives user attributes from LDAP
+# Retrieves user attributes from LDAP
 class LdapUserAttributes
   attr_reader :name, :user_type
 
@@ -14,8 +14,8 @@ class LdapUserAttributes
   # Constructs a new instance from the CAS directory id,
   # using LDAP.
   #
-  # This method requires an LDAP server connection. Consider using
-  # LdapUserAttributes.create(name, groups) for testing.
+  # This method requires an LDAP server connection unless an LDAP_OVERRIDE
+  # is set in the development environment.
   #
   # @param cas_directory_id the CAS directory id for the user.
   # @return the LdapUserAttributes object
