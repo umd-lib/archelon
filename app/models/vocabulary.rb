@@ -15,8 +15,6 @@ class Vocabulary < ApplicationRecord
     ntriples: 'nt'
   }.freeze
 
-  VOCAB_CONTEXT = 'http://vocab.lib.umd.edu/'
-
   validates :identifier,
             presence: true,
             format: { with: /\A[a-z][a-zA-Z0-9_-]*\z/ },
@@ -30,7 +28,11 @@ class Vocabulary < ApplicationRecord
   has_many :individuals, dependent: :destroy
 
   def uri
-    VOCAB_CONTEXT + identifier + '#'
+    VOCAB_CONFIG['local_authority_base_uri'] + identifier + '#'
+  end
+
+  def published_uri
+    VOCAB_CONFIG['publication_base_uri'] + identifier + '.json'
   end
 
   def term_count
@@ -47,7 +49,7 @@ class Vocabulary < ApplicationRecord
   def publish_rdf(format)
     FORMAT_EXTENSIONS.include?(format) || raise('Unrecognized format')
 
-    vocab_dir = Rails.root.join('public', 'vocabularies')
+    vocab_dir = Rails.root.join('public', 'published_vocabularies')
     FileUtils.makedirs vocab_dir
 
     extension = FORMAT_EXTENSIONS[format]
@@ -56,7 +58,7 @@ class Vocabulary < ApplicationRecord
   end
 
   def self.delete_published_rdf(identifier)
-    vocab_dir = Rails.root.join('public', 'vocabularies')
+    vocab_dir = Rails.root.join('public', 'published_vocabularies')
     Dir.glob(Rails.root.join(vocab_dir, "#{identifier}.*")).each do |file|
       FileUtils.safe_unlink file
     end

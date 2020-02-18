@@ -53,7 +53,8 @@ en:
       vocabulary:
         description: Description
         identifier: Identifier
-        uri: URI
+        uri: Local Authority URI
+        published_uri: Published URI
     models:
       download_url: Download URL
       individual: Term

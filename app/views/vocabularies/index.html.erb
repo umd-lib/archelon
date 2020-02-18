@@ -5,6 +5,7 @@
     <tr>
       <th><%= t 'activerecord.attributes.vocabulary.identifier' %></th>
       <th><%= t 'activerecord.attributes.vocabulary.uri' %></th>
+      <th><%= t 'activerecord.attributes.vocabulary.published_uri' %></th>
       <th><%= ActiveSupport::Inflector.pluralize(t('activerecord.models.type')) %></th>
       <th><%= ActiveSupport::Inflector.pluralize(t('activerecord.models.individual')) %></th>
       <th colspan="2"></th>
@@ -16,6 +17,7 @@
       <tr>
         <td><%= link_to vocabulary.identifier, vocabulary %></td>
         <td><%= vocabulary.uri %></td>
+        <td><%= link_to vocabulary.published_uri, vocabulary.published_uri %></td>
         <td><%= vocabulary.types.count %></td>
         <td><%= vocabulary.individuals.count %></td>
         <td><%= link_to 'Edit', edit_vocabulary_path(vocabulary), class: 'btn btn-sm btn-success' %></td>
