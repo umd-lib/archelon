@@ -9,6 +9,12 @@ class Vocabulary < ApplicationRecord
     dc: RDF::Vocabulary.new('http://purl.org/dc/elements/1.1/')
   }.freeze
 
+  FORMAT_EXTENSIONS = {
+    jsonld: 'json',
+    ttl: 'ttl',
+    ntriples: 'nt'
+  }.freeze
+
   VOCAB_CONTEXT = 'http://vocab.lib.umd.edu/'
 
   validates :identifier,
@@ -35,6 +41,24 @@ class Vocabulary < ApplicationRecord
     RDF::Graph.new.tap do |graph|
       add_types_to graph
       add_individuals_to graph
+    end
+  end
+
+  def publish_rdf(format)
+    FORMAT_EXTENSIONS.include?(format) || raise('Unrecognized format')
+
+    vocab_dir = Rails.root.join('public', 'vocabularies')
+    FileUtils.makedirs vocab_dir
+
+    extension = FORMAT_EXTENSIONS[format]
+    path = Rails.root.join(vocab_dir, "#{identifier}.#{extension}")
+    File.open(path, 'w') { |f| f << graph.dump(format, prefixes: PREFIXES.dup) }
+  end
+
+  def self.delete_published_rdf(identifier)
+    vocab_dir = Rails.root.join('public', 'vocabularies')
+    Dir.glob(Rails.root.join(vocab_dir, "#{identifier}.*")).each do |file|
+      FileUtils.safe_unlink file
     end
   end
 

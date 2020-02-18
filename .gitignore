@@ -43,3 +43,6 @@ coverage
 
 # Ignore any SSL pem files in root
 *.pem
+
+# Ignore published vocabularies
+/public/vocabularies/
