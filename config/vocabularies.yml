@@ -5,7 +5,7 @@ default: &default
 development:
   <<: *default
 
-testing:
+test:
   <<: *default
 
 production:
