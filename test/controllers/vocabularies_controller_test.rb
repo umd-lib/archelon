@@ -5,7 +5,7 @@ require 'test_helper'
 class VocabulariesControllerTest < ActionController::TestCase
   setup do
     @vocabulary = vocabularies(:vocab_one)
-    @cas_user = cas_users(:one)
+    @cas_user = cas_users(:vocab_editor)
     mock_cas_login(@cas_user.cas_directory_id)
   end
 

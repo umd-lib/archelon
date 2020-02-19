@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class TypesController < ApplicationController
-  before_action :set_type, only: %i[show edit update destroy]
+  load_and_authorize_resource
 
   # GET /types
   # GET /types.json
@@ -68,11 +68,6 @@ class TypesController < ApplicationController
   end
 
   private
-
-    # Use callbacks to share common setup or constraints between actions.
-    def set_type
-      @type = Type.find(params[:id])
-    end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def type_params

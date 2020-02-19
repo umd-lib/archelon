@@ -16,13 +16,15 @@
         <td><%= link_to type.identifier, type %></td>
         <td><%= link_to type.vocabulary.identifier, type.vocabulary %></td>
         <td><%= link_to type.uri, type.uri %></td>
-        <td><%= link_to 'Edit', edit_type_path(type), class: 'btn btn-sm btn-success' %></td>
-        <td><%= link_to 'Delete', type, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger' %></td>
+        <td><%= link_to_edit type %></td>
+        <td><%= link_to_delete type %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
-<div>
-  <%= link_to "New #{t 'activerecord.models.type'}", new_type_path, class: 'btn btn-success' %>
-</div>
+<% if can? :create, Type %>
+  <div>
+    <%= link_to "New #{t 'activerecord.models.type'}", new_type_path, class: 'btn btn-success' %>
+  </div>
+<% end %>

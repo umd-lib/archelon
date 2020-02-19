@@ -126,3 +126,4 @@ gem 'mechanize'
 
 gem 'rdf-turtle'
 gem 'json-ld'
+gem 'cancancan'

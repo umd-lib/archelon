@@ -49,3 +49,11 @@ test_admin2:
   cas_directory_id: test_admin2
   name: Test Admin
   user_type: admin
+
+vocab_editor:
+  cas_directory_id: vocab_editor
+  name: Vocabulary Editor
+  user_type: user
+  groups:
+    - Users
+    - VocabularyEditors

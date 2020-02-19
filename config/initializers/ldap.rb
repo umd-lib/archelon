@@ -8,8 +8,7 @@ LDAP_NAME_ATTR = LDAP_CONFIG['name_attr']
 LDAP_GROUPS_ATTR = LDAP_CONFIG['groups_attr']
 LDAP_ATTRIBUTES = [LDAP_NAME_ATTR,LDAP_GROUPS_ATTR]
 LDAP_BASE = LDAP_CONFIG['base']
-GROUPER_ADMIN_GROUP = LDAP_CONFIG['grouper_admin_group']
-GROUPER_USER_GROUP = LDAP_CONFIG['grouper_user_group']
+GROUPER_GROUPS = LDAP_CONFIG['grouper_groups']
 LDAP_OVERRIDE = LDAP_CONFIG['ldap_override']
 
 # Initialize LDAP object

@@ -9,7 +9,10 @@
   <%= link_to @type.vocabulary.identifier, @type.vocabulary %>
 </div>
 
-<%= link_to 'Edit', edit_type_path(@type), class: 'btn btn-success' %>
+<% if can? :edit, @type %>
+  <%= link_to 'Edit', edit_type_path(@type), class: 'btn btn-success' %>
+<% end %>
+
 <div>
   <%= link_to "All #{ActiveSupport::Inflector.pluralize(t('activerecord.models.type'))}", types_path %>
-<div>
+</div>
