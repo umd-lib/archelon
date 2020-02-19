@@ -16,8 +16,7 @@ class CasAuthorizationTest < ActionDispatch::IntegrationTest
 
   # LDAP call will return the given CAS user ldap_attrs map
   def stub_ldap_response(name:, groups:)
-    user_type = LdapUserAttributes.user_type_from_groups(groups)
-    expect(LdapUserAttributes).to receive(:create).and_return(LdapUserAttributes.send(:new, name, user_type))
+    expect(LdapUserAttributes).to receive(:create).and_return(LdapUserAttributes.send(:new, name, groups))
   end
 
   test 'existing cas_user can access application' do
@@ -33,7 +32,7 @@ class CasAuthorizationTest < ActionDispatch::IntegrationTest
 
   test 'new cas_user with User Grouper group can access application' do
     stub_solr_response
-    stub_ldap_response(name: 'New CAS User', groups: [GROUPER_USER_GROUP])
+    stub_ldap_response(name: 'New CAS User', groups: [GROUPER_GROUPS['Users']])
 
     cas_login('new_cas_user1')
 
@@ -43,7 +42,7 @@ class CasAuthorizationTest < ActionDispatch::IntegrationTest
   end
 
   test 'new cas_user can with User Grouper group has assigned "user" type' do
-    stub_ldap_response(name: 'New CAS User', groups: [GROUPER_USER_GROUP])
+    stub_ldap_response(name: 'New CAS User', groups: [GROUPER_GROUPS['Users']])
 
     cas_login('new_cas_user2')
 
@@ -52,7 +51,7 @@ class CasAuthorizationTest < ActionDispatch::IntegrationTest
 
   test 'new cas_user can with Admin Grouper group can access application' do
     stub_solr_response
-    stub_ldap_response(name: 'New Admin CAS User', groups: [GROUPER_ADMIN_GROUP])
+    stub_ldap_response(name: 'New Admin CAS User', groups: [GROUPER_GROUPS['Administrators']])
 
     cas_login('new_admin_cas_user1')
 
@@ -62,7 +61,7 @@ class CasAuthorizationTest < ActionDispatch::IntegrationTest
   end
 
   test 'new cas_user can with Admin Grouper group has "admin" type' do
-    stub_ldap_response(name: 'New Admin CAS User', groups: [GROUPER_ADMIN_GROUP])
+    stub_ldap_response(name: 'New Admin CAS User', groups: [GROUPER_GROUPS['Administrators']])
 
     cas_login('new_admin_cas_user2')
 
@@ -89,7 +88,7 @@ class CasAuthorizationTest < ActionDispatch::IntegrationTest
   test 'existing admin cas_user type is updated based on Grouper group changes during login' do
     assert CasUser.find_by(cas_directory_id: 'prior_admin').admin?
 
-    stub_ldap_response(name: 'Prior Admin', groups: [GROUPER_USER_GROUP])
+    stub_ldap_response(name: 'Prior Admin', groups: [GROUPER_GROUPS['Users']])
 
     cas_login('prior_admin')
 
@@ -99,7 +98,7 @@ class CasAuthorizationTest < ActionDispatch::IntegrationTest
   test 'existing cas_user type is updated based on Grouper group changes during login' do
     assert CasUser.find_by(cas_directory_id: 'prior_user1').user?
 
-    stub_ldap_response(name: 'Prior User1', groups: [GROUPER_ADMIN_GROUP])
+    stub_ldap_response(name: 'Prior User1', groups: [GROUPER_GROUPS['Administrators']])
 
     cas_login('prior_user1')
 
@@ -123,7 +122,7 @@ class CasAuthorizationTest < ActionDispatch::IntegrationTest
     assert_not user.admin?
 
     # do the critical steps of a login
-    stub_ldap_response(name: 'Prior Unauthorized', groups: [GROUPER_USER_GROUP])
+    stub_ldap_response(name: 'Prior Unauthorized', groups: [GROUPER_GROUPS['Users']])
     user = CasUser.find_or_create_from_auth_hash(uid: user.cas_directory_id)
 
     # they should be a user now
@@ -139,7 +138,7 @@ class CasAuthorizationTest < ActionDispatch::IntegrationTest
     assert_not user.admin?
 
     # do the critical steps of a login
-    stub_ldap_response(name: 'Prior Unauthorized 2', groups: [GROUPER_ADMIN_GROUP])
+    stub_ldap_response(name: 'Prior Unauthorized 2', groups: [GROUPER_GROUPS['Administrators']])
     user = CasUser.find_or_create_from_auth_hash(uid: user.cas_directory_id)
 
     # they should be an admin now

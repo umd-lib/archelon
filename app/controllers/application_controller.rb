@@ -5,6 +5,10 @@ class ApplicationController < ActionController::Base
 
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
 
+  rescue_from CanCan::AccessDenied do
+    render file: Rails.root.join('public', '403.html'), status: :forbidden, layout: false
+  end
+
   before_action :authenticate
 
   # Adds a few additional behaviors into the application controller

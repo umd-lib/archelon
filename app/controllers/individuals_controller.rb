@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class IndividualsController < ApplicationController
-  before_action :set_individual, only: %i[show edit update destroy]
+  load_and_authorize_resource
 
   # GET /individuals
   # GET /individuals.json
@@ -72,11 +72,6 @@ class IndividualsController < ApplicationController
   end
 
   private
-
-    # Use callbacks to share common setup or constraints between actions.
-    def set_individual
-      @individual = Individual.find(params[:id])
-    end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def individual_params

@@ -20,11 +20,15 @@
         <td><%= link_to individual.identifier, individual %></td>
         <td><%= link_to individual.same_as, individual.same_as unless individual.same_as.blank? %></td>
         <td><%= link_to individual.uri, individual.uri %></td>
-        <td><%= link_to 'Edit', edit_individual_path(individual), class: 'btn btn-sm btn-success' %></td>
-        <td><%= link_to 'Delete', individual, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger' %></td>
+        <td><%= link_to_edit individual %></td>
+        <td><%= link_to_delete individual %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
-<%= link_to "New #{t 'activerecord.models.individual'}", new_individual_path, class: 'btn btn-success' %>
+<% if can? :create, Individual %>
+  <div>
+    <%= link_to "New #{t 'activerecord.models.individual'}", new_individual_path, class: 'btn btn-success' %>
+  </div>
+<% end %>

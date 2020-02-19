@@ -263,8 +263,8 @@ returned from an LDAP server for that user.
 
 The local development environment (or Docker container) can be run without
 connecting to an LDAP server by setting the `LDAP_OVERRIDE` environment variable.
-The `LDAP_OVERRIDE` environment variable specifies the user type for any user
-that logs in, i.e., either "admin" or "user".
+The `LDAP_OVERRIDE` environment variable should contain a space-separated list
+of Grouper group DNs that any authenticated user should receive.
 
 The `LDAP_OVERRIDE` environment variable only works in the `development`
 Rails environment.

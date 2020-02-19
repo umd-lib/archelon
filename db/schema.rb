@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_07_183911) do
+ActiveRecord::Schema.define(version: 2020_02_19_151411) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer "user_id", null: false
@@ -31,6 +31,13 @@ ActiveRecord::Schema.define(version: 2020_02_07_183911) do
     t.datetime "updated_at", null: false
     t.string "user_type"
     t.index ["cas_directory_id"], name: "index_cas_users_on_cas_directory_id", unique: true
+  end
+
+  create_table "cas_users_groups", id: false, force: :cascade do |t|
+    t.integer "cas_user_id"
+    t.integer "group_id"
+    t.index ["cas_user_id"], name: "index_cas_users_groups_on_cas_user_id"
+    t.index ["group_id"], name: "index_cas_users_groups_on_group_id"
   end
 
   create_table "download_urls", force: :cascade do |t|
@@ -62,6 +69,12 @@ ActiveRecord::Schema.define(version: 2020_02_07_183911) do
     t.datetime "updated_at", null: false
     t.string "download_url"
     t.index ["cas_user_id"], name: "index_export_jobs_on_cas_user_id"
+  end
+
+  create_table "groups", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "individuals", force: :cascade do |t|

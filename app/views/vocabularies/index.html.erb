@@ -20,13 +20,15 @@
         <td><%= link_to vocabulary.published_uri, vocabulary.published_uri %></td>
         <td><%= vocabulary.types.count %></td>
         <td><%= vocabulary.individuals.count %></td>
-        <td><%= link_to 'Edit', edit_vocabulary_path(vocabulary), class: 'btn btn-sm btn-success' %></td>
-        <td><%= link_to 'Delete', vocabulary, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger' %></td>
+        <td><%= link_to_edit vocabulary %></td>
+        <td><%= link_to_delete vocabulary %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
-<div>
-  <%= link_to "New #{t 'activerecord.models.vocabulary'}", new_vocabulary_path, class: 'btn btn-success' %>
-</div>
+<% if can? :create, Vocabulary %>
+  <div>
+    <%= link_to "New #{t 'activerecord.models.vocabulary'}", new_vocabulary_path, class: 'btn btn-success' %>
+  </div>
+<% end %>

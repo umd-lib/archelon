@@ -2,21 +2,30 @@
 
 <h1><%= content_for :page_title %></h1>
 
-<p>
+<div>
   <strong>Directory ID:</strong>
   <%= @cas_user.cas_directory_id %>
-</p>
+</div>
 
-<p>
+<div>
   <strong>Name:</strong>
   <%= @cas_user.name %>
-</p>
+</div>
+
+<div>
+  <strong>Groups:</strong>
+  <ul>
+    <% @cas_user.groups.each do |group| %>
+      <li><%= group.name %></li>
+    <% end %>
+  </ul>
+</div>
 
 <% if current_cas_user.admin? %>
-<p>
-  <strong>Type:</strong>
-  <%= @cas_user.user_type %>
-</p>
+  <div>
+    <strong>Type:</strong>
+    <%= @cas_user.user_type %>
+  </div>
 <% end %>
 
 <div class="actions">

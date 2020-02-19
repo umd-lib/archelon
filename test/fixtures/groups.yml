@@ -1,0 +1,10 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+Administrators:
+  name: Administrators
+
+Users:
+  name: Users
+
+VocabularyEditors:
+  name: VocabularyEditors

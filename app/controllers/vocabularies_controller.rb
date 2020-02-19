@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class VocabulariesController < ApplicationController
-  before_action :set_vocabulary, only: %i[show edit update destroy]
+  load_and_authorize_resource
 
   # GET /vocabularies
   # GET /vocabularies.json
@@ -84,11 +84,6 @@ class VocabulariesController < ApplicationController
   end
 
   private
-
-    # Use callbacks to share common setup or constraints between actions.
-    def set_vocabulary
-      @vocabulary = Vocabulary.find(params[:id])
-    end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def vocabulary_params

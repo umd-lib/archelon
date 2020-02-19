@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ExportJobsController < ApplicationController
+  before_action -> { authorize! :manage, ExportJob }
   before_action :cancel_workflow?, only: %i[create review]
   before_action :stomp_client_connected?, only: %i[new create review]
   before_action :selected_items?, only: %i[new create review]

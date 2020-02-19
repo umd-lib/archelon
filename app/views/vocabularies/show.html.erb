@@ -12,7 +12,10 @@
   <%= label :vocabulary, :description %>
   <%= @vocabulary.description %>
 </div>
-<%= link_to 'Edit', edit_vocabulary_path(@vocabulary), class: 'btn btn-success' %>
+
+<% if can? :edit, @vocabulary %>
+  <%= link_to 'Edit', edit_vocabulary_path(@vocabulary), class: 'btn btn-success' %>
+<% end %>
 
 <div class="row">
   <div class="col-sm-6">
@@ -23,9 +26,11 @@
             <%= ActiveSupport::Inflector.pluralize(t('activerecord.models.type'))  %>
             <span class="badge badge-secondary"><%= @vocabulary.types.count %></span>
           <% end %>
-          <div class="pull-right">
-            <%= link_to "New #{t 'activerecord.models.type'}", new_type_path(vocabulary: @vocabulary), class: 'btn btn-sm btn-success' %>
-          </div>
+          <% if can? :create, Type %>
+            <div class="pull-right">
+              <%= link_to "New #{t 'activerecord.models.type'}", new_type_path(vocabulary: @vocabulary), class: 'btn btn-sm btn-success' %>
+            </div>
+          <% end %>
         </div>
       </div>
 
@@ -47,9 +52,11 @@
             <%= ActiveSupport::Inflector.pluralize(t('activerecord.models.individual')) %>
             <span class="badge badge-secondary"><%= @vocabulary.individuals.count %></span>
           <% end %>
-          <div class="pull-right">
-            <%= link_to "New #{t 'activerecord.models.individual'}", new_individual_path(vocabulary: @vocabulary), class: 'btn btn-sm btn-success' %>
-          </div>
+          <% if can? :create, Individual %>
+            <div class="pull-right">
+              <%= link_to "New #{t 'activerecord.models.individual'}", new_individual_path(vocabulary: @vocabulary), class: 'btn btn-sm btn-success' %>
+            </div>
+          <% end %>
         </div>
       </div>
       <div class="panel-body">
