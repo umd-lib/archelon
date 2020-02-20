@@ -33,6 +33,12 @@ class LdapUserAttributesTest < ActiveSupport::TestCase
     )
   end
 
+  test 'group matching ignores case' do
+    # we shouldn't care about DN capitalization
+    assert_equal :user, LdapUserAttributes.user_type_from_groups([GROUPER_GROUPS['Users'].downcase])
+    assert_equal :admin, LdapUserAttributes.user_type_from_groups([GROUPER_GROUPS['Administrators'].downcase])
+  end
+
   test 'Creation from LDAP with valid result' do
     ldap_entry = Net::LDAP::Entry.new
     ldap_entry[LDAP_NAME_ATTR] = Faker::Name.name
