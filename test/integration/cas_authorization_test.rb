@@ -158,6 +158,13 @@ class CasAuthorizationTest < ActionDispatch::IntegrationTest
     assert_response(:forbidden)
   end
 
+  test 'ldap group name checks should ignore case' do
+    stub_ldap_response(name: 'New User', groups: [GROUPER_GROUPS['VocabularyEditors'].downcase])
+    user = CasUser.find_or_create_from_auth_hash(uid: 'newuser')
+
+    assert user.in_group? :VocabularyEditors
+  end
+
   def teardown
   end
 end

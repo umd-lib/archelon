@@ -39,8 +39,10 @@ class LdapUserAttributes
 
   def self.user_type_from_groups(groups)
     if groups
-      return :admin if groups.include? GROUPER_GROUPS['Administrators']
-      return :user if groups.include? GROUPER_GROUPS['Users']
+      # the LDAP server returns some group DNs in all lowercase
+      groups_lc = groups.map(&:downcase)
+      return :admin if groups_lc.include? GROUPER_GROUPS['Administrators'].downcase
+      return :user if groups_lc.include? GROUPER_GROUPS['Users'].downcase
     end
     :unauthorized
   end
@@ -49,6 +51,6 @@ class LdapUserAttributes
   #
   # @return the user type of the user. See CasUser.user_type enumeration
   def user_type
-    self.class.user_type_from_groups(@groups)
+    @user_type ||= self.class.user_type_from_groups(@groups)
   end
 end
