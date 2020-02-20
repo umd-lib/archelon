@@ -44,6 +44,7 @@ en:
         identifier: Identifier
         label: Term
         same_as: URI
+        source: Source
         uri: Local URI
         vocabulary: Vocabulary
       type:
