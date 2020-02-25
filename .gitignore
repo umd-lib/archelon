@@ -45,4 +45,6 @@ coverage
 *.pem
 
 # Ignore published vocabularies
-/public/published_vocabularies/
+/public/published_vocabularies/*.json
+/public/published_vocabularies/*.ttl
+/public/published_vocabularies/*.nt
