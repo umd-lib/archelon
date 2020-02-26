@@ -20,7 +20,7 @@ class Individual < ApplicationRecord
   end
 
   def source
-    return nil if same_as.empty?
+    return nil if same_as.blank?
 
     SAME_AS_ABBREVIATIONS.each do |prefix, abbreviation|
       return abbreviation if same_as.starts_with? prefix
