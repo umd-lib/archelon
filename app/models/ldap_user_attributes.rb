@@ -46,8 +46,9 @@ class LdapUserAttributes
   # @return the user type of the user. See CasUser.user_type enumeration
   def self.user_type_from_groups(groups)
     if groups
-      return :admin if groups.include?(GROUPER_ADMIN_GROUP)
-      return :user if groups.include?(GROUPER_USER_GROUP)
+      groups_lc = groups.map(&:downcase)
+      return :admin if groups_lc.include?(GROUPER_ADMIN_GROUP.downcase)
+      return :user if groups_lc.include?(GROUPER_USER_GROUP.downcase)
     end
     :unauthorized
   end
