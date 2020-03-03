@@ -191,7 +191,7 @@ GEM
       connection_pool (~> 2.2)
     net-ldap (0.16.1)
     nio4r (2.4.0)
-    nokogiri (1.10.5)
+    nokogiri (1.10.8)
       mini_portile2 (~> 2.4.0)
     ntlm-http (0.1.1)
     omniauth (1.9.0)
