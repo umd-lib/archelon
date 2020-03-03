@@ -39,8 +39,9 @@ class LdapUserAttributes
 
   def self.user_type_from_groups(groups)
     if groups
-      return :admin if groups.include? GROUPER_GROUPS['Administrators']
-      return :user if groups.include? GROUPER_GROUPS['Users']
+      groups_lc = groups.map(&:downcase)
+      return :admin if groups_lc.include? GROUPER_GROUPS['Administrators'].downcase
+      return :user if groups_lc.include? GROUPER_GROUPS['Users'].downcase
     end
     :unauthorized
   end
