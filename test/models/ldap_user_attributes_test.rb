@@ -34,8 +34,8 @@ class LdapUserAttributesTest < ActiveSupport::TestCase
   end
 
   test 'Ignore group name case when assigning user type' do
-    assert_equal :user, LdapUserAttributes.user_type_from_groups([GROUPER_USER_GROUP.downcase])
-    assert_equal :admin, LdapUserAttributes.user_type_from_groups([GROUPER_ADMIN_GROUP.downcase])
+    assert_equal :user, LdapUserAttributes.user_type_from_groups([GROUPER_GROUPS['Users'].downcase])
+    assert_equal :admin, LdapUserAttributes.user_type_from_groups([GROUPER_GROUPS['Administrators'].downcase])
   end
 
   test 'Creation from LDAP with valid result' do
