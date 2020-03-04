@@ -15,6 +15,9 @@ class Individual < ApplicationRecord
 
   belongs_to :vocabulary
 
+  after_save ->(individual) { individual.vocabulary.publish_rdf_async }
+  after_destroy ->(individual) { individual.vocabulary.publish_rdf_async }
+
   def uri
     vocabulary.uri + identifier
   end

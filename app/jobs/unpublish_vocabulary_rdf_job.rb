@@ -4,7 +4,7 @@
 class UnpublishVocabularyRdfJob < ApplicationJob
   queue_as :default
 
-  def perform(identifier)
-    Vocabulary.delete_published_rdf identifier
+  def perform(vocabulary)
+    vocabulary.delete_published_rdf
   end
 end
