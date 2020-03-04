@@ -1,0 +1,27 @@
+<h1><%= t 'activerecord.models.individual' %>: <%= @individual.label %></h1>
+
+<div>
+  <%= label :individual, :uri %>
+  <%= link_to @individual.uri, @individual.uri %>
+</div>
+<div>
+  <%= label :individual, :label %>
+  <%= @individual.label %>
+  <%= "(#{@individual.source})" if @individual.source.present? %>
+</div>
+<div>
+  <%= label :individual, :same_as %>
+  <%= link_to @individual.same_as, @individual.same_as %>
+</div>
+<div>
+  <%= label :individual, :vocabulary_id %>
+  <%= link_to @individual.vocabulary.identifier, @individual.vocabulary %>
+</div>
+
+<% if can? :edit, @individual %>
+  <%= link_to 'Edit', edit_individual_path(@individual), class: 'btn btn-success' %>
+<% end %>
+
+<div>
+  <%= link_to "All #{ActiveSupport::Inflector.pluralize(t('activerecord.models.individual'))}", individuals_path %>
+</div>

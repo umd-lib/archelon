@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DownloadUrlsController < ApplicationController
-  before_action :set_download_url, only: [:show]
+  load_and_authorize_resource
   include Blacklight::SearchHelper
 
   # GET /download_urls
@@ -21,7 +21,7 @@ class DownloadUrlsController < ApplicationController
   # GET /download_urls/generate/:document_url
   def generate_download_url
     solr_document = find_solr_document(params['document_url'])
-    not_found unless solr_document
+    not_found && return unless solr_document
     @download_url = DownloadUrl.new
     @download_url.url = solr_document[:id]
     @download_url.title = create_default_title(solr_document)
@@ -30,7 +30,7 @@ class DownloadUrlsController < ApplicationController
   # POST /download_urls/create/:document_url
   def create_download_url # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     solr_document = find_solr_document(params['document_url'])
-    not_found unless solr_document
+    not_found && return unless solr_document
 
     @download_url = DownloadUrl.new(download_url_params)
     @download_url.url = solr_document[:id]
@@ -99,11 +99,6 @@ class DownloadUrlsController < ApplicationController
       return solr_documents.first if solr_documents.any?
 
       nil
-    end
-
-    # Use callbacks to share common setup or constraints between actions.
-    def set_download_url
-      @download_url = DownloadUrl.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

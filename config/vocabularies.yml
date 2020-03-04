@@ -1,0 +1,13 @@
+default: &default
+  local_authority_base_uri: http://vocab.lib.umd.edu/
+  publication_base_uri: http://localhost:3000/published_vocabularies/
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+
+production:
+  local_authority_base_uri: <%= ENV['VOCAB_LOCAL_AUTHORITY_BASE_URI'] %>
+  publication_base_uri: <%= ENV['VOCAB_PUBLICATION_BASE_URI'] %>

@@ -18,4 +18,5 @@
 ActiveSupport::Inflector.inflections(:en) do |inflect|
   # converts "umd_lib" to "UMDLib" instead of the default "UmdLib"
   inflect.acronym 'UMD'
+  inflect.acronym 'URI'
 end

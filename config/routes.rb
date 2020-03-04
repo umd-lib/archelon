@@ -62,4 +62,8 @@ Rails.application.routes.draw do # rubocop:disable Metrics/BlockLength
 
   get 'about' => 'static_pages#about'
   get 'help' => 'static_pages#help'
+
+  resources :vocabularies
+  resources :types
+  resources :individuals
 end

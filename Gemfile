@@ -6,7 +6,7 @@ gem 'rails', '~> 5.2.3'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
 # Use Puma as the app server
-gem 'puma', '~> 3.11'
+gem 'puma', '~> 3.12'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
@@ -97,8 +97,7 @@ group :test do
  	# Easy installation and use of web drivers to run system tests with browsers
 	gem 'webdrivers'
 
-  gem 'minitest-ci', '~> 3.0.3'
-  gem 'minitest-reporters', '~> 1.1.8'
+  gem 'minitest-reporters'
 
   # Code analysis tools
   gem 'rubocop', '~> 0.74.0', require: false
@@ -124,3 +123,7 @@ gem "sparql-client", "~> 3.0"
 gem 'stomp'
 
 gem 'mechanize'
+
+gem 'rdf-turtle'
+gem 'json-ld'
+gem 'cancancan'

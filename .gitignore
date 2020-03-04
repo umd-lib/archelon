@@ -33,6 +33,7 @@
 
 # Ignore environment specific files
 .env
+.env.local
 
 # Ignore minitest-ci reports
 test/reports
@@ -42,3 +43,8 @@ coverage
 
 # Ignore any SSL pem files in root
 *.pem
+
+# Ignore published vocabularies
+/public/published_vocabularies/*.json
+/public/published_vocabularies/*.ttl
+/public/published_vocabularies/*.nt

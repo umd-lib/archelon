@@ -2,6 +2,13 @@
 
 class ApplicationController < ActionController::Base
   include CasHelper
+
+  rescue_from ActiveRecord::RecordNotFound, with: :not_found
+
+  rescue_from CanCan::AccessDenied do
+    render file: Rails.root.join('public', '403.html'), status: :forbidden, layout: false
+  end
+
   before_action :authenticate
 
   # Adds a few additional behaviors into the application controller
@@ -11,7 +18,7 @@ class ApplicationController < ActionController::Base
 
   # Causes a "404 - Not Found" error page to be displayed.
   def not_found
-    raise ActionController::RoutingError, 'Not Found'
+    render file: Rails.root.join('public', '404.html'), status: :not_found
   end
 
   def impersonating?

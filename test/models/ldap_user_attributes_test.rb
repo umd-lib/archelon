@@ -8,32 +8,46 @@ class LdapUserAttributesTest < ActiveSupport::TestCase
     assert_equal :unauthorized, LdapUserAttributes.user_type_from_groups([])
     assert_equal :unauthorized, LdapUserAttributes.user_type_from_groups(['SOME_OTHER_GROUP'])
 
-    assert_equal :user, LdapUserAttributes.user_type_from_groups([GROUPER_USER_GROUP])
-    assert_equal :user, LdapUserAttributes.user_type_from_groups(['SOME_OTHER_GROUP', GROUPER_USER_GROUP])
-    assert_equal :user, LdapUserAttributes.user_type_from_groups([GROUPER_USER_GROUP, 'SOME_OTHER_GROUP'])
+    assert_equal :user, LdapUserAttributes.user_type_from_groups([GROUPER_GROUPS['Users']])
+    assert_equal :user, LdapUserAttributes.user_type_from_groups(['SOME_OTHER_GROUP', GROUPER_GROUPS['Users']])
+    assert_equal :user, LdapUserAttributes.user_type_from_groups([GROUPER_GROUPS['Users'], 'SOME_OTHER_GROUP'])
 
-    assert_equal :admin, LdapUserAttributes.user_type_from_groups([GROUPER_ADMIN_GROUP])
-    assert_equal :admin, LdapUserAttributes.user_type_from_groups([GROUPER_ADMIN_GROUP, 'SOME_OTHER_GROUP'])
-    assert_equal :admin, LdapUserAttributes.user_type_from_groups(['SOME_OTHER_GROUP', GROUPER_ADMIN_GROUP])
-    assert_equal :admin, LdapUserAttributes.user_type_from_groups([GROUPER_ADMIN_GROUP, GROUPER_USER_GROUP])
-    assert_equal :admin, LdapUserAttributes.user_type_from_groups([GROUPER_USER_GROUP, GROUPER_ADMIN_GROUP])
+    assert_equal :admin, LdapUserAttributes.user_type_from_groups([GROUPER_GROUPS['Administrators']])
     assert_equal :admin, LdapUserAttributes.user_type_from_groups(
-      ['SOME_OTHER_GROUP', GROUPER_USER_GROUP, GROUPER_ADMIN_GROUP]
+      [GROUPER_GROUPS['Administrators'], 'SOME_OTHER_GROUP']
     )
     assert_equal :admin, LdapUserAttributes.user_type_from_groups(
-      [GROUPER_USER_GROUP, GROUPER_ADMIN_GROUP, 'SOME_OTHER_GROUP']
+      ['SOME_OTHER_GROUP', GROUPER_GROUPS['Administrators']]
+    )
+    assert_equal :admin, LdapUserAttributes.user_type_from_groups(
+      [GROUPER_GROUPS['Administrators'], GROUPER_GROUPS['Users']]
+    )
+    assert_equal :admin, LdapUserAttributes.user_type_from_groups(
+      [GROUPER_GROUPS['Users'], GROUPER_GROUPS['Administrators']]
+    )
+    assert_equal :admin, LdapUserAttributes.user_type_from_groups(
+      ['SOME_OTHER_GROUP', GROUPER_GROUPS['Users'], GROUPER_GROUPS['Administrators']]
+    )
+    assert_equal :admin, LdapUserAttributes.user_type_from_groups(
+      [GROUPER_GROUPS['Users'], GROUPER_GROUPS['Administrators'], 'SOME_OTHER_GROUP']
     )
   end
 
+  test 'group matching ignores case' do
+    # we shouldn't care about DN capitalization
+    assert_equal :user, LdapUserAttributes.user_type_from_groups([GROUPER_GROUPS['Users'].downcase])
+    assert_equal :admin, LdapUserAttributes.user_type_from_groups([GROUPER_GROUPS['Administrators'].downcase])
+  end
+
   test 'Ignore group name case when assigning user type' do
-    assert_equal :user, LdapUserAttributes.user_type_from_groups([GROUPER_USER_GROUP.downcase])
-    assert_equal :admin, LdapUserAttributes.user_type_from_groups([GROUPER_ADMIN_GROUP.downcase])
+    assert_equal :user, LdapUserAttributes.user_type_from_groups([GROUPER_GROUPS['Users'].downcase])
+    assert_equal :admin, LdapUserAttributes.user_type_from_groups([GROUPER_GROUPS['Administrators'].downcase])
   end
 
   test 'Creation from LDAP with valid result' do
     ldap_entry = Net::LDAP::Entry.new
     ldap_entry[LDAP_NAME_ATTR] = Faker::Name.name
-    ldap_entry[LDAP_GROUPS_ATTR] = [GROUPER_USER_GROUP, GROUPER_ADMIN_GROUP]
+    ldap_entry[LDAP_GROUPS_ATTR] = [GROUPER_GROUPS['Users'], GROUPER_GROUPS['Administrators']]
 
     LDAP.stub :search, [ldap_entry] do
       ldap_user_attributes = LdapUserAttributes.create('foo')
@@ -58,7 +72,7 @@ class LdapUserAttributesTest < ActiveSupport::TestCase
   test 'Creation from LDAP with missing attributes' do
     ldap_entry = Net::LDAP::Entry.new
     ldap_entry['unexpected_attribute1'] = Faker::Name.name
-    ldap_entry['unexpected_attribute2'] = [GROUPER_USER_GROUP, GROUPER_ADMIN_GROUP]
+    ldap_entry['unexpected_attribute2'] = [GROUPER_GROUPS['Users'], GROUPER_GROUPS['Administrators']]
 
     LDAP.stub :search, [ldap_entry] do
       ldap_user_attributes = LdapUserAttributes.create('foo')

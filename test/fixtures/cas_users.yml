@@ -25,6 +25,16 @@ prior_user2:
   name: Prior User2
   user_type: user
 
+prior_unauthorized:
+  cas_directory_id: prior_unauthorized
+  name: Prior Unauthorized
+  user_type: unauthorized
+
+prior_unauthorized2:
+  cas_directory_id: prior_unauthorized2
+  name: Prior Unauthorized 2
+  user_type: unauthorized
+
 test_user:
   cas_directory_id: test_user
   name: Test User
@@ -39,3 +49,11 @@ test_admin2:
   cas_directory_id: test_admin2
   name: Test Admin
   user_type: admin
+
+vocab_editor:
+  cas_directory_id: vocab_editor
+  name: Vocabulary Editor
+  user_type: user
+  groups:
+    - Users
+    - VocabularyEditors

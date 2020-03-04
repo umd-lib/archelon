@@ -40,7 +40,9 @@ AUDIT_DATABASE_USERNAME=archelon
 AUDIT_DATABASE_PASSWORD=archelon
 
 # ActiveMQ/Stomp protocol configuration
-# -- config/environments/*.rb
+# This is used to send export jobs and receive notifications
+# when an export job is complete
+# -- config/stomp.yml
 STOMP_HOST=
 STOMP_PORT=
 
@@ -71,7 +73,15 @@ ARCHELON_DATABASE_PORT=5432
 ARCHELON_DATABASE_POOL=10
 
 # --- config/ssl.yml
+# Used when retrieving export packages from fcrepo.
 # These should point to an SSL client cert that has:
 # - read permissions to the /exports container
 FCREPO_CLIENT_CERT=
 FCREPO_CLIENT_KEY=
+
+# --- config/vocabularies.yml
+# Base URI for the controlled vocabulary terms
+VOCAB_LOCAL_AUTHORITY_BASE_URI=
+
+# Base URI for the location where the vocabularies are published
+VOCAB_PUBLICATION_BASE_URI=

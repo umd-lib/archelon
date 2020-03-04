@@ -1,6 +1,6 @@
 # archelon
 
-Archelon is a Rails-based search interface for the Fedora 4 repository. It uses
+Archelon is a Rails-based administrative interface for the Fedora 4 repository. It uses
 the Blacklight gem for providing the search functionality.
 
 ## Quick Start
@@ -23,11 +23,11 @@ Requires:
 2. Set up the database:
 
   ```
-  rake db:migrate
+  rails db:migrate
   ```
 
   **Note:** Sample "Download URL" data can be added by running
-  `rake db:reset_with_sample_data`
+  `rails db:reset_with_sample_data`
 
 3. Create a `.env` file from the `env_example` file and fill in appropriate
    values for the environment variables.
@@ -43,6 +43,30 @@ self-signed SSL certificates for HTTPS, see the section [SSL setup](#ssl-setup).
 
 See [archelon-vagrant] for running Archelon application in a Vagrant
 environment.
+
+## Importing Controlled Vocabularies
+
+Archelon comes with a rake task, [vocab:import](lib/tasks/vocab.rake), to do a
+bulk load of vocabulary terms from a CSV file. Run:
+
+```
+rails vocab:import[filename.csv,vocabulary]
+```
+
+where `filename.csv` is the path to a CSV file containing the vocabulary terms
+to be imported, and `vocabulary` is the string name of the vocabulary to add
+those terms to. This vocabulary will be created if it doesn't already exist.
+
+The CSV file must have the following three columns:
+
+* label
+* identifier
+* uri
+
+Other columns are ignored.
+
+The import task currently only supports creating Individuals (a.k.a. Terms),
+and not Types (a.k.a. Classes).
 
 ## Docker
 
@@ -97,19 +121,19 @@ includes a script to generate solr package that can be used here.
 Create the Solr core as per the configuration in `.solr_wrapper.yml`:
 
 ```
-bundle exec rake solr:create_collection
+bundle exec rails solr:create_collection
 ```
 
 Start the solr server:
 
 ```
-bundle exec rake solr:start_server
+bundle exec rails solr:start_server
 ```
 
 Load sample data included in the solr package:
 
 ```
-bundle exec rake solr:rebuild_index seed_file=/path/to/sample_solr_data.yml
+bundle exec rails solr:rebuild_index seed_file=/path/to/sample_solr_data.yml
 ```
 
 ### Usage
@@ -117,19 +141,19 @@ bundle exec rake solr:rebuild_index seed_file=/path/to/sample_solr_data.yml
 Start the solr server:
 
 ```
-bundle exec rake solr:start_server
+bundle exec rails solr:start_server
 ```
 
 Stop the solr server:
 
 ```
-bundle exec rake solr:stop
+bundle exec rails solr:stop
 ```
 
 Clean and reinstall setup:
 
 ```
-bundle exec rake solr:clean
+bundle exec rails solr:clean
 ```
 
 ## File Retrieval configuration
@@ -162,41 +186,14 @@ server. For example, see the
 
 ### Concurrent operation in the development environment
 
-In the development environment, there are two issues regarding concurrent
-operations:
+Rails disables concurrent operation when using the development environment.
 
-* The standard "webrick" server does not support concurrent operations
-* Rails disables concurrent operation when using the development environment.
-
-To test concurrent operations in development mode, do the following:
-
-1. Install the "puma" gem into the Gemfile, by adding the following line:
-
-  ```
-  gem 'puma', '~> 3.9.1'
-  ```
-
-2. Run Bundler to install the gem:
-
-  ```
-  bundle install
-  ```
-
-3. Edit the "config/application.rb" file, and add the following line to
-   application setting:
+Edit the "config/development.rb" file, and add the following line to
+application setting:
 
   ```
   config.allow_concurrency=true
   ```
-
-4. Run the following command to use the puma server:
-
-  ```
-  puma --port=3000 --workers 3
-  ```
-
-  The `--port=3000` sets the port to the webrick standard of 3000, and the
-  `--workers 3` sets the number of concurrent workers.
 
 ## SSL setup
 
@@ -261,15 +258,15 @@ instance.
 ## LDAP Override
 
 By default, Archelon determines the user type for a user ("admin", "user" or
-"unauthorized") using the list of Grouper groups in the "memberOf" attribute
+"unauthorized") using the list of Grouper groups in the `memberOf` attribute
 returned from an LDAP server for that user.
 
 The local development environment (or Docker container) can be run without
-connecting to an LDAP server using the "LDAP_OVERRIDE" environment variable.
-The "LDAP_OVERRIDE" environment variable specifies the user type for any user
-that logs in, i.e., either "admin" or "user".
+connecting to an LDAP server by setting the `LDAP_OVERRIDE` environment variable.
+The `LDAP_OVERRIDE` environment variable should contain a space-separated list
+of Grouper group DNs that any authenticated user should receive.
 
-The "LDAP_OVERRIDE" environment variable only works in the "development"
+The `LDAP_OVERRIDE` environment variable only works in the `development`
 Rails environment.
 
 ## About CVE-2015-9284
@@ -291,5 +288,4 @@ See the [LICENSE](LICENSE.md) file for license rights and limitations
 [archelon-vagrant]: https://github.com/umd-lib/archelon-vagrant
 [cve-2015-9284]: https://github.com/omniauth/omniauth/wiki/Resolving-CVE-2015-9284
 [fcrepo-vagrant]: https://github.com/umd-lib/fcrepo-vagrant
-[passenger-phusion]: https://www.phusionpassenger.com/library/config/apache/reference/#passengerbufferresponse
 [plastron]: https://github.com/umd-lib/plastron

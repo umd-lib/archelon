@@ -3,7 +3,7 @@
 require 'erb'
 require 'addressable/template'
 
-module ApplicationHelper
+module ApplicationHelper # rubocop:disable Metrics/ModuleLength
   FEDORA_BASE_URL = Rails.application.config.fcrepo_base_url
   IIIF_BASE_URL = Rails.application.config.iiif_base_url
   PCDM_OBJECT = 'pcdm:Object'
@@ -124,5 +124,17 @@ module ApplicationHelper
       iiifURLPrefix: "#{IIIF_BASE_URL}manifests/",
       q: query
     ).to_s
+  end
+
+  def link_to_edit(resource)
+    return unless can? :edit, resource
+
+    link_to 'Edit', { action: :edit, id: resource }, class: 'btn btn-sm btn-success'
+  end
+
+  def link_to_delete(resource)
+    return unless can? :destroy, resource
+
+    link_to 'Delete', resource, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger'
   end
 end

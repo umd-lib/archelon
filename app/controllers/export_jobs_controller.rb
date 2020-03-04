@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ExportJobsController < ApplicationController
+  before_action -> { authorize! :manage, ExportJob }
   before_action :cancel_workflow?, only: %i[create review]
   before_action :stomp_client_connected?, only: %i[new create review]
   before_action :selected_items?, only: %i[new create review]
@@ -32,7 +33,7 @@ class ExportJobsController < ApplicationController
     return unless @job.save
 
     begin
-      STOMP_CLIENT.publish Rails.configuration.queues[:export_jobs], uris.join("\n"), message_headers(@job)
+      STOMP_CLIENT.publish STOMP_CONFIG['export_jobs_queue'], uris.join("\n"), message_headers(@job)
     rescue Stomp::Error::NoCurrentConnection
       @job.status = 'Error'
       @job.save

@@ -2,40 +2,38 @@
 
 # A user of the application
 class CasUser < ApplicationRecord
-  # Connects this user object to Blacklights Bookmarks.
+  # Connects this user object to Blacklight's Bookmarks.
   include Blacklight::User
+
+  has_and_belongs_to_many :groups # rubocop:disable Rails/HasAndBelongsToMany
 
   enum user_type: { admin: 'admin', user: 'user', unauthorized: 'unauthorized' }
   validates :cas_directory_id, presence: true, uniqueness: { case_sensitive: false }
   validates :name, presence: true
 
   def self.find_or_create_from_auth_hash(auth)
-    ldap_user_attributes = LdapUserAttributes.create(auth[:uid])
-    ldap_name = ldap_user_attributes.name
-    ldap_user_type = ldap_user_attributes.user_type
-
+    # update user info upon successful login, and return the user object
     where(cas_directory_id: auth[:uid]).first_or_initialize.tap do |user|
       user.cas_directory_id = auth[:uid]
-      update_name(user, ldap_name) unless user.name
-      update_user_type(user, ldap_user_type)
+      user.update_from_ldap
       user.save!
     end
   end
 
-  # The following methods are not intended to be called from outside this class.
-  def self.update_name(user, name)
-    return if !name && user.name
-
-    user.name = user.cas_directory_id and return unless name # rubocop:disable Style/AndOr
-    user.name = name
+  def ldap_attributes
+    @ldap_attributes ||= LdapUserAttributes.create(cas_directory_id)
   end
 
-  def self.update_user_type(user, user_type)
-    return if !user_type && user.user_type
+  def update_from_ldap
+    # only update from LDAP if we found anything
+    return unless ldap_attributes
 
-    user.user_type = :unauthorized
-    return unless user_type
+    self.name = ldap_attributes.name || cas_directory_id
+    self.user_type = ldap_attributes.user_type
+    self.groups = ldap_attributes.groups.map { |dn| Group.from_dn(dn) }.reject(&:nil?)
+  end
 
-    user.user_type = user_type
+  def in_group?(group_name)
+    groups.map(&:name).include? group_name.to_s
   end
 end
