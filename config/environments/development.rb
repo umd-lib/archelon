@@ -74,4 +74,6 @@ Rails.application.configure do
       password: ENV['AUDIT_DATABASE_PASSWORD'] || 'archelon',
   }
 
+  # add RDF MIME types so static files in the public dir get served correctly
+  Rack::Mime::MIME_TYPES.merge!({'.nt' => 'application/n-triples', '.ttl' => 'text/turtle'})
 end
