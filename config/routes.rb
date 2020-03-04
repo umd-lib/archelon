@@ -66,4 +66,6 @@ Rails.application.routes.draw do # rubocop:disable Metrics/BlockLength
   resources :vocabularies
   resources :types
   resources :individuals
+
+  get '/ping' => 'ping#verify'
 end
