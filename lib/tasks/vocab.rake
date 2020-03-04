@@ -43,6 +43,7 @@ namespace :vocab do
         report_import_errors(individual, args.filename, index + 2)
       end
     end
+    vocabulary.publish_rdf :all
     puts "Imported #{import_count} terms from #{args.filename} into #{args.vocab_identifier}"
   end
 end

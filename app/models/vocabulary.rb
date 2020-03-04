@@ -46,15 +46,19 @@ class Vocabulary < ApplicationRecord
     end
   end
 
-  def publish_rdf(format)
-    FORMAT_EXTENSIONS.include?(format) || raise('Unrecognized format')
+  def publish_rdf(format) # rubocop:disable Metrics/AbcSize
+    if format == :all
+      FORMAT_EXTENSIONS.keys.each { |f| publish_rdf(f) }
+    else
+      FORMAT_EXTENSIONS.include?(format) || raise('Unrecognized format')
 
-    vocab_dir = Rails.root.join('public', 'published_vocabularies')
-    FileUtils.makedirs vocab_dir
+      vocab_dir = Rails.root.join('public', 'published_vocabularies')
+      FileUtils.makedirs vocab_dir
 
-    extension = FORMAT_EXTENSIONS[format]
-    path = Rails.root.join(vocab_dir, "#{identifier}.#{extension}")
-    File.open(path, 'w') { |f| f << graph.dump(format, prefixes: PREFIXES.dup) }
+      extension = FORMAT_EXTENSIONS[format]
+      path = Rails.root.join(vocab_dir, "#{identifier}.#{extension}")
+      File.open(path, 'w') { |f| f << graph.dump(format, prefixes: PREFIXES.dup) }
+    end
   end
 
   def self.delete_published_rdf(identifier)
