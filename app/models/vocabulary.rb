@@ -58,7 +58,7 @@ class Vocabulary < ApplicationRecord
   end
 
   def publish_rdf_async
-    PublishVocabularyRdfJob.perform_later self, 'all'
+    PublishVocabularyRdfJob.perform_later self
   end
 
   def delete_published_rdf
