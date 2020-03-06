@@ -27,6 +27,9 @@ class Vocabulary < ApplicationRecord
   has_many :types, dependent: :destroy
   has_many :individuals, dependent: :destroy
 
+  after_save :publish_rdf_async
+  after_destroy :delete_published_rdf_async
+
   def uri
     VOCAB_CONFIG['local_authority_base_uri'] + identifier + '#'
   end
@@ -46,26 +49,26 @@ class Vocabulary < ApplicationRecord
     end
   end
 
-  def publish_rdf(format) # rubocop:disable Metrics/AbcSize
-    if format == :all
-      FORMAT_EXTENSIONS.keys.each { |f| publish_rdf(f) }
-    else
-      FORMAT_EXTENSIONS.include?(format) || raise('Unrecognized format')
-
-      vocab_dir = Rails.root.join('public', 'published_vocabularies')
-      FileUtils.makedirs vocab_dir
-
-      extension = FORMAT_EXTENSIONS[format]
+  def publish_rdf
+    FileUtils.makedirs vocab_dir
+    FORMAT_EXTENSIONS.each do |format, extension|
       path = Rails.root.join(vocab_dir, "#{identifier}.#{extension}")
       File.open(path, 'w') { |f| f << graph.dump(format, prefixes: PREFIXES.dup) }
     end
   end
 
-  def self.delete_published_rdf(identifier)
-    vocab_dir = Rails.root.join('public', 'published_vocabularies')
+  def publish_rdf_async
+    PublishVocabularyRdfJob.perform_later self
+  end
+
+  def delete_published_rdf
     Dir.glob(Rails.root.join(vocab_dir, "#{identifier}.*")).each do |file|
       FileUtils.safe_unlink file
     end
+  end
+
+  def delete_published_rdf_async
+    UnpublishVocabularyRdfJob.perform_later self
   end
 
   private
@@ -84,5 +87,9 @@ class Vocabulary < ApplicationRecord
         graph << [individual_uri, RDF::RDFS.label, individual.label]
         graph << [individual_uri, RDF::OWL.sameAs, RDF::URI(individual.same_as)] if individual.same_as.present?
       end
+    end
+
+    def vocab_dir
+      Rails.root.join('public', 'published_vocabularies')
     end
 end
