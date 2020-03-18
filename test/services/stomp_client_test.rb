@@ -37,10 +37,11 @@ class StompClientTest < Minitest::Test
   def create_message(job_id)
     message = Stomp::Message.new('')
     headers = {}
-    headers['ArchelonExportJobId'] = job_id.to_s
-    headers['ArchelonExportJobStatus'] = 'Ready'
+    headers['PlastronJobId'] = "http://example.com/job/#{job_id}"
+    headers['PlastronJobStatus'] = 'Ready'
     message.command = 'MESSAGE'
     message.headers = headers
+    message.body = JSON.generate(download_uri: 'http://example.com/foo')
     message
   end
 end
