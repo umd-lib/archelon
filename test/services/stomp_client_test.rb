@@ -37,7 +37,7 @@ class StompClientTest < Minitest::Test
   def create_message(job_id)
     message = Stomp::Message.new('')
     headers = {}
-    headers['PlastronJobId'] = "http://example.com/job/#{job_id.to_s}"
+    headers['PlastronJobId'] = "http://example.com/job/#{job_id}"
     headers['PlastronJobStatus'] = 'Ready'
     message.command = 'MESSAGE'
     message.headers = headers
