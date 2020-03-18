@@ -88,11 +88,12 @@ class ExportJobsController < ApplicationController
 
     def message_headers(job)
       {
-        ArchelonExportJobName: job.name,
-        ArchelonExportJobId: job.id,
-        ArchelonExportJobUsername: job.cas_user.cas_directory_id,
-        ArchelonExportJobFormat: job.format,
-        ArchelonExportJobTimestamp: job.timestamp,
+        PlastronCommand: 'export',
+        PlastronJobId: export_job_url(job),
+        'PlastronArg-name': job.name,
+        'PlastronArg-username': job.cas_user.cas_directory_id,
+        'PlastronArg-format': job.format,
+        'PlastronArg-timestamp': job.timestamp,
         persistent: 'true'
       }
     end

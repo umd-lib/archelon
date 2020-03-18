@@ -41,6 +41,12 @@ class ExportJob < ApplicationRecord
     ]
   end
 
+  def self.from_uri(uri)
+    # assume that the last path segment of the uri is the identifier
+    id = uri[uri.rindex('/') + 1..]
+    find(id)
+  end
+
   private
 
     def content_disposition(headers)
