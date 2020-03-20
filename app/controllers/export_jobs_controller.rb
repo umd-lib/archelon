@@ -28,15 +28,16 @@ class ExportJobsController < ApplicationController
   end
 
   def create # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
-    uris = current_user.bookmarks.map(&:document_id)
     @job = create_job(params.require(:export_job).permit(:name, :format, :item_count))
     return unless @job.save
 
     begin
-      STOMP_CLIENT.publish STOMP_CONFIG['export_jobs_queue'], uris.join("\n"), message_headers(@job)
+      submit_job(current_user.bookmarks.map(&:document_id))
     rescue Stomp::Error::NoCurrentConnection
+      @job.plastron_operation.status = :error
       @job.status = 'Error'
       @job.save
+      @job.plastron_operation.save!
       flash[:error] = I18n.t(:active_mq_is_down)
     end
     redirect_to action: 'index', status: :see_other
@@ -80,10 +81,11 @@ class ExportJobsController < ApplicationController
     end
 
     def create_job(args)
-      args[:timestamp] = Time.zone.now
-      args[:cas_user] = current_cas_user
-      args[:status] = ExportJob::IN_PROGRESS
-      ExportJob.new(args)
+      ExportJob.new(args).tap do |job|
+        job.timestamp = Time.zone.now
+        job.cas_user = current_cas_user
+        job.plastron_operation = PlastronOperation.new status: :pending, progress: 0
+      end
     end
 
     def message_headers(job)
@@ -96,5 +98,19 @@ class ExportJobsController < ApplicationController
         'PlastronArg-timestamp': job.timestamp,
         persistent: 'true'
       }
+    end
+
+    def submit_job(uris)
+      body = uris.join("\n")
+      headers = message_headers(@job)
+      STOMP_CLIENT.publish STOMP_CONFIG['export_jobs_queue'], body, headers
+      @job.plastron_operation.started = Time.zone.now
+      @job.plastron_operation.status = :in_progress
+      @job.plastron_operation.request_message = "#{headers_to_s(headers)}\n\n#{body}"
+      @job.plastron_operation.save!
+    end
+
+    def headers_to_s(headers)
+      headers.map { |k, v| [k, v].join(': ') }.join("\n")
     end
 end

@@ -15,30 +15,32 @@ class StompClientTest < Minitest::Test
   def test_update_export_job_when_message_received
     mock = MockStompClient.instance
     cas_user = CasUser.first
-    job = ExportJob.new(name: 'test job', cas_user: cas_user)
+    op = PlastronOperation.first
+    job = ExportJob.new(name: 'test job', cas_user: cas_user, plastron_operation: op)
     job.save!
     message = create_message(job.id)
-    mock.update_export_job(message)
+    mock.update_export_job_status(message)
     job.reload
-    assert_equal 'Ready', job.status
+    assert job.plastron_operation.done?
   end
 
   def test_update_export_job_when_error_received
     mock = MockStompClient.instance
     cas_user = CasUser.first
-    job = ExportJob.new(name: 'test job', cas_user: cas_user)
+    op = PlastronOperation.first
+    job = ExportJob.new(name: 'test job', cas_user: cas_user, plastron_operation: op)
     job.save!
     message = create_message(job.id)
-    mock.update_export_job(message)
+    mock.update_export_job_status(message)
     job.reload
-    assert_equal 'Ready', job.status
+    assert job.plastron_operation.done?
   end
 
   def create_message(job_id)
     message = Stomp::Message.new('')
     headers = {}
     headers['PlastronJobId'] = "http://example.com/job/#{job_id}"
-    headers['PlastronJobStatus'] = 'Ready'
+    headers['PlastronJobStatus'] = 'Done'
     message.command = 'MESSAGE'
     message.headers = headers
     message.body = JSON.generate(download_uri: 'http://example.com/foo')

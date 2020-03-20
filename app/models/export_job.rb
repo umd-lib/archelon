@@ -3,6 +3,7 @@
 # An export job from Fedora
 class ExportJob < ApplicationRecord
   belongs_to :cas_user
+  belongs_to :plastron_operation, dependent: :destroy
 
   CSV_FORMAT = 'text/csv'
   TURTLE_FORMAT = 'text/turtle'
@@ -17,13 +18,6 @@ class ExportJob < ApplicationRecord
     TURTLE_FORMAT => '.ttl',
     'application/zip' => '.zip'
   }.freeze
-
-  # statuses
-  IN_PROGRESS = 'In Progress'
-  READY = 'Ready'
-  FAILED = 'Failed'
-
-  STATUSES = [IN_PROGRESS, READY, FAILED].freeze
 
   def self.exportable_types
     %w[Image Issue Letter]
@@ -45,6 +39,13 @@ class ExportJob < ApplicationRecord
     # assume that the last path segment of the uri is the identifier
     id = uri[uri.rindex('/') + 1..]
     find(id)
+  end
+
+  def mark_as_completed(status)
+    plastron_operation.completed = Time.zone.now
+    plastron_operation.status = status
+    plastron_operation.save!
+    self
   end
 
   private

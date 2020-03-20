@@ -144,11 +144,11 @@ input {
   font-weight: bold;
 }
 
-.export_job_status_failed {
+.export_job_status_failed, .export_job_status_error {
   color: #d83935;
 }
 
-.export_job_status_ready {
+.export_job_status_done {
   color: #03ab3a;
 }
 

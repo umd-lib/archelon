@@ -41,13 +41,27 @@ class StompClient
 
   # Updates ExportJob based on a Stomp message
   def update_export_job(stomp_msg)
-    headers = stomp_msg.headers
-    job_uri = headers['PlastronJobId']
-    Rails.logger.info "Updating export job #{job_uri}"
-    export_job = ExportJob.from_uri(job_uri)
-    export_job.status = headers['PlastronJobStatus']
-    body_data = JSON.parse(stomp_msg.body)
-    export_job.download_url = body_data['download_uri']
-    export_job.save
+    message = PlastronMessage.new(stomp_msg)
+    Rails.logger.info "Updating export job #{message.job_id}"
+    export_job = ExportJob.from_uri(message.job_id)
+    export_job.mark_as_completed(message.headers['PlastronJobStatus'])
+    export_job.download_url = message.body_json['download_uri']
+    export_job.save!
+  end
+end
+
+# Convenience class for Plastron STOMP messages
+class PlastronMessage
+  attr_reader :headers, :body, :job_id
+
+  def initialize(stomp_msg)
+    @headers = stomp_msg.headers
+    @body = stomp_msg.body
+    @job_id = @headers['PlastronJobId']
+  end
+
+  # Parse the message body as JSON and return the result.
+  def body_json
+    JSON.parse(@body)
   end
 end
