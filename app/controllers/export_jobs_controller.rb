@@ -103,7 +103,7 @@ class ExportJobsController < ApplicationController
     def submit_job(uris)
       body = uris.join("\n")
       headers = message_headers(@job)
-      STOMP_CLIENT.publish STOMP_CONFIG['export_jobs_queue'], body, headers
+      STOMP_CLIENT.publish STOMP_CONFIG['destinations']['jobs'], body, headers
       @job.plastron_operation.started = Time.zone.now
       @job.plastron_operation.status = :in_progress
       @job.plastron_operation.request_message = "#{headers_to_s(headers)}\n\n#{body}"

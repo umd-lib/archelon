@@ -41,11 +41,19 @@ class ExportJob < ApplicationRecord
     find(id)
   end
 
-  def mark_as_completed(status)
-    plastron_operation.completed = Time.zone.now
-    plastron_operation.status = status
+  def update_progress(message)
+    stats = message.body_json
+    progress = (stats['count']['exported'].to_f / stats['count']['total'] * 100).round
+    plastron_operation.progress = progress
     plastron_operation.save!
-    self
+  end
+
+  def update_status(message)
+    plastron_operation.completed = Time.zone.now
+    plastron_operation.status = message.headers['PlastronJobStatus']
+    plastron_operation.save!
+    self.download_url = message.body_json['download_uri']
+    save!
   end
 
   private
