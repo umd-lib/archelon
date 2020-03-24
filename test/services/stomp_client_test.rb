@@ -19,7 +19,7 @@ class StompClientTest < Minitest::Test
     job = ExportJob.new(name: 'test job', cas_user: cas_user, plastron_operation: op)
     job.save!
     message = create_message(job.id)
-    mock.update_export_job_status(message)
+    mock.update_export_job(message)
     job.reload
     assert job.plastron_operation.done?
   end
@@ -31,7 +31,7 @@ class StompClientTest < Minitest::Test
     job = ExportJob.new(name: 'test job', cas_user: cas_user, plastron_operation: op)
     job.save!
     message = create_message(job.id)
-    mock.update_export_job_status(message)
+    mock.update_export_job(message)
     job.reload
     assert job.plastron_operation.done?
   end
