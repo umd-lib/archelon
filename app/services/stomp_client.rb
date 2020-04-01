@@ -21,10 +21,16 @@ class StompClient
   end
 
   def subscribe
-    export_jobs_completed_queue = STOMP_CONFIG['export_jobs_completed_queue']
-    Rails.logger.debug "STOMP client subscribing to #{export_jobs_completed_queue}"
-    @stomp_client.subscribe export_jobs_completed_queue do |stomp_msg|
-      update_export_job(stomp_msg)
+    jobs_completed_queue = STOMP_CONFIG['destinations']['jobs_completed']
+    Rails.logger.debug "STOMP client subscribing to #{jobs_completed_queue}"
+    @stomp_client.subscribe jobs_completed_queue do |stomp_msg|
+      update_job_status(stomp_msg)
+    end
+
+    job_status_topic = STOMP_CONFIG['destinations']['job_status']
+    Rails.logger.debug "STOMP client subscribing to #{job_status_topic}"
+    @stomp_client.subscribe job_status_topic do |stomp_msg|
+      update_job_progress(stomp_msg)
     end
   end
 
@@ -39,14 +45,25 @@ class StompClient
     @stomp_client.publish destination, message, headers
   end
 
-  # Updates ExportJob based on a Stomp message
-  def update_export_job(stomp_msg)
+  # Updates job status based on a Stomp message
+  def update_job_status(stomp_msg)
     message = PlastronMessage.new(stomp_msg)
-    Rails.logger.info "Updating export job #{message.job_id}"
-    export_job = ExportJob.from_uri(message.job_id)
-    export_job.mark_as_completed(message.headers['PlastronJobStatus'])
-    export_job.download_url = message.body_json['download_uri']
-    export_job.save!
+    Rails.logger.debug "Updating job status for #{message.job_id}"
+    job_from_uri(message.job_id).update_status(message)
+  end
+
+  # Updates job status based on a Stomp message
+  def update_job_progress(stomp_msg)
+    message = PlastronMessage.new(stomp_msg)
+    Rails.logger.debug "Updating job progress for #{message.job_id}"
+    job_from_uri(message.job_id).update_progress(message)
+  end
+
+  # Get a job model instance from a URI
+  def job_from_uri(uri)
+    route = Rails.application.routes.recognize_path(uri)
+    model_class = route[:controller].classify.constantize
+    model_class.find(route[:id])
   end
 end
 
@@ -55,7 +72,7 @@ class PlastronMessage
   attr_reader :headers, :body, :job_id
 
   def initialize(stomp_msg)
-    @headers = stomp_msg.headers
+    @headers = stomp_msg.headers.with_indifferent_access
     @body = stomp_msg.body
     @job_id = @headers['PlastronJobId']
   end
