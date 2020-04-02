@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Import Jobs</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Cas user</th>
+      <th>Plastron operation</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @import_jobs.each do |import_job| %>
+      <tr>
+        <td><%= import_job.cas_user %></td>
+        <td><%= import_job.plastron_operation %></td>
+        <td><%= link_to 'Show', import_job %></td>
+        <td><%= link_to 'Edit', edit_import_job_path(import_job) %></td>
+        <td><%= link_to 'Destroy', import_job, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Import Job', new_import_job_path %>

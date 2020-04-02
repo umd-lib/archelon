@@ -1,0 +1,27 @@
+<%= form_with(model: import_job, local: true) do |form| %>
+  <% if import_job.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(import_job.errors.count, "error") %> prohibited this import_job from being saved:</h2>
+
+      <ul>
+      <% import_job.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :cas_user_id %>
+    <%= form.text_field :cas_user_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :plastron_operation_id %>
+    <%= form.text_field :plastron_operation_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

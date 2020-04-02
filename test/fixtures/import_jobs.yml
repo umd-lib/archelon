@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  cas_user: one
+  plastron_operation: one
+
+two:
+  cas_user: two
+  plastron_operation: two

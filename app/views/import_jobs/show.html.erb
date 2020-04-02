@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Cas user:</strong>
+  <%= @import_job.cas_user %>
+</p>
+
+<p>
+  <strong>Plastron operation:</strong>
+  <%= @import_job.plastron_operation %>
+</p>
+
+<%= link_to 'Edit', edit_import_job_path(@import_job) %> |
+<%= link_to 'Back', import_jobs_path %>
