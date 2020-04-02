@@ -2,8 +2,8 @@
 
 one:
   cas_user: one
-  plastron_operation: one
+  plastron_operation: import_op1
 
 two:
   cas_user: two
-  plastron_operation: two
+  plastron_operation: import_op2
