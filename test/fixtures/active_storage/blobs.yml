@@ -1,0 +1,16 @@
+# See https://stackoverflow.com/a/55835955
+one_blob:
+  key: 'TW1WnEgc9juhWyqpdwW8ZzUp'
+  filename: 'one.csv'
+  content_type: 'text/csv'
+  metadata: nil
+  byte_size: 275
+  checksum: "zJIVJPfwxpOUA3wsbeXocQ=="
+
+two_blob:
+  key: 'yiAo9fPFFEGNtmmWvvjA1NeY'
+  filename: 'two.csv'
+  content_type: 'text/csv'
+  metadata: nil
+  byte_size: 275
+  checksum: "zJIVJPfwxpOUA3wsbeXocQ=="

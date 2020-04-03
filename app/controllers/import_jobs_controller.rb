@@ -1,10 +1,16 @@
 class ImportJobsController < ApplicationController
-  before_action :set_import_job, only: [:show, :edit, :update, :destroy]
+  before_action :set_import_job, only: %i[show edit update destroy]
+  before_action :cancel_workflow?, only: %i[create]
 
   # GET /import_jobs
   # GET /import_jobs.json
   def index
-    @import_jobs = ImportJob.all
+    @import_jobs =
+      if current_cas_user.admin?
+        ImportJob.all.order('timestamp DESC')
+      else
+        ImportJob.where(cas_user: current_cas_user).order('timestamp DESC')
+      end
   end
 
   # GET /import_jobs/1
@@ -14,7 +20,8 @@ class ImportJobsController < ApplicationController
 
   # GET /import_jobs/new
   def new
-    @import_job = ImportJob.new
+    name = params[:name] || "#{current_cas_user.cas_directory_id}-#{Time.now.iso8601}"
+    @import_job = ImportJob.new(name: name)
   end
 
   # GET /import_jobs/1/edit
@@ -24,7 +31,7 @@ class ImportJobsController < ApplicationController
   # POST /import_jobs
   # POST /import_jobs.json
   def create
-    @import_job = ImportJob.new(import_job_params)
+    @import_job = create_job(import_job_params)
 
     respond_to do |format|
       if @import_job.save
@@ -62,13 +69,26 @@ class ImportJobsController < ApplicationController
   end
 
   private
+
+    def cancel_workflow?
+      redirect_to controller: :import_jobs, action: :index if params[:commit] == 'Cancel'
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_import_job
       @import_job = ImportJob.find(params[:id])
     end
 
+    def create_job(args)
+      ImportJob.new(args).tap do |job|
+        job.timestamp = Time.zone.now
+        job.cas_user = current_cas_user
+        job.plastron_operation = PlastronOperation.new status: :pending, progress: 0
+      end
+    end
+
     # Never trust parameters from the scary internet, only allow the white list through.
     def import_job_params
-      params.require(:import_job).permit(:cas_user_id, :plastron_operation_id)
+      params.require(:import_job).permit(:name, :file_to_upload)
     end
 end

@@ -2,28 +2,41 @@
 
 <h1>Import Jobs</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Cas user</th>
-      <th>Plastron operation</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @import_jobs.each do |import_job| %>
+<% if @import_jobs.count > 0 %>
+  <table class="table">
+    <thead>
       <tr>
-        <td><%= import_job.cas_user %></td>
-        <td><%= import_job.plastron_operation %></td>
-        <td><%= link_to 'Show', import_job %></td>
-        <td><%= link_to 'Edit', edit_import_job_path(import_job) %></td>
-        <td><%= link_to 'Destroy', import_job, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <th>Job ID</th>
+        <th>Job Name</th>
+        <th>User</th>
+        <th>Timestamp</th>
+        <th>Uploaded File</th>
+        <th>Status</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
 
-<br>
+    <tbody>
+      <% @import_jobs.each do |import_job| %>
+        <tr>
+          <td><%= import_job.id %></td>
+          <td><%= import_job.name %></td>
+          <td><%= import_job.cas_user&.name%></td>
+          <td><%= import_job.timestamp %></td>
+          <td><%= import_job.file_to_upload.filename %></td>
+          <td class="plastron_operation_status_<%= import_job.plastron_operation.status %>">
+            <%= PlastronOperation.statuses[import_job.plastron_operation.status] %>
+            <% unless import_job.plastron_operation.pending? || import_job.plastron_operation.done? %>
+              (<%= import_job.plastron_operation.progress %>%)
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <br>
+<% else %>
+  <p>No Import jobs found</p>
+<% end %>
 
 <%= link_to 'New Import Job', new_import_job_path %>

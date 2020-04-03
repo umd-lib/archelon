@@ -66,6 +66,11 @@ class ActiveSupport::TestCase
     cas_login(cas_directory_id)
   end
 
+  def mock_cas_logout()
+    request.env.delete('omniauth.auth')
+    session.delete(:cas_user)
+  end
+
   # Runs the contents of a block using the given user as the current_user.
   def impersonate_as_user(user) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     current_admin_user = CasUser.find_by(cas_directory_id: session[:cas_user])

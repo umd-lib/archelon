@@ -56,6 +56,12 @@ en:
         identifier: Identifier
         uri: Local Authority URI
         published_uri: Published URI
+    errors:
+      models:
+        import_job:
+          attributes:
+            file_to_upload:
+              required: 'is required'
     models:
       download_url: Download URL
       individual: Term
