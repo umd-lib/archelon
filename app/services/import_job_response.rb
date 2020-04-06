@@ -48,7 +48,8 @@ class ImportJobResponse
       validation = ImportJobLineValidation.new(v)
 
       # Skip any lines without validation errors
-      continue if validation.valid?
+      next if validation.valid?
+
       invalid_lines << validation
     end
   end

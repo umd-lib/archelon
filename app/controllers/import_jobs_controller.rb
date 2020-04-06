@@ -1,6 +1,6 @@
 class ImportJobsController < ApplicationController
-  before_action :set_import_job, only: %i[show edit update destroy]
-  before_action :cancel_workflow?, only: %i[create]
+  before_action :set_import_job, only: %i[update revalidate show edit update destroy]
+  before_action :cancel_workflow?, only: %i[create update]
 
   # GET /import_jobs
   # GET /import_jobs.json
@@ -17,6 +17,10 @@ class ImportJobsController < ApplicationController
   # GET /import_jobs/1.json
   def show
     response_message = @import_job.plastron_operation.response_message
+    set_import_response(response_message)
+  end
+
+  def set_import_response(response_message)
     import_job_response = ImportJobResponse.new(response_message)
 
     @valid = import_job_response.valid?
@@ -38,7 +42,6 @@ class ImportJobsController < ApplicationController
       end
     end
   end
-
   # GET /import_jobs/new
   def new
     name = params[:name] || "#{current_cas_user.cas_directory_id}-#{Time.now.iso8601}"
@@ -47,6 +50,8 @@ class ImportJobsController < ApplicationController
 
   # GET /import_jobs/1/edit
   def edit
+    response_message = @import_job.plastron_operation.response_message
+    set_import_response(response_message)
   end
 
   # POST /import_jobs
@@ -56,7 +61,7 @@ class ImportJobsController < ApplicationController
     return unless @import_job.save
 
     begin
-      submit_job(@import_job)
+      submit_job(@import_job, validate_only: true)
     rescue Stomp::Error::NoCurrentConnection
       @job.plastron_operation.status = :error
       @job.status = 'Error'
@@ -67,29 +72,31 @@ class ImportJobsController < ApplicationController
     redirect_to action: 'index', status: :see_other
   end
 
-  # PATCH/PUT /import_jobs/1
-  # PATCH/PUT /import_jobs/1.json
   def update
-    respond_to do |format|
-      if @import_job.update(import_job_params)
-        format.html { redirect_to @import_job, notice: 'Import job was successfully updated.' }
-        format.json { render :show, status: :ok, location: @import_job }
-      else
-        format.html { render :edit }
-        format.json { render json: @import_job.errors, status: :unprocessable_entity }
-      end
+    update_succeeded = @import_job.update(import_job_params)
+    return unless update_succeeded
+
+    begin
+        submit_job(@import_job, validate_only: false)
+    rescue Stomp::Error::NoCurrentConnection
+      @job.plastron_operation.status = :error
+      @job.status = 'Error'
+      @job.save
+      @job.plastron_operation.save!
+      flash[:error] = I18n.t(:active_mq_is_down)
     end
+    redirect_to action: 'index', status: :see_other
   end
 
-  # DELETE /import_jobs/1
-  # DELETE /import_jobs/1.json
-  def destroy
-    @import_job.destroy
-    respond_to do |format|
-      format.html { redirect_to import_jobs_url, notice: 'Import job was successfully destroyed.' }
-      format.json { head :no_content }
-    end
-  end
+  # # DELETE /import_jobs/1
+  # # DELETE /import_jobs/1.json
+  # def destroy
+  #   @import_job.destroy
+  #   respond_to do |format|
+  #     format.html { redirect_to import_jobs_url, notice: 'Import job was successfully destroyed.' }
+  #     format.json { head :no_content }
+  #   end
+  # end
 
   private
 
@@ -105,13 +112,14 @@ class ImportJobsController < ApplicationController
       ImportJob.new(args).tap do |job|
         job.timestamp = Time.zone.now
         job.cas_user = current_cas_user
+        job.stage = 'validate'
         job.plastron_operation = PlastronOperation.new status: :pending, progress: 0
       end
     end
 
-    def submit_job(import_job)
+    def submit_job(import_job, validate_only = false)
       body = import_job.file_to_upload.download
-      headers = message_headers(import_job)
+      headers = message_headers(import_job, validate_only: validate_only)
 
       import_job.plastron_operation.started = Time.zone.now
       import_job.plastron_operation.status = :in_progress
@@ -121,16 +129,18 @@ class ImportJobsController < ApplicationController
       STOMP_CLIENT.publish STOMP_CONFIG['destinations']['jobs'], body, headers
     end
 
-    def message_headers(job)
-      {
-        'PlastronCommand': 'import',
+    def message_headers(job, validate_only = false)
+      headers = {
+        PlastronCommand: 'import',
+        PlastronJobId: import_job_url(job),
         'PlastronArg-model': 'Issue',
-        'PlastronArg-validate-only': 'True',
-        'PlastronJobId': import_job_url(job),
         'PlastronArg-name': job.name,
         'PlastronArg-username': job.cas_user.cas_directory_id,
         'PlastronArg-timestamp': job.timestamp
       }
+
+      headers['PlastronArg-validate-only'] = 'True' if validate_only
+      headers
     end
 
     def headers_to_s(headers)

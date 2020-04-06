@@ -12,6 +12,7 @@
         <th>Timestamp</th>
         <th>Uploaded File</th>
         <th>Status</th>
+        <th></th>
       </tr>
     </thead>
 
@@ -23,12 +24,15 @@
           <td><%= import_job.cas_user&.name%></td>
           <td><%= import_job.timestamp %></td>
           <td><%= import_job.file_to_upload.filename %></td>
-          <td class="plastron_operation_status_<%= import_job.plastron_operation.status %>">
-            <%= PlastronOperation.statuses[import_job.plastron_operation.status] %>
-            <% unless import_job.plastron_operation.pending? || import_job.plastron_operation.done? %>
+          <td class="plastron_operation_status_<%= import_job.status %>">
+            <%= import_job.status %>
+            <% if import_job.status.nil? %>
               (<%= import_job.plastron_operation.progress %>%)
             <% end %>
           </td>
+          <% if !import_job.workflow_url.nil? %>
+            <td><%= link_to import_job.workflow_action, import_job.workflow_url %></td>
+          <% end %>
         </tr>
       <% end %>
     </tbody>

@@ -76,4 +76,11 @@ Rails.application.configure do
 
   # add RDF MIME types so static files in the public dir get served correctly
   Rack::Mime::MIME_TYPES.merge!({'.nt' => 'application/n-triples', '.ttl' => 'text/turtle'})
+
+  # Use "inline" queue to force synchronous operation. This appears to be
+  # necessary when using SQLite because of a SQLite3::BusyException: database is locked
+  # exception when resubmitting imports (which is attempting to delete the old
+  # import attachment).
+  # See https://github.com/rails/rails/issues/30937
+  config.active_job.queue_adapter = :inline
 end
