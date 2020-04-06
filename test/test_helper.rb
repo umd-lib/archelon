@@ -101,4 +101,23 @@ class ActiveSupport::TestCase
       mock_cas_login(DEFAULT_TEST_USER)
     end
   end
+
+  # Replaces STOMP_CLIENT with the MockStompClient
+  def mock_stomp_client(client = MockStompClient.instance)
+    Object.const_set('STOMP_CLIENT', client)
+  end
+end
+
+class MockStompClient < StompClient
+  def initialize
+    # Skip initialization
+  end
+
+  def publish(destination, message, headers = {})
+    # Do nothing
+  end
+
+  def connected?
+    true
+  end
 end

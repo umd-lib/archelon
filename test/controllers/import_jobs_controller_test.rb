@@ -59,6 +59,8 @@ class ImportJobsControllerTest < ActionController::TestCase
   end
 
   test 'should create import_job' do
+    mock_stomp_client
+
     name = "#{@cas_user.cas_directory_id}-#{Time.now.iso8601}"
     assert_difference('ImportJob.count') do
       post :create, params: {
@@ -66,7 +68,7 @@ class ImportJobsControllerTest < ActionController::TestCase
       }
     end
 
-    assert_redirected_to import_job_url(ImportJob.last)
+    assert_redirected_to import_jobs_url
   end
 
   test 'name is required when creating import_job' do
@@ -96,27 +98,4 @@ class ImportJobsControllerTest < ActionController::TestCase
     assert_includes(import_job.errors.messages[:file_to_upload],
                     I18n.t('activerecord.errors.models.import_job.attributes.file_to_upload.required'))
   end
-
-  # test "should show import_job" do
-  #   get import_job_url(@import_job)
-  #   assert_response :success
-  # end
-
-  # test "should get edit" do
-  #   get edit_import_job_url(@import_job)
-  #   assert_response :success
-  # end
-
-  # test "should update import_job" do
-  #   patch import_job_url(@import_job), params: { import_job: { cas_user_id: @import_job.cas_user_id, plastron_operation_id: @import_job.plastron_operation_id } }
-  #   assert_redirected_to import_job_url(@import_job)
-  # end
-
-  # test "should destroy import_job" do
-  #   assert_difference('ImportJob.count', -1) do
-  #     delete import_job_url(@import_job)
-  #   end
-
-  #   assert_redirected_to import_jobs_url
-  # end
 end

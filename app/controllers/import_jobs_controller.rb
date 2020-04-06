@@ -16,6 +16,27 @@ class ImportJobsController < ApplicationController
   # GET /import_jobs/1
   # GET /import_jobs/1.json
   def show
+    response_message = @import_job.plastron_operation.response_message
+    import_job_response = ImportJobResponse.new(response_message)
+
+    @valid = import_job_response.valid?
+    @num_total = import_job_response.num_total
+    @num_valid = import_job_response.num_valid
+    @num_invalid = import_job_response.num_invalid
+    @num_error = import_job_response.num_error
+
+    invalid_lines = import_job_response.invalid_lines
+
+    @invalid_line_descriptions = []
+    invalid_lines.each do |line|
+      if line.line_error?
+        @invalid_line_descriptions << line.line_error
+      elsif line.field_errors?
+        bad_fields = line.field_errors.join(',')
+        description = "#{line.line_location}, #{bad_fields}"
+        @invalid_line_descriptions << description
+      end
+    end
   end
 
   # GET /import_jobs/new
@@ -32,16 +53,18 @@ class ImportJobsController < ApplicationController
   # POST /import_jobs.json
   def create
     @import_job = create_job(import_job_params)
+    return unless @import_job.save
 
-    respond_to do |format|
-      if @import_job.save
-        format.html { redirect_to @import_job, notice: 'Import job was successfully created.' }
-        format.json { render :show, status: :created, location: @import_job }
-      else
-        format.html { render :new }
-        format.json { render json: @import_job.errors, status: :unprocessable_entity }
-      end
+    begin
+      submit_job(@import_job)
+    rescue Stomp::Error::NoCurrentConnection
+      @job.plastron_operation.status = :error
+      @job.status = 'Error'
+      @job.save
+      @job.plastron_operation.save!
+      flash[:error] = I18n.t(:active_mq_is_down)
     end
+    redirect_to action: 'index', status: :see_other
   end
 
   # PATCH/PUT /import_jobs/1
@@ -74,7 +97,6 @@ class ImportJobsController < ApplicationController
       redirect_to controller: :import_jobs, action: :index if params[:commit] == 'Cancel'
     end
 
-    # Use callbacks to share common setup or constraints between actions.
     def set_import_job
       @import_job = ImportJob.find(params[:id])
     end
@@ -85,6 +107,34 @@ class ImportJobsController < ApplicationController
         job.cas_user = current_cas_user
         job.plastron_operation = PlastronOperation.new status: :pending, progress: 0
       end
+    end
+
+    def submit_job(import_job)
+      body = import_job.file_to_upload.download
+      headers = message_headers(import_job)
+
+      import_job.plastron_operation.started = Time.zone.now
+      import_job.plastron_operation.status = :in_progress
+      import_job.plastron_operation.request_message = "#{headers_to_s(headers)}\n\n#{body}"
+      import_job.plastron_operation.save!
+
+      STOMP_CLIENT.publish STOMP_CONFIG['destinations']['jobs'], body, headers
+    end
+
+    def message_headers(job)
+      {
+        'PlastronCommand': 'import',
+        'PlastronArg-model': 'Issue',
+        'PlastronArg-validate-only': 'True',
+        'PlastronJobId': import_job_url(job),
+        'PlastronArg-name': job.name,
+        'PlastronArg-username': job.cas_user.cas_directory_id,
+        'PlastronArg-timestamp': job.timestamp
+      }
+    end
+
+    def headers_to_s(headers)
+      headers.map { |k, v| [k, v].join(': ') }.join("\n")
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

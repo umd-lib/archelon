@@ -2,12 +2,6 @@
 
 require 'test_helper'
 
-class MockStompClient < StompClient
-  def initialize
-    # Skip initialization
-  end
-end
-
 class StompClientTest < Minitest::Test
   def setup
   end
