@@ -1,6 +1,6 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Import Jobs</h1>
+<h1>Metadata Import</h1>
 
 <% if @import_jobs.count > 0 %>
   <table class="table">
@@ -26,18 +26,19 @@
           <td><%= import_job.file_to_upload.filename %></td>
           <% if import_job.status.nil? %>
             <td class="plastron_operation_status_<%= import_job.status %>">
-              (<%= import_job.plastron_operation.progress %>%)
+              <%= I18n.t("activerecord.models.import_job.attributes.stage.#{import_job.stage}") %> (<%= import_job.plastron_operation.progress %>%)
             </td>
           <% else %>
             <td class="import_job_status_<%= import_job.status %>">
-              <%= import_job.status %>
+              <%= I18n.t("activerecord.models.import_job.attributes.status.#{import_job.status}") %>
             </td>
           <% end %>
           <% if import_job.workflow_action == :resubmit %>
             <td><%= link_to 'Resubmit', edit_import_job_path(import_job) %></td>
-          <% end %>
-          <% if import_job.workflow_action == :import %>
+          <% elsif import_job.workflow_action == :import %>
             <td><%= button_to 'Import', perform_import_import_jobs_path(import_job) %>
+          <% else %>
+            <td></td>
           <% end %>
         </tr>
       <% end %>
