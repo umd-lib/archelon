@@ -1,10 +1,12 @@
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title">Validation Results</h3>
+    <h3 class="panel-title"><%= panel_title %></h3>
   </div>
   <div class="panel-body">
     <p>Valid? <%= @valid %></p>
     <p>Total records <%= @num_total %></p>
+    <p>Updated records <%= @num_updated %></p>
+    <p>Unchanged records <%= @num_unchanged %></p>
     <p>Valid records <%= @num_valid %></p>
     <p>Invalid records <%= @num_invalid %></p>
     <p>Error records <%= @num_error %></p>

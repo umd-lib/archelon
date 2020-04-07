@@ -8,7 +8,7 @@
   <%= @import_job.status %>
 </p>
 
-<%= render partial: "import_job_validation_panel", locals: {import_job: @import_job} %>
+<%= render partial: "import_job_validation_panel", locals: {import_job: @import_job, panel_title: 'Validation Results'} %>
 
 <div class="panel panel-default">
   <div class="panel-heading">
