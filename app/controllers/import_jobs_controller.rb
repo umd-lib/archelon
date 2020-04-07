@@ -1,5 +1,5 @@
 class ImportJobsController < ApplicationController
-  before_action :set_import_job, only: %i[update revalidate show edit update destroy]
+  before_action :set_import_job, only: %i[update revalidate show edit update import destroy]
   before_action :cancel_workflow?, only: %i[create update]
 
   # GET /import_jobs
@@ -61,7 +61,7 @@ class ImportJobsController < ApplicationController
     return unless @import_job.save
 
     begin
-      submit_job(@import_job, validate_only: true)
+      submit_job(@import_job, true)
     rescue Stomp::Error::NoCurrentConnection
       @job.plastron_operation.status = :error
       @job.status = 'Error'
@@ -77,7 +77,22 @@ class ImportJobsController < ApplicationController
     return unless update_succeeded
 
     begin
-        submit_job(@import_job, validate_only: false)
+        submit_job(@import_job, true)
+    rescue Stomp::Error::NoCurrentConnection
+      @job.plastron_operation.status = :error
+      @job.status = 'Error'
+      @job.save
+      @job.plastron_operation.save!
+      flash[:error] = I18n.t(:active_mq_is_down)
+    end
+    redirect_to action: 'index', status: :see_other
+  end
+
+  def import
+    begin
+      submit_job(@import_job, false)
+      @import_job.stage = 'import'
+      @import_job.save!
     rescue Stomp::Error::NoCurrentConnection
       @job.plastron_operation.status = :error
       @job.status = 'Error'
@@ -117,9 +132,9 @@ class ImportJobsController < ApplicationController
       end
     end
 
-    def submit_job(import_job, validate_only = false)
+    def submit_job(import_job, validate_only)
       body = import_job.file_to_upload.download
-      headers = message_headers(import_job, validate_only: validate_only)
+      headers = message_headers(import_job, validate_only)
 
       import_job.plastron_operation.started = Time.zone.now
       import_job.plastron_operation.status = :in_progress
@@ -129,7 +144,7 @@ class ImportJobsController < ApplicationController
       STOMP_CLIENT.publish STOMP_CONFIG['destinations']['jobs'], body, headers
     end
 
-    def message_headers(job, validate_only = false)
+    def message_headers(job, validate_only)
       headers = {
         PlastronCommand: 'import',
         PlastronJobId: import_job_url(job),

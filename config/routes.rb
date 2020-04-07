@@ -54,7 +54,11 @@ Rails.application.routes.draw do # rubocop:disable Metrics/BlockLength
     end
   end
 
-  resources :import_jobs
+  resources :import_jobs do
+    collection do
+      post ':id/import', to: 'import_jobs#import', as: 'perform_import'
+    end
+  end
 
   get 'login', to: redirect('/auth/cas'), as: 'login'
   get 'admin/user/login_as/:user_id', to: 'sessions#login_as', as: 'admin_user_login_as'

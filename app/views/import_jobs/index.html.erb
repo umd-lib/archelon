@@ -33,6 +33,9 @@
           <% if !import_job.workflow_url.nil? %>
             <td><%= link_to import_job.workflow_action, import_job.workflow_url %></td>
           <% end %>
+          <% if import_job.status == :validate_success %>
+            <td><%= button_to 'Import', perform_import_import_jobs_path(import_job) %>
+          <% end %>
         </tr>
       <% end %>
     </tbody>
