@@ -40,6 +40,15 @@ en:
   selected_items_changed: 'Selected items has changed. Please review.'
   activerecord:
     attributes:
+      import_job:
+        stage:
+          import: Import
+          validate: Validation
+        status:
+          validate_success: Validation Successful
+          validate_failed: Validation Failed
+          import_success: Import Successful
+          import_failed: Import Failed
       individual:
         identifier: Identifier
         label: Term
@@ -67,16 +76,6 @@ en:
       individual: Term
       type: Class
       vocabulary: Vocabulary
-      import_job:
-        attributes:
-          stage:
-            import: Import
-            validate: Validation
-          status:
-            validate_success: Validation Successful
-            validate_failed: Validation Failed
-            import_success: Import Successful
-            import_failed: Import Failed
   tooltips:
     identifier: This will be used as the local id and populate the URI of the local vocabulary term.
     same_as: This should be a full URI to an external vocabulary such as LC Genre/Form Terms, AAT, LCSH

@@ -60,18 +60,21 @@ class ImportJobsController < ApplicationController
   # POST /import_jobs.json
   def create
     @import_job = create_job(import_job_params)
-    return unless @import_job.save
+    if @import_job.save
 
-    begin
-      submit_job(@import_job, true)
-    rescue Stomp::Error::NoCurrentConnection
-      @job.plastron_operation.status = :error
-      @job.status = 'Error'
-      @job.save
-      @job.plastron_operation.save!
-      flash[:error] = I18n.t(:active_mq_is_down)
+      begin
+        submit_job(@import_job, true)
+      rescue Stomp::Error::NoCurrentConnection
+        @job.plastron_operation.status = :error
+        @job.status = 'Error'
+        @job.save
+        @job.plastron_operation.save!
+        flash[:error] = I18n.t(:active_mq_is_down)
+      end
+      redirect_to action: 'index', status: :see_other
+      return
     end
-    redirect_to action: 'index', status: :see_other
+    render :new
   end
 
   def update
