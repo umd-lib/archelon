@@ -61,7 +61,6 @@ class ImportJobsController < ApplicationController
   def create
     @import_job = create_job(import_job_params)
     if @import_job.save
-
       begin
         submit_job(@import_job, true)
       rescue Stomp::Error::NoCurrentConnection
@@ -78,19 +77,37 @@ class ImportJobsController < ApplicationController
   end
 
   def update
-    update_succeeded = @import_job.update(import_job_params)
-    return unless update_succeeded
+    valid_update = @import_job.update(import_job_params)
 
-    begin
-        submit_job(@import_job, true)
-    rescue Stomp::Error::NoCurrentConnection
-      @job.plastron_operation.status = :error
-      @job.status = 'Error'
-      @job.save
-      @job.plastron_operation.save!
-      flash[:error] = I18n.t(:active_mq_is_down)
+    # Need special handing of "file_to_upload", because if we're gotten this
+    # far, the @import_job already has a file attached, so the
+    # "attachment_validation" method on the model won't catch that the
+    # update form submission doesn't have new file attached.
+    #
+    # Need to have the method after the call to @import_job.update, as
+    # update clears the "errors" array
+    if import_job_params['file_to_upload'].nil?
+      @import_job.errors.add(:file_to_upload, :required)
+      valid_update = false
     end
-    redirect_to action: 'index', status: :see_other
+
+    if valid_update && @import_job.save
+      begin
+        submit_job(@import_job, true)
+      rescue Stomp::Error::NoCurrentConnection
+        @job.plastron_operation.status = :error
+        @job.status = 'Error'
+        @job.save
+        @job.plastron_operation.save!
+        flash[:error] = I18n.t(:active_mq_is_down)
+      end
+      redirect_to action: 'index', status: :see_other
+      return
+    end
+
+    response_message = @import_job.plastron_operation.response_message
+    set_import_response(response_message)
+    render :edit
   end
 
   def import

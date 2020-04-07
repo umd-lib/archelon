@@ -98,4 +98,22 @@ class ImportJobsControllerTest < ActionController::TestCase
     assert_includes(import_job.errors.messages[:file_to_upload],
                     I18n.t('activerecord.errors.models.import_job.attributes.file_to_upload.required'))
   end
+
+  test 'file attachment is required when updating import_job' do
+    import_job = ImportJob.first
+    patch :update, params: { id: import_job.id, import_job: { name: import_job.name } }
+    result = assigns(:import_job)
+    assert_includes(result.errors.messages[:file_to_upload],
+                    I18n.t('activerecord.errors.models.import_job.attributes.file_to_upload.required'))
+    assert_template :edit
+  end
+
+  test 'name cannot be blank when updating import_job' do
+    import_job = ImportJob.first
+    patch :update, params: { id: import_job.id, import_job: { name: '' } }
+    result = assigns(:import_job)
+    assert_includes(result.errors.messages[:name],
+                    I18n.t('errors.messages.blank'))
+    assert_template :edit
+  end
 end
