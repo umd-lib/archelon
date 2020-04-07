@@ -1,52 +1,21 @@
 <h1>Editing Import Job</h1>
 
-<p>
-  <strong>Job ID:</strong>
-  <%= @import_job.id %>
-</p>
+<%= render partial: "import_job_info_panel", locals: {import_job: @import_job} %>
 
-<p>
-  <strong>Job Name:</strong>
-  <%= @import_job.name %>
-</p>
-
-<p>
-  <strong>User:</strong>
-  <%= @import_job.cas_user&.name %>
-</p>
-
-<p>
-  <strong>Timestamp:</strong>
-  <%= @import_job.timestamp %>
-</p>
-
-<p>
-  <strong>File to upload:</strong>
-  <%= @import_job.file_to_upload.filename %>
-</p>
 
 <p>
   <strong>Status:</strong>
   <%= @import_job.status %>
 </p>
 
-<p>
-  <strong>Validation Results</strong>
-  <p>Valid? <%= @valid %></p>
-  <p>Total records <%= @num_total %></p>
-  <p>Valid records <%= @num_valid %></p>
-  <p>Invalid records <%= @num_invalid %></p>
-  <p>Error records <%= @num_error %></p>
-  <% if @invalid_line_descriptions.any? %>
-    <ul>
-    <% @invalid_line_descriptions.each do |desc| %>
-      <li><%= desc %></li>
-    <% end %>
-    </ul>
-  <% end %>
-</p>
+<%= render partial: "import_job_validation_panel", locals: {import_job: @import_job} %>
 
-<%= render 'form', import_job: @import_job %>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Resubmit Job</h3>
+  </div>
+  <div class="panel-body">
+    <%= render 'form', import_job: @import_job %>
+  </div>
+</div>
 
-<%= link_to 'Show', @import_job %> |
-<%= link_to 'Back', import_jobs_path %>

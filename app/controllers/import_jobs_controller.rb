@@ -25,6 +25,8 @@ class ImportJobsController < ApplicationController
 
     @valid = import_job_response.valid?
     @num_total = import_job_response.num_total
+    @num_updated = import_job_response.num_updated
+    @num_unchanged = import_job_response.num_unchanged
     @num_valid = import_job_response.num_valid
     @num_invalid = import_job_response.num_invalid
     @num_error = import_job_response.num_error

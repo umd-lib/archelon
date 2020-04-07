@@ -209,3 +209,12 @@ input {
   visibility: visible;
   opacity: 1;
 }
+
+/* Import Job Status */
+.import_job_status_validate_success, .import_job_status_import_success {
+  color: #03ab3a;
+}
+
+.import_job_status_validate_failed, .import_job_status_import_failed {
+  color: #d83935;
+}

@@ -26,7 +26,7 @@ class ImportJobResponseTest < Minitest::Test
     invalid_jsons = [
       '{ "foo": "bar" }',
       '{ "count": { "foo": "bar" } }',
-      '{ "count": { "total": 1, "valid": 1, "invalid": 0, "errors": "abc" } }'
+      '{ "count": { "total": 1, "updated": 0, "unchanged": 0, "valid": 1, "invalid": 0, "errors": "abc" } }'
     ]
 
     invalid_jsons.each do |json|
@@ -39,8 +39,8 @@ class ImportJobResponseTest < Minitest::Test
 
   def test_valid_JSON_and_successful_validation
     jsons = [
-      '{ "count": { "total": 1, "valid": 1, "invalid": 0, "errors": 0 } }',
-      '{ "count": { "total": 45, "valid": 45, "invalid": 0, "errors": 0 } }'
+      '{ "count": { "total": 1, "updated": 0, "unchanged": 0, "valid": 1, "invalid": 0, "errors": 0 } }',
+      '{ "count": { "total": 45, "updated": 0, "unchanged": 0, "valid": 45, "invalid": 0, "errors": 0 } }'
     ]
 
     jsons.each do |json|
@@ -59,8 +59,8 @@ class ImportJobResponseTest < Minitest::Test
 
   def test_valid_JSON_and_failed_validation
     jsons = [
-      '{ "count": { "total": 2, "valid": 1, "invalid": 1, "errors": "0" }, "validation": [] }',
-      '{ "count": { "total": 47 ,"valid": 45, "invalid": 0, "errors": 2 }, "validation": [] }'
+      '{ "count": { "total": 2, "updated": 0, "unchanged": 0, "valid": 1, "invalid": 1, "errors": "0" }, "validation": [] }',
+      '{ "count": { "total": 47, "updated": 0, "unchanged": 0, "valid": 45, "invalid": 0, "errors": 2 }, "validation": [] }'
     ]
 
     jsons.each do |json|

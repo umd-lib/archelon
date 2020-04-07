@@ -15,37 +15,20 @@ class ImportJob < ApplicationRecord
   def status
     return "#{stage}_pending".to_sym if plastron_operation.pending?
 
-    if plastron_operation.done?
-      response = ImportJobResponse.new(plastron_operation.response_message)
-      return "#{stage}_success".to_sym if response.valid?
-      return "#{stage}_failed".to_sym if !response.valid?
-    end
-    nil
+    return nil unless plastron_operation.done?
+
+    response = ImportJobResponse.new(plastron_operation.response_message)
+    return "#{stage}_success".to_sym if response.valid?
+
+    "#{stage}_failed".to_sym
   end
 
   def workflow_action
-    # Returns the URL to use for the next step in the workflow
     case status
     when :validate_success
-      'Import'
+      :import
     when :validate_failed
-      'Resubmit'
-    else
-      # Anything else (such as "Pending"), return nil
-      nil
-    end
-  end
-
-  def workflow_url
-    # Returns the URL to use for the next step in the workflow
-    case status
-    when :validate_success
-      '/foo'
-    when :validate_failed
-      Rails.application.routes.url_helpers.edit_import_job_path(self)
-    else
-      # Anything else (such as "Pending"), return nil
-      nil
+      :resubmit
     end
   end
 
@@ -61,7 +44,6 @@ class ImportJob < ApplicationRecord
     plastron_operation.status = message.headers['PlastronJobStatus']
     plastron_operation.response_message = message.body
     plastron_operation.save!
-#    self.download_url = message.body_json['download_uri']
     save
   end
 end
