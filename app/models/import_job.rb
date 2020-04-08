@@ -53,7 +53,9 @@ class ImportJob < ApplicationRecord
   end
 
   # Returns a symbol reflecting the current status
-  def status
+  def status # rubocop:disable Metrics/AbcSize
+    return :error if plastron_operation.error?
+
     return "#{stage}_pending".to_sym if plastron_operation.pending?
 
     return :in_progress unless plastron_operation.done?

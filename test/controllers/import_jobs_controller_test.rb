@@ -118,4 +118,51 @@ class ImportJobsControllerTest < ActionController::TestCase
                     I18n.t('errors.messages.blank'))
     assert_template :edit
   end
+
+  test 'create should report error when STOMP client is not connected' do
+    mock_stomp_client(UnconnectedMockStompClient.instance)
+
+    # Verify that STOMP_CLIENT actually raises Stomp::Error::NoCurrentConnection
+    assert_raises(Stomp::Error::NoCurrentConnection) do
+      STOMP_CLIENT.publish(nil, nil, nil)
+    end
+
+    post :create, params: {
+      import_job: { name: name, file_to_upload: fixture_file_upload('files/valid_import.csv') }
+    }
+
+    import_job = assigns(:import_job)
+    assert_equal(:error, import_job.status)
+  end
+
+  test 'update should report error when STOMP client is not connected' do
+    mock_stomp_client(UnconnectedMockStompClient.instance)
+
+    # Verify that STOMP_CLIENT actually raises Stomp::Error::NoCurrentConnection
+    assert_raises(Stomp::Error::NoCurrentConnection) do
+      STOMP_CLIENT.publish(nil, nil, nil)
+    end
+
+    import_job = ImportJob.first
+    patch :update, params: { id: import_job.id,
+                             import_job: { name: import_job.name, file_to_upload: fixture_file_upload('files/valid_import.csv') } }
+    result = assigns(:import_job)
+    assert_equal(:error, result.status)
+  end
+
+  test 'import should report error when STOMP client is not connected' do
+    mock_stomp_client(UnconnectedMockStompClient.instance)
+
+    # Verify that STOMP_CLIENT actually raises Stomp::Error::NoCurrentConnection
+    assert_raises(Stomp::Error::NoCurrentConnection) do
+      STOMP_CLIENT.publish(nil, nil, nil)
+    end
+
+    import_job = ImportJob.first
+    import_job.file_to_upload = fixture_file_upload('files/valid_import.csv')
+    import_job.save!
+    patch :import, params: { id: import_job.id }
+    result = assigns(:import_job)
+    assert_equal(:error, result.status)
+  end
 end

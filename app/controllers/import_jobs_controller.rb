@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ImportJobsController < ApplicationController # rubocop:disable Metrics/ClassLength
+class ImportJobsController < ApplicationController
   before_action :set_import_job, only: %i[update show edit update import]
   before_action :cancel_workflow?, only: %i[create update]
 
@@ -36,25 +36,17 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
 
   # POST /import_jobs
   # POST /import_jobs.json
-  def create # rubocop:disable Metrics/MethodLength
+  def create
     @import_job = create_job(import_job_params)
     if @import_job.save
-      begin
-        submit_job(@import_job, true)
-      rescue Stomp::Error::NoCurrentConnection
-        @job.plastron_operation.status = :error
-        @job.status = :error
-        @job.save
-        @job.plastron_operation.save!
-        flash[:error] = I18n.t(:active_mq_is_down)
-      end
+      submit_job(@import_job, true)
       redirect_to action: 'index', status: :see_other
       return
     end
     render :new
   end
 
-  def update # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+  def update # rubocop:disable Metrics/MethodLength
     valid_update = @import_job.update(import_job_params)
 
     # Need special handing of "file_to_upload", because if we're gotten this
@@ -70,15 +62,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     end
 
     if valid_update && @import_job.save
-      begin
-        submit_job(@import_job, true)
-      rescue Stomp::Error::NoCurrentConnection
-        @job.plastron_operation.status = :error
-        @job.status = :error
-        @job.save
-        @job.plastron_operation.save!
-        flash[:error] = I18n.t(:active_mq_is_down)
-      end
+      submit_job(@import_job, true)
       redirect_to action: 'index', status: :see_other
       return
     end
@@ -88,18 +72,10 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     render :edit
   end
 
-  def import # rubocop:disable Metrics/MethodLength
-    begin
-      submit_job(@import_job, false)
-      @import_job.stage = 'import'
-      @import_job.save!
-    rescue Stomp::Error::NoCurrentConnection
-      @job.plastron_operation.status = :error
-      @job.status = :error
-      @job.save
-      @job.plastron_operation.save!
-      flash[:error] = I18n.t(:active_mq_is_down)
-    end
+  def import
+    submit_job(@import_job, false)
+    @import_job.stage = 'import'
+    @import_job.save!
     redirect_to action: 'index', status: :see_other
   end
 
@@ -122,7 +98,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
       end
     end
 
-    def submit_job(import_job, validate_only)
+    def submit_job(import_job, validate_only) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       body = import_job.file_to_upload.download
       headers = message_headers(import_job, validate_only)
 
@@ -130,8 +106,12 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
       import_job.plastron_operation.status = :in_progress
       import_job.plastron_operation.request_message = "#{headers_to_s(headers)}\n\n#{body}"
       import_job.plastron_operation.save!
-
       STOMP_CLIENT.publish STOMP_CONFIG['destinations']['jobs'], body, headers
+    rescue Stomp::Error::NoCurrentConnection
+      import_job.plastron_operation.status = :error
+      import_job.save
+      import_job.plastron_operation.save!
+      flash[:error] = I18n.t(:active_mq_is_down)
     end
 
     def message_headers(job, validate_only)

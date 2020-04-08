@@ -104,6 +104,8 @@ class ActiveSupport::TestCase
 
   # Replaces STOMP_CLIENT with the MockStompClient
   def mock_stomp_client(client = MockStompClient.instance)
+    # Remove constant, if set, to avoid warning about resetting the constant
+    Object.send(:remove_const, 'STOMP_CLIENT') if Object.const_defined?('STOMP_CLIENT')
     Object.const_set('STOMP_CLIENT', client)
   end
 end
@@ -119,5 +121,16 @@ class MockStompClient < StompClient
 
   def connected?
     true
+  end
+end
+
+# Variant of MockStompClient simulating unconnected client
+class UnconnectedMockStompClient < MockStompClient
+  def publish(_destination, _message, _headers = {})
+    raise Stomp::Error::NoCurrentConnection
+  end
+
+  def connected?
+    false
   end
 end
