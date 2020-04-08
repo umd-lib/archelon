@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ImportJobsController < ApplicationController
+class ImportJobsController < ApplicationController # rubocop:disable Metrics/ClassLength
   before_action :set_import_job, only: %i[update show edit update import]
   before_action :cancel_workflow?, only: %i[create update]
 
@@ -30,6 +30,12 @@ class ImportJobsController < ApplicationController
 
   # GET /import_jobs/1/edit
   def edit
+    if @import_job.stage == 'import'
+      flash[:error] = I18n.t(:import_already_performed)
+      redirect_to action: 'index', status: :see_other
+      return
+    end
+
     response_message = @import_job.plastron_operation.response_message
     @import_job_response = ImportJobResponse.new(response_message)
   end
@@ -46,7 +52,13 @@ class ImportJobsController < ApplicationController
     render :new
   end
 
-  def update # rubocop:disable Metrics/MethodLength
+  def update # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+    if @import_job.stage == 'import'
+      flash[:error] = I18n.t(:import_already_performed)
+      redirect_to action: 'index', status: :see_other
+      return
+    end
+
     valid_update = @import_job.update(import_job_params)
 
     # Need special handing of "file_to_upload", because if we're gotten this
@@ -72,7 +84,19 @@ class ImportJobsController < ApplicationController
     render :edit
   end
 
-  def import
+  def import # rubocop:disable Metrics/MethodLength
+    if @import_job.status == :import_success || @import_job.status == :import_failed
+      flash[:error] = I18n.t(:import_already_performed)
+      redirect_to action: 'index', status: :see_other
+      return
+    end
+
+    if @import_job.status == :validate_failed
+      flash[:error] = I18n.t(:cannot_import_invalid_file)
+      redirect_to action: 'index', status: :see_other
+      return
+    end
+
     submit_job(@import_job, false)
     @import_job.stage = 'import'
     @import_job.save!

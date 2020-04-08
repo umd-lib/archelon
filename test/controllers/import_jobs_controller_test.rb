@@ -165,4 +165,51 @@ class ImportJobsControllerTest < ActionController::TestCase
     result = assigns(:import_job)
     assert_equal(:error, result.status)
   end
+
+  test 'should not be able to edit a job that is in "import" stage' do
+    import_job = ImportJob.first
+    import_job.stage = 'import'
+    import_job.save!
+    get :edit, params: { id: import_job.id }
+    assert_redirected_to import_jobs_url
+    assert_equal I18n.t(:import_already_performed), flash[:error]
+  end
+
+  test 'should not be able to update a job that is in "import" stage' do
+    import_job = ImportJob.first
+    import_job.stage = 'import'
+    import_job.save!
+    patch :update, params: { id: import_job.id,
+                             import_job: { name: import_job.name, file_to_upload: fixture_file_upload('files/valid_import.csv') } }
+    assert_redirected_to import_jobs_url
+    assert_equal I18n.t(:import_already_performed), flash[:error]
+  end
+
+  test 'should not be able to import a job where the import has completed' do
+    import_job = ImportJob.first
+    import_job.stage = 'import'
+    import_job.save!
+
+    statuses = %i[import_success import_failed]
+    statuses.each do |status|
+      ImportJob.any_instance.stub(:status).and_return(status)
+      patch :import, params: { id: import_job.id }
+      assert_redirected_to import_jobs_url
+      assert_equal I18n.t(:import_already_performed), flash[:error], "Allowed import when status is #{status}"
+    end
+  end
+
+  test 'should not be able to import a job with validation errors' do
+    import_job = ImportJob.first
+    import_job.stage = 'import'
+    import_job.save!
+
+    statuses = %i[validate_failed]
+    statuses.each do |status|
+      ImportJob.any_instance.stub(:status).and_return(status)
+      patch :import, params: { id: import_job.id }
+      assert_redirected_to import_jobs_url
+      assert_equal I18n.t(:cannot_import_invalid_file), flash[:error], "Allowed import when status is #{status}"
+    end
+  end
 end
