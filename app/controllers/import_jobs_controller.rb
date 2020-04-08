@@ -1,4 +1,6 @@
-class ImportJobsController < ApplicationController
+# frozen_string_literal: true
+
+class ImportJobsController < ApplicationController # rubocop:disable Metrics/ClassLength
   before_action :set_import_job, only: %i[update revalidate show edit update import destroy]
   before_action :cancel_workflow?, only: %i[create update]
 
@@ -17,33 +19,9 @@ class ImportJobsController < ApplicationController
   # GET /import_jobs/1.json
   def show
     response_message = @import_job.plastron_operation.response_message
-    set_import_response(response_message)
+    @import_job_response = ImportJobResponse.new(response_message)
   end
 
-  def set_import_response(response_message)
-    import_job_response = ImportJobResponse.new(response_message)
-
-    @valid = import_job_response.valid?
-    @num_total = import_job_response.num_total
-    @num_updated = import_job_response.num_updated
-    @num_unchanged = import_job_response.num_unchanged
-    @num_valid = import_job_response.num_valid
-    @num_invalid = import_job_response.num_invalid
-    @num_error = import_job_response.num_error
-
-    invalid_lines = import_job_response.invalid_lines
-
-    @invalid_line_descriptions = []
-    invalid_lines.each do |line|
-      if line.line_error?
-        @invalid_line_descriptions << line.line_error
-      elsif line.field_errors?
-        bad_fields = line.field_errors.join(',')
-        description = "#{line.line_location}, #{bad_fields}"
-        @invalid_line_descriptions << description
-      end
-    end
-  end
   # GET /import_jobs/new
   def new
     name = params[:name] || "#{current_cas_user.cas_directory_id}-#{Time.now.iso8601}"
@@ -53,7 +31,7 @@ class ImportJobsController < ApplicationController
   # GET /import_jobs/1/edit
   def edit
     response_message = @import_job.plastron_operation.response_message
-    set_import_response(response_message)
+    @import_job_response = ImportJobResponse.new(response_message)
   end
 
   # POST /import_jobs
@@ -106,7 +84,7 @@ class ImportJobsController < ApplicationController
     end
 
     response_message = @import_job.plastron_operation.response_message
-    set_import_response(response_message)
+    @import_job_response = ImportJobResponse.new(response_message)
     render :edit
   end
 

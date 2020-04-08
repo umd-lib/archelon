@@ -3,19 +3,35 @@
     <h3 class="panel-title"><%= panel_title %></h3>
   </div>
   <div class="panel-body">
-    <p>Valid? <%= @valid %></p>
-    <p>Total records <%= @num_total %></p>
-    <p>Updated records <%= @num_updated %></p>
-    <p>Unchanged records <%= @num_unchanged %></p>
-    <p>Valid records <%= @num_valid %></p>
-    <p>Invalid records <%= @num_invalid %></p>
-    <p>Error records <%= @num_error %></p>
-    <% if @invalid_line_descriptions.any? %>
-      <ul>
-      <% @invalid_line_descriptions.each do |desc| %>
-        <li><%= desc %></li>
-      <% end %>
-      </ul>
+    <p>Valid? <%= import_job_response.valid? %></p>
+    <p>Total records <%= import_job_response.num_total %></p>
+    <p>Updated records <%= import_job_response.num_updated %></p>
+    <p>Unchanged records <%= import_job_response.num_unchanged %></p>
+    <p>Valid records <%= import_job_response.num_valid %></p>
+    <p>Invalid records <%= import_job_response.num_invalid %></p>
+    <p>Error records <%= import_job_response.num_error %></p>
+    <% if import_job_response.invalid_lines.any? %>
+      <table>
+        <thead>
+          <tr><th>Line Number</th><th>Problem</th>
+        </thead>
+        <tbody>
+          <% import_job_response.invalid_lines.each do |line| %>
+            <tr>
+              <td>
+                <%= line.line_location %>
+              </td>
+              <td>
+                <% if line.line_error? %>
+                  <%= line.line_error %>
+                <% elsif line.field_errors? %>
+                  <%= line.field_errors.join(',') %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
     <% end %>
   </div>
 </div>

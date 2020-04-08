@@ -9,6 +9,7 @@
   <%= PlastronOperation.statuses[@import_job.plastron_operation.status] %>
 </p>
 
-<%= render partial: "import_job_validation_panel", locals: {import_job: @import_job, panel_title: 'Import Results'} %>
+<%= render partial: "import_job_validation_panel", locals: {import_job_response: @import_job_response,
+                                                            panel_title: 'Import Results'} %>
 
 <%= link_to 'Back', import_jobs_path %>
