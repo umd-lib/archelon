@@ -1,3 +1,4 @@
+# Parses the Plastron response for metadata import job.
 class ImportJobResponse
   attr_reader :server_error, :num_total, :num_updated, :num_unchanged,
               :num_valid, :num_invalid, :num_error, :invalid_lines
@@ -70,11 +71,18 @@ class ImportJobResponse
   end
 end
 
+# Parses the Plastron response regarding the validity of individual lines
+# in the import file
 class ImportJobLineValidation
   attr_reader :line_location, :line_error, :field_errors
 
   def initialize(validation)
     @line_location = validation['line']
+
+    # Strip '<>:' from line location, if present
+    empty_file = '<>:'
+    @line_location = @line_location[empty_file.length..] if @line_location.start_with?(empty_file)
+
     @valid = validation['is_valid']
     @line_error = validation['error']
 

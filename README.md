@@ -255,6 +255,10 @@ In order to avoid this error:
 The batch export functionality relies on a running [Plastron](plastron)
 instance.
 
+## Metadata Import
+
+See [docs/MetadataImport](docs/MetadataImport.md).
+
 ## LDAP Override
 
 By default, Archelon determines the user type for a user ("admin", "user" or

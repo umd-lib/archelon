@@ -65,7 +65,7 @@ class ImportJobsController < ApplicationController
         submit_job(@import_job, true)
       rescue Stomp::Error::NoCurrentConnection
         @job.plastron_operation.status = :error
-        @job.status = 'Error'
+        @job.status = :error
         @job.save
         @job.plastron_operation.save!
         flash[:error] = I18n.t(:active_mq_is_down)
@@ -96,7 +96,7 @@ class ImportJobsController < ApplicationController
         submit_job(@import_job, true)
       rescue Stomp::Error::NoCurrentConnection
         @job.plastron_operation.status = :error
-        @job.status = 'Error'
+        @job.status = :error
         @job.save
         @job.plastron_operation.save!
         flash[:error] = I18n.t(:active_mq_is_down)
@@ -117,7 +117,7 @@ class ImportJobsController < ApplicationController
       @import_job.save!
     rescue Stomp::Error::NoCurrentConnection
       @job.plastron_operation.status = :error
-      @job.status = 'Error'
+      @job.status = :error
       @job.save
       @job.plastron_operation.save!
       flash[:error] = I18n.t(:active_mq_is_down)

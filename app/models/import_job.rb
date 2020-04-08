@@ -1,4 +1,43 @@
+# Model for metadata import jobs
+#
+# This model provides a simple workflow, tracking where the
+# job is via the "stage" field. The "stage" field can have the
+# following values:
+#
+#   * validate - The job is in the "validate" stage
+#   * import - The job is in the "import" stage
+#
+# The normal workflow is for a job to move from "validate" to "import" when
+# file validation is successful. If the file is not valid, the model stays
+# in the "validate" stage.
+#
+# The "status" method generates the current status of the job from the
+# Plastron response message. The possible statuses are:
+#
+#   * :validate_pending - A "validate" request has been sent to Plastron, but
+#                         no response has been received.
+#
+#   * :validate_success - A Plastron response was received indicating that the
+#                         file is valid
+#
+#   * :validate_failed - A Plastron response was received indicating that the
+#                         file was not valid
+#
+#   * :import_pending - An "import" request has been sent to Plastron, but
+#                       no response has been received.
+#
+#   * :import_success - A Plastron response was received indicating that the
+#                       import succeeded.
+#
+#   * :import_failed - A Plastron response was received indicating that the
+#                      import failed
+#
+#   * :in_progress - Returned for any other status
+#
+#   * :error - An error has occurred, such as the STOMP client not being
+#              connected
 class ImportJob < ApplicationRecord
+
   belongs_to :cas_user
   belongs_to :plastron_operation, dependent: :destroy
   has_one_attached :file_to_upload
@@ -12,10 +51,11 @@ class ImportJob < ApplicationRecord
     errors.add(:file_to_upload, :required) unless file_to_upload.attached?
   end
 
+  # Returns a symbol reflecting the current status
   def status
     return "#{stage}_pending".to_sym if plastron_operation.pending?
 
-    return nil unless plastron_operation.done?
+    return :in_progress unless plastron_operation.done?
 
     response = ImportJobResponse.new(plastron_operation.response_message)
     return "#{stage}_success".to_sym if response.valid?
@@ -23,6 +63,8 @@ class ImportJob < ApplicationRecord
     "#{stage}_failed".to_sym
   end
 
+  # Returns the next workflow action, based on the current status, or nil if
+  # no workflow action is available.
   def workflow_action
     case status
     when :validate_success
