@@ -45,10 +45,14 @@ en:
           import: Import
           validate: Validation
         status:
+          validate_pending: Pending
           validate_success: Validation Successful
           validate_failed: Validation Failed
           import_success: Import Successful
           import_failed: Import Failed
+          import_pending: Pending
+          in_progress: In Progress
+          error: Error
       individual:
         identifier: Identifier
         label: Term
