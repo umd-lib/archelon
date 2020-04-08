@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ImportJobsController < ApplicationController # rubocop:disable Metrics/ClassLength
-  before_action :set_import_job, only: %i[update revalidate show edit update import destroy]
+  before_action :set_import_job, only: %i[update show edit update import]
   before_action :cancel_workflow?, only: %i[create update]
 
   # GET /import_jobs
@@ -36,7 +36,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
 
   # POST /import_jobs
   # POST /import_jobs.json
-  def create
+  def create # rubocop:disable Metrics/MethodLength
     @import_job = create_job(import_job_params)
     if @import_job.save
       begin
@@ -54,7 +54,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     render :new
   end
 
-  def update
+  def update # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     valid_update = @import_job.update(import_job_params)
 
     # Need special handing of "file_to_upload", because if we're gotten this
@@ -88,7 +88,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     render :edit
   end
 
-  def import
+  def import # rubocop:disable Metrics/MethodLength
     begin
       submit_job(@import_job, false)
       @import_job.stage = 'import'
@@ -102,16 +102,6 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     end
     redirect_to action: 'index', status: :see_other
   end
-
-  # # DELETE /import_jobs/1
-  # # DELETE /import_jobs/1.json
-  # def destroy
-  #   @import_job.destroy
-  #   respond_to do |format|
-  #     format.html { redirect_to import_jobs_url, notice: 'Import job was successfully destroyed.' }
-  #     format.json { head :no_content }
-  #   end
-  # end
 
   private
 

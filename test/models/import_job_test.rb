@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class ImportJobTest < ActiveSupport::TestCase
-  test "PlastronOperation is deleted when ImportJob is deleted" do
+  test 'PlastronOperation is deleted when ImportJob is deleted' do
     import_job = import_jobs(:one)
     assert_not_nil(import_job.plastron_operation)
 
@@ -12,7 +14,7 @@ class ImportJobTest < ActiveSupport::TestCase
     end
   end
 
-  test "ImportJob is not deleted when PlastronOperation is deleted" do
+  test 'ImportJob is not deleted when PlastronOperation is deleted' do
     # Not sure if this is really the desired behavior. Ordinarily would
     # expect a one-to-one relationship between ImportJob and it's
     # associated PlastronOperation, so that deleting one deletes the other.

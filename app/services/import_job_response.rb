@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 # Parses the Plastron response for metadata import job.
 class ImportJobResponse
   attr_reader :server_error, :num_total, :num_updated, :num_unchanged,
               :num_valid, :num_invalid, :num_error, :invalid_lines
 
-  def initialize(response_message)
+  def initialize(response_message) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity, Metrics/LineLength
     @valid = false
     @server_error = nil
     @num_total = 0
@@ -76,7 +78,7 @@ end
 class ImportJobLineValidation
   attr_reader :line_location, :line_error, :field_errors
 
-  def initialize(validation)
+  def initialize(validation) # rubocop:disable Metrics/MethodLength
     @line_location = validation['line']
 
     # Strip '<>:' from line location, if present

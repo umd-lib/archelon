@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Model for metadata import jobs
 #
 # This model provides a simple workflow, tracking where the
@@ -37,7 +39,6 @@
 #   * :error - An error has occurred, such as the STOMP client not being
 #              connected
 class ImportJob < ApplicationRecord
-
   belongs_to :cas_user
   belongs_to :plastron_operation, dependent: :destroy
   has_one_attached :file_to_upload

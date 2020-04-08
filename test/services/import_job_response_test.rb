@@ -22,7 +22,7 @@ class ImportJobResponseTest < Minitest::Test
     assert_equal(:invalid_response_from_server, import_job_response.server_error)
   end
 
-  def test_invalid_json
+  def test_invalid_json # rubocop:disable Metrics/MethodLength
     invalid_jsons = [
       '{ "foo": "bar" }',
       '{ "count": { "foo": "bar" } }',
@@ -37,7 +37,7 @@ class ImportJobResponseTest < Minitest::Test
     end
   end
 
-  def test_valid_JSON_and_successful_validation
+  def test_valid_json_and_successful_validation # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     jsons = [
       '{ "count": { "total": 1, "updated": 0, "unchanged": 0, "valid": 1, "invalid": 0, "errors": 0 } }',
       '{ "count": { "total": 45, "updated": 0, "unchanged": 0, "valid": 45, "invalid": 0, "errors": 0 } }'
@@ -57,7 +57,7 @@ class ImportJobResponseTest < Minitest::Test
     end
   end
 
-  def test_valid_JSON_and_failed_validation
+  def test_valid_json_and_failed_validation # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     jsons = [
       '{ "count": { "total": 2, "updated": 0, "unchanged": 0, "valid": 1, "invalid": 1, "errors": "0" }, "validation": [] }',
       '{ "count": { "total": 47, "updated": 0, "unchanged": 0, "valid": 45, "invalid": 0, "errors": 2 }, "validation": [] }'
@@ -76,9 +76,8 @@ class ImportJobResponseTest < Minitest::Test
     end
   end
 
-  def test_valid_JSON_and_failed_validation_with_invalid_date
-    json =
-      '''
+  def test_valid_json_and_failed_validation_with_invalid_date # rubocop:disable Metrics/MethodLength
+    json = <<~JSON_END
       { "count": {"total": 1, "updated": 0, "unchanged": 0, "valid": 0, "invalid": 1, "errors": 0},
         "validation": [
           { "line": "<>:2", "is_valid": false,
@@ -95,20 +94,19 @@ class ImportJobResponseTest < Minitest::Test
           }
         ]
       }
-      '''
+    JSON_END
 
     import_job_response = ImportJobResponse.new(json)
     invalid_lines = import_job_response.invalid_lines
 
     assert_equal(false, import_job_response.valid?)
     assert_equal(1, invalid_lines.count)
-    assert_equal('<>:2', invalid_lines[0].line_location)
+    assert_equal('2', invalid_lines[0].line_location)
     assert_equal('date', invalid_lines[0].field_errors[0])
   end
 
-  def test_valid_JSON_and_failed_validation_with_wrong_number_of_columns
-    json =
-      '''
+  def test_valid_json_and_failed_validation_with_wrong_number_of_columns # rubocop:disable Metrics/MethodLength
+    json = <<~JSON_END
       { "count": {"total": 1, "updated": 0, "unchanged": 0, "valid": 0, "invalid": 1, "errors": 0},
         "validation": [
           {
@@ -118,14 +116,14 @@ class ImportJobResponseTest < Minitest::Test
           }
         ]
       }
-      '''
+    JSON_END
 
     import_job_response = ImportJobResponse.new(json)
     invalid_lines = import_job_response.invalid_lines
 
     assert_equal(false, import_job_response.valid?)
     assert_equal(1, invalid_lines.count)
-    assert_equal('<>:3', invalid_lines[0].line_location)
+    assert_equal('3', invalid_lines[0].line_location)
     assert_equal('Line <>:3 has the wrong number of columns', invalid_lines[0].line_error)
   end
 end

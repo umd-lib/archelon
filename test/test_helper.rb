@@ -66,7 +66,7 @@ class ActiveSupport::TestCase
     cas_login(cas_directory_id)
   end
 
-  def mock_cas_logout()
+  def mock_cas_logout
     request.env.delete('omniauth.auth')
     session.delete(:cas_user)
   end
