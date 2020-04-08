@@ -76,7 +76,7 @@ class ImportJobResponseTest < Minitest::Test
     end
   end
 
-  def test_valid_json_and_failed_validation_with_invalid_date # rubocop:disable Metrics/MethodLength
+  def test_valid_json_and_failed_validation_with_invalid_data # rubocop:disable Metrics/MethodLength
     json = <<~JSON_END
       { "count": {"total": 1, "updated": 0, "unchanged": 0, "valid": 0, "invalid": 1, "errors": 0},
         "validation": [
