@@ -22,7 +22,7 @@ class SessionsController < ApplicationController
 
   def destroy
     CasAuthentication.sign_out(session, cookies)
-    cas_logout_url = Rails.application.config.cas_url + '/logout'
+    cas_logout_url = "#{CAS_URL}/logout"
     redirect_to cas_logout_url
   end
 

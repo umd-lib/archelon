@@ -1,0 +1,17 @@
+# config/audit_database.yml
+
+default: &default
+  dbname: <%= ENV['AUDIT_DATABASE_NAME'] %>
+  host: <%= ENV['AUDIT_DATABASE_HOST'] %>
+  port: <%= ENV['AUDIT_DATABASE_PORT'] %>
+  user: <%= ENV['AUDIT_DATABASE_USERNAME'] %>
+  password: <%= ENV['AUDIT_DATABASE_PASSWORD'] %>
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+
+production:
+  <<: *default
