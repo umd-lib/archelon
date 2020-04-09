@@ -3,6 +3,14 @@
 <h1>Metadata Import</h1>
 
 <% if @import_jobs.count > 0 %>
+  <div class="row">
+    <div class="btn-toolbar">
+      <div class="col-md-6">
+          <div class="btn-group"><%= will_paginate @download_urls, renderer: BootstrapPagination::Rails %></div>
+      </div>
+    </div>
+  </div>
+
   <table class="table">
     <thead>
       <tr>
@@ -45,6 +53,7 @@
     </tbody>
   </table>
 
+  <%= will_paginate @download_urls, renderer: BootstrapPagination::Rails %>
   <br>
 <% else %>
   <p>No Import jobs found</p>
