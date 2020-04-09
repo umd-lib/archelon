@@ -79,8 +79,13 @@ class ImportJob < ApplicationRecord
 
   def update_progress(message) # rubocop:disable Metrics/AbcSize
     stats = message.body_json
-    processed_file_count = stats['count']['updated'] + stats['count']['unchanged']
+
     total_count = stats['count']['total']
+    # Total could be nil for non-seekable files
+    return if total_count.nil? || total_count.zero?
+
+    processed_file_count = stats['count']['updated'] + stats['count']['unchanged'] + stats['count']['errors']
+
     progress = (processed_file_count.to_f / total_count * 100).round
     plastron_operation.progress = progress
     plastron_operation.save!

@@ -33,8 +33,14 @@
           <td><%= import_job.timestamp %></td>
           <td><%= import_job.file_to_upload.filename %></td>
           <% if import_job.status == :in_progress %>
+            <% progress = import_job.plastron_operation.progress %>
+            <% if progress.nil? || progress == 0 %>
+              <% progress = I18n.t("activerecord.attributes.import_job.status.in_progress") %>
+            <% else %>
+              <% progress = "#{progress}%" %>
+            <% end %>
             <td class="plastron_operation_status_<%= import_job.status %>">
-              <%= I18n.t("activerecord.attributes.import_job.stage.#{import_job.stage}") %> (<%= import_job.plastron_operation.progress %>%)
+              <%= I18n.t("activerecord.attributes.import_job.stage.#{import_job.stage}") %> (<%= progress %>)
             </td>
           <% else %>
             <td class="import_job_status_<%= import_job.status %>">
