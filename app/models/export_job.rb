@@ -3,10 +3,17 @@
 # An export job from Fedora
 class ExportJob < ApplicationRecord
   belongs_to :cas_user
-  belongs_to :plastron_operation, dependent: :destroy
 
   CSV_FORMAT = 'text/csv'
   TURTLE_FORMAT = 'text/turtle'
+
+  enum plastron_status: {
+    plastron_status_pending: 'Pending',
+    plastron_status_in_progress: 'In Progress',
+    plastron_status_done: 'Done',
+    plastron_status_failed: 'Failed',
+    plastron_status_error: 'Error'
+  }
 
   FORMATS = {
     CSV_FORMAT => 'CSV',
@@ -44,14 +51,12 @@ class ExportJob < ApplicationRecord
   def update_progress(message)
     stats = message.body_json
     progress = (stats['count']['exported'].to_f / stats['count']['total'] * 100).round
-    plastron_operation.progress = progress
-    plastron_operation.save!
+    self.progress = progress
+    save!
   end
 
   def update_status(message)
-    plastron_operation.completed = Time.zone.now
-    plastron_operation.status = message.headers['PlastronJobStatus']
-    plastron_operation.save!
+    self.plastron_status = message.headers['PlastronJobStatus']
     self.download_url = message.body_json['download_uri']
     save!
   end

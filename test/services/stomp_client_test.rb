@@ -9,37 +9,34 @@ class StompClientTest < Minitest::Test
   def test_update_job_when_done
     mock = MockStompClient.instance
     cas_user = CasUser.first
-    op = PlastronOperation.first
-    job = ExportJob.new(name: 'test job', cas_user: cas_user, plastron_operation: op)
+    job = ExportJob.new(name: 'test job', cas_user: cas_user)
     job.save!
     message = create_message(job.id, 'Done')
     mock.update_job_status(message)
     job.reload
-    assert job.plastron_operation.done?
+    assert job.plastron_status_done?
   end
 
   def test_update_job_on_error
     mock = MockStompClient.instance
     cas_user = CasUser.first
-    op = PlastronOperation.first
-    job = ExportJob.new(name: 'test job', cas_user: cas_user, plastron_operation: op)
+    job = ExportJob.new(name: 'test job', cas_user: cas_user)
     job.save!
     message = create_message(job.id, 'Error')
     mock.update_job_status(message)
     job.reload
-    assert job.plastron_operation.error?
+    assert job.plastron_status_error?
   end
 
   def test_update_job_when_failed
     mock = MockStompClient.instance
     cas_user = CasUser.first
-    op = PlastronOperation.first
-    job = ExportJob.new(name: 'test job', cas_user: cas_user, plastron_operation: op)
+    job = ExportJob.new(name: 'test job', cas_user: cas_user)
     job.save!
     message = create_message(job.id, 'Failed')
     mock.update_job_status(message)
     job.reload
-    assert job.plastron_operation.failed?
+    assert job.plastron_status_failed?
   end
 
   def create_message(job_id, status)

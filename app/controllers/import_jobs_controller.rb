@@ -127,11 +127,11 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
       headers = message_headers(import_job, validate_only)
 
       import_job.plastron_status = :plastron_status_in_progress
-      import_job.save
+      import_job.save!
       STOMP_CLIENT.publish STOMP_CONFIG['destinations']['jobs'], body, headers
     rescue Stomp::Error::NoCurrentConnection
       import_job.plastron_status = :plastron_status_error
-      import_job.save
+      import_job.save!
       flash[:error] = I18n.t(:active_mq_is_down)
     end
 

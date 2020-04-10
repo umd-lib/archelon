@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_10_112128) do
+ActiveRecord::Schema.define(version: 2020_04_10_124453) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -89,9 +89,9 @@ ActiveRecord::Schema.define(version: 2020_04_10_112128) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "download_url"
-    t.integer "plastron_operation_id"
+    t.string "plastron_status"
+    t.integer "progress"
     t.index ["cas_user_id"], name: "index_export_jobs_on_cas_user_id"
-    t.index ["plastron_operation_id"], name: "index_export_jobs_on_plastron_operation_id"
   end
 
   create_table "groups", force: :cascade do |t|

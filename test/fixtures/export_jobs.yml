@@ -7,7 +7,6 @@ one:
   name: MyString
   item_count: 1
   status: MyString
-  plastron_operation: op1
 
 two:
   format: MyString
@@ -16,4 +15,3 @@ two:
   name: MyString
   item_count: 1
   status: MyString
-  plastron_operation: op2
