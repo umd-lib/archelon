@@ -33,7 +33,7 @@
           <td><%= import_job.timestamp %></td>
           <td><%= import_job.file_to_upload.filename %></td>
           <% if import_job.status == :in_progress %>
-            <% progress = import_job.plastron_operation.progress %>
+            <% progress = import_job.progress %>
             <% if progress.nil? || progress == 0 %>
               <% progress = I18n.t("activerecord.attributes.import_job.status.in_progress") %>
             <% else %>

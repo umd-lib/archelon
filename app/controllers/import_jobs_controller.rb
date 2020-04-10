@@ -18,7 +18,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
   # GET /import_jobs/1
   # GET /import_jobs/1.json
   def show
-    response_message = @import_job.plastron_operation.response_message
+    response_message = @import_job.last_response
     @import_job_response = ImportJobResponse.new(response_message)
   end
 
@@ -36,7 +36,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
       return
     end
 
-    response_message = @import_job.plastron_operation.response_message
+    response_message = @import_job.last_response
     @import_job_response = ImportJobResponse.new(response_message)
   end
 
@@ -79,7 +79,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
       return
     end
 
-    response_message = @import_job.plastron_operation.response_message
+    response_message = @import_job.last_response
     @import_job_response = ImportJobResponse.new(response_message)
     render :edit
   end
@@ -118,23 +118,20 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
         job.timestamp = Time.zone.now
         job.cas_user = current_cas_user
         job.stage = 'validate'
-        job.plastron_operation = PlastronOperation.new status: :pending, progress: 0
+        job.plastron_status = :plastron_status_pending
       end
     end
 
-    def submit_job(import_job, validate_only) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    def submit_job(import_job, validate_only)
       body = import_job.file_to_upload.download
       headers = message_headers(import_job, validate_only)
 
-      import_job.plastron_operation.started = Time.zone.now
-      import_job.plastron_operation.status = :in_progress
-      import_job.plastron_operation.request_message = "#{headers_to_s(headers)}\n\n#{body}"
-      import_job.plastron_operation.save!
+      import_job.plastron_status = :plastron_status_in_progress
+      import_job.save
       STOMP_CLIENT.publish STOMP_CONFIG['destinations']['jobs'], body, headers
     rescue Stomp::Error::NoCurrentConnection
-      import_job.plastron_operation.status = :error
+      import_job.plastron_status = :plastron_status_error
       import_job.save
-      import_job.plastron_operation.save!
       flash[:error] = I18n.t(:active_mq_is_down)
     end
 

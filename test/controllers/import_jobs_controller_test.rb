@@ -101,6 +101,18 @@ class ImportJobsControllerTest < ActionController::TestCase
                     I18n.t('activerecord.errors.models.import_job.attributes.file_to_upload.required'))
   end
 
+  test 'should get show' do
+    import_job = ImportJob.first
+    get :show, params: { id: import_job.id }
+    assert_response :success
+  end
+
+  test 'should get edit' do
+    import_job = ImportJob.first
+    get :edit, params: { id: import_job.id }
+    assert_response :success
+  end
+
   test 'file attachment is required when updating import_job' do
     import_job = ImportJob.first
     patch :update, params: { id: import_job.id, import_job: { name: import_job.name } }
