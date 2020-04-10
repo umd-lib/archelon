@@ -8,7 +8,7 @@
         <span class="badge badge-secondary" data-role='bookmark-counter'><%= current_or_guest_user.bookmarks.count %></span>
       <% end %>
     </li>
-    
+
     <li>
       <div class="btn-group">
         <button type="button" class="btn dropdown-toggle menu-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -20,6 +20,7 @@
           <% end %>
           <li><%= link_to 'Download URLs', controller: 'download_urls', action: 'index' %></li>
           <li><%= link_to 'Export Queue', controller: 'export_jobs', action: 'index' %></li>
+          <li><%= link_to 'Metadata Import', controller: 'import_jobs', action: 'index' %></li>
           <li><%= link_to 'Vocabularies', controller: 'vocabularies', action: 'index' %></li>
         </ul>
       </div>

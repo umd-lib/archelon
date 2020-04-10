@@ -66,6 +66,11 @@ class ActiveSupport::TestCase
     cas_login(cas_directory_id)
   end
 
+  def mock_cas_logout
+    request.env.delete('omniauth.auth')
+    session.delete(:cas_user)
+  end
+
   # Runs the contents of a block using the given user as the current_user.
   def impersonate_as_user(user) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     current_admin_user = CasUser.find_by(cas_directory_id: session[:cas_user])
@@ -95,5 +100,37 @@ class ActiveSupport::TestCase
       # Restore fake user
       mock_cas_login(DEFAULT_TEST_USER)
     end
+  end
+
+  # Replaces STOMP_CLIENT with the MockStompClient
+  def mock_stomp_client(client = MockStompClient.instance)
+    # Remove constant, if set, to avoid warning about resetting the constant
+    Object.send(:remove_const, 'STOMP_CLIENT') if Object.const_defined?('STOMP_CLIENT')
+    Object.const_set('STOMP_CLIENT', client)
+  end
+end
+
+class MockStompClient < StompClient
+  def initialize
+    # Skip initialization
+  end
+
+  def publish(destination, message, headers = {})
+    # Do nothing
+  end
+
+  def connected?
+    true
+  end
+end
+
+# Variant of MockStompClient simulating unconnected client
+class UnconnectedMockStompClient < MockStompClient
+  def publish(_destination, _message, _headers = {})
+    raise Stomp::Error::NoCurrentConnection
+  end
+
+  def connected?
+    false
   end
 end

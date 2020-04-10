@@ -1,0 +1,36 @@
+<%= form_with(model: import_job, local: true) do |form| %>
+  <% if import_job.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(import_job.errors.count, "error") %> prohibited this job from being saved:</h2>
+
+      <ul>
+      <% import_job.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <div>
+      <%= form.label "Choose job name:", class: "col-form-label-lg" %>
+    </div>
+    <div class="p-3 ml-5">
+      <%= form.text_field :name, size: 40, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div>
+      <%= form.label :file_to_upload, class: "col-form-label-lg" %>
+    </div>
+    <div class="p-3 ml-5">
+      <%= form.file_field :file_to_upload, class: "form-control" %>
+    </div>
+  </div>
+
+    <div class="form-group">
+      <%= form.submit "Cancel", class: 'btn btn-danger form-control' %>
+      <%= form.submit "Next", class: 'btn btn-primary form-control' %>
+    </div>
+<% end %>

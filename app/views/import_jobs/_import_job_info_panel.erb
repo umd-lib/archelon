@@ -1,0 +1,31 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Job Info</h3>
+  </div>
+  <div class="panel-body">
+    <p>
+      <strong>Job ID:</strong>
+      <%= import_job.id %>
+    </p>
+
+    <p>
+      <strong>Job Name:</strong>
+      <%= import_job.name %>
+    </p>
+
+    <p>
+      <strong>User:</strong>
+      <%= import_job.cas_user&.name %>
+    </p>
+
+    <p>
+      <strong>Timestamp:</strong>
+      <%= import_job.timestamp %>
+    </p>
+
+    <p>
+      <strong>File to upload:</strong>
+      <%= import_job.file_to_upload.filename %>
+    </p>
+  </div>
+</div>

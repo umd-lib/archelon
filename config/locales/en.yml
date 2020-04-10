@@ -38,8 +38,23 @@ en:
   items_selected: 'Added %{selected_count} exportable %{items} from this search to your selected items list.'
   max_limit: 'Maximum overall selection limit is %{limit}.'
   selected_items_changed: 'Selected items has changed. Please review.'
+  import_already_performed: 'Import has completed. Cannot reimport or validate'
+  cannot_import_invalid_file: 'Cannot import a file with validation errors.'
   activerecord:
     attributes:
+      import_job:
+        stage:
+          import: Import
+          validate: Validation
+        status:
+          validate_pending: Pending
+          validate_success: Validation Successful
+          validate_failed: Validation Failed
+          import_success: Import Successful
+          import_failed: Import Failed
+          import_pending: Pending
+          in_progress: In Progress
+          error: Error
       individual:
         identifier: Identifier
         label: Term
@@ -56,6 +71,12 @@ en:
         identifier: Identifier
         uri: Local Authority URI
         published_uri: Published URI
+    errors:
+      models:
+        import_job:
+          attributes:
+            file_to_upload:
+              required: 'is required'
     models:
       download_url: Download URL
       individual: Term
