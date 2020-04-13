@@ -50,6 +50,7 @@ en:
           validate_pending: Pending
           validate_success: Validation Successful
           validate_failed: Validation Failed
+          validate_error: Validation Error
           import_success: Import Successful
           import_failed: Import Failed
           import_pending: Pending

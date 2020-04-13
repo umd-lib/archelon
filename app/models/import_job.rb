@@ -55,7 +55,9 @@ class ImportJob < ApplicationRecord
 
   # Returns a symbol reflecting the current status
   def status
-    return :error if plastron_status_error?
+    if plastron_status_error?
+      return stage ? "#{stage}_error".to_sym : :error
+    end
 
     return "#{stage}_pending".to_sym if plastron_status_pending?
 
@@ -73,7 +75,7 @@ class ImportJob < ApplicationRecord
     case status
     when :validate_success
       :import
-    when :validate_failed
+    when :validate_failed, :validate_error
       :resubmit
     end
   end

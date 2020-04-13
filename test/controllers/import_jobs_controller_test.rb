@@ -144,7 +144,7 @@ class ImportJobsControllerTest < ActionController::TestCase
     }
 
     import_job = assigns(:import_job)
-    assert_equal(:error, import_job.status)
+    assert_equal(:validate_error, import_job.status)
   end
 
   test 'update should report error when STOMP client is not connected' do
@@ -175,7 +175,7 @@ class ImportJobsControllerTest < ActionController::TestCase
     import_job.save!
     patch :import, params: { id: import_job.id }
     result = assigns(:import_job)
-    assert_equal(:error, result.status)
+    assert_equal(:import_error, result.status)
   end
 
   test 'should not be able to edit a job that is in "import" stage' do

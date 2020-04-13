@@ -139,7 +139,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
       headers = {
         PlastronCommand: 'import',
         PlastronJobId: import_job_url(job),
-        'PlastronArg-model': 'Issue',
+        'PlastronArg-model': job.model,
         'PlastronArg-name': job.name,
         'PlastronArg-username': job.cas_user.cas_directory_id,
         'PlastronArg-timestamp': job.timestamp
@@ -155,6 +155,6 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def import_job_params
-      params.require(:import_job).permit(:name, :file_to_upload)
+      params.require(:import_job).permit(:name, :model, :file_to_upload)
     end
 end
