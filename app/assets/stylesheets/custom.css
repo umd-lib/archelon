@@ -215,6 +215,6 @@ input {
   color: #03ab3a;
 }
 
-.import_job_status_validate_failed, .import_job_status_import_failed {
+.import_job_status_validate_error, .import_job_status_validate_failed, .import_job_status_import_failed {
   color: #d83935;
 }

@@ -13,12 +13,12 @@ class ImportJobTest < ActiveSupport::TestCase
 
     tests = [
       { import_job_stage: :validate, plastron_status: :plastron_status_pending, response: nil, expected: :validate_pending },
-      { import_job_stage: :validate, plastron_status: :plastron_status_error, response: nil, expected: :error },
+      { import_job_stage: :validate, plastron_status: :plastron_status_error, response: nil, expected: :validate_error },
       { import_job_stage: :validate, plastron_status: :plastron_status_done, response: json_successful_response, expected: :validate_success },
       { import_job_stage: :validate, plastron_status: :plastron_status_done, response: json_failed_response, expected: :validate_failed },
       { import_job_stage: :validate, plastron_status: :plastron_status_in_progress, response: nil, expected: :in_progress },
       { import_job_stage: :import, plastron_status: :plastron_status_pending, response: nil, expected: :import_pending },
-      { import_job_stage: :import, plastron_status: :plastron_status_error, response: nil, expected: :error },
+      { import_job_stage: :import, plastron_status: :plastron_status_error, response: nil, expected: :import_error },
       { import_job_stage: :import, plastron_status: :plastron_status_done, response: json_successful_response, expected: :import_success },
       { import_job_stage: :import, plastron_status: :plastron_status_done, response: json_failed_response, expected: :import_failed },
       { import_job_stage: :import, plastron_status: :plastron_status_in_progress, response: nil, expected: :in_progress }

@@ -19,6 +19,7 @@
         <th>User</th>
         <th>Timestamp</th>
         <th>Uploaded File</th>
+        <th>Content Model</th>
         <th>Status</th>
         <th></th>
       </tr>
@@ -32,6 +33,7 @@
           <td><%= import_job.cas_user&.name%></td>
           <td><%= import_job.timestamp %></td>
           <td><%= import_job.file_to_upload.filename %></td>
+          <td><%= import_job.model %></td>
           <% if import_job.status == :in_progress %>
             <% progress = import_job.progress %>
             <% if progress.nil? || progress == 0 %>
