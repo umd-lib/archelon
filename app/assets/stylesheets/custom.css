@@ -139,16 +139,19 @@ input {
   padding-right: 10px;
 }
 
-.plastron_status_in_progress {
+.plastron_status_in_progress, .import_job_status_in_progress {
   color: #000000;
   font-weight: bold;
 }
 
-.plastron_status_failed, .plastron_status_error {
+.plastron_status_failed, .plastron_status_error,
+.import_job_status_error, .import_job_status_validate_error, .import_job_status_import_error,
+.import_job_status_validate_failed, .import_job_status_import_failed {
   color: #d83935;
 }
 
-.plastron_status_done {
+.plastron_status_done, .import_job_status_done,
+.import_job_status_validate_success, .import_job_status_import_success {
   color: #03ab3a;
 }
 
@@ -208,13 +211,4 @@ input {
 .umd_tooltip:hover .umd_tooltiptext {
   visibility: visible;
   opacity: 1;
-}
-
-/* Import Job Status */
-.import_job_status_validate_success, .import_job_status_import_success {
-  color: #03ab3a;
-}
-
-.import_job_status_validate_error, .import_job_status_validate_failed, .import_job_status_import_failed {
-  color: #d83935;
 }

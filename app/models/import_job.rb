@@ -36,8 +36,12 @@
 #
 #   * :in_progress - Returned for any other status
 #
-#   * :error - An error has occurred, such as the STOMP client not being
-#              connected
+#   * :validate_error - An error has occurred during validation, such as the
+#                       STOMP client not being connected
+#
+#   * :import_error - An error has occurred during import, such as the
+#                     STOMP client not being connected
+#   * :error - Generic error when stage is nil
 class ImportJob < ApplicationRecord
   include PlastronStatus
 

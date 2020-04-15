@@ -3,6 +3,7 @@
 class ImportJobsController < ApplicationController # rubocop:disable Metrics/ClassLength
   before_action :set_import_job, only: %i[update show edit update import]
   before_action :cancel_workflow?, only: %i[create update]
+  helper_method :status_text
 
   # GET /import_jobs
   # GET /import_jobs.json
@@ -101,6 +102,21 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     @import_job.stage = 'import'
     @import_job.save!
     redirect_to action: 'index', status: :see_other
+  end
+
+  # Generates status text display for the GUI
+  def status_text(import_job)
+    if import_job.status == :in_progress
+      status_text = I18n.t("activerecord.attributes.import_job.status.in_progress")
+      progress = import_job.progress
+      if !progress.nil? && progress > 0
+        stage_text = I18n.t("activerecord.attributes.import_job.stage.#{import_job.stage}")
+        status_text = "#{stage_text} (#{progress}%)"
+      end
+      return status_text
+    else
+      return I18n.t("activerecord.attributes.import_job.status.#{import_job.status}")
+    end
   end
 
   private
