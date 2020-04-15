@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_06_155648) do
+ActiveRecord::Schema.define(version: 2020_04_15_141249) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -85,13 +85,12 @@ ActiveRecord::Schema.define(version: 2020_04_06_155648) do
     t.datetime "timestamp"
     t.string "name"
     t.integer "item_count"
-    t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "download_url"
-    t.integer "plastron_operation_id"
+    t.string "plastron_status"
+    t.integer "progress"
     t.index ["cas_user_id"], name: "index_export_jobs_on_cas_user_id"
-    t.index ["plastron_operation_id"], name: "index_export_jobs_on_plastron_operation_id"
   end
 
   create_table "groups", force: :cascade do |t|
@@ -102,14 +101,16 @@ ActiveRecord::Schema.define(version: 2020_04_06_155648) do
 
   create_table "import_jobs", force: :cascade do |t|
     t.integer "cas_user_id"
-    t.integer "plastron_operation_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "timestamp"
     t.string "name"
     t.string "stage"
+    t.string "status"
+    t.string "plastron_status"
+    t.integer "progress"
+    t.text "last_response"
     t.index ["cas_user_id"], name: "index_import_jobs_on_cas_user_id"
-    t.index ["plastron_operation_id"], name: "index_import_jobs_on_plastron_operation_id"
   end
 
   create_table "individuals", force: :cascade do |t|
@@ -120,17 +121,6 @@ ActiveRecord::Schema.define(version: 2020_04_06_155648) do
     t.datetime "updated_at", null: false
     t.integer "vocabulary_id"
     t.index ["vocabulary_id"], name: "index_individuals_on_vocabulary_id"
-  end
-
-  create_table "plastron_operations", force: :cascade do |t|
-    t.string "status"
-    t.integer "progress"
-    t.datetime "started"
-    t.datetime "completed"
-    t.string "request_message"
-    t.string "response_message"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "searches", force: :cascade do |t|

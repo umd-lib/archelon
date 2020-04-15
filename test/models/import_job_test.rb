@@ -3,37 +3,8 @@
 require 'test_helper'
 
 class ImportJobTest < ActiveSupport::TestCase
-  test 'PlastronOperation is deleted when ImportJob is deleted' do
+  test 'status reflects current status of job' do
     import_job = import_jobs(:one)
-    assert_not_nil(import_job.plastron_operation)
-
-    assert_difference('ImportJob.count', -1) do
-      assert_difference('PlastronOperation.count', -1) do
-        import_job.destroy!
-      end
-    end
-  end
-
-  test 'ImportJob is not deleted when PlastronOperation is deleted' do
-    # Not sure if this is really the desired behavior. Ordinarily would
-    # expect a one-to-one relationship between ImportJob and it's
-    # associated PlastronOperation, so that deleting one deletes the other.
-    # Suspect it was done this way so that PlastronOperation would not
-    # need to deal with polymorphism between ExportJob/ImportJob in
-    # a "has_one" relationship.
-    plastron_op = plastron_operations(:import_op1)
-
-    assert_no_difference('ImportJob.count') do
-      assert_difference('PlastronOperation.count', -1) do
-        plastron_op.destroy!
-      end
-    end
-  end
-
-  test 'status reflects current status of job' do # rubocop:disable Metrics/BlockLength
-    import_job = import_jobs(:one)
-    plastron_op = plastron_operations(:op1)
-    import_job.plastron_operation = plastron_op
 
     json_successful_response =
       '{ "count": { "total": 1, "updated": 0, "unchanged": 0, "valid": 1, "invalid": 0, "errors": 0 } }'
@@ -41,23 +12,24 @@ class ImportJobTest < ActiveSupport::TestCase
       '{ "count": { "total": 2, "updated": 0, "unchanged": 0, "valid": 1, "invalid": 1, "errors": "0" }, "validation": [] }'
 
     tests = [
-      { import_job_stage: :validate, plastron_status: :pending, response: nil, expected: :validate_pending },
-      { import_job_stage: :validate, plastron_status: :error, response: nil, expected: :error },
-      { import_job_stage: :validate, plastron_status: :done, response: json_successful_response, expected: :validate_success },
-      { import_job_stage: :validate, plastron_status: :done, response: json_failed_response, expected: :validate_failed },
-      { import_job_stage: :validate, plastron_status: :in_progress, response: nil, expected: :in_progress },
-      { import_job_stage: :import, plastron_status: :pending, response: nil, expected: :import_pending },
-      { import_job_stage: :import, plastron_status: :error, response: nil, expected: :error },
-      { import_job_stage: :import, plastron_status: :done, response: json_successful_response, expected: :import_success },
-      { import_job_stage: :import, plastron_status: :done, response: json_failed_response, expected: :import_failed },
-      { import_job_stage: :import, plastron_status: :in_progress, response: nil, expected: :in_progress }
+      { import_job_stage: :validate, plastron_status: :plastron_status_pending, response: nil, expected: :validate_pending },
+      { import_job_stage: :validate, plastron_status: :plastron_status_error, response: nil, expected: :error },
+      { import_job_stage: :validate, plastron_status: :plastron_status_done, response: json_successful_response, expected: :validate_success },
+      { import_job_stage: :validate, plastron_status: :plastron_status_done, response: json_failed_response, expected: :validate_failed },
+      { import_job_stage: :validate, plastron_status: :plastron_status_in_progress, response: nil, expected: :in_progress },
+      { import_job_stage: :import, plastron_status: :plastron_status_pending, response: nil, expected: :import_pending },
+      { import_job_stage: :import, plastron_status: :plastron_status_error, response: nil, expected: :error },
+      { import_job_stage: :import, plastron_status: :plastron_status_done, response: json_successful_response, expected: :import_success },
+      { import_job_stage: :import, plastron_status: :plastron_status_done, response: json_failed_response, expected: :import_failed },
+      { import_job_stage: :import, plastron_status: :plastron_status_in_progress, response: nil, expected: :in_progress }
     ]
     tests.each do |test|
       import_job.stage = test[:import_job_stage]
-      plastron_op.status = test[:plastron_status]
-      plastron_op.response_message = test[:response]
+      import_job.plastron_status = test[:plastron_status]
+      import_job.last_response = test[:response]
+      import_job.save!
       expected = test[:expected]
-      assert_equal(expected, import_job.status, "Failed for (#{import_job.stage}, #{plastron_op.status})")
+      assert_equal(expected, import_job.status, "Failed for (#{import_job.stage}, #{import_job.plastron_status})")
     end
   end
 

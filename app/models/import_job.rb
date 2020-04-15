@@ -39,8 +39,9 @@
 #   * :error - An error has occurred, such as the STOMP client not being
 #              connected
 class ImportJob < ApplicationRecord
+  include PlastronStatus
+
   belongs_to :cas_user
-  belongs_to :plastron_operation, dependent: :destroy
   has_one_attached :file_to_upload
 
   validates :name, presence: true
@@ -53,14 +54,14 @@ class ImportJob < ApplicationRecord
   end
 
   # Returns a symbol reflecting the current status
-  def status # rubocop:disable Metrics/AbcSize
-    return :error if plastron_operation.error?
+  def status
+    return :error if plastron_status_error?
 
-    return "#{stage}_pending".to_sym if plastron_operation.pending?
+    return "#{stage}_pending".to_sym if plastron_status_pending?
 
-    return :in_progress unless plastron_operation.done?
+    return :in_progress unless plastron_status_done?
 
-    response = ImportJobResponse.new(plastron_operation.response_message)
+    response = ImportJobResponse.new(last_response)
     return "#{stage}_success".to_sym if response.valid?
 
     "#{stage}_failed".to_sym
@@ -77,8 +78,8 @@ class ImportJob < ApplicationRecord
     end
   end
 
-  def update_progress(message) # rubocop:disable Metrics/AbcSize
-    stats = message.body_json
+  def update_progress(plastron_message) # rubocop:disable Metrics/AbcSize
+    stats = plastron_message.body_json
 
     total_count = stats['count']['total']
     # Total could be nil for non-seekable files
@@ -86,16 +87,13 @@ class ImportJob < ApplicationRecord
 
     processed_file_count = stats['count']['updated'] + stats['count']['unchanged'] + stats['count']['errors']
 
-    progress = (processed_file_count.to_f / total_count * 100).round
-    plastron_operation.progress = progress
-    plastron_operation.save!
+    self.progress = (processed_file_count.to_f / total_count * 100).round
+    save!
   end
 
-  def update_status(message)
-    plastron_operation.completed = Time.zone.now
-    plastron_operation.status = message.headers['PlastronJobStatus']
-    plastron_operation.response_message = message.body
-    plastron_operation.save!
-    save
+  def update_status(plastron_message)
+    self.plastron_status = plastron_message.headers['PlastronJobStatus']
+    self.last_response = plastron_message.body
+    save!
   end
 end

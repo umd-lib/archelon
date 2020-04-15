@@ -26,14 +26,14 @@
         <td><%= job.timestamp %></td>
         <td><%= job.item_count %></td>
         <td><span title="<%= job.format %>"><%= format_label %></span></td>
-        <td class="plastron_operation_status_<%= job.plastron_operation.status %>">
-          <%= PlastronOperation.statuses[job.plastron_operation.status] %>
-          <% unless job.plastron_operation.pending? || job.plastron_operation.done? %>
-            (<%= job.plastron_operation.progress %>%)
+        <td class="<%= job.plastron_status %>">
+          <%= ExportJob.plastron_statuses[job.plastron_status] %>
+          <% if job.plastron_status_in_progress? %>
+            (<%= job.progress %>%)
           <% end %>
         </td>
         <td>
-          <% if job.plastron_operation.done? && job.download_url %>
+          <% if job.plastron_status_done? && job.download_url %>
             <%= link_to 'Download', download_export_jobs_url(job), data: { turbolinks: false } %>
           <% end %>
         </td>

@@ -46,7 +46,7 @@ class ExportJobsControllerTest < ActionController::TestCase
       post :create, params: params
     end
     export_job = ExportJob.last
-    assert_equal 'Error', export_job.status
+    assert export_job.plastron_status_error?
 
     assert_equal I18n.t(:active_mq_is_down), flash[:error]
     assert_redirected_to export_jobs_path
