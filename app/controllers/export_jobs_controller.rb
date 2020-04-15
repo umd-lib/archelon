@@ -27,7 +27,7 @@ class ExportJobsController < ApplicationController
     @job.item_count = current_user.bookmarks.count
   end
 
-  def create # rubocop:disable Metrics/MethodLength
+  def create
     @job = create_job(params.require(:export_job).permit(:name, :format, :item_count))
     return unless @job.save
 
@@ -35,7 +35,6 @@ class ExportJobsController < ApplicationController
       submit_job(current_user.bookmarks.map(&:document_id))
     rescue Stomp::Error::NoCurrentConnection
       @job.plastron_status = :plastron_status_error
-      @job.status = 'Error'
       @job.save
       flash[:error] = I18n.t(:active_mq_is_down)
     end

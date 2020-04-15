@@ -6,7 +6,6 @@ one:
   timestamp: 2019-08-12 15:45:29
   name: MyString
   item_count: 1
-  status: MyString
 
 two:
   format: MyString
@@ -14,4 +13,3 @@ two:
   timestamp: 2019-08-12 15:45:29
   name: MyString
   item_count: 1
-  status: MyString

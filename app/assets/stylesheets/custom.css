@@ -139,16 +139,16 @@ input {
   padding-right: 10px;
 }
 
-.plastron_operation_status_in_progress {
+.plastron_status_in_progress {
   color: #000000;
   font-weight: bold;
 }
 
-.plastron_operation_status_failed, .plastron_operation_error {
+.plastron_status_failed, .plastron_status_error {
   color: #d83935;
 }
 
-.plastron_operation_status_done {
+.plastron_status_done {
   color: #03ab3a;
 }
 

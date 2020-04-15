@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_10_130306) do
+ActiveRecord::Schema.define(version: 2020_04_15_141249) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -85,7 +85,6 @@ ActiveRecord::Schema.define(version: 2020_04_10_130306) do
     t.datetime "timestamp"
     t.string "name"
     t.integer "item_count"
-    t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "download_url"

@@ -26,9 +26,9 @@
         <td><%= job.timestamp %></td>
         <td><%= job.item_count %></td>
         <td><span title="<%= job.format %>"><%= format_label %></span></td>
-        <td class="plastron_operation_status_<%= job.plastron_status %>">
+        <td class="<%= job.plastron_status %>">
           <%= ExportJob.plastron_statuses[job.plastron_status] %>
-          <% unless job.plastron_status_pending? || job.plastron_status_done? %>
+          <% if job.plastron_status_in_progress? %>
             (<%= job.progress %>%)
           <% end %>
         </td>

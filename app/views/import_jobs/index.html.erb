@@ -39,7 +39,7 @@
             <% else %>
               <% progress = "#{progress}%" %>
             <% end %>
-            <td class="plastron_operation_status_<%= import_job.status %>">
+            <td class="plastron_status_<%= import_job.status %>">
               <%= I18n.t("activerecord.attributes.import_job.stage.#{import_job.stage}") %> (<%= progress %>)
             </td>
           <% else %>
