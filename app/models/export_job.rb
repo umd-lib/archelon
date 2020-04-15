@@ -2,18 +2,12 @@
 
 # An export job from Fedora
 class ExportJob < ApplicationRecord
+  include PlastronStatus
+
   belongs_to :cas_user
 
   CSV_FORMAT = 'text/csv'
   TURTLE_FORMAT = 'text/turtle'
-
-  enum plastron_status: {
-    plastron_status_pending: 'Pending',
-    plastron_status_in_progress: 'In Progress',
-    plastron_status_done: 'Done',
-    plastron_status_failed: 'Failed',
-    plastron_status_error: 'Error'
-  }
 
   FORMATS = {
     CSV_FORMAT => 'CSV',

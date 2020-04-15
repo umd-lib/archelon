@@ -39,19 +39,13 @@
 #   * :error - An error has occurred, such as the STOMP client not being
 #              connected
 class ImportJob < ApplicationRecord
+  include PlastronStatus
+
   belongs_to :cas_user
   has_one_attached :file_to_upload
 
   validates :name, presence: true
   validate :attachment_validation
-
-  enum plastron_status: {
-    plastron_status_pending: 'Pending',
-    plastron_status_in_progress: 'In Progress',
-    plastron_status_done: 'Done',
-    plastron_status_failed: 'Failed',
-    plastron_status_error: 'Error'
-  }
 
   # Rails 5.2 does not have attachment validation, so this is needed
   # until at least Rails 6 (see https://stackoverflow.com/questions/48158770/activestorage-file-attachment-validation)
