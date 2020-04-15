@@ -225,42 +225,42 @@ class ImportJobsControllerTest < ActionController::TestCase
     end
   end
 
-  test 'status_text should show information about the current status' do
+  test 'status_text should show information about the current status' do # rubocop:disable Metrics/BlockLength:
     tests = [
       # Validate Stages
-      { stage: 'validate', status: :validate_pending,  progress: 0,
-        expected_text: I18n.t("activerecord.attributes.import_job.status.validate_pending") },
+      { stage: 'validate', status: :validate_pending, progress: 0,
+        expected_text: I18n.t('activerecord.attributes.import_job.status.validate_pending') },
       { stage: 'validate', status: :validate_success, progress: 100,
-        expected_text: I18n.t("activerecord.attributes.import_job.status.validate_success") },
+        expected_text: I18n.t('activerecord.attributes.import_job.status.validate_success') },
       { stage: 'validate', status: :validate_failed, progress: 100,
-        expected_text: I18n.t("activerecord.attributes.import_job.status.validate_failed") },
+        expected_text: I18n.t('activerecord.attributes.import_job.status.validate_failed') },
 
       # Import Stages
       { stage: 'import', status: :import_pending, progress: 0,
-        expected_text: I18n.t("activerecord.attributes.import_job.status.import_pending") },
+        expected_text: I18n.t('activerecord.attributes.import_job.status.import_pending') },
       { stage: 'import', status: :import_success, progress: 100,
-        expected_text: I18n.t("activerecord.attributes.import_job.status.import_success") },
+        expected_text: I18n.t('activerecord.attributes.import_job.status.import_success') },
       { stage: 'import', status: :import_failed, progress: 100,
-        expected_text: I18n.t("activerecord.attributes.import_job.status.import_failed") },
+        expected_text: I18n.t('activerecord.attributes.import_job.status.import_failed') },
 
       # Error
       { stage: 'validate', status: :error, progress: 0,
-        expected_text: I18n.t("activerecord.attributes.import_job.status.error") },
+        expected_text: I18n.t('activerecord.attributes.import_job.status.error') },
       { stage: 'import', status: :error, progress: 0,
-        expected_text: I18n.t("activerecord.attributes.import_job.status.error") },
+        expected_text: I18n.t('activerecord.attributes.import_job.status.error') },
 
       # In Progress (with non-zero percentage)
       { stage: 'validate', status: :in_progress, progress: 20,
-        expected_text: "#{I18n.t("activerecord.attributes.import_job.stage.validate")} (20%)" },
+        expected_text: "#{I18n.t('activerecord.attributes.import_job.stage.validate')} (20%)" },
       { stage: 'import', status: :in_progress, progress: 20,
-        expected_text: "#{I18n.t("activerecord.attributes.import_job.stage.import")} (20%)" },
+        expected_text: "#{I18n.t('activerecord.attributes.import_job.stage.import')} (20%)" },
 
       # In Progress (zero percentage)
       { stage: 'validate', status: :in_progress, progress: 0,
-        expected_text: I18n.t("activerecord.attributes.import_job.status.in_progress") },
+        expected_text: I18n.t('activerecord.attributes.import_job.status.in_progress') },
       { stage: 'import', status: :in_progress, progress: 0,
-        expected_text: I18n.t("activerecord.attributes.import_job.status.in_progress") },
-      ]
+        expected_text: I18n.t('activerecord.attributes.import_job.status.in_progress') }
+    ]
 
     tests.each do |test|
       import_job = ImportJob.first

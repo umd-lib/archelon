@@ -105,17 +105,17 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
   end
 
   # Generates status text display for the GUI
-  def status_text(import_job)
+  def status_text(import_job) # rubocop:disable Metrics/MethodLength
     if import_job.status == :in_progress
-      status_text = I18n.t("activerecord.attributes.import_job.status.in_progress")
+      status_text = I18n.t('activerecord.attributes.import_job.status.in_progress')
       progress = import_job.progress
-      if !progress.nil? && progress > 0
+      if !progress.nil? && progress.positive?
         stage_text = I18n.t("activerecord.attributes.import_job.stage.#{import_job.stage}")
         status_text = "#{stage_text} (#{progress}%)"
       end
-      return status_text
+      status_text
     else
-      return I18n.t("activerecord.attributes.import_job.status.#{import_job.status}")
+      I18n.t("activerecord.attributes.import_job.status.#{import_job.status}")
     end
   end
 
