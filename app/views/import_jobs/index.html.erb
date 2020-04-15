@@ -33,6 +33,7 @@
           <td><%= import_job.cas_user&.name%></td>
           <td><%= import_job.timestamp %></td>
           <td><%= import_job.file_to_upload.filename %></td>
+          <td><%= import_job.model %></td>
           <td>
             <%= link_to status_text(import_job), import_job_path(import_job), class: "import_job_status_#{import_job.status}" %>
           </td>

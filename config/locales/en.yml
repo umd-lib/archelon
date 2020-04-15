@@ -53,6 +53,7 @@ en:
           validate_error: Validation Error
           import_success: Import Successful
           import_failed: Import Failed
+          import_error: Import Error
           import_pending: Pending
           in_progress: In Progress
           error: Error

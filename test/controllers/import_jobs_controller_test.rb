@@ -244,9 +244,11 @@ class ImportJobsControllerTest < ActionController::TestCase
         expected_text: I18n.t('activerecord.attributes.import_job.status.import_failed') },
 
       # Error
-      { stage: 'validate', status: :error, progress: 0,
-        expected_text: I18n.t('activerecord.attributes.import_job.status.error') },
-      { stage: 'import', status: :error, progress: 0,
+      { stage: 'validate', status: :validate_error, progress: 0,
+        expected_text: I18n.t('activerecord.attributes.import_job.status.validate_error') },
+      { stage: 'import', status: :import_error, progress: 0,
+        expected_text: I18n.t('activerecord.attributes.import_job.status.import_error') },
+      { stage: nil, status: :error, progress: 0,
         expected_text: I18n.t('activerecord.attributes.import_job.status.error') },
 
       # In Progress (with non-zero percentage)
