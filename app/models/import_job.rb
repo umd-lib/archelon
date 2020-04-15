@@ -54,7 +54,7 @@ class ImportJob < ApplicationRecord
   end
 
   # Returns a symbol reflecting the current status
-  def status
+  def status # rubocop:disable Metrics/AbcSize
     if plastron_status_error?
       return stage ? "#{stage}_error".to_sym : :error
     end
