@@ -34,25 +34,13 @@
           <td><%= import_job.timestamp %></td>
           <td><%= import_job.file_to_upload.filename %></td>
           <td><%= import_job.model %></td>
-          <% if import_job.status == :in_progress %>
-            <% progress = import_job.progress %>
-            <% if progress.nil? || progress == 0 %>
-              <% progress = I18n.t("activerecord.attributes.import_job.status.in_progress") %>
-            <% else %>
-              <% progress = "#{progress}%" %>
-            <% end %>
-            <td class="plastron_status_<%= import_job.status %>">
-              <%= I18n.t("activerecord.attributes.import_job.stage.#{import_job.stage}") %> (<%= progress %>)
-            </td>
-          <% else %>
-            <td class="import_job_status_<%= import_job.status %>">
-              <%= I18n.t("activerecord.attributes.import_job.status.#{import_job.status}") %>
-            </td>
-          <% end %>
+          <td>
+            <%= link_to status_text(import_job), import_job_path(import_job), class: "import_job_status_#{import_job.status}" %>
+          </td>
           <% if import_job.workflow_action == :resubmit %>
             <td><%= button_to 'Resubmit', edit_import_job_path(import_job), method: :get, class: 'btn-xs btn-danger' %></td>
           <% elsif import_job.workflow_action == :import %>
-            <td><%= button_to 'Import', perform_import_import_jobs_path(import_job), class: 'btn-xs btn-success' %>
+            <td><%= button_to 'Import', perform_import_import_jobs_path(import_job), class: 'btn-xs btn-success' %></td>
           <% else %>
             <td></td>
           <% end %>

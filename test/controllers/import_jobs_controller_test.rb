@@ -224,4 +224,54 @@ class ImportJobsControllerTest < ActionController::TestCase
       assert_equal I18n.t(:cannot_import_invalid_file), flash[:error], "Allowed import when status is #{status}"
     end
   end
+
+  test 'status_text should show information about the current status' do # rubocop:disable Metrics/BlockLength:
+    tests = [
+      # Validate Stages
+      { stage: 'validate', status: :validate_pending, progress: 0,
+        expected_text: I18n.t('activerecord.attributes.import_job.status.validate_pending') },
+      { stage: 'validate', status: :validate_success, progress: 100,
+        expected_text: I18n.t('activerecord.attributes.import_job.status.validate_success') },
+      { stage: 'validate', status: :validate_failed, progress: 100,
+        expected_text: I18n.t('activerecord.attributes.import_job.status.validate_failed') },
+
+      # Import Stages
+      { stage: 'import', status: :import_pending, progress: 0,
+        expected_text: I18n.t('activerecord.attributes.import_job.status.import_pending') },
+      { stage: 'import', status: :import_success, progress: 100,
+        expected_text: I18n.t('activerecord.attributes.import_job.status.import_success') },
+      { stage: 'import', status: :import_failed, progress: 100,
+        expected_text: I18n.t('activerecord.attributes.import_job.status.import_failed') },
+
+      # Error
+      { stage: 'validate', status: :validate_error, progress: 0,
+        expected_text: I18n.t('activerecord.attributes.import_job.status.validate_error') },
+      { stage: 'import', status: :import_error, progress: 0,
+        expected_text: I18n.t('activerecord.attributes.import_job.status.import_error') },
+      { stage: nil, status: :error, progress: 0,
+        expected_text: I18n.t('activerecord.attributes.import_job.status.error') },
+
+      # In Progress (with non-zero percentage)
+      { stage: 'validate', status: :in_progress, progress: 20,
+        expected_text: "#{I18n.t('activerecord.attributes.import_job.stage.validate')} (20%)" },
+      { stage: 'import', status: :in_progress, progress: 20,
+        expected_text: "#{I18n.t('activerecord.attributes.import_job.stage.import')} (20%)" },
+
+      # In Progress (zero percentage)
+      { stage: 'validate', status: :in_progress, progress: 0,
+        expected_text: I18n.t('activerecord.attributes.import_job.status.in_progress') },
+      { stage: 'import', status: :in_progress, progress: 0,
+        expected_text: I18n.t('activerecord.attributes.import_job.status.in_progress') }
+    ]
+
+    tests.each do |test|
+      import_job = ImportJob.first
+      import_job.stage = test[:stage]
+      import_job.progress = test[:progress]
+      import_job.stub(:status, test[:status]) do
+        status_text = @controller.status_text(import_job)
+        assert_equal test[:expected_text], status_text, "Failed for #{test[:stage]}, #{test[:status]}, #{test[:progress]}"
+      end
+    end
+  end
 end
