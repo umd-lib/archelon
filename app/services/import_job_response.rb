@@ -3,7 +3,7 @@
 # Parses the Plastron response for metadata import job.
 class ImportJobResponse
   attr_reader :server_error, :num_total, :num_updated, :num_unchanged,
-              :num_valid, :num_invalid, :num_error, :invalid_lines
+              :num_valid, :num_invalid, :num_error, :invalid_lines, :json
 
   def initialize(response_message) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity, Metrics/LineLength
     @valid = false
@@ -22,13 +22,13 @@ class ImportJobResponse
     end
 
     begin
-      msg = JSON.parse(response_message)
+      @json = JSON.parse(response_message)
     rescue JSON::ParserError
       @server_error = :invalid_response_from_server
       return
     end
 
-    count_hash = msg['count']
+    count_hash = @json['count']
     if count_hash.nil?
       @server_error = :invalid_response_from_server
       return
@@ -50,7 +50,7 @@ class ImportJobResponse
 
     return if @valid
 
-    validations = msg['validation']
+    validations = @json['validation']
 
     return unless validations
 
@@ -70,6 +70,14 @@ class ImportJobResponse
 
   def server_error?
     !@server_error.nil?
+  end
+
+  # Returns pretty-printed JSON suitable for display, or an empty
+  # string if the JSON cannot be parsed.
+  def json_pretty_print
+    JSON.pretty_generate(@json)
+  rescue StandardError
+    ''
   end
 end
 

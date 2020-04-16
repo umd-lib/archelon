@@ -12,6 +12,7 @@ class ImportJobResponseTest < Minitest::Test
     assert_equal(false, import_job_response.valid?)
     assert_equal(true, import_job_response.server_error?)
     assert_equal(:invalid_response_from_server, import_job_response.server_error)
+    assert_equal('', import_job_response.json_pretty_print)
   end
 
   def test_empty_response
@@ -20,6 +21,7 @@ class ImportJobResponseTest < Minitest::Test
     assert_equal(false, import_job_response.valid?)
     assert_equal(true, import_job_response.server_error?)
     assert_equal(:invalid_response_from_server, import_job_response.server_error)
+    assert_equal('', import_job_response.json_pretty_print)
   end
 
   def test_invalid_json # rubocop:disable Metrics/MethodLength
@@ -34,6 +36,7 @@ class ImportJobResponseTest < Minitest::Test
       assert_equal(false, import_job_response.valid?, "JSON: #{json}")
       assert_equal(true, import_job_response.server_error?, "JSON: #{json}")
       assert_equal(:invalid_response_from_server, import_job_response.server_error, "JSON: #{json}")
+      assert_equal(JSON.pretty_generate(JSON.parse(json)), import_job_response.json_pretty_print, "JSON: #{json}")
     end
   end
 
@@ -54,6 +57,7 @@ class ImportJobResponseTest < Minitest::Test
                    "JSON: #{json}")
       assert_equal(0, import_job_response.num_invalid, "JSON: #{json}")
       assert_equal(0, import_job_response.num_error, "JSON: #{json}")
+      assert_equal(JSON.pretty_generate(JSON.parse(json)), import_job_response.json_pretty_print, "JSON: #{json}")
     end
   end
 
@@ -73,10 +77,11 @@ class ImportJobResponseTest < Minitest::Test
       assert_equal(import_job_response.num_total,
                    import_job_response.num_valid + import_job_response.num_invalid + import_job_response.num_error,
                    "JSON: #{json}")
+      assert_equal(JSON.pretty_generate(JSON.parse(json)), import_job_response.json_pretty_print, "JSON: #{json}")
     end
   end
 
-  def test_valid_json_and_failed_validation_with_invalid_data # rubocop:disable Metrics/MethodLength
+  def test_valid_json_and_failed_validation_with_invalid_data # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     json = <<~JSON_END
       { "count": {"total": 1, "updated": 0, "unchanged": 0, "valid": 0, "invalid": 1, "errors": 0},
         "validation": [
@@ -103,9 +108,10 @@ class ImportJobResponseTest < Minitest::Test
     assert_equal(1, invalid_lines.count)
     assert_equal('2', invalid_lines[0].line_location)
     assert_equal('date', invalid_lines[0].field_errors[0])
+    assert_equal(JSON.pretty_generate(JSON.parse(json)), import_job_response.json_pretty_print, "JSON: #{json}")
   end
 
-  def test_valid_json_and_failed_validation_with_wrong_number_of_columns # rubocop:disable Metrics/MethodLength
+  def test_valid_json_and_failed_validation_with_wrong_number_of_columns # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     json = <<~JSON_END
       { "count": {"total": 1, "updated": 0, "unchanged": 0, "valid": 0, "invalid": 1, "errors": 0},
         "validation": [
@@ -125,5 +131,6 @@ class ImportJobResponseTest < Minitest::Test
     assert_equal(1, invalid_lines.count)
     assert_equal('3', invalid_lines[0].line_location)
     assert_equal('Line <>:3 has the wrong number of columns', invalid_lines[0].line_error)
+    assert_equal(JSON.pretty_generate(JSON.parse(json)), import_job_response.json_pretty_print, "JSON: #{json}")
   end
 end

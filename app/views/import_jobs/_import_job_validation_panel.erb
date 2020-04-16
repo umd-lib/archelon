@@ -62,5 +62,20 @@
         </div>
       </div>
     <% end %>
+
+    <% unless import_job_response.json_pretty_print.empty? %>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <div class="panel-title">
+            <a role="button" data-toggle="collapse" data-target="#json_panel" class="btn-block">
+              JSON
+            </a>
+          </div>
+        </div>
+        <div id="json_panel" class="panel-body collapse">
+          <pre><code><%= import_job_response.json_pretty_print %></code></pre>
+        </div>
+      </div>
+    <% end %>
   </div>
 </div>
