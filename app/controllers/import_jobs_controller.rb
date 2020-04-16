@@ -154,7 +154,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
         PlastronJobId: import_job_url(job),
         'PlastronArg-model': job.model,
         'PlastronArg-name': job.name,
-        'PlastronArg-username': job.cas_user.cas_directory_id,
+        'PlastronArg-on-behalf-of': job.cas_user.cas_directory_id,
         'PlastronArg-timestamp': job.timestamp
       }
 
