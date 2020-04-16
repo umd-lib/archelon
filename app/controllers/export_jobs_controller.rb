@@ -92,7 +92,7 @@ class ExportJobsController < ApplicationController
         PlastronCommand: 'export',
         PlastronJobId: export_job_url(job),
         'PlastronArg-name': job.name,
-        'PlastronArg-username': job.cas_user.cas_directory_id,
+        'PlastronArg-on-behalf-of': job.cas_user.cas_directory_id,
         'PlastronArg-format': job.format,
         'PlastronArg-timestamp': job.timestamp,
         persistent: 'true'
