@@ -63,7 +63,9 @@
       </div>
     <% end %>
 
-    <% unless import_job_response.json_pretty_print.empty? %>
+    <% json_headers = import_job_response.headers_pretty_print %>
+    <% json_body = import_job_response.body_pretty_print %>
+    <% if json_headers.present? or json_body.present? %>
       <div class="panel panel-default">
         <div class="panel-heading">
           <div class="panel-title">
@@ -73,7 +75,10 @@
           </div>
         </div>
         <div id="json_panel" class="panel-body collapse">
-          <pre><code><%= import_job_response.json_pretty_print %></code></pre>
+            <h4>Headers</h4>
+            <pre><code><%= json_headers %></code></pre>
+            <h4>Body</h4>
+            <pre><code><%= json_body %></code></pre>
         </div>
       </div>
     <% end %>

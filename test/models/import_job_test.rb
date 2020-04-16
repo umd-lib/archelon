@@ -3,7 +3,7 @@
 require 'test_helper'
 
 class ImportJobTest < ActiveSupport::TestCase
-  test 'status reflects current status of job' do
+  test 'status reflects current status of job' do # rubocop:disable Metrics/BlockLength
     import_job = import_jobs(:one)
 
     json_successful_response =
@@ -26,7 +26,8 @@ class ImportJobTest < ActiveSupport::TestCase
     tests.each do |test|
       import_job.stage = test[:import_job_stage]
       import_job.plastron_status = test[:plastron_status]
-      import_job.last_response = test[:response]
+      import_job.last_response_headers = '{}' # Simple valid header
+      import_job.last_response_body = test[:response]
       import_job.save!
       expected = test[:expected]
       assert_equal(expected, import_job.status, "Failed for (#{import_job.stage}, #{import_job.plastron_status})")

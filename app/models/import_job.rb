@@ -67,7 +67,7 @@ class ImportJob < ApplicationRecord
 
     return :in_progress unless plastron_status_done?
 
-    response = ImportJobResponse.new(last_response)
+    response = ImportJobResponse.new(last_response_headers, last_response_body)
     return "#{stage}_success".to_sym if response.valid?
 
     "#{stage}_failed".to_sym
@@ -99,7 +99,12 @@ class ImportJob < ApplicationRecord
 
   def update_status(plastron_message)
     self.plastron_status = plastron_message.headers['PlastronJobStatus']
-    self.last_response = plastron_message.body
+    self.last_response_headers = plastron_message.headers_json
+    self.last_response_body = plastron_message.body
     save!
+  end
+
+  def last_response
+    ImportJobResponse.new(last_response_headers, last_response_body)
   end
 end

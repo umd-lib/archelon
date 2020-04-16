@@ -3,9 +3,10 @@
 # Parses the Plastron response for metadata import job.
 class ImportJobResponse
   attr_reader :server_error, :num_total, :num_updated, :num_unchanged,
-              :num_valid, :num_invalid, :num_error, :invalid_lines, :json
+              :num_valid, :num_invalid, :num_error, :invalid_lines,
+              :json_headers, :json_body
 
-  def initialize(response_message) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity, Metrics/LineLength
+  def initialize(response_headers, response_body) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity, Metrics/LineLength
     @valid = false
     @server_error = nil
     @num_total = 0
@@ -16,19 +17,31 @@ class ImportJobResponse
     @num_error = 0
     @invalid_lines = []
 
-    if response_message.nil?
+    if response_headers.nil?
       @server_error = :invalid_response_from_server
       return
     end
 
     begin
-      @json = JSON.parse(response_message)
+      @json_headers = JSON.parse(response_headers)
     rescue JSON::ParserError
       @server_error = :invalid_response_from_server
       return
     end
 
-    count_hash = @json['count']
+    if response_body.nil?
+      @server_error = :invalid_response_from_server
+      return
+    end
+
+    begin
+      @json_body = JSON.parse(response_body)
+    rescue JSON::ParserError
+      @server_error = :invalid_response_from_server
+      return
+    end
+
+    count_hash = @json_body['count']
     if count_hash.nil?
       @server_error = :invalid_response_from_server
       return
@@ -50,7 +63,7 @@ class ImportJobResponse
 
     return if @valid
 
-    validations = @json['validation']
+    validations = @json_body['validation']
 
     return unless validations
 
@@ -72,12 +85,30 @@ class ImportJobResponse
     !@server_error.nil?
   end
 
-  # Returns pretty-printed JSON suitable for display, or an empty
-  # string if the JSON cannot be parsed.
-  def json_pretty_print
-    JSON.pretty_generate(@json)
-  rescue StandardError
-    ''
+  # Returns a pretty-printed JSON string representing the response headers,
+  # or an empty string if the headers could not be parsed.
+  def headers_pretty_print
+    return '' if @json_headers.blank?
+
+    begin
+      JSON.pretty_generate(@json_headers)
+    rescue StandardError => e
+      Rails.logger.warn "Could not parse response headers from server: #{e.message}"
+      ''
+    end
+  end
+
+  # Returns a pretty-printed JSON string representing the response body,
+  # or an empty string if the body could not be parsed.
+  def body_pretty_print
+    return '' if @json_body.blank?
+
+    begin
+      JSON.pretty_generate(@json_body)
+    rescue StandardError => e
+      Rails.logger.warn "Could not parse response body from server: #{e.message}"
+      ''
+    end
   end
 end
 

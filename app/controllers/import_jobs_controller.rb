@@ -19,8 +19,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
   # GET /import_jobs/1
   # GET /import_jobs/1.json
   def show
-    response_message = @import_job.last_response
-    @import_job_response = ImportJobResponse.new(response_message)
+    @import_job_response = @import_job.last_response
   end
 
   # GET /import_jobs/new
@@ -37,8 +36,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
       return
     end
 
-    response_message = @import_job.last_response
-    @import_job_response = ImportJobResponse.new(response_message)
+    @import_job_response = @import_job.last_response
   end
 
   # POST /import_jobs
@@ -80,8 +78,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
       return
     end
 
-    response_message = @import_job.last_response
-    @import_job_response = ImportJobResponse.new(response_message)
+    @import_job_response = @import_job.last_response
     render :edit
   end
 
