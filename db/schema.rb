@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_15_170216) do
+ActiveRecord::Schema.define(version: 2020_04_16_134039) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -111,6 +111,7 @@ ActiveRecord::Schema.define(version: 2020_04_15_170216) do
     t.integer "progress"
     t.text "last_response"
     t.string "model"
+    t.text "last_response_headers"
     t.index ["cas_user_id"], name: "index_import_jobs_on_cas_user_id"
   end
 
