@@ -77,6 +77,11 @@ class PlastronMessage
     @job_id = @headers['PlastronJobId']
   end
 
+  # Parse the message headers as JSON and return the result.
+  def headers_json
+    @headers.to_json
+  end
+
   # Parse the message body as JSON and return the result.
   def body_json
     JSON.parse(@body)
