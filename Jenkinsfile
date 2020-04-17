@@ -111,7 +111,7 @@ pipeline {
           # Configure MiniTest to use JUnit-style reporter
           export MINITEST_REPORTER=JUnitReporter
 
-          bundle exec rails db:reset
+          bundle exec rails db:reset db:seed
           bundle exec rails test:system test
         '''
       }
