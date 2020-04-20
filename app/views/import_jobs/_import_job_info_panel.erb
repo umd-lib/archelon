@@ -4,32 +4,37 @@
   </div>
   <div class="panel-body">
     <p>
-      <strong>Job ID:</strong>
+      <strong><%= t('activerecord.attributes.import_job.id') %>:</strong>
       <%= import_job.id %>
     </p>
 
     <p>
-      <strong>Job Name:</strong>
+      <strong><%= t('activerecord.attributes.import_job.name') %>:</strong>
       <%= import_job.name %>
     </p>
 
     <p>
-      <strong>Content Model:</strong>
+      <strong><%= t('activerecord.attributes.import_job.model') %>:</strong>
       <%= import_job.model %>
     </p>
 
     <p>
-      <strong>User:</strong>
+      <strong><%= t('activerecord.attributes.import_job.access') %>:</strong>
+      <%= import_job.access %>
+    </p>
+
+    <p>
+      <strong><%= t('activerecord.attributes.import_job.cas_user') %>:</strong>
       <%= import_job.cas_user&.name %>
     </p>
 
     <p>
-      <strong>Timestamp:</strong>
+      <strong><%= t('activerecord.attributes.import_job.timestamp') %>:</strong>
       <%= import_job.timestamp %>
     </p>
 
     <p>
-      <strong>File to upload:</strong>
+      <strong><%= t('activerecord.attributes.import_job.file_to_upload') %>:</strong>
       <%= import_job.file_to_upload.filename %>
     </p>
   </div>

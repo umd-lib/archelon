@@ -13,7 +13,7 @@
 
   <div class="form-group">
     <div>
-      <%= form.label "Choose job name:", class: "col-form-label-lg" %>
+      <%= form.label :name, class: "col-form-label-lg" %>
     </div>
     <div class="p-3 ml-5">
       <%= form.text_field :name, size: 40, class: "form-control" %>
@@ -22,10 +22,24 @@
 
   <div class="form-group">
     <div>
-      <%= form.label "Content model:", class: "col-form-label-lg" %>
+      <%= form.label :model, class: "col-form-label-lg" %>
     </div>
     <div class="p-3 ml-5">
       <%= form.select :model, options_for_select(%w(Item Issue Letter Poster), selected: import_job.model) %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div>
+      <%= form.label :access, class: "col-form-label-lg" %>
+    </div>
+    <div class="p-3 ml-5">
+      <% if ImportJob.access_vocab.nil? %>
+        <i>Access vocabulary is not configured.</i>
+      <% else %>
+        <%=  form.select :access, options_for_select(ImportJob.access_vocab.types.map {|type| [ type.identifier, type.uri ]}, selected: import_job.access)  %>
+      <% end %>
+      This is the access level that will be applied to any newly created objects.
     </div>
   </div>
 

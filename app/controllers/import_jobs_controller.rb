@@ -148,18 +148,18 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
       flash[:error] = I18n.t(:active_mq_is_down)
     end
 
-    def message_headers(job, validate_only)
-      headers = {
+    def message_headers(job, validate_only) # rubocop:disable Metrics/MethodLength
+      {
         PlastronCommand: 'import',
         PlastronJobId: import_job_url(job),
         'PlastronArg-model': job.model,
         'PlastronArg-name': job.name,
         'PlastronArg-on-behalf-of': job.cas_user.cas_directory_id,
         'PlastronArg-timestamp': job.timestamp
-      }
-
-      headers['PlastronArg-validate-only'] = 'True' if validate_only
-      headers
+      }.tap do |headers|
+        headers['PlastronArg-access'] = "<#{job.access}>" if job.access.present?
+        headers['PlastronArg-validate-only'] = 'True' if validate_only
+      end
     end
 
     def headers_to_s(headers)
@@ -168,6 +168,6 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def import_job_params
-      params.require(:import_job).permit(:name, :model, :file_to_upload)
+      params.require(:import_job).permit(:name, :model, :access, :file_to_upload)
     end
 end

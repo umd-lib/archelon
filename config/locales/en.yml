@@ -43,6 +43,12 @@ en:
   activerecord:
     attributes:
       import_job:
+        access: Access
+        cas_user: User
+        file_to_upload: File to Upload
+        id: Job ID
+        model: Content Model
+        name: Job Name
         stage:
           import: Import
           validate: Validation
@@ -57,6 +63,7 @@ en:
           import_pending: Pending
           in_progress: In Progress
           error: Error
+        timestamp: Timestamp
       individual:
         identifier: Identifier
         label: Term

@@ -51,6 +51,10 @@ class ImportJob < ApplicationRecord
   validates :name, presence: true
   validate :attachment_validation
 
+  def self.access_vocab
+    @access_vocab ||= Vocabulary.find_by identifier: VOCAB_CONFIG['access_vocab_identifier']
+  end
+
   # Rails 5.2 does not have attachment validation, so this is needed
   # until at least Rails 6 (see https://stackoverflow.com/questions/48158770/activestorage-file-attachment-validation)
   def attachment_validation
