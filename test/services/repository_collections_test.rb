@@ -23,7 +23,7 @@ class RepositoryCollectionsTest < ActiveSupport::TestCase
   end
 
   test 'valid Solr response - no collections' do
-    Blacklight::Solr::Repository.any_instance.stub(:search).and_return(valid_solr_response_no_collections)
+    stub_repository_collections_solr_response('services/repository_collections/solr_response_no_collections.json')
 
     collections = RepositoryCollections.list
 
@@ -31,7 +31,7 @@ class RepositoryCollectionsTest < ActiveSupport::TestCase
   end
 
   test 'valid Solr response - one collection' do
-    Blacklight::Solr::Repository.any_instance.stub(:search).and_return(valid_solr_response_one_collection)
+    stub_repository_collections_solr_response('services/repository_collections/solr_response_one_collection.json')
 
     collections = RepositoryCollections.list
 
@@ -41,7 +41,7 @@ class RepositoryCollectionsTest < ActiveSupport::TestCase
   end
 
   test 'valid Solr response - multiple collections' do
-    Blacklight::Solr::Repository.any_instance.stub(:search).and_return(valid_solr_response_multiple_collections)
+    stub_repository_collections_solr_response('services/repository_collections/solr_response_multiple_collections.json')
 
     collections = RepositoryCollections.list
 
@@ -51,28 +51,5 @@ class RepositoryCollectionsTest < ActiveSupport::TestCase
     display_titles = collections.map { |c| c[:display_title] }
     display_titles_sorted = display_titles.sort
     assert_equal display_titles_sorted, display_titles
-  end
-
-  # Helper methods
-
-  def valid_solr_response_no_collections
-    file = file_fixture('services/repository_collections/solr_response_no_collections.json').read
-    data_hash = JSON.parse(file)
-
-    Blacklight::Solr::Response.new(data_hash, nil)
-  end
-
-  def valid_solr_response_one_collection
-    file = file_fixture('services/repository_collections/solr_response_one_collection.json').read
-    data_hash = JSON.parse(file)
-
-    Blacklight::Solr::Response.new(data_hash, nil)
-  end
-
-  def valid_solr_response_multiple_collections
-    file = file_fixture('services/repository_collections/solr_response_multiple_collections.json').read
-    data_hash = JSON.parse(file)
-
-    Blacklight::Solr::Response.new(data_hash, nil)
   end
 end

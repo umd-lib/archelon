@@ -6,6 +6,9 @@ class ImportJobsControllerTest < ActionController::TestCase
   setup do
     @cas_user = cas_users(:test_admin)
     mock_cas_login(@cas_user.cas_directory_id)
+
+    # Stub Blacklight::Solr::Repository so that repository collections can be retrieved
+    stub_repository_collections_solr_response('services/repository_collections/solr_response_one_collection.json')
   end
 
   test 'actions should redirect to login when unauthenticated' do
@@ -66,7 +69,8 @@ class ImportJobsControllerTest < ActionController::TestCase
     name = "#{@cas_user.cas_directory_id}-#{Time.now.iso8601}"
     assert_difference('ImportJob.count') do
       post :create, params: {
-        import_job: { name: name, file_to_upload: fixture_file_upload('files/valid_import.csv') }
+        import_job: { name: name, collection: 'http://example.com/foo/baz',
+                      file_to_upload: fixture_file_upload('files/valid_import.csv') }
       }
     end
 
@@ -77,7 +81,8 @@ class ImportJobsControllerTest < ActionController::TestCase
     name = ''
     assert_no_difference('ImportJob.count') do
       post :create, params: {
-        import_job: { name: name, file_to_upload: fixture_file_upload('files/valid_import.csv') }
+        import_job: { name: name, collection: 'http://example.com/foo/baz',
+                      file_to_upload: fixture_file_upload('files/valid_import.csv') }
       }
     end
 
@@ -91,7 +96,7 @@ class ImportJobsControllerTest < ActionController::TestCase
     name = "#{@cas_user.cas_directory_id}-#{Time.now.iso8601}"
     assert_no_difference('ImportJob.count') do
       post :create, params: {
-        import_job: { name: name }
+        import_job: { name: name, collection: 'http://example.com/foo/baz' }
       }
     end
 
@@ -140,7 +145,8 @@ class ImportJobsControllerTest < ActionController::TestCase
     end
 
     post :create, params: {
-      import_job: { name: name, file_to_upload: fixture_file_upload('files/valid_import.csv') }
+      import_job: { name: name, collection: 'http://example.com/foo/baz',
+                    file_to_upload: fixture_file_upload('files/valid_import.csv') }
     }
 
     import_job = assigns(:import_job)
@@ -273,5 +279,15 @@ class ImportJobsControllerTest < ActionController::TestCase
         assert_equal test[:expected_text], status_text, "Failed for #{test[:stage]}, #{test[:status]}, #{test[:progress]}"
       end
     end
+  end
+
+  test 'flash message should be displayed when Solr is down' do
+    Blacklight::Solr::Repository.any_instance.stub(:search).and_return(StandardError.new)
+    get :new
+
+    collections_options_array = assigns(:collections_options_array)
+
+    assert_equal I18n.t(:solr_is_down), flash[:error]
+    assert_equal [], collections_options_array
   end
 end

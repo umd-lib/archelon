@@ -26,6 +26,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
   def new
     name = params[:name] || "#{current_cas_user.cas_directory_id}-#{Time.now.iso8601}"
     @import_job = ImportJob.new(name: name)
+    @collections_options_array = retrieve_collections
   end
 
   # GET /import_jobs/1/edit
@@ -37,6 +38,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     end
 
     @import_job_response = @import_job.last_response
+    @collections_options_array = retrieve_collections
   end
 
   # POST /import_jobs
@@ -48,6 +50,8 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
       redirect_to action: 'index', status: :see_other
       return
     end
+
+    @collections_options_array = retrieve_collections
     render :new
   end
 
@@ -79,6 +83,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     end
 
     @import_job_response = @import_job.last_response
+    @collections_options_array = retrieve_collections
     render :edit
   end
 
@@ -126,6 +131,18 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
       @import_job = ImportJob.find(params[:id])
     end
 
+    # Returns an array of arrays, the first element being the collection title,
+    # the second element the URI of the collection.
+    #
+    # If an error occurs, an empty array is returned.
+    def retrieve_collections
+      collections = RepositoryCollections.list
+      collections.map { |c| [c[:display_title], c[:uri]] }
+    rescue StandardError
+      flash[:error] = I18n.t(:solr_is_down)
+      []
+    end
+
     def create_job(args)
       ImportJob.new(args).tap do |job|
         job.timestamp = Time.zone.now
@@ -155,6 +172,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
         'PlastronArg-model': job.model,
         'PlastronArg-name': job.name,
         'PlastronArg-on-behalf-of': job.cas_user.cas_directory_id,
+        'PlastronArg-member-of': job.collection,
         'PlastronArg-timestamp': job.timestamp
       }.tap do |headers|
         headers['PlastronArg-access'] = "<#{job.access}>" if job.access.present?
@@ -168,6 +186,6 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def import_job_params
-      params.require(:import_job).permit(:name, :model, :access, :file_to_upload)
+      params.require(:import_job).permit(:name, :model, :access, :collection, :file_to_upload)
     end
 end

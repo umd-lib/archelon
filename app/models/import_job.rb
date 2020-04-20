@@ -49,6 +49,7 @@ class ImportJob < ApplicationRecord
   has_one_attached :file_to_upload
 
   validates :name, presence: true
+  validates :collection, presence: true
   validate :attachment_validation
 
   def self.access_vocab
