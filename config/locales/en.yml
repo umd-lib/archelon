@@ -45,6 +45,7 @@ en:
       import_job:
         access: Access
         cas_user: User
+        collection: Collection
         file_to_upload: File to Upload
         id: Job ID
         model: Content Model
