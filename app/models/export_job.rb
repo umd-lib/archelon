@@ -6,6 +6,8 @@ class ExportJob < ApplicationRecord
 
   belongs_to :cas_user
 
+  after_commit { ExportJobRelayJob.perform_now(self) }
+
   CSV_FORMAT = 'text/csv'
   TURTLE_FORMAT = 'text/turtle'
 
