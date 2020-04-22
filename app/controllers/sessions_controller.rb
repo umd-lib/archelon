@@ -6,10 +6,8 @@ class SessionsController < ApplicationController
   def create
     @user = CasUser.find_or_create_from_auth_hash(request.env['omniauth.auth'])
     if @user.nil?
-      session[:unauthorized_user] = true
-
-      # Delete signed cookie used for Action Cable authentication
-      cookies.delete(:cas_user)
+      session[:unauthorized_user] = true # Not sure if this is actually used anywhere
+      CasAuthentication.sign_out(session, cookies)
 
       render(file: Rails.root.join('public', '403.html'), status: :forbidden, layout: false) and return # rubocop:disable Style/AndOr, Metrics/LineLength
     else
@@ -19,20 +17,11 @@ class SessionsController < ApplicationController
   end
 
   def sign_in(user)
-    session[:cas_user] = user.cas_directory_id
-
-    # Signed cookie is used for providing CAS directory id for Action Cable
-    # authentication (see app/channels/application_cable/connection.rb)
-    cookies.signed[:cas_user] = user.cas_directory_id
+    CasAuthentication.sign_in(user.cas_directory_id, session, cookies)
   end
 
   def destroy
-    session.delete(:cas_user)
-    session.delete(:admin_id)
-
-    # Delete signed cookie used for Action Cable authentication
-    cookies.delete(:cas_user)
-
+    CasAuthentication.sign_out(session, cookies)
     cas_logout_url = Rails.application.config.cas_url + '/logout'
     redirect_to cas_logout_url
   end
