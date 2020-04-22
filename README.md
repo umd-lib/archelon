@@ -284,6 +284,13 @@ this application is vulnerable to CVE-2015-9284, due to its use of the
 As configured, this application uses CAS for authenication. As the application
 does not use OAuth it is not vulnerable to CVE-2015-9284.
 
+## Action Cable
+
+The Rails "Action Cable" functionality is used to provide dynamic updates to
+the GUI.
+
+See [docs/ActionCable.md](docs/ActionCable.md) for more information.
+
 ## License
 
 See the [LICENSE](LICENSE.md) file for license rights and limitations
