@@ -1,4 +1,4 @@
-# test/jobs/chat_relay_job_test.rb
+# frozen_string_literal: true
 
 require 'test_helper'
 

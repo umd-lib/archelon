@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Channel for Export Jobs
 class ExportJobsChannel < ApplicationCable::Channel
   def follow
     stop_all_streams

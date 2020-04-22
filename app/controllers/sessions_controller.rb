@@ -3,7 +3,7 @@
 class SessionsController < ApplicationController
   skip_before_action :authenticate
 
-  def create
+  def create # rubocop:disable Metrics/AbcSize
     @user = CasUser.find_or_create_from_auth_hash(request.env['omniauth.auth'])
     if @user.nil?
       session[:unauthorized_user] = true # Not sure if this is actually used anywhere
