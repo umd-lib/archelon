@@ -6,7 +6,7 @@ App.export_jobs = App.cable.subscriptions.create "ExportJobsChannel",
     #
     # This timeout is in the Rails Action Cable "full-stack" example at
     # https://github.com/rails/actioncable-examples/blob/master/app/assets/javascripts/channels/comments.coffee
-    # with the followig comment:
+    # with the following comment:
     #    FIXME: While we wait for cable subscriptions to always be finalized before sending messages
     #
     # Not clear if this is still necessary, but leaving it in for safety
@@ -16,12 +16,8 @@ App.export_jobs = App.cable.subscriptions.create "ExportJobsChannel",
     , 1000
 
   received: (data) ->
-    # Called when data is received from the server
-    export_job = data.export_job
-    export_job_id = export_job['id']
-    job_id_divs = $("[data-channel='export_jobs'][data-job-id='"+export_job_id+"']")
-
-    job_id_divs.replaceWith(data.message)
+    # Trigger a page reload
+    location.reload()
 
   followExportJobs: ->
     # Calls "follow" or "unfollow" on ExportJobsChannel, based on whether
