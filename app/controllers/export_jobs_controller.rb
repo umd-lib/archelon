@@ -60,14 +60,6 @@ class ExportJobsController < ApplicationController
     end
 
     def stomp_client_connected?
-      return if STOMP_CLIENT.connected?
-
-      # try to reconnect
-      STOMP_CLIENT.connect max_reconnect_attempts: 3
-      return if STOMP_CLIENT.connected?
-
-      flash[:error] = I18n.t(:active_mq_is_down)
-      redirect_to controller: 'bookmarks'
     end
 
     def selected_items_changed?
@@ -102,12 +94,13 @@ class ExportJobsController < ApplicationController
     def submit_job(uris)
       body = uris.join("\n")
       headers = message_headers(@job)
-      STOMP_CLIENT.publish STOMP_CONFIG['destinations']['jobs'], body, headers
-      @job.plastron_status = :plastron_status_in_progress
-      @job.save!
-    end
-
-    def headers_to_s(headers)
-      headers.map { |k, v| [k, v].join(': ') }.join("\n")
+      if StompService.publish_message :jobs, body, headers
+        @job.plastron_status = :plastron_status_in_progress
+        @job.save!
+      else
+        @job.plastron_status = :plastron_status_error
+        @job.save!
+        flash[:error] = I18n.t(:active_mq_is_down)
+      end
     end
 end

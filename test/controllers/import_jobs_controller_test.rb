@@ -64,7 +64,7 @@ class ImportJobsControllerTest < ActionController::TestCase
   end
 
   test 'should create import_job' do
-    mock_stomp_client
+    mock_stomp_service
 
     name = "#{@cas_user.cas_directory_id}-#{Time.now.iso8601}"
     assert_difference('ImportJob.count') do
@@ -137,12 +137,9 @@ class ImportJobsControllerTest < ActionController::TestCase
   end
 
   test 'create should report error when STOMP client is not connected' do
-    mock_stomp_client(UnconnectedMockStompClient.instance)
-
-    # Verify that STOMP_CLIENT actually raises Stomp::Error::NoCurrentConnection
-    assert_raises(Stomp::Error::NoCurrentConnection) do
-      STOMP_CLIENT.publish(nil, nil, nil)
-    end
+    stub_const('StompService', double('stomp_service_disconnected', publish_message: false))
+    expect(StompService).to receive(:publish_message)
+    assert_not StompService.publish_message(nil, nil, nil)
 
     post :create, params: {
       import_job: { name: name, collection: 'http://example.com/foo/baz',
@@ -154,12 +151,9 @@ class ImportJobsControllerTest < ActionController::TestCase
   end
 
   test 'update should report error when STOMP client is not connected' do
-    mock_stomp_client(UnconnectedMockStompClient.instance)
-
-    # Verify that STOMP_CLIENT actually raises Stomp::Error::NoCurrentConnection
-    assert_raises(Stomp::Error::NoCurrentConnection) do
-      STOMP_CLIENT.publish(nil, nil, nil)
-    end
+    stub_const('StompService', double('stomp_service_disconnected', publish_message: false))
+    expect(StompService).to receive(:publish_message)
+    assert_not StompService.publish_message(nil, nil, nil)
 
     import_job = ImportJob.first
     patch :update, params: { id: import_job.id,
@@ -169,12 +163,9 @@ class ImportJobsControllerTest < ActionController::TestCase
   end
 
   test 'import should report error when STOMP client is not connected' do
-    mock_stomp_client(UnconnectedMockStompClient.instance)
-
-    # Verify that STOMP_CLIENT actually raises Stomp::Error::NoCurrentConnection
-    assert_raises(Stomp::Error::NoCurrentConnection) do
-      STOMP_CLIENT.publish(nil, nil, nil)
-    end
+    stub_const('StompService', double('stomp_service_disconnected', publish_message: false))
+    expect(StompService).to receive(:publish_message)
+    assert_not StompService.publish_message(nil, nil, nil)
 
     import_job = ImportJob.first
     import_job.file_to_upload = fixture_file_upload('files/valid_import.csv')

@@ -158,8 +158,9 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
 
       import_job.plastron_status = :plastron_status_in_progress
       import_job.save!
-      STOMP_CLIENT.publish STOMP_CONFIG['destinations']['jobs'], body, headers
-    rescue Stomp::Error::NoCurrentConnection
+      StompService.publish_message(:jobs, body, headers) && return
+
+      # if we were unable to send the message
       import_job.plastron_status = :plastron_status_error
       import_job.save!
       flash[:error] = I18n.t(:active_mq_is_down)
@@ -178,10 +179,6 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
         headers['PlastronArg-access'] = "<#{job.access}>" if job.access.present?
         headers['PlastronArg-validate-only'] = 'True' if validate_only
       end
-    end
-
-    def headers_to_s(headers)
-      headers.map { |k, v| [k, v].join(': ') }.join("\n")
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

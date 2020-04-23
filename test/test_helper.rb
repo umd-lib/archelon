@@ -103,10 +103,10 @@ class ActiveSupport::TestCase
   end
 
   # Replaces STOMP_CLIENT with the MockStompClient
-  def mock_stomp_client(client = MockStompClient.instance)
+  def mock_stomp_service(service = MockStompService.new)
     # Remove constant, if set, to avoid warning about resetting the constant
-    Object.send(:remove_const, 'STOMP_CLIENT') if Object.const_defined?('STOMP_CLIENT')
-    Object.const_set('STOMP_CLIENT', client)
+    Object.send(:remove_const, :STOMP_SERVICE) if Object.const_defined?(:STOMP_SERVICE)
+    Object.const_set(:STOMP_SERVICE, service)
   end
 end
 
@@ -119,27 +119,15 @@ def stub_repository_collections_solr_response(fixture_filename)
   Blacklight::Solr::Repository.any_instance.stub(:search).and_return(response)
 end
 
-class MockStompClient < StompClient
-  def initialize
-    # Skip initialization
-  end
-
-  def publish(destination, message, headers = {})
-    # Do nothing
-  end
-
-  def connected?
+class MockStompService < StompService
+  def publish(_destination, _message, _headers = {})
     true
   end
 end
 
-# Variant of MockStompClient simulating unconnected client
-class UnconnectedMockStompClient < MockStompClient
+# Simulation of when the STOMP server is not reachable
+class UnconnectedMockStompService < StompService
   def publish(_destination, _message, _headers = {})
-    raise Stomp::Error::NoCurrentConnection
-  end
-
-  def connected?
     false
   end
 end

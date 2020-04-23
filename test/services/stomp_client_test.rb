@@ -7,46 +7,45 @@ class StompClientTest < Minitest::Test
   end
 
   def test_update_job_when_done
-    mock = MockStompClient.instance
     cas_user = CasUser.first
     job = ExportJob.new(name: 'test job', cas_user: cas_user)
     job.save!
     message = create_message(job.id, 'Done')
-    mock.update_job_status(message)
+    message.find_job.update_status(message)
     job.reload
     assert job.plastron_status_done?
   end
 
   def test_update_job_on_error
-    mock = MockStompClient.instance
     cas_user = CasUser.first
     job = ExportJob.new(name: 'test job', cas_user: cas_user)
     job.save!
     message = create_message(job.id, 'Error')
-    mock.update_job_status(message)
+    message.find_job.update_status(message)
     job.reload
     assert job.plastron_status_error?
   end
 
   def test_update_job_when_failed
-    mock = MockStompClient.instance
     cas_user = CasUser.first
     job = ExportJob.new(name: 'test job', cas_user: cas_user)
     job.save!
     message = create_message(job.id, 'Failed')
-    mock.update_job_status(message)
+    message.find_job.update_status(message)
     job.reload
     assert job.plastron_status_failed?
   end
 
   def create_message(job_id, status)
-    Stomp::Message.new('').tap do |message|
-      message.command = 'MESSAGE'
-      message.headers = {
-        PlastronJobId: "http://localhost:3000/export_jobs/#{job_id}",
-        PlastronJobStatus: status
-      }
-      message.body = JSON.generate(download_uri: 'http://example.com/foo')
-    end
+    PlastronMessage.new(
+      Stomp::Message.new('').tap do |message|
+        message.command = 'MESSAGE'
+        message.headers = {
+          PlastronJobId: "http://localhost:3000/export_jobs/#{job_id}",
+          PlastronJobStatus: status
+        }
+        message.body = JSON.generate(download_uri: 'http://example.com/foo')
+      end
+    )
   end
 end
