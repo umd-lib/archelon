@@ -7,7 +7,8 @@ class ExportJobRelayJobTest < ActiveJob::TestCase
 
   test "broadcasts message to 'export_jobs:status' channel" do
     export_job = export_jobs(:one)
-    assert_broadcasts('export_jobs:status', 1) do
+    channel_name = ExportJobsChannel.channel_name(export_job.cas_user)
+    assert_broadcasts(channel_name, 1) do
       ExportJobRelayJob.perform_now(export_job)
     end
   end

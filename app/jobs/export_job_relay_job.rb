@@ -3,7 +3,8 @@
 # Job for broadcasting export job status over Action Cable to clients
 class ExportJobRelayJob < ApplicationJob
   def perform(export_job)
-    ActionCable.server.broadcast 'export_jobs:status',
+    channel_name = ExportJobsChannel.channel_name(export_job.cas_user)
+    ActionCable.server.broadcast channel_name,
                                  export_job: export_job, message: render_message(export_job)
   end
 
