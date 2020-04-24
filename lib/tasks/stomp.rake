@@ -17,6 +17,40 @@ namespace :stomp do
       message.find_job.update_progress(message)
     end
 
-    loop { sleep(0.1) }
+    begin
+      loop { sleep(0.1) }
+    rescue Interrupt
+      listener.stop
+    end
+  end
+end
+
+# STOMP client for long-running subscriptions to queues and topics
+class StompListener
+  def connect
+    server = "#{STOMP_SERVER[:host]}:#{STOMP_SERVER[:port]}"
+    puts "Connecting to STOMP server at #{server}"
+    begin
+      @client = Stomp::Client.new(hosts: [STOMP_SERVER], reliable: true)
+      puts "Connected to STOMP server at #{server}"
+      self
+    rescue Stomp::Error::MaxReconnectAttempts
+      puts "Unable to connect to STOMP message broker at #{server}"
+      return
+    end
+  end
+
+  def subscribe(destination, &block)
+    destination = STOMP_CONFIG['destinations'][destination.to_s]
+    puts "Subscribing to #{destination}"
+    @client.subscribe destination, &block
+    puts "Subscribed to #{destination}"
+  end
+
+  def stop
+    server = "#{STOMP_SERVER[:host]}:#{STOMP_SERVER[:port]}"
+    puts "Closing connection to #{server}"
+    @client.close
+    puts "Closed connection to #{server}"
   end
 end
