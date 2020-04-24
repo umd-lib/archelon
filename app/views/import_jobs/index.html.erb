@@ -34,16 +34,7 @@
           <td><%= import_job.timestamp %></td>
           <td><%= import_job.file_to_upload.filename %></td>
           <td><%= import_job.model %></td>
-          <td>
-            <%= link_to status_text(import_job), import_job_path(import_job), class: "import_job_status_#{import_job.status}" %>
-          </td>
-          <% if import_job.workflow_action == :resubmit %>
-            <td><%= button_to 'Resubmit', edit_import_job_path(import_job), method: :get, class: 'btn-xs btn-danger' %></td>
-          <% elsif import_job.workflow_action == :import %>
-            <td><%= button_to 'Import', perform_import_import_jobs_path(import_job), class: 'btn-xs btn-success' %></td>
-          <% else %>
-            <td></td>
-          <% end %>
+          <%= render partial: 'import_job_status', locals: { import_job: import_job } %>
         </tr>
       <% end %>
     </tbody>

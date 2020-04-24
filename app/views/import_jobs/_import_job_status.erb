@@ -1,0 +1,10 @@
+<td data-channel="import_jobs" data-job-id="<%= import_job.id %>">
+  <%= link_to status_text(import_job), import_job_path(import_job), class: "import_job_status_#{import_job.status}" %>
+</td>
+<% if import_job.workflow_action == :resubmit %>
+  <td><%= button_to 'Resubmit', edit_import_job_path(import_job), method: :get, class: 'btn-xs btn-danger' %></td>
+<% elsif import_job.workflow_action == :import %>
+  <td><%= button_to 'Import', perform_import_import_jobs_path(import_job), class: 'btn-xs btn-success' %></td>
+<% else %>
+  <td></td>
+<% end %>

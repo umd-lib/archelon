@@ -48,6 +48,8 @@ class ImportJob < ApplicationRecord
   belongs_to :cas_user
   has_one_attached :file_to_upload
 
+  after_commit { ImportJobRelayJob.perform_later(self) }
+
   validates :name, presence: true
   validates :collection, presence: true
   validate :attachment_validation

@@ -14,3 +14,11 @@ two_blob:
   metadata: nil
   byte_size: 275
   checksum: "zJIVJPfwxpOUA3wsbeXocQ=="
+
+three_blob:
+  key: 'YeN1AjvvWmmtNGEFFPf9oAiy'
+  filename: 'three.csv'
+  content_type: 'text/csv'
+  metadata: nil
+  byte_size: 275
+  checksum: "zJIVJPfwxpOUA3wsbeXocQ=="

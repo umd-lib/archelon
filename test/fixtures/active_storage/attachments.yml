@@ -8,3 +8,8 @@ two:
   name: 'file_to_upload'
   record: two (ImportJob)
   blob: two_blob
+
+three:
+  name: 'file_to_upload'
+  record: test_admin_import_job (ImportJob)
+  blob: three_blob
