@@ -1,0 +1,11 @@
+    <td class="<%= export_job.plastron_status %>" data-channel="export_jobs" data-job-id="<%= export_job.id %>">
+      <%= ExportJob.plastron_statuses[export_job.plastron_status] %>
+      <% if export_job.plastron_status_in_progress? %>
+        (<%= export_job.progress %>%)
+      <% end %>
+    </td>
+    <% if export_job.plastron_status_done? && export_job.download_url %>
+      <td>
+        <%= link_to 'Download', download_export_jobs_path(export_job), data: { turbolinks: false } %>
+      </td>
+    <% end %>

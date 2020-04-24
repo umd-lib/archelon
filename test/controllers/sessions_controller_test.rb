@@ -8,9 +8,16 @@ class SessionsControllerTest < ActionController::TestCase
     mock_cas_login(@cas_user.cas_directory_id)
   end
 
-  test 'should redirect to cas logout url on session destory' do
+  test 'should redirect to cas logout url on session destroy' do
+    assert_equal @cas_user.cas_directory_id, session[:cas_user]
+    assert_equal @cas_user.cas_directory_id, cookies.signed[:cas_user]
+
     get :destroy
     cas_logout_url = Rails.application.config.cas_url + '/logout'
     assert_redirected_to(cas_logout_url)
+
+    # User-identifying session and cookie should be destroyed as well
+    assert session[:cas_user].nil?
+    assert cookies.signed[:cas_user].nil?
   end
 end

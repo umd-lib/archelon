@@ -13,3 +13,10 @@ two:
   timestamp: 2019-08-12 15:45:29
   name: MyString
   item_count: 1
+
+test_admin_export_job:
+  format: MyString
+  cas_user: test_admin
+  timestamp: 2019-08-12 15:45:29
+  name: MyString
+  item_count: 1
