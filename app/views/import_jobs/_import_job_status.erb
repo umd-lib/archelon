@@ -1,4 +1,4 @@
-<td data-channel="import_jobs" data-job-id="<%= import_job.id %>">
+<td data-channel="import_jobs" data-job-id="<%= import_job.id %>" data-stage="<%= import_job.stage %>" data-status="<%= import_job.status %>">
   <%= link_to status_text(import_job), import_job_path(import_job), class: "import_job_status_#{import_job.status}" %>
 </td>
 <% if import_job.workflow_action == :resubmit %>
