@@ -21,6 +21,7 @@ class ImportJobsChannelTest < ActionCable::Channel::TestCase
     user_stream = ImportJobsChannel.stream(import_job.cas_user)
     admins_stream = ImportJobsChannel.admins_stream
 
+    stub_connection(current_user: import_job.cas_user)
     subscribe
 
     assert_broadcasts(admins_stream, 0) do
@@ -46,6 +47,7 @@ class ImportJobsChannelTest < ActionCable::Channel::TestCase
     user_stream = ImportJobsChannel.stream(import_job.cas_user)
     admins_stream = ImportJobsChannel.admins_stream
 
+    stub_connection(current_user: import_job.cas_user)
     subscribe
 
     # Import job status check will broadcast on both the user stream, and
@@ -74,6 +76,7 @@ class ImportJobsChannelTest < ActionCable::Channel::TestCase
     user_stream = ImportJobsChannel.stream(import_job.cas_user)
     admins_stream = ImportJobsChannel.admins_stream
 
+    stub_connection(current_user: import_job.cas_user)
     subscribe
 
     # Import job status check will broadcast on both the user stream, and
