@@ -3,6 +3,10 @@
 namespace :stomp do
   desc 'Start a STOMP listener'
   task listen: :environment do
+    # immediately flush stdout, since in production situations
+    # we will be writing to a logfile
+    $stdout.sync = true
+
     listener = StompListener.new.connect || exit(1)
 
     listener.subscribe(:jobs_completed) do |stomp_msg|
