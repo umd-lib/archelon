@@ -2,18 +2,8 @@ App.export_jobs = App.cable.subscriptions.create "ExportJobsChannel",
   collection: -> $("[data-channel='export_jobs']")
 
   connected: ->
-    # Called when the subscription is ready for use on the server
-    #
-    # This timeout is in the Rails Action Cable "full-stack" example at
-    # https://github.com/rails/actioncable-examples/blob/master/app/assets/javascripts/channels/comments.coffee
-    # with the following comment:
-    #    FIXME: While we wait for cable subscriptions to always be finalized before sending messages
-    #
-    # Not clear if this is still necessary, but leaving it in for safety
-    setTimeout =>
       @followExportJobs()
       @installPageChangeCallback()
-    , 1000
 
   received: (data) ->
     # Trigger a page reload
