@@ -11,3 +11,9 @@ two:
   timestamp: 2020-04-02 15:45:29
   name: MyString
   collection: http://example.com/quuz/bax
+
+test_admin_import_job:
+  cas_user: test_admin
+  timestamp: 2019-08-12 15:45:29
+  name: MyString
+  collection: http://example.com/bar/kludge

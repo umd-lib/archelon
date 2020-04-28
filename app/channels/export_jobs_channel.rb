@@ -5,9 +5,9 @@ class ExportJobsChannel < ApplicationCable::Channel
   def follow
     stop_all_streams
     if current_user.admin?
-      stream_from ExportJobsChannel.admins_channel_name
+      stream_from ExportJobsChannel.admins_stream
     else
-      stream_from ExportJobsChannel.channel_name(current_user)
+      stream_from ExportJobsChannel.stream(current_user)
     end
   end
 
@@ -17,33 +17,27 @@ class ExportJobsChannel < ApplicationCable::Channel
 
   # Broadcasts export job information to the appropriate channel(s)
   def self.broadcast(export_job)
-    message = ExportJobsChannel.render_message(export_job)
     user = export_job.cas_user
 
     unless user.admin?
-      # Don't broadcast on per-user channel if user is an admin, as they
-      # will get the message on the "admins" channel
-      channel_name = ExportJobsChannel.channel_name(user)
-      ActionCable.server.broadcast channel_name, export_job: export_job, message: message
+      # Don't broadcast on per-user stream if user is an admin, as they
+      # will get the message on the "admins" stream
+      user_stream = ExportJobsChannel.stream(user)
+      ActionCable.server.broadcast user_stream, export_job: export_job
     end
 
-    admins_channel_name = ExportJobsChannel.admins_channel_name
-    ActionCable.server.broadcast admins_channel_name, export_job: export_job, message: message
+    admins_stream = ExportJobsChannel.admins_stream
+    ActionCable.server.broadcast admins_stream, export_job: export_job
   end
 
-  # Channel that sends status message to the user that created the export job
-  def self.channel_name(user)
+  # Stream that sends status message to the user that created the export job
+  def self.stream(user)
     "export_jobs:#{user.id}:status"
   end
 
-  # Channel for sending status messages to admins, regardless of who created
+  # Stream for sending status messages to admins, regardless of who created
   # the export job.
-  def self.admins_channel_name
+  def self.admins_stream
     'export_jobs:admins:status'
-  end
-
-  # Renders the message to send
-  def self.render_message(export_job)
-    ApplicationController.renderer.render(partial: 'export_jobs/export_job_status', locals: { export_job: export_job })
   end
 end
