@@ -43,7 +43,7 @@
   <%= will_paginate @download_urls, renderer: BootstrapPagination::Rails %>
   <br>
 <% else %>
-  <p>No Import jobs found</p>
+  <p data-channel="import_jobs">No Import jobs found</p>
 <% end %>
 
 <%= link_to 'New Import Job', new_import_job_path, class: 'btn btn-success' %>
