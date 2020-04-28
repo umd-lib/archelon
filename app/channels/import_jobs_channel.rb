@@ -1,7 +1,16 @@
 # frozen_string_literal: true
 
 # Channel for Import Jobs
+#
+# This class uses follow/unfollow methods, instead of simply using
+# subscribe/unsubscribe methods, because currently ImportJobChannels are
+# created for all pages, but we only want particular pages to
+# by updated when import job updates occur.
+#
+# Using follow/unfollow allows enables a page to subscribe for updates
+# based on app/assets/javascripts/channels/import_jobs.coffee settings.
 class ImportJobsChannel < ApplicationCable::Channel
+  # Used for following updates for any import job.
   def follow
     stop_all_streams
     if current_user.admin?
@@ -29,6 +38,7 @@ class ImportJobsChannel < ApplicationCable::Channel
     jobs = data['jobs']
     return if jobs.nil?
 
+    updated_jobs = []
     jobs.each do |job|
       job_id = job['jobId']
       stage = job['stage']
@@ -37,26 +47,33 @@ class ImportJobsChannel < ApplicationCable::Channel
       next if import_job.nil?
 
       needs_update = (import_job.stage != stage) || (import_job.status.to_s != status)
-
-      # Sends an update on the first match that needs an update,
-      # as we assume that client will just do a page update.
-      ImportJobsChannel.broadcast(import_job) && break if needs_update
+      updated_jobs << import_job if needs_update
     end
+
+    # Sends an update
+    ImportJobsChannel.broadcast(updated_jobs) unless updated_jobs.empty?
   end
 
   # Broadcasts import job information to the appropriate stream(s)
-  def self.broadcast(import_job)
-    user = import_job.cas_user
+  def self.broadcast(import_jobs)
+    # Split the import jobs into groups by user.
+    # This prevents users from seeing information about jobs they don't
+    # own.
+    import_jobs_by_user = import_jobs.group_by(&:cas_user)
+    users = import_jobs_by_user.keys
 
-    unless user.admin?
+    users.each do |user|
       # Don't broadcast on per-user stream if user is an admin, as they
       # will get the message on the "admins" stream
+      next if user.admin?
+
       user_stream = ImportJobsChannel.stream(user)
-      ActionCable.server.broadcast user_stream, import_job: import_job
+      ActionCable.server.broadcast user_stream, import_jobs: import_jobs_by_user[user]
     end
 
+    # Admins can see all the jobs
     admins_stream = ImportJobsChannel.admins_stream
-    ActionCable.server.broadcast admins_stream, import_job: import_job
+    ActionCable.server.broadcast admins_stream, import_jobs: import_jobs
   end
 
   # Stream that sends status message to the user that created the import job
