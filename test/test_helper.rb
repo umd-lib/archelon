@@ -102,11 +102,10 @@ class ActiveSupport::TestCase
     end
   end
 
-  # Replaces STOMP_CLIENT with the MockStompClient
-  def mock_stomp_service(service = MockStompService.new)
-    # Remove constant, if set, to avoid warning about resetting the constant
-    Object.send(:remove_const, :STOMP_SERVICE) if Object.const_defined?(:STOMP_SERVICE)
-    Object.const_set(:STOMP_SERVICE, service)
+  # Replaces StompService with a stub
+  def mock_stomp_service(connected:)
+    name = "stomp_service_#{connected ? '' : 'dis'}connected"
+    stub_const('StompService', double(name, publish_message: connected))
   end
 end
 
@@ -117,17 +116,4 @@ def stub_repository_collections_solr_response(fixture_filename)
 
   response = Blacklight::Solr::Response.new(data_hash, nil)
   Blacklight::Solr::Repository.any_instance.stub(:search).and_return(response)
-end
-
-class MockStompService < StompService
-  def publish(_destination, _message, _headers = {})
-    true
-  end
-end
-
-# Simulation of when the STOMP server is not reachable
-class UnconnectedMockStompService < StompService
-  def publish(_destination, _message, _headers = {})
-    false
-  end
 end

@@ -64,7 +64,7 @@ class ImportJobsControllerTest < ActionController::TestCase
   end
 
   test 'should create import_job' do
-    mock_stomp_service
+    mock_stomp_service(connected: true)
 
     name = "#{@cas_user.cas_directory_id}-#{Time.now.iso8601}"
     assert_difference('ImportJob.count') do
@@ -137,7 +137,7 @@ class ImportJobsControllerTest < ActionController::TestCase
   end
 
   test 'create should report error when STOMP client is not connected' do
-    stub_const('StompService', double('stomp_service_disconnected', publish_message: false))
+    mock_stomp_service(connected: false)
     expect(StompService).to receive(:publish_message)
     assert_not StompService.publish_message(nil, nil, nil)
 
@@ -151,7 +151,7 @@ class ImportJobsControllerTest < ActionController::TestCase
   end
 
   test 'update should report error when STOMP client is not connected' do
-    stub_const('StompService', double('stomp_service_disconnected', publish_message: false))
+    mock_stomp_service(connected: false)
     expect(StompService).to receive(:publish_message)
     assert_not StompService.publish_message(nil, nil, nil)
 
@@ -163,7 +163,7 @@ class ImportJobsControllerTest < ActionController::TestCase
   end
 
   test 'import should report error when STOMP client is not connected' do
-    stub_const('StompService', double('stomp_service_disconnected', publish_message: false))
+    mock_stomp_service(connected: false)
     expect(StompService).to receive(:publish_message)
     assert_not StompService.publish_message(nil, nil, nil)
 

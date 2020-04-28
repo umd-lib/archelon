@@ -3,7 +3,6 @@
 class ExportJobsController < ApplicationController
   before_action -> { authorize! :manage, ExportJob }
   before_action :cancel_workflow?, only: %i[create review]
-  before_action :stomp_client_connected?, only: %i[new create review]
   before_action :selected_items?, only: %i[new create review]
   before_action :selected_items_changed?, only: :create
 
@@ -57,9 +56,6 @@ class ExportJobsController < ApplicationController
 
       flash[:error] = I18n.t(:needs_selected_items)
       redirect_to controller: :bookmarks, action: :index
-    end
-
-    def stomp_client_connected?
     end
 
     def selected_items_changed?
