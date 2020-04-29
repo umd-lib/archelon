@@ -83,4 +83,21 @@ class ExportJobsControllerTest < ActionController::TestCase
     jobs = assigns(:jobs)
     assert_equal ExportJob.count, jobs.count
   end
+
+  test 'download can only be done by export job owner or admin' do
+    export_job = export_jobs(:one)
+
+    export_job_owner = export_job.cas_user
+    ability = Ability.new(export_job_owner)
+    assert ability.can?(:download, export_job)
+
+    admin_user = cas_users(:test_admin)
+    ability = Ability.new(admin_user)
+    assert ability.can?(:download, export_job)
+
+    invalid_user = cas_users(:two)
+    assert_not_equal export_job.cas_user, invalid_user
+    ability = Ability.new(invalid_user)
+    assert ability.cannot?(:download, export_job)
+  end
 end

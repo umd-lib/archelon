@@ -10,7 +10,12 @@ class Ability
     elsif user.user?
       can %i[index show], :all
       can :manage, DownloadUrl
+
       can :manage, ExportJob
+      # Users can only download export jobs they own
+      cannot :download, ExportJob
+      can :download, ExportJob, cas_user_id: user.id
+
       can :manage, [Vocabulary, Individual, Type] if user.in_group? :VocabularyEditors
     end
   end
