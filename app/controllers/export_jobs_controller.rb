@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ExportJobsController < ApplicationController
-  before_action -> { authorize! :manage, ExportJob }
+  before_action -> { authorize! :manage, ExportJob }, except: :download
   before_action :cancel_workflow?, only: %i[create review]
   before_action :stomp_client_connected?, only: %i[new create review]
   before_action :selected_items?, only: %i[new create review]
@@ -43,6 +43,10 @@ class ExportJobsController < ApplicationController
 
   def download
     job = ExportJob.find(params[:id])
+
+    # Authorizing here because we aren't using CanCanCan "load_and_authorize_resource"
+    authorize! :download, job
+
     send_data(*job.download_file)
   end
 
