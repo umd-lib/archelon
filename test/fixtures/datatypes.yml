@@ -2,8 +2,8 @@
 
 one:
   identifier: MyString
-  vocabulary: one
+  vocabulary: vocab_one
 
 two:
   identifier: MyString
-  vocabulary: two
+  vocabulary: vocab_two
