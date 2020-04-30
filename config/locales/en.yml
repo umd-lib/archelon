@@ -42,6 +42,10 @@ en:
   cannot_import_invalid_file: 'Cannot import a file with validation errors.'
   activerecord:
     attributes:
+      datatype:
+        identifier: Identifier
+        vocabulary: Vocabulary
+        description: Description
       import_job:
         access: Access
         cas_user: User
@@ -88,6 +92,7 @@ en:
             file_to_upload:
               required: 'is required'
     models:
+      datatype: Datatype
       download_url: Download URL
       individual: Term
       type: Class

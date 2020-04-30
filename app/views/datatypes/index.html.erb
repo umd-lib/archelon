@@ -1,29 +1,28 @@
-<p id="notice"><%= notice %></p>
+<h1><%= ActiveSupport::Inflector.pluralize(t 'activerecord.models.datatype') %></h1>
 
-<h1>Datatypes</h1>
-
-<table>
+<table class="table">
   <thead>
     <tr>
-      <th>Identifier</th>
-      <th>Vocabulary</th>
-      <th colspan="3"></th>
+      <th><%= t 'activerecord.attributes.datatype.identifier' %></th>
+      <th><%= t 'activerecord.attributes.datatype.vocabulary' %></th>
+      <th colspan="2"></th>
     </tr>
   </thead>
 
   <tbody>
     <% @datatypes.each do |datatype| %>
       <tr>
-        <td><%= datatype.identifier %></td>
-        <td><%= datatype.vocabulary %></td>
-        <td><%= link_to 'Show', datatype %></td>
-        <td><%= link_to 'Edit', edit_datatype_path(datatype) %></td>
-        <td><%= link_to 'Destroy', datatype, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to datatype.identifier, datatype %></td>
+        <td><%= link_to datatype.vocabulary.identifier, datatype.vocabulary %></td>
+        <td><%= link_to_edit datatype %></td>
+        <td><%= link_to_delete datatype %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
-<br>
-
-<%= link_to 'New Datatype', new_datatype_path %>
+<% if can? :create, Datatype %>
+  <div>
+    <%= link_to "New #{t 'activerecord.models.datatype'}", new_datatype_path, class: 'btn btn-success' %>
+  </div>
+<% end %>
