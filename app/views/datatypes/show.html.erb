@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Identifier:</strong>
+  <%= @datatype.identifier %>
+</p>
+
+<p>
+  <strong>Vocabulary:</strong>
+  <%= @datatype.vocabulary %>
+</p>
+
+<%= link_to 'Edit', edit_datatype_path(@datatype) %> |
+<%= link_to 'Back', datatypes_path %>

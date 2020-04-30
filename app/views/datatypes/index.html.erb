@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Datatypes</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Identifier</th>
+      <th>Vocabulary</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @datatypes.each do |datatype| %>
+      <tr>
+        <td><%= datatype.identifier %></td>
+        <td><%= datatype.vocabulary %></td>
+        <td><%= link_to 'Show', datatype %></td>
+        <td><%= link_to 'Edit', edit_datatype_path(datatype) %></td>
+        <td><%= link_to 'Destroy', datatype, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Datatype', new_datatype_path %>

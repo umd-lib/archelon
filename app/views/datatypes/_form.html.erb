@@ -1,0 +1,27 @@
+<%= form_with(model: datatype, local: true) do |form| %>
+  <% if datatype.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(datatype.errors.count, "error") %> prohibited this datatype from being saved:</h2>
+
+      <ul>
+      <% datatype.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :identifier %>
+    <%= form.text_field :identifier %>
+  </div>
+
+  <div class="field">
+    <%= form.label :vocabulary_id %>
+    <%= form.text_field :vocabulary_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
