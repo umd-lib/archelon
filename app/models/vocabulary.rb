@@ -47,6 +47,7 @@ class Vocabulary < ApplicationRecord
     RDF::Graph.new.tap do |graph|
       add_types_to graph
       add_individuals_to graph
+      add_datatypes_to graph
     end
   end
 
@@ -87,6 +88,13 @@ class Vocabulary < ApplicationRecord
         graph << [individual_uri, PREFIXES[:dc].identifier, individual.identifier]
         graph << [individual_uri, RDF::RDFS.label, individual.label]
         graph << [individual_uri, RDF::OWL.sameAs, RDF::URI(individual.same_as)] if individual.same_as.present?
+      end
+    end
+
+    def add_datatypes_to(graph)
+      datatypes.each do |datatype|
+        datatype_uri = RDF::URI(datatype.uri)
+        graph << [datatype_uri, RDF.type, RDF::RDFS.Datatype]
       end
     end
 

@@ -12,4 +12,11 @@ class Datatype < ApplicationRecord
               end
             }
   belongs_to :vocabulary
+
+  after_save ->(datatype) { datatype.vocabulary.publish_rdf_async }
+  after_destroy ->(datatype) { datatype.vocabulary.publish_rdf_async }
+
+  def uri
+    vocabulary.uri + identifier
+  end
 end
