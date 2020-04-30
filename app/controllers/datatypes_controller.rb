@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class DatatypesController < ApplicationController
-  before_action :set_datatype, only: [:show, :edit, :update, :destroy]
+  before_action :set_datatype, only: %i[show edit update destroy]
 
   # GET /datatypes
   # GET /datatypes.json
@@ -62,6 +64,7 @@ class DatatypesController < ApplicationController
   end
 
   private
+
     # Use callbacks to share common setup or constraints between actions.
     def set_datatype
       @datatype = Datatype.find(params[:id])
