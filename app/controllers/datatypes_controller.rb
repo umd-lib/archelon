@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DatatypesController < ApplicationController
-  before_action :set_datatype, only: %i[show edit update destroy]
+  load_and_authorize_resource
 
   # GET /datatypes
   # GET /datatypes.json
