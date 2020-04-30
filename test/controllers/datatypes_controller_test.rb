@@ -27,7 +27,8 @@ class DatatypesControllerTest < ActionController::TestCase
       post :create, params: { datatype: { identifier: 'datatype_abc123', vocabulary_id: vocabulary.id } }
     end
 
-    assert_redirected_to datatype_url(Datatype.last)
+    # On create, we redirect to the Vocabulary page, not the Datatype
+    assert_redirected_to vocabulary_url(Datatype.last.vocabulary)
   end
 
   test 'should show datatype' do

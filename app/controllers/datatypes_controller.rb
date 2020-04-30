@@ -17,6 +17,7 @@ class DatatypesController < ApplicationController
   # GET /datatypes/new
   def new
     @datatype = Datatype.new
+    @datatype.vocabulary_id = params[:vocabulary] if params[:vocabulary]
   end
 
   # GET /datatypes/1/edit
@@ -25,12 +26,15 @@ class DatatypesController < ApplicationController
 
   # POST /datatypes
   # POST /datatypes.json
-  def create
+  def create # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     @datatype = Datatype.new(datatype_params)
 
     respond_to do |format|
       if @datatype.save
-        format.html { redirect_to @datatype, notice: 'Datatype was successfully created.' }
+        format.html do
+          redirect_to @datatype.vocabulary,
+                      notice: "#{t('activerecord.models.datatype')} #{@datatype.identifier} was successfully created."
+        end
         format.json { render :show, status: :created, location: @datatype }
       else
         format.html { render :new }
@@ -44,7 +48,7 @@ class DatatypesController < ApplicationController
   def update
     respond_to do |format|
       if @datatype.update(datatype_params)
-        format.html { redirect_to @datatype, notice: 'Datatype was successfully updated.' }
+        format.html { redirect_to @datatype, notice: "#{t('activerecord.models.datatype')} was successfully updated." }
         format.json { render :show, status: :ok, location: @datatype }
       else
         format.html { render :edit }
@@ -58,17 +62,15 @@ class DatatypesController < ApplicationController
   def destroy
     @datatype.destroy
     respond_to do |format|
-      format.html { redirect_to datatypes_url, notice: 'Datatype was successfully destroyed.' }
+      format.html do
+        redirect_to datatypes_url,
+                    notice: "#{t('activerecord.models.datatype')} was successfully destroyed."
+      end
       format.json { head :no_content }
     end
   end
 
   private
-
-    # Use callbacks to share common setup or constraints between actions.
-    def set_datatype
-      @datatype = Datatype.find(params[:id])
-    end
 
     # Only allow a list of trusted parameters through.
     def datatype_params
