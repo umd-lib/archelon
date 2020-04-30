@@ -69,10 +69,10 @@ class DatatypesControllerTest < ActionController::TestCase
     get :edit, params: { id: @datatype.id }
     assert_response :forbidden
 
-    post :create, params: { datatype: { identifier: 'ABC123', vocabular: @datatype.vocabulary } }
+    post :create, params: { datatype: { identifier: 'ABC123', vocabulary_id: @datatype.vocabulary.id } }
     assert_response :forbidden
 
-    patch :update, params: { id: @datatype.id, datatype: { identifier: 'ABC123_123', vocabulary: @datatype.vocabulary } }
+    patch :update, params: { id: @datatype.id, datatype: { identifier: 'ABC123_123', vocabulary_id: @datatype.vocabulary.id } }
     assert_response :forbidden
 
     delete :destroy, params: { id: @datatype.id }
@@ -94,14 +94,14 @@ class DatatypesControllerTest < ActionController::TestCase
     get :edit, params: { id: @datatype.id }
     assert_response :success
 
-    post :create, params: { datatype: { identifier: 'ABC123', vocabulary: @datatype.vocabulary } }
-    assert_response :success
-
-    patch :update, params: { id: @datatype.id, datatype: { identifier: 'ABC123_123', vocabulary: @datatype.vocabulary } }
-    assert_response :success
+    patch :update, params: { id: @datatype.id, datatype: { identifier: 'ABC123_123', vocabulary_id: @datatype.vocabulary.id } }
+    assert_redirected_to datatype_url(@datatype)
 
     delete :destroy, params: { id: @datatype.id }
     assert_redirected_to datatypes_url
+
+    post :create, params: { datatype: { identifier: 'ABC123', vocabulary_id: @datatype.vocabulary.id } }
+    assert_redirected_to vocabulary_url(@datatype.vocabulary)
   end
 
   test 'all actions should be available to admins' do
@@ -120,13 +120,13 @@ class DatatypesControllerTest < ActionController::TestCase
     get :edit, params: { id: @datatype.id }
     assert_response :success
 
-    post :create, params: { datatype: { identifier: 'ABC123', vocabulary: @datatype.vocabulary } }
-    assert_response :success
-
-    patch :update, params: { id: @datatype.id, datatype: { identifier: 'ABC123_123', vocabulary: @datatype.vocabulary } }
-    assert_response :success
+    patch :update, params: { id: @datatype.id, datatype: { identifier: 'ABC123_123', vocabulary_id: @datatype.vocabulary.id } }
+    assert_redirected_to datatype_url(@datatype)
 
     delete :destroy, params: { id: @datatype.id }
     assert_redirected_to datatypes_url
+
+    post :create, params: { datatype: { identifier: 'ABC123', vocabulary_id: @datatype.vocabulary.id } }
+    assert_redirected_to vocabulary_url(@datatype.vocabulary)
   end
 end
