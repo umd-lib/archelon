@@ -41,8 +41,8 @@ class DatatypesControllerTest < ActionController::TestCase
   end
 
   test 'should update datatype' do
-    patch :update, params: { id: @datatype.id, datatype: { indentifier: 'updated identifier' } }
-    assert_redirected_to datatype_url(@datatype)
+    patch :update, params: { id: @datatype.id, datatype: { identifier: 'updated identifier' } }
+    assert_response :success
   end
 
   test 'should destroy datatype' do
