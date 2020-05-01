@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ImportJobsController < ApplicationController # rubocop:disable Metrics/ClassLength
-  before_action :set_import_job, only: %i[update show edit update import]
+  before_action :set_import_job, only: %i[update show edit import]
   before_action :cancel_workflow?, only: %i[create update]
   helper_method :status_text
 
@@ -178,10 +178,6 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
         headers['PlastronArg-access'] = "<#{job.access}>" if job.access.present?
         headers['PlastronArg-validate-only'] = 'True' if validate_only
       end
-    end
-
-    def headers_to_s(headers)
-      headers.map { |k, v| [k, v].join(': ') }.join("\n")
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
