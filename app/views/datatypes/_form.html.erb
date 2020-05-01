@@ -1,0 +1,32 @@
+<%= form_with(model: datatype, local: true) do |form| %>
+  <% if datatype.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(datatype.errors.count, "error") %> prohibited this <%= t('activerecord.models.datatype').downcase %> from being saved:</h2>
+
+      <ul>
+      <% datatype.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-inline">
+    <div class="form-group">
+      <%= form.label :identifier, class: "umd_tooltip" do %>
+        <%= t("activerecord.attributes.datatype.identifier") %>
+        <span class="umd_tooltiptext"><%= t("tooltips.identifier") %></span>
+      <% end %>
+      <%= form.text_field :identifier, class: "form-control" %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :vocabulary_id %>
+      <%= form.collection_select :vocabulary_id, Vocabulary.all, :id, :identifier, {}, { class: "form-control" } %>
+    </div>
+  </div>
+
+  <div class="actions" style="margin: 10px 0px;">
+    <%= form.submit class: "btn btn-success" %>
+  </div>
+<% end %>

@@ -7,3 +7,7 @@
 vocab_one:
   identifier: vocab_one
   description: Vocabulary One
+
+vocab_two:
+  identifier: vocab_two
+  description: Vocabulary Two
