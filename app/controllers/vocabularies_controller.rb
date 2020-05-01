@@ -10,7 +10,7 @@ class VocabulariesController < ApplicationController
       @vocabulary = Vocabulary.find_by! identifier: params[:identifier]
       render :show
     else
-      @vocabularies = Vocabulary.all
+      @vocabularies = Vocabulary.all.by_identifier
     end
   end
 
