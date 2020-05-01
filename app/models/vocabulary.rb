@@ -31,6 +31,8 @@ class Vocabulary < ApplicationRecord
   after_save :publish_rdf_async
   after_destroy :delete_published_rdf_async
 
+  scope :by_identifier, -> { order('identifier ASC') }
+
   def uri
     VOCAB_CONFIG['local_authority_base_uri'] + identifier + '#'
   end

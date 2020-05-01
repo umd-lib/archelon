@@ -19,7 +19,7 @@
 
     <div class="form-group">
       <%= form.label :vocabulary_id %>
-      <%= form.collection_select :vocabulary_id, Vocabulary.all, :id, :identifier, {}, { class: "form-control" } %>
+      <%= form.collection_select :vocabulary_id, Vocabulary.all.by_identifier, :id, :identifier, {}, { class: "form-control" } %>
     </div>
 
     <div class="form-group">
