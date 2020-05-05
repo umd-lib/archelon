@@ -13,7 +13,7 @@ class SessionsControllerTest < ActionController::TestCase
     assert_equal @cas_user.cas_directory_id, cookies.signed[:cas_user]
 
     get :destroy
-    cas_logout_url = Rails.application.config.cas_url + '/logout'
+    cas_logout_url = "#{CAS_URL}/logout"
     assert_redirected_to(cas_logout_url)
 
     # User-identifying session and cookie should be destroyed as well

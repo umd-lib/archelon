@@ -110,8 +110,4 @@ class ExportJobsController < ApplicationController
       @job.plastron_status = :plastron_status_in_progress
       @job.save!
     end
-
-    def headers_to_s(headers)
-      headers.map { |k, v| [k, v].join(': ') }.join("\n")
-    end
 end

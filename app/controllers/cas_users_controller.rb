@@ -43,7 +43,7 @@ class CasUsersController < ApplicationController
     END_QUERY
 
     # TODO: put the connection setup somewhere central
-    conn = PG.connect(Rails.configuration.audit_database)
+    conn = PG.connect(AUDIT_DB_CONFIG)
 
     # the TZ environment variable overrides the default time zone
     tz = ENV.key?('TZ') ? ENV['TZ'] : Time.zone.name
