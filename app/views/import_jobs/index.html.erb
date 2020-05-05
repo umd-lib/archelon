@@ -2,6 +2,8 @@
 
 <h1>Metadata Import</h1>
 
+<%= link_to 'New Import Job', new_import_job_path, class: 'btn btn-success' %>
+
 <% if @import_jobs.count > 0 %>
   <div class="row">
     <div class="btn-toolbar">
@@ -55,4 +57,3 @@
   <p>No Import jobs found</p>
 <% end %>
 
-<%= link_to 'New Import Job', new_import_job_path, class: 'btn btn-success' %>
