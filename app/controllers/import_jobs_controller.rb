@@ -64,15 +64,15 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
 
     valid_update = @import_job.update(import_job_params)
 
-    # Need special handing of "file_to_upload", because if we're gotten this
+    # Need special handing of "metadata_file", because if we're gotten this
     # far, the @import_job already has a file attached, so the
     # "attachment_validation" method on the model won't catch that the
     # update form submission doesn't have new file attached.
     #
     # Need to have the method after the call to @import_job.update, as
     # update clears the "errors" array
-    if import_job_params['file_to_upload'].nil?
-      @import_job.errors.add(:file_to_upload, :required)
+    if import_job_params['metadata_file'].nil?
+      @import_job.errors.add(:metadata_file, :required)
       valid_update = false
     end
 
@@ -153,7 +153,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     end
 
     def submit_job(import_job, validate_only)
-      body = import_job.file_to_upload.download
+      body = import_job.metadata_file.download
       headers = message_headers(import_job, validate_only)
 
       import_job.plastron_status = :plastron_status_in_progress
@@ -177,11 +177,14 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
       }.tap do |headers|
         headers['PlastronArg-access'] = "<#{job.access}>" if job.access.present?
         headers['PlastronArg-validate-only'] = 'True' if validate_only
+        headers['PlastronArg-binaries-location'] = job.remote_server if job.remote_server.present?
       end
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def import_job_params
-      params.require(:import_job).permit(:name, :model, :access, :collection, :file_to_upload)
+      params.require(:import_job).permit(:name, :model, :access, :collection,
+                                         :metadata_file, :binary_zip_file,
+                                         :remote_server)
     end
 end

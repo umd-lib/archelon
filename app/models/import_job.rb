@@ -46,13 +46,15 @@ class ImportJob < ApplicationRecord
   include PlastronStatus
 
   belongs_to :cas_user
-  has_one_attached :file_to_upload
+  has_one_attached :metadata_file
+  has_one_attached :binary_zip_file
 
   after_commit { ImportJobRelayJob.perform_later(self) }
 
   validates :name, presence: true
   validates :collection, presence: true
   validate :attachment_validation
+  validate :include_binaries_options
 
   def self.access_vocab
     @access_vocab ||= Vocabulary.find_by identifier: VOCAB_CONFIG['access_vocab_identifier']
@@ -61,7 +63,13 @@ class ImportJob < ApplicationRecord
   # Rails 5.2 does not have attachment validation, so this is needed
   # until at least Rails 6 (see https://stackoverflow.com/questions/48158770/activestorage-file-attachment-validation)
   def attachment_validation
-    errors.add(:file_to_upload, :required) unless file_to_upload.attached?
+    errors.add(:metadata_file, :required) unless metadata_file.attached?
+  end
+
+  # Raises an error if both a "binary_zip_file" and a "remote server" field
+  # is provided
+  def include_binaries_options
+    errors.add(:base, :multiple_include_binaries_options) if binary_zip_file.attached? && remote_server.present?
   end
 
   # Returns a symbol reflecting the current status
@@ -113,5 +121,11 @@ class ImportJob < ApplicationRecord
 
   def last_response
     ImportJobResponse.new(last_response_headers, last_response_body)
+  end
+
+  # Returns true if a binary zip file is attached, or remote server is
+  # specified, false otherwise.
+  def binaries?
+    binary_zip_file.attached? || remote_server.present?
   end
 end

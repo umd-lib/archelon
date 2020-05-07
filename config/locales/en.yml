@@ -48,12 +48,16 @@ en:
         description: Description
       import_job:
         access: Access
+        binaries:
+          true: 'Yes'
+          false: 'No'
         cas_user: User
         collection: Collection
-        file_to_upload: File to Upload
         id: Job ID
+        metadata_file: Metadata File
         model: Content Model
         name: Job Name
+        remote_server: Remote server
         stage:
           import: Import
           validate: Validation
@@ -89,7 +93,9 @@ en:
       models:
         import_job:
           attributes:
-            file_to_upload:
+            base:
+              multiple_include_binaries_options: When including binaries, choose either an uploaded binary file or remote server, not both.
+            metadata_file:
               required: 'is required'
     models:
       datatype: Datatype

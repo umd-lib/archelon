@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_30_145550) do
+ActiveRecord::Schema.define(version: 2020_05_07_151009) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -122,6 +122,7 @@ ActiveRecord::Schema.define(version: 2020_04_30_145550) do
     t.text "last_response_headers"
     t.string "access"
     t.string "collection"
+    t.string "remote_server"
     t.index ["cas_user_id"], name: "index_import_jobs_on_cas_user_id"
   end
 
