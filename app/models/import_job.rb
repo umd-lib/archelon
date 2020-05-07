@@ -116,7 +116,9 @@ class ImportJob < ApplicationRecord
     ImportJobResponse.new(last_response_headers, last_response_body)
   end
 
+  # Returns true if a binary zip file is attached, or remote server is
+  # specified, false otherwise.
   def binaries?
-    binary_zip_file.attached?
+    binary_zip_file.attached? || remote_server.present?
   end
 end

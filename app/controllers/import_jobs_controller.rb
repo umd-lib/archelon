@@ -177,11 +177,14 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
       }.tap do |headers|
         headers['PlastronArg-access'] = "<#{job.access}>" if job.access.present?
         headers['PlastronArg-validate-only'] = 'True' if validate_only
+        headers['PlastronArg-binaries-location'] = job.remote_server if job.remote_server.present?
       end
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def import_job_params
-      params.require(:import_job).permit(:name, :model, :access, :collection, :file_to_upload, :binary_zip_file)
+      params.require(:import_job).permit(:name, :model, :access, :collection,
+                                         :file_to_upload, :binary_zip_file,
+                                         :remote_server)
     end
 end

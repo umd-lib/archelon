@@ -47,3 +47,11 @@ six_blob:
   metadata: nil
   byte_size: 1024
   checksum: "zJIVJPfwxpOUA3wsbeXocQ=="
+
+seven_blob:
+  key: 'mT7DQdgANwchBodPUbaNP7ay'
+  filename: 'seven.csv'
+  content_type: 'text/csv'
+  metadata: nil
+  byte_size: 275
+  checksum: "zJIVJPfwxpOUA3wsbeXocQ=="

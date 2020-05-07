@@ -49,5 +49,11 @@
         <%= import_job.binary_zip_file.filename %>
       </p>
     <% end %>
+    <% if import_job.remote_server.present? %>
+      <p>
+        <strong><%= t('activerecord.attributes.import_job.remote_server') %>:</strong>
+        <%= import_job.remote_server %>
+      </p>
+    <% end %>
   </div>
 </div>

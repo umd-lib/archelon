@@ -18,10 +18,10 @@ test_admin_import_job:
   name: MyString
   collection: http://example.com/bar/kludge
 
-import_job_without_binary_zip_file:
+import_job_without_binaries:
   cas_user: test_admin
   timestamp: 2020-05-06 14:38:42
-  name: import_job_without_binary_zip_file
+  name: import_job_without_binaries
   collection: http://example.com/foo/quuz
 
 import_job_with_binary_zip_file:
@@ -29,3 +29,10 @@ import_job_with_binary_zip_file:
   timestamp: 2020-05-06 14:38:42
   name: import_job_with_binary_zip_file
   collection: http://example.com/foo/quuz
+
+import_job_with_remote_server:
+  cas_user: test_admin
+  timestamp: 2020-05-06 14:38:42
+  name: import_job_with_remove_server
+  collection: http://example.com/foo/quuz
+  remote_server: stfp://example.com/foo/baz

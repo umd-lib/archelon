@@ -48,12 +48,16 @@ en:
         description: Description
       import_job:
         access: Access
+        binaries:
+          true: 'Yes'
+          false: 'No'
         cas_user: User
         collection: Collection
         file_to_upload: File to Upload
         id: Job ID
         model: Content Model
         name: Job Name
+        remote_server: Remote server
         stage:
           import: Import
           validate: Validation
@@ -69,9 +73,6 @@ en:
           in_progress: In Progress
           error: Error
         timestamp: Timestamp
-        binaries:
-          true: 'Yes'
-          false: 'No'
       individual:
         identifier: Identifier
         label: Term
