@@ -70,7 +70,7 @@ class ImportJobsControllerTest < ActionController::TestCase
     assert_difference('ImportJob.count') do
       post :create, params: {
         import_job: { name: name, collection: 'http://example.com/foo/baz',
-                      file_to_upload: fixture_file_upload('files/valid_import.csv') }
+                      metadata_file: fixture_file_upload('files/valid_import.csv') }
       }
     end
 
@@ -82,7 +82,7 @@ class ImportJobsControllerTest < ActionController::TestCase
     assert_no_difference('ImportJob.count') do
       post :create, params: {
         import_job: { name: name, collection: 'http://example.com/foo/baz',
-                      file_to_upload: fixture_file_upload('files/valid_import.csv') }
+                      metadata_file: fixture_file_upload('files/valid_import.csv') }
       }
     end
 
@@ -102,8 +102,8 @@ class ImportJobsControllerTest < ActionController::TestCase
 
     # Verify that error message is provided
     import_job = assigns(:import_job)
-    assert_includes(import_job.errors.messages[:file_to_upload],
-                    I18n.t('activerecord.errors.models.import_job.attributes.file_to_upload.required'))
+    assert_includes(import_job.errors.messages[:metadata_file],
+                    I18n.t('activerecord.errors.models.import_job.attributes.metadata_file.required'))
   end
 
   test 'should get show' do
@@ -122,8 +122,8 @@ class ImportJobsControllerTest < ActionController::TestCase
     import_job = ImportJob.first
     patch :update, params: { id: import_job.id, import_job: { name: import_job.name } }
     result = assigns(:import_job)
-    assert_includes(result.errors.messages[:file_to_upload],
-                    I18n.t('activerecord.errors.models.import_job.attributes.file_to_upload.required'))
+    assert_includes(result.errors.messages[:metadata_file],
+                    I18n.t('activerecord.errors.models.import_job.attributes.metadata_file.required'))
     assert_template :edit
   end
 
@@ -146,7 +146,7 @@ class ImportJobsControllerTest < ActionController::TestCase
 
     post :create, params: {
       import_job: { name: name, collection: 'http://example.com/foo/baz',
-                    file_to_upload: fixture_file_upload('files/valid_import.csv') }
+                    metadata_file: fixture_file_upload('files/valid_import.csv') }
     }
 
     import_job = assigns(:import_job)
@@ -163,7 +163,7 @@ class ImportJobsControllerTest < ActionController::TestCase
 
     import_job = ImportJob.first
     patch :update, params: { id: import_job.id,
-                             import_job: { name: import_job.name, file_to_upload: fixture_file_upload('files/valid_import.csv') } }
+                             import_job: { name: import_job.name, metadata_file: fixture_file_upload('files/valid_import.csv') } }
     result = assigns(:import_job)
     assert_equal(:error, result.status)
   end
@@ -177,7 +177,7 @@ class ImportJobsControllerTest < ActionController::TestCase
     end
 
     import_job = ImportJob.first
-    import_job.file_to_upload = fixture_file_upload('files/valid_import.csv')
+    import_job.metadata_file = fixture_file_upload('files/valid_import.csv')
     import_job.save!
     patch :import, params: { id: import_job.id }
     result = assigns(:import_job)
@@ -198,7 +198,7 @@ class ImportJobsControllerTest < ActionController::TestCase
     import_job.stage = 'import'
     import_job.save!
     patch :update, params: { id: import_job.id,
-                             import_job: { name: import_job.name, file_to_upload: fixture_file_upload('files/valid_import.csv') } }
+                             import_job: { name: import_job.name, metadata_file: fixture_file_upload('files/valid_import.csv') } }
     assert_redirected_to import_jobs_url
     assert_equal I18n.t(:import_already_performed), flash[:error]
   end

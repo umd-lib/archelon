@@ -39,8 +39,8 @@
     </p>
 
     <p>
-      <strong><%= t('activerecord.attributes.import_job.file_to_upload') %>:</strong>
-      <%= import_job.file_to_upload.filename %>
+      <strong><%= t('activerecord.attributes.import_job.metadata_file') %>:</strong>
+      <%= import_job.metadata_file.filename %>
     </p>
 
     <% if import_job.binary_zip_file.attached? %>

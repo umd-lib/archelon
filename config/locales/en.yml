@@ -53,8 +53,8 @@ en:
           false: 'No'
         cas_user: User
         collection: Collection
-        file_to_upload: File to Upload
         id: Job ID
+        metadata_file: Metadata File
         model: Content Model
         name: Job Name
         remote_server: Remote server
@@ -95,7 +95,7 @@ en:
           attributes:
             base:
               multiple_include_binaries_options: When including binaries, choose either an uploaded binary file or remote server, not both.
-            file_to_upload:
+            metadata_file:
               required: 'is required'
     models:
       datatype: Datatype

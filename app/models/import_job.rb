@@ -46,7 +46,7 @@ class ImportJob < ApplicationRecord
   include PlastronStatus
 
   belongs_to :cas_user
-  has_one_attached :file_to_upload
+  has_one_attached :metadata_file
   has_one_attached :binary_zip_file
 
   after_commit { ImportJobRelayJob.perform_later(self) }
@@ -63,7 +63,7 @@ class ImportJob < ApplicationRecord
   # Rails 5.2 does not have attachment validation, so this is needed
   # until at least Rails 6 (see https://stackoverflow.com/questions/48158770/activestorage-file-attachment-validation)
   def attachment_validation
-    errors.add(:file_to_upload, :required) unless file_to_upload.attached?
+    errors.add(:metadata_file, :required) unless metadata_file.attached?
   end
 
   # Raises an error if both a "binary_zip_file" and a "remote server" field
