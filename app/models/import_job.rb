@@ -54,6 +54,7 @@ class ImportJob < ApplicationRecord
   validates :name, presence: true
   validates :collection, presence: true
   validate :attachment_validation
+  validate :include_binaries_options
 
   def self.access_vocab
     @access_vocab ||= Vocabulary.find_by identifier: VOCAB_CONFIG['access_vocab_identifier']
@@ -63,6 +64,12 @@ class ImportJob < ApplicationRecord
   # until at least Rails 6 (see https://stackoverflow.com/questions/48158770/activestorage-file-attachment-validation)
   def attachment_validation
     errors.add(:file_to_upload, :required) unless file_to_upload.attached?
+  end
+
+  # Raises an error if both a "binary_zip_file" and a "remote server" field
+  # is provided
+  def include_binaries_options
+    errors.add(:base, :multiple_include_binaries_options) if binary_zip_file.attached? && remote_server.present?
   end
 
   # Returns a symbol reflecting the current status

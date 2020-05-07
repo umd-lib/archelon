@@ -93,6 +93,8 @@ en:
       models:
         import_job:
           attributes:
+            base:
+              multiple_include_binaries_options: When including binaries, choose either an uploaded binary file or remote server, not both.
             file_to_upload:
               required: 'is required'
     models:
