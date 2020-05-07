@@ -17,3 +17,15 @@ test_admin_import_job:
   timestamp: 2019-08-12 15:45:29
   name: MyString
   collection: http://example.com/bar/kludge
+
+import_job_without_binary_zip_file:
+  cas_user: test_admin
+  timestamp: 2020-05-06 14:38:42
+  name: import_job_without_binary_zip_file
+  collection: http://example.com/foo/quuz
+
+import_job_with_binary_zip_file:
+  cas_user: test_admin
+  timestamp: 2020-05-06 14:38:42
+  name: import_job_with_binary_zip_file
+  collection: http://example.com/foo/quuz

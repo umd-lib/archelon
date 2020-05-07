@@ -182,6 +182,6 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def import_job_params
-      params.require(:import_job).permit(:name, :model, :access, :collection, :file_to_upload)
+      params.require(:import_job).permit(:name, :model, :access, :collection, :file_to_upload, :binary_zip_file)
     end
 end

@@ -19,6 +19,7 @@
         <th>User</th>
         <th>Timestamp</th>
         <th>Uploaded File</th>
+        <th>Binaries</th>
         <th>Content Model</th>
         <th>Status</th>
         <th></th>
@@ -33,6 +34,7 @@
           <td><%= import_job.cas_user&.name%></td>
           <td><%= import_job.timestamp %></td>
           <td><%= import_job.file_to_upload.filename %></td>
+          <td><%= import_job.binaries? ? t('activerecord.attributes.import_job.binaries.true') : t('activerecord.attributes.import_job.binaries.false') %></td>
           <td><%= import_job.model %></td>
           <%= render partial: 'import_job_status', locals: { import_job: import_job } %>
         </tr>

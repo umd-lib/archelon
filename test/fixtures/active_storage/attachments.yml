@@ -13,3 +13,19 @@ three:
   name: 'file_to_upload'
   record: test_admin_import_job (ImportJob)
   blob: three_blob
+
+import_job_without_binary_zip_file_file_to_upload:
+  name: 'file_to_upload'
+  record: import_job_without_binary_zip_file (ImportJob)
+  blob: four_blob
+
+import_job_with_binary_zip_file_file_to_upload:
+  name: 'file_to_upload'
+  record: import_job_with_binary_zip_file (ImportJob)
+  blob: five_blob
+
+import_job_with_binary_zip_file_binary_zip_file:
+  name: 'binary_zip_file'
+  record: import_job_with_binary_zip_file (ImportJob)
+  blob: six_blob
+

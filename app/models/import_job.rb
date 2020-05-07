@@ -47,6 +47,7 @@ class ImportJob < ApplicationRecord
 
   belongs_to :cas_user
   has_one_attached :file_to_upload
+  has_one_attached :binary_zip_file
 
   after_commit { ImportJobRelayJob.perform_later(self) }
 
@@ -113,5 +114,9 @@ class ImportJob < ApplicationRecord
 
   def last_response
     ImportJobResponse.new(last_response_headers, last_response_body)
+  end
+
+  def binaries?
+    binary_zip_file.attached?
   end
 end
