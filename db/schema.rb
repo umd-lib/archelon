@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_07_151009) do
+ActiveRecord::Schema.define(version: 2020_05_13_152520) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -98,6 +98,9 @@ ActiveRecord::Schema.define(version: 2020_05_07_151009) do
     t.string "download_url"
     t.string "plastron_status"
     t.integer "progress"
+    t.boolean "export_binaries"
+    t.bigint "binaries_size"
+    t.integer "binaries_count"
     t.index ["cas_user_id"], name: "index_export_jobs_on_cas_user_id"
   end
 

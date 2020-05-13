@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ExportJobsController < ApplicationController
+class ExportJobsController < ApplicationController # rubocop:disable Metrics/ClassLength
   before_action -> { authorize! :manage, ExportJob }, except: :download
   before_action :cancel_workflow?, only: %i[create review]
   before_action :selected_items?, only: %i[new create review]
@@ -16,22 +16,25 @@ class ExportJobsController < ApplicationController
   end
 
   def new
-    name = params[:name] || "#{current_cas_user.cas_directory_id}-#{Time.now.iso8601}"
-    format = params[:_format] || ExportJob::CSV_FORMAT
-    @job = ExportJob.new(name: name, format: format)
+    @job = ExportJob.new(params.key?(:export_job) ? export_job_params : default_job_params)
   end
 
   def review
-    @job = ExportJob.new(params.require(:export_job).permit(:name, :format))
-    @job.item_count = current_user.bookmarks.count
+    @job = ExportJob.new(export_job_params)
+    @job.item_count = bookmarks.count
+    return unless @job.export_binaries
+
+    binary_stats = BinariesStats.get_stats(bookmarks.map(&:document_id))
+    @job.binaries_size = binary_stats[:total_size]
+    @job.binaries_count = binary_stats[:count]
   end
 
   def create
-    @job = create_job(params.require(:export_job).permit(:name, :format, :item_count))
+    @job = create_job(export_job_params)
     return unless @job.save
 
     begin
-      submit_job(current_user.bookmarks.map(&:document_id))
+      submit_job(bookmarks.map(&:document_id))
     rescue Stomp::Error::NoCurrentConnection
       @job.plastron_status = :plastron_status_error
       @job.save
@@ -51,6 +54,25 @@ class ExportJobsController < ApplicationController
 
   private
 
+    def export_job_params
+      params
+        .require(:export_job)
+        .permit(:name, :format, :export_binaries, :item_count, :binaries_size, :binaries_count)
+        .with_defaults(default_job_params)
+    end
+
+    def default_job_params
+      {
+        name: "#{current_cas_user.cas_directory_id}-#{Time.now.iso8601}",
+        format: ExportJob::CSV_FORMAT,
+        export_binaries: false
+      }
+    end
+
+    def bookmarks
+      current_user.bookmarks
+    end
+
     def cancel_workflow?
       redirect_to controller: :bookmarks, action: :index if params[:commit] == 'Cancel'
     end
@@ -63,7 +85,7 @@ class ExportJobsController < ApplicationController
     end
 
     def selected_items_changed?
-      return if params[:export_job][:item_count] == current_user.bookmarks.count.to_s
+      return if params[:export_job][:item_count] == bookmarks.count.to_s
 
       flash[:notice] = I18n.t(:selected_items_changed)
       review
@@ -87,6 +109,7 @@ class ExportJobsController < ApplicationController
         'PlastronArg-on-behalf-of': job.cas_user.cas_directory_id,
         'PlastronArg-format': job.format,
         'PlastronArg-timestamp': job.timestamp,
+        'PlastronArg-export-binaries': job.export_binaries.to_s,
         persistent: 'true'
       }
     end
