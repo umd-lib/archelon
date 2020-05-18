@@ -32,7 +32,7 @@
 en:
   hello: 'Hello world'
   solr_is_down: 'Unable to connect to Solr index. Search functionality is unavailable at this time.'
-  active_mq_is_down: 'Unable to connect to Active MQ. Export functionality is unavailable at this time.'
+  active_mq_is_down: 'Unable to connect to ActiveMQ. Import/export functionality is unavailable at this time.'
   needs_selected_items: 'To create a export job, you must select items first.'
   already_selected: 'All exportable items from this search are already selected.'
   items_selected: 'Added %{selected_count} exportable %{items} from this search to your selected items list.'

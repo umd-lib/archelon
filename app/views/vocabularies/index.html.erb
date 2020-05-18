@@ -1,5 +1,11 @@
 <h1><%= ActiveSupport::Inflector.pluralize(t 'activerecord.models.vocabulary') %></h1>
 
+<% if can? :create, Vocabulary %>
+  <div>
+    <%= link_to "New #{t 'activerecord.models.vocabulary'}", new_vocabulary_path, class: 'btn btn-success' %>
+  </div>
+<% end %>
+
 <table class="table">
   <thead>
     <tr>
@@ -29,8 +35,3 @@
   </tbody>
 </table>
 
-<% if can? :create, Vocabulary %>
-  <div>
-    <%= link_to "New #{t 'activerecord.models.vocabulary'}", new_vocabulary_path, class: 'btn btn-success' %>
-  </div>
-<% end %>

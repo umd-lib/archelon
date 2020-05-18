@@ -3,7 +3,6 @@
 class ExportJobsController < ApplicationController
   before_action -> { authorize! :manage, ExportJob }, except: :download
   before_action :cancel_workflow?, only: %i[create review]
-  before_action :stomp_client_connected?, only: %i[new create review]
   before_action :selected_items?, only: %i[new create review]
   before_action :selected_items_changed?, only: :create
 
@@ -63,17 +62,6 @@ class ExportJobsController < ApplicationController
       redirect_to controller: :bookmarks, action: :index
     end
 
-    def stomp_client_connected?
-      return if STOMP_CLIENT.connected?
-
-      # try to reconnect
-      STOMP_CLIENT.connect max_reconnect_attempts: 3
-      return if STOMP_CLIENT.connected?
-
-      flash[:error] = I18n.t(:active_mq_is_down)
-      redirect_to controller: 'bookmarks'
-    end
-
     def selected_items_changed?
       return if params[:export_job][:item_count] == current_user.bookmarks.count.to_s
 
@@ -106,8 +94,13 @@ class ExportJobsController < ApplicationController
     def submit_job(uris)
       body = uris.join("\n")
       headers = message_headers(@job)
-      STOMP_CLIENT.publish STOMP_CONFIG['destinations']['jobs'], body, headers
-      @job.plastron_status = :plastron_status_in_progress
-      @job.save!
+      if StompService.publish_message :jobs, body, headers
+        @job.plastron_status = :plastron_status_in_progress
+        @job.save!
+      else
+        @job.plastron_status = :plastron_status_error
+        @job.save!
+        flash[:error] = I18n.t(:active_mq_is_down)
+      end
     end
 end
