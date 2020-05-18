@@ -3,7 +3,7 @@ en:
     application_name: 'Archelon'
 
     header_links:
-      bookmarks: 'Manage Selected Items'
+      bookmarks: 'Selected Items'
 
     bookmarks:
       page_title: 'Selected Items - Archelon'

@@ -1,10 +1,15 @@
 default: &default
   host: <%= ENV['STOMP_HOST'] %>
   port: <%= ENV['STOMP_PORT'] %>
-  export_jobs_queue: /queue/exportjobs
-  export_jobs_completed_queue: /queue/exportjobs.completed
+  destinations:
+    jobs: /queue/plastron.jobs
+    job_status: /topic/plastron.jobs.status
+    jobs_completed: /queue/plastron.jobs.completed
 
 development:
+  <<: *default
+
+test:
   <<: *default
 
 production:

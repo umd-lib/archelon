@@ -2,6 +2,8 @@
 
 # An export job from Fedora
 class ExportJob < ApplicationRecord
+  include PlastronStatus
+
   belongs_to :cas_user
 
   CSV_FORMAT = 'text/csv'
@@ -18,13 +20,6 @@ class ExportJob < ApplicationRecord
     'application/zip' => '.zip'
   }.freeze
 
-  # statuses
-  IN_PROGRESS = 'In Progress'
-  READY = 'Ready'
-  FAILED = 'Failed'
-
-  STATUSES = [IN_PROGRESS, READY, FAILED].freeze
-
   def self.exportable_types
     %w[Image Issue Letter]
   end
@@ -39,6 +34,25 @@ class ExportJob < ApplicationRecord
         filename: filename(content_disposition(response.headers), mime_type)
       }
     ]
+  end
+
+  def self.from_uri(uri)
+    # assume that the last path segment of the uri is the identifier
+    id = uri[uri.rindex('/') + 1..]
+    find(id)
+  end
+
+  def update_progress(message)
+    stats = message.body_json
+    progress = (stats['count']['exported'].to_f / stats['count']['total'] * 100).round
+    self.progress = progress
+    save!
+  end
+
+  def update_status(message)
+    self.plastron_status = message.headers['PlastronJobStatus']
+    self.download_url = message.body_json['download_uri']
+    save!
   end
 
   private

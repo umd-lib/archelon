@@ -17,8 +17,6 @@
     <tbody>
     <% @jobs.each do |job| %>
         <%
-          status = job.status
-          status_css_code = "export_job_status_#{status.parameterize(separator: "_")}"
           format_label = ExportJob::FORMATS[job.format] || job.format
         %>
       <tr>
@@ -28,9 +26,14 @@
         <td><%= job.timestamp %></td>
         <td><%= job.item_count %></td>
         <td><span title="<%= job.format %>"><%= format_label %></span></td>
-        <td class="<%= status_css_code %>"><%= status %></td>
+        <td class="<%= job.plastron_status %>">
+          <%= ExportJob.plastron_statuses[job.plastron_status] %>
+          <% if job.plastron_status_in_progress? %>
+            (<%= job.progress %>%)
+          <% end %>
+        </td>
         <td>
-          <% if status == 'Ready' && job.download_url %>
+          <% if job.plastron_status_done? && job.download_url %>
             <%= link_to 'Download', download_export_jobs_url(job), data: { turbolinks: false } %>
           <% end %>
         </td>

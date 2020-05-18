@@ -4,9 +4,7 @@
 class PublishVocabularyRdfJob < ApplicationJob
   queue_as :default
 
-  def perform(vocabulary, *formats)
-    formats.each do |format|
-      vocabulary.publish_rdf format.to_sym
-    end
+  def perform(vocabulary)
+    vocabulary.publish_rdf
   end
 end

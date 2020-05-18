@@ -13,6 +13,9 @@ class Type < ApplicationRecord
             }
   belongs_to :vocabulary
 
+  after_save ->(type) { type.vocabulary.publish_rdf_async }
+  after_destroy ->(type) { type.vocabulary.publish_rdf_async }
+
   def uri
     vocabulary.uri + identifier
   end

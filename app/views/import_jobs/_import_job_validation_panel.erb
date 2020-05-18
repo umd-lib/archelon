@@ -1,0 +1,86 @@
+<% job_status = I18n.t("activerecord.attributes.import_job.status.#{import_job.status}") %>
+<% job_status_css_class = "import_job_status_#{import_job.status}" %>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">
+      Status - <span class="<%= job_status_css_class %>"><%= status_text %></span>
+    </h3>
+  </div>
+  <div class="panel-body">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Valid</th>
+          <th>Invalid</th>
+          <th>Error</th>
+          <th>Updated</th>
+          <th>Unchanged</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+        <tbody>
+          <tr>
+            <td><%= import_job_response.num_valid %></td>
+            <td><%= import_job_response.num_invalid %></td>
+            <td><%= import_job_response.num_error %></td>
+            <td><%= import_job_response.num_updated %></td>
+            <td><%= import_job_response.num_unchanged %></td>
+            <td><%= import_job_response.num_total %></td>
+          </tr>
+        </tbody>
+      </thead>
+    </table>
+
+    <% if import_job_response.invalid_lines.any? %>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Validation Failures</h3>
+        </div>
+        <div class="panel-body">
+          <table class="table">
+            <thead>
+              <tr><th>Line Number</th><th>Problem</th>
+            </thead>
+            <tbody>
+              <% import_job_response.invalid_lines.each do |line| %>
+                <tr>
+                  <td>
+                    <%= line.line_location %>
+                  </td>
+                  <td>
+                    <% if line.line_error? %>
+                      <%= line.line_error %>
+                    <% elsif line.field_errors? %>
+                      <%= line.field_errors.join(',') %>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% end %>
+
+    <% json_headers = import_job_response.headers_pretty_print %>
+    <% json_body = import_job_response.body_pretty_print %>
+    <% if json_headers.present? or json_body.present? %>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <div class="panel-title">
+            <a role="button" data-toggle="collapse" data-target="#json_panel" class="btn-block">
+              JSON
+            </a>
+          </div>
+        </div>
+        <div id="json_panel" class="panel-body collapse">
+            <h4>Headers</h4>
+            <pre><code><%= json_headers %></code></pre>
+            <h4>Body</h4>
+            <pre><code><%= json_body %></code></pre>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

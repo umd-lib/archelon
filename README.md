@@ -44,6 +44,11 @@ self-signed SSL certificates for HTTPS, see the section [SSL setup](#ssl-setup).
 See [archelon-vagrant] for running Archelon application in a Vagrant
 environment.
 
+## Archelon Development Environment Setup
+
+To set up Archelon for development see
+[docs/ArchelonDevelopmentEnvironment.md](docs/ArchelonDevelopmentEnvironment.md).
+
 ## Importing Controlled Vocabularies
 
 Archelon comes with a rake task, [vocab:import](lib/tasks/vocab.rake), to do a
@@ -254,6 +259,10 @@ In order to avoid this error:
 
 The batch export functionality relies on a running [Plastron](plastron)
 instance.
+
+## Metadata Import
+
+See [docs/MetadataImport](docs/MetadataImport.md).
 
 ## LDAP Override
 

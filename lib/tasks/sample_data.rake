@@ -3,7 +3,7 @@
 # lib/tasks/sample_data.rake
 namespace :db do # rubocop:disable Metrics/BlockLength
   desc 'Drop, create, migrate, seed and populate sample data'
-  task reset_with_sample_data: %i[drop create migrate seed populate_sample_data] do
+  task reset_with_sample_data: %i[drop reset seed populate_sample_data] do
     puts 'Ready to go!'
   end
 
@@ -42,13 +42,13 @@ namespace :db do # rubocop:disable Metrics/BlockLength
     end
 
     num_export_jobs = 25
-    job_statuses = ['In Progress', 'Ready', 'Failed']
+    plastron_statuses = ExportJob.plastron_statuses
     num_export_jobs.times do
       cas_user = cas_users[Random.rand(num_cas_users)]
       timestamp = Faker::Time.between(14.days.ago, Time.zone.now)
       job_name = "#{cas_user.cas_directory_id}-#{timestamp.iso8601}"
       item_count = Random.rand(10)
-      status = job_statuses[Random.rand(job_statuses.size)]
+      plastron_status = plastron_statuses.values[Random.rand(plastron_statuses.size)]
 
       export_job = ExportJob.new
       export_job.name = job_name
@@ -56,7 +56,8 @@ namespace :db do # rubocop:disable Metrics/BlockLength
       export_job.timestamp = timestamp
       export_job.item_count = item_count
       export_job.format = 'CSV'
-      export_job.status = status
+      export_job.plastron_status = plastron_status
+      export_job.progress = Random.rand(100) if export_job.plastron_status_in_progress?
       export_job.save!
     end
   end

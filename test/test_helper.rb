@@ -66,6 +66,11 @@ class ActiveSupport::TestCase
     cas_login(cas_directory_id)
   end
 
+  def mock_cas_logout
+    request.env.delete('omniauth.auth')
+    session.delete(:cas_user)
+  end
+
   # Runs the contents of a block using the given user as the current_user.
   def impersonate_as_user(user) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     current_admin_user = CasUser.find_by(cas_directory_id: session[:cas_user])
@@ -96,4 +101,19 @@ class ActiveSupport::TestCase
       mock_cas_login(DEFAULT_TEST_USER)
     end
   end
+
+  # Replaces StompService with a stub
+  def mock_stomp_service(connected:)
+    name = "stomp_service_#{connected ? '' : 'dis'}connected"
+    stub_const('StompService', double(name, publish_message: connected))
+  end
+end
+
+# Stub response for RepositoryCollections Solr requests from fixture file
+def stub_repository_collections_solr_response(fixture_filename)
+  file = file_fixture(fixture_filename).read
+  data_hash = JSON.parse(file)
+
+  response = Blacklight::Solr::Response.new(data_hash, nil)
+  Blacklight::Solr::Repository.any_instance.stub(:search).and_return(response)
 end

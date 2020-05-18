@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  cas_user: test_admin
+  timestamp: 2019-08-12 15:45:29
+  name: MyString
+  collection: http://example.com/foo/bar
+
+two:
+  cas_user: test_user
+  timestamp: 2020-04-02 15:45:29
+  name: MyString
+  collection: http://example.com/quuz/bax

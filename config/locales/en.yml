@@ -32,14 +32,39 @@
 en:
   hello: 'Hello world'
   solr_is_down: 'Unable to connect to Solr index. Search functionality is unavailable at this time.'
-  active_mq_is_down: 'Unable to connect to Active MQ. Export functionality is unavailable at this time.'
+  active_mq_is_down: 'Unable to connect to ActiveMQ. Import/export functionality is unavailable at this time.'
   needs_selected_items: 'To create a export job, you must select items first.'
   already_selected: 'All exportable items from this search are already selected.'
   items_selected: 'Added %{selected_count} exportable %{items} from this search to your selected items list.'
   max_limit: 'Maximum overall selection limit is %{limit}.'
   selected_items_changed: 'Selected items has changed. Please review.'
+  import_already_performed: 'Import has completed. Cannot reimport or validate'
+  cannot_import_invalid_file: 'Cannot import a file with validation errors.'
   activerecord:
     attributes:
+      import_job:
+        access: Access
+        cas_user: User
+        collection: Collection
+        file_to_upload: File to Upload
+        id: Job ID
+        model: Content Model
+        name: Job Name
+        stage:
+          import: Import
+          validate: Validation
+        status:
+          validate_pending: Pending
+          validate_success: Validation Successful
+          validate_failed: Validation Failed
+          validate_error: Validation Error
+          import_success: Import Successful
+          import_failed: Import Failed
+          import_error: Import Error
+          import_pending: Pending
+          in_progress: In Progress
+          error: Error
+        timestamp: Timestamp
       individual:
         identifier: Identifier
         label: Term
@@ -56,6 +81,12 @@ en:
         identifier: Identifier
         uri: Local Authority URI
         published_uri: Published URI
+    errors:
+      models:
+        import_job:
+          attributes:
+            file_to_upload:
+              required: 'is required'
     models:
       download_url: Download URL
       individual: Term

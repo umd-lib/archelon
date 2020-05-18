@@ -1,0 +1,10 @@
+# See https://stackoverflow.com/a/55835955
+one:
+  name: 'file_to_upload'
+  record: one (ImportJob)
+  blob: one_blob
+
+two:
+  name: 'file_to_upload'
+  record: two (ImportJob)
+  blob: two_blob

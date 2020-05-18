@@ -33,13 +33,8 @@ class LdapUserAttributesTest < ActiveSupport::TestCase
     )
   end
 
-  test 'group matching ignores case' do
-    # we shouldn't care about DN capitalization
-    assert_equal :user, LdapUserAttributes.user_type_from_groups([GROUPER_GROUPS['Users'].downcase])
-    assert_equal :admin, LdapUserAttributes.user_type_from_groups([GROUPER_GROUPS['Administrators'].downcase])
-  end
-
   test 'Ignore group name case when assigning user type' do
+    # we shouldn't care about DN capitalization
     assert_equal :user, LdapUserAttributes.user_type_from_groups([GROUPER_GROUPS['Users'].downcase])
     assert_equal :admin, LdapUserAttributes.user_type_from_groups([GROUPER_GROUPS['Administrators'].downcase])
   end

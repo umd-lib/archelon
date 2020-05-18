@@ -1,5 +1,5 @@
-# Load the configuration
+# STOMP server and destinations
 STOMP_CONFIG = Archelon::Application.config_for :stomp
 
-# Only start Stomp connection when Rails server is actually running
-STOMP_CLIENT = StompClient.instance if defined?(Rails::Server) || Rails.env.production?
+# Convenient shorthand for passing host and port to Stomp::Client and Stomp::Connection
+STOMP_SERVER = { host: STOMP_CONFIG['host'], port: STOMP_CONFIG['port'] }

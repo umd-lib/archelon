@@ -16,6 +16,8 @@ AllCops:
 # Increase max allowed line length
 Metrics/LineLength:
   Max: 120
+  Exclude:
+    - 'test/**/*'
 
 Metrics/ClassLength:
   Exclude:

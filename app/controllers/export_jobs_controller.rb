@@ -3,7 +3,6 @@
 class ExportJobsController < ApplicationController
   before_action -> { authorize! :manage, ExportJob }
   before_action :cancel_workflow?, only: %i[create review]
-  before_action :stomp_client_connected?, only: %i[new create review]
   before_action :selected_items?, only: %i[new create review]
   before_action :selected_items_changed?, only: :create
 
@@ -27,15 +26,14 @@ class ExportJobsController < ApplicationController
     @job.item_count = current_user.bookmarks.count
   end
 
-  def create # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
-    uris = current_user.bookmarks.map(&:document_id)
+  def create
     @job = create_job(params.require(:export_job).permit(:name, :format, :item_count))
     return unless @job.save
 
     begin
-      STOMP_CLIENT.publish STOMP_CONFIG['export_jobs_queue'], uris.join("\n"), message_headers(@job)
+      submit_job(current_user.bookmarks.map(&:document_id))
     rescue Stomp::Error::NoCurrentConnection
-      @job.status = 'Error'
+      @job.plastron_status = :plastron_status_error
       @job.save
       flash[:error] = I18n.t(:active_mq_is_down)
     end
@@ -60,17 +58,6 @@ class ExportJobsController < ApplicationController
       redirect_to controller: :bookmarks, action: :index
     end
 
-    def stomp_client_connected?
-      return if STOMP_CLIENT.connected?
-
-      # try to reconnect
-      STOMP_CLIENT.connect max_reconnect_attempts: 3
-      return if STOMP_CLIENT.connected?
-
-      flash[:error] = I18n.t(:active_mq_is_down)
-      redirect_to controller: 'bookmarks'
-    end
-
     def selected_items_changed?
       return if params[:export_job][:item_count] == current_user.bookmarks.count.to_s
 
@@ -80,20 +67,36 @@ class ExportJobsController < ApplicationController
     end
 
     def create_job(args)
-      args[:timestamp] = Time.zone.now
-      args[:cas_user] = current_cas_user
-      args[:status] = ExportJob::IN_PROGRESS
-      ExportJob.new(args)
+      ExportJob.new(args).tap do |job|
+        job.timestamp = Time.zone.now
+        job.cas_user = current_cas_user
+        job.progress = 0
+        job.plastron_status = :plastron_status_pending
+      end
     end
 
     def message_headers(job)
       {
-        ArchelonExportJobName: job.name,
-        ArchelonExportJobId: job.id,
-        ArchelonExportJobUsername: job.cas_user.cas_directory_id,
-        ArchelonExportJobFormat: job.format,
-        ArchelonExportJobTimestamp: job.timestamp,
+        PlastronCommand: 'export',
+        PlastronJobId: export_job_url(job),
+        'PlastronArg-name': job.name,
+        'PlastronArg-on-behalf-of': job.cas_user.cas_directory_id,
+        'PlastronArg-format': job.format,
+        'PlastronArg-timestamp': job.timestamp,
         persistent: 'true'
       }
+    end
+
+    def submit_job(uris)
+      body = uris.join("\n")
+      headers = message_headers(@job)
+      if StompService.publish_message :jobs, body, headers
+        @job.plastron_status = :plastron_status_in_progress
+        @job.save!
+      else
+        @job.plastron_status = :plastron_status_error
+        @job.save!
+        flash[:error] = I18n.t(:active_mq_is_down)
+      end
     end
 end
