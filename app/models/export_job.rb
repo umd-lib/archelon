@@ -38,6 +38,10 @@ class ExportJob < ApplicationRecord
     ]
   end
 
+  def binaries_file
+    File.join(EXPORT_BINARIES_DIR, name + '_binaries.zip')
+  end
+
   def self.from_uri(uri)
     # assume that the last path segment of the uri is the identifier
     id = uri[uri.rindex('/') + 1..]

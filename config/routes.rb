@@ -50,6 +50,7 @@ Rails.application.routes.draw do # rubocop:disable Metrics/BlockLength
     collection do
       get 'review'
       get ':id/file', to: 'export_jobs#download', as: 'download'
+      get ':id/binaries', to: 'export_jobs#download_binaries', as: 'download_binaries'
     end
   end
 

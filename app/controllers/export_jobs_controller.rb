@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class ExportJobsController < ApplicationController # rubocop:disable Metrics/ClassLength
-  before_action -> { authorize! :manage, ExportJob }, except: :download
+  before_action -> { authorize! :manage, ExportJob }, except: %i[download download_binaries]
+  before_action -> { authorize! :download, ExportJob }, only: %i[download download_binaries]
+  before_action :set_export_job, only: %i[download download_binaries]
   before_action :cancel_workflow?, only: %i[create review]
   before_action :selected_items?, only: %i[new create review]
   before_action :selected_items_changed?, only: :create
@@ -44,12 +46,13 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
   end
 
   def download
-    job = ExportJob.find(params[:id])
+    send_data(*@job.download_file)
+  end
 
-    # Authorizing here because we aren't using CanCanCan "load_and_authorize_resource"
-    authorize! :download, job
-
-    send_data(*job.download_file)
+  def download_binaries
+    send_file(@job.binaries_file)
+  rescue ActionController::MissingFile
+    render file: Rails.root.join('public', '404.html'), status: :not_found
   end
 
   private
@@ -67,6 +70,10 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
         format: ExportJob::CSV_FORMAT,
         export_binaries: false
       }
+    end
+
+    def set_export_job
+      @job = ExportJob.find(params[:id])
     end
 
     def bookmarks
