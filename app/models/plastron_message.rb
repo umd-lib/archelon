@@ -17,6 +17,8 @@ class PlastronMessage
 
   # Parse the message body as JSON and return the result.
   def body_json
+    return nil if @body.blank?
+
     JSON.parse(@body)
   end
 

@@ -57,7 +57,7 @@ class ExportJob < ApplicationRecord
 
   def update_status(message)
     self.plastron_status = message.headers['PlastronJobStatus']
-    self.download_url = message.body_json['download_uri']
+    self.download_url = message.body_json['download_uri'] unless message.body_json.nil?
     save!
   end
 
