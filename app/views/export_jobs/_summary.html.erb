@@ -1,0 +1,52 @@
+<div class="p-3 ">
+  <div class="row form-group">
+    <div class="col-xs-2">
+      <strong>Export Format:</strong>
+    </div>
+    <div class="col-xs-10">
+      <%= export_job.format %>
+    </div>
+  </div>
+  <div class="row form-group">
+    <div class="col-xs-2">
+      <strong>Job Name:</strong>
+    </div>
+    <div class="col-xs-10">
+      <%= export_job.name %>
+    </div>
+  </div>
+  <div class="row form-group">
+    <div class="col-xs-2">
+      <strong>Number of Records:</strong>
+    </div>
+    <div class="col-xs-10">
+      <%= export_job.item_count %>
+    </div>
+  </div>
+  <div class="row form-group">
+    <div class="col-xs-2">
+      <strong>Export Binaries?</strong>
+    </div>
+    <div class="col-xs-10">
+      <%= export_job.export_binaries ? 'Yes' : 'No' %>
+    </div>
+  </div>
+  <% if export_job.export_binaries %>
+    <div class="row form-group">
+      <div class="col-xs-2">
+        <strong>Number of Binaries:</strong>
+      </div>
+      <div class="col-xs-10">
+        <%= export_job.binaries_count %>
+      </div>
+    </div>
+    <div class="row form-group">
+      <div class="col-xs-2">
+        <strong>Estimated Total Size of Binaries:</strong>
+      </div>
+      <div class="col-xs-10">
+        <%= number_to_human_size export_job.binaries_size %>
+      </div>
+    </div>
+  <% end %>
+</div>

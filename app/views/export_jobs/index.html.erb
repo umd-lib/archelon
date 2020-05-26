@@ -9,9 +9,10 @@
         <th>User</th>
         <th>Timestamp</th>
         <th># of Records</th>
+        <th># of Binaries</th>
+        <th>Size of Binaries</th>
         <th>Format</th>
-        <th>Status</th>
-        <th></th>
+        <th colspan="3">Status</th>
       </tr>
     </thead>
     <tbody>
@@ -25,6 +26,8 @@
         <td><%= job.cas_user&.name%></td>
         <td><%= job.timestamp %></td>
         <td><%= job.item_count %></td>
+        <td><%= job.binaries_count %></td>
+        <td><%= number_to_human_size job.binaries_size %></td>
         <td><span title="<%= job.format %>"><%= format_label %></span></td>
         <%= render partial: 'export_job_status', locals: { export_job: job } %>
       </tr>

@@ -38,6 +38,10 @@ class ExportJob < ApplicationRecord
     ]
   end
 
+  def binaries_file
+    File.join(EXPORT_BINARIES_DIR, name + '_binaries.zip')
+  end
+
   def self.from_uri(uri)
     # assume that the last path segment of the uri is the identifier
     id = uri[uri.rindex('/') + 1..]
@@ -53,7 +57,7 @@ class ExportJob < ApplicationRecord
 
   def update_status(message)
     self.plastron_status = message.headers['PlastronJobStatus']
-    self.download_url = message.body_json['download_uri']
+    self.download_url = message.body_json['download_uri'] unless message.body_json.nil?
     save!
   end
 

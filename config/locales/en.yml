@@ -46,6 +46,10 @@ en:
         identifier: Identifier
         vocabulary: Vocabulary
         description: Description
+      export_job:
+        format: Metadata Format
+        id: Job ID
+        name: Job Name
       import_job:
         access: Access
         binaries:

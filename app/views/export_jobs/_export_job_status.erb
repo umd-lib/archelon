@@ -1,11 +1,20 @@
-    <td class="<%= export_job.plastron_status %>" data-channel="export_jobs" data-job-id="<%= export_job.id %>">
-      <%= ExportJob.plastron_statuses[export_job.plastron_status] %>
-      <% if export_job.plastron_status_in_progress? %>
-        (<%= export_job.progress %>%)
-      <% end %>
-    </td>
-    <% if export_job.plastron_status_done? && export_job.download_url %>
-      <td>
-        <%= link_to 'Download', download_export_jobs_path(export_job), data: { turbolinks: false } %>
-      </td>
+<td class="<%= export_job.plastron_status %>" data-channel="export_jobs" data-job-id="<%= export_job.id %>"<% unless export_job.plastron_status_done? %> colspan="3"<% end %>>
+  <%= ExportJob.plastron_statuses[export_job.plastron_status] %>
+  <% if export_job.plastron_status_in_progress? %>
+    (<%= export_job.progress %>%)
+  <% end %>
+</td>
+<td>
+  <% if export_job.plastron_status_done? && export_job.download_url %>
+    <%= link_to download_export_jobs_path(export_job), class: 'btn btn-sm btn-success', data: { turbolinks: false } do %>
+      <i class="glyphicon glyphicon-download-alt"></i>&nbsp;Metadata
     <% end %>
+  <% end %>
+</td>
+<td>
+  <% if export_job.plastron_status_done? && export_job.export_binaries %>
+    <%= link_to download_binaries_export_jobs_path(export_job), class: 'btn btn-sm btn-primary', data: { turbolinks: false } do %>
+      <i class="glyphicon glyphicon-download-alt"></i>&nbsp;Binaries
+    <% end %>
+  <% end %>
+</td>
