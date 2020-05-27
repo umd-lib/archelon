@@ -1,8 +1,8 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Metadata Import</h1>
+<h1><%= t('activerecord.models.import_job').pluralize %></h1>
 
-<%= link_to 'New Import Job', new_import_job_path, class: 'btn btn-success' %>
+<%= link_to "New #{t('activerecord.models.import_job')}", new_import_job_path, class: 'btn btn-success' %>
 
 <% if @import_jobs.count > 0 %>
   <div class="row">
@@ -16,14 +16,14 @@
   <table class="table">
     <thead>
       <tr>
-        <th>Job ID</th>
-        <th>Job Name</th>
-        <th>User</th>
-        <th>Timestamp</th>
-        <th>Metadata File</th>
-        <th>Binaries</th>
-        <th>Content Model</th>
-        <th>Status</th>
+        <th><%= t('activerecord.attributes.import_job.id') %></th>
+        <th><%= t('activerecord.attributes.import_job.name') %></th>
+        <th><%= t('activerecord.attributes.import_job.cas_user') %></th>
+        <th><%= t('activerecord.attributes.import_job.timestamp') %></th>
+        <th><%= t('activerecord.attributes.import_job.metadata_file') %></th>
+        <th><%= t('activerecord.attributes.import_job.binaries.label') %></th>
+        <th><%= t('activerecord.attributes.import_job.model') %></th>
+        <th><%= t('activerecord.attributes.import_job.status.label') %></th>
         <th></th>
       </tr>
     </thead>
@@ -44,7 +44,7 @@
     </tbody>
   </table>
 
-  <%= will_paginate @download_urls, renderer: BootstrapPagination::Rails %>
+  <%= will_paginate @import_jobs, renderer: BootstrapPagination::Rails %>
   <br>
 <% else %>
   <p data-channel="import_jobs">No Import jobs found</p>
