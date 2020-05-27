@@ -53,6 +53,7 @@ en:
       import_job:
         access: Access
         binaries:
+          label: 'Includes Binaries'
           true: 'Yes'
           false: 'No'
         cas_user: User
@@ -66,6 +67,7 @@ en:
           import: Import
           validate: Validation
         status:
+          label: Status
           validate_pending: Pending
           validate_success: Validation Successful
           validate_failed: Validation Failed
@@ -104,6 +106,8 @@ en:
     models:
       datatype: Datatype
       download_url: Download URL
+      export_job: Export Job
+      import_job: Import Job
       individual: Term
       type: Class
       vocabulary: Vocabulary
