@@ -28,6 +28,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     name = params[:name] || "#{current_cas_user.cas_directory_id}-#{Time.now.iso8601}"
     @import_job = ImportJob.new(name: name)
     @collections_options_array = retrieve_collections
+    @binaries_files = Dir.children(IMPORT_CONFIG[:binaries_dir])&.select { |filename| filename =~ /\.zip$/ }
   end
 
   # GET /import_jobs/1/edit
@@ -40,6 +41,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
 
     @import_job_response = @import_job.last_response
     @collections_options_array = retrieve_collections
+    @binaries_files = Dir.children(IMPORT_CONFIG[:binaries_dir])&.select { |filename| filename =~ /\.zip$/ }
   end
 
   # POST /import_jobs
@@ -56,25 +58,11 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     render :new
   end
 
-  def update # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+  def update # rubocop:disable Metrics/MethodLength
     if @import_job.stage == 'import'
       flash[:error] = I18n.t(:import_already_performed)
       redirect_to action: 'index', status: :see_other
       return
-    end
-
-    valid_update = @import_job.update(import_job_params)
-
-    # Need special handing of "metadata_file", because if we're gotten this
-    # far, the @import_job already has a file attached, so the
-    # "attachment_validation" method on the model won't catch that the
-    # update form submission doesn't have new file attached.
-    #
-    # Need to have the method after the call to @import_job.update, as
-    # update clears the "errors" array
-    if import_job_params['metadata_file'].nil?
-      @import_job.errors.add(:metadata_file, :required)
-      valid_update = false
     end
 
     if valid_update && @import_job.save
@@ -186,14 +174,39 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
       }.tap do |headers|
         headers['PlastronArg-access'] = "<#{job.access}>" if job.access.present?
         headers['PlastronArg-validate-only'] = 'True' if validate_only
-        headers['PlastronArg-binaries-location'] = job.remote_server if job.remote_server.present?
+        headers['PlastronArg-binaries-location'] = job.binaries_location if job.binaries_location.present?
       end
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def import_job_params
-      params.require(:import_job).permit(:name, :model, :access, :collection,
-                                         :metadata_file, :binary_zip_file,
-                                         :remote_server)
+      safe_params = params.require(:import_job).permit(:name, :model, :access, :collection,
+                                                       :metadata_file, :binaries_zip_filename)
+      location = binaries_location(safe_params.delete(:binaries_zip_filename))
+      # if this import job has binaries construct the location to pass to plastron
+      safe_params[:binaries_location] = location if location.present?
+      safe_params
+    end
+
+    def binaries_location(filename)
+      filename.present? ? File.join(IMPORT_CONFIG[:binaries_base_location], filename) : nil
+    end
+
+    def valid_update
+      @import_job.update(import_job_params)
+
+      # Need special handing of "metadata_file", because if we're gotten this
+      # far, the @import_job already has a file attached, so the
+      # "attachment_validation" method on the model won't catch that the
+      # update form submission doesn't have new file attached.
+      #
+      # Need to have the method after the call to @import_job.update, as
+      # update clears the "errors" array
+      if import_job_params['metadata_file'].nil?
+        @import_job.errors.add(:metadata_file, :required)
+        return false
+      end
+
+      true
     end
 end

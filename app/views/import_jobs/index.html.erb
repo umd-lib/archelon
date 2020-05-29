@@ -37,7 +37,7 @@
           <td><%= job.name %></td>
           <td><%= job.cas_user&.name%></td>
           <td><%= job.timestamp %></td>
-          <td><%= job.metadata_file.filename %></td>
+          <td><%= job.metadata_file.filename if job.metadata_file.attached? %></td>
           <td><%= job.binaries? ? t('activerecord.attributes.import_job.binaries.true') : t('activerecord.attributes.import_job.binaries.false') %></td>
           <td><%= job.item_count %></td>
           <td><%= job.binaries_count if job.binaries? %></td>

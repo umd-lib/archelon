@@ -49,3 +49,6 @@ coverage
 /public/published_vocabularies/*.json
 /public/published_vocabularies/*.ttl
 /public/published_vocabularies/*.nt
+
+# Ignore the imports
+/imports
