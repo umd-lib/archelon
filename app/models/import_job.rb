@@ -100,21 +100,27 @@ class ImportJob < ApplicationRecord
   end
 
   def update_progress(plastron_message) # rubocop:disable Metrics/AbcSize
-    stats = plastron_message.body_json
+    return if plastron_message.body.blank?
 
-    total_count = stats['count']['total']
+    count = plastron_message.body_json['count'] || {}
+    total_count = count['total']
     # Total could be nil for non-seekable files
     return if total_count.nil? || total_count.zero?
 
-    processed_file_count = stats['count']['updated'] + stats['count']['unchanged'] + stats['count']['errors']
+    processed_count = count['updated'] + count['unchanged'] + count['errors']
 
-    self.progress = (processed_file_count.to_f / total_count * 100).round
+    self.progress = (processed_count.to_f / total_count * 100).round
     save!
   end
 
   def update_status(plastron_message)
+    if plastron_message.body.present?
+      count = plastron_message.body_json['count'] || {}
+      self.item_count = count['total']
+      self.binaries_count = count['files']
+    end
     self.plastron_status = plastron_message.headers['PlastronJobStatus']
-    self.last_response_headers = plastron_message.headers_json
+    self.last_response_headers = plastron_message.headers.to_json
     self.last_response_body = plastron_message.body
     save!
   end

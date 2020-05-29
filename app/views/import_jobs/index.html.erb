@@ -22,6 +22,8 @@
         <th><%= t('activerecord.attributes.import_job.timestamp') %></th>
         <th><%= t('activerecord.attributes.import_job.metadata_file') %></th>
         <th><%= t('activerecord.attributes.import_job.binaries.label') %></th>
+        <th># of Records</th>
+        <th># of Binaries</th>
         <th><%= t('activerecord.attributes.import_job.model') %></th>
         <th><%= t('activerecord.attributes.import_job.status.label') %></th>
         <th></th>
@@ -29,16 +31,18 @@
     </thead>
 
     <tbody>
-      <% @import_jobs.each do |import_job| %>
+      <% @import_jobs.each do |job| %>
         <tr>
-          <td><%= link_to import_job.id, import_job_path(import_job) %></td>
-          <td><%= import_job.name %></td>
-          <td><%= import_job.cas_user&.name%></td>
-          <td><%= import_job.timestamp %></td>
-          <td><%= import_job.metadata_file.filename %></td>
-          <td><%= import_job.binaries? ? t('activerecord.attributes.import_job.binaries.true') : t('activerecord.attributes.import_job.binaries.false') %></td>
-          <td><%= import_job.model %></td>
-          <%= render partial: 'import_job_status', locals: { import_job: import_job } %>
+          <td><%= link_to job.id, import_job_path(job) %></td>
+          <td><%= job.name %></td>
+          <td><%= job.cas_user&.name%></td>
+          <td><%= job.timestamp %></td>
+          <td><%= job.metadata_file.filename %></td>
+          <td><%= job.binaries? ? t('activerecord.attributes.import_job.binaries.true') : t('activerecord.attributes.import_job.binaries.false') %></td>
+          <td><%= job.item_count %></td>
+          <td><%= job.binaries_count if job.binaries? %></td>
+          <td><%= job.model %></td>
+          <%= render partial: 'import_job_status', locals: { import_job: job } %>
         </tr>
       <% end %>
     </tbody>
