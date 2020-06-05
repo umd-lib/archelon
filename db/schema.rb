@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_27_202323) do
+ActiveRecord::Schema.define(version: 2020_06_05_171038) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -125,7 +125,7 @@ ActiveRecord::Schema.define(version: 2020_05_27_202323) do
     t.text "last_response_headers"
     t.string "access"
     t.string "collection"
-    t.string "remote_server"
+    t.string "binaries_location"
     t.integer "binaries_count"
     t.integer "item_count"
     t.index ["cas_user_id"], name: "index_import_jobs_on_cas_user_id"
@@ -139,6 +139,14 @@ ActiveRecord::Schema.define(version: 2020_05_27_202323) do
     t.datetime "updated_at", null: false
     t.integer "vocabulary_id"
     t.index ["vocabulary_id"], name: "index_individuals_on_vocabulary_id"
+  end
+
+  create_table "public_keys", force: :cascade do |t|
+    t.string "key"
+    t.integer "cas_user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cas_user_id"], name: "index_public_keys_on_cas_user_id"
   end
 
   create_table "searches", force: :cascade do |t|

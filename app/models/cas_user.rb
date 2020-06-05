@@ -6,6 +6,7 @@ class CasUser < ApplicationRecord
   include Blacklight::User
 
   has_and_belongs_to_many :groups # rubocop:disable Rails/HasAndBelongsToMany
+  has_many :public_keys, dependent: :destroy
 
   enum user_type: { admin: 'admin', user: 'user', unauthorized: 'unauthorized' }
   validates :cas_directory_id, presence: true, uniqueness: { case_sensitive: false }
