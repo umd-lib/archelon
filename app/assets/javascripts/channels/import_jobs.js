@@ -101,7 +101,7 @@
         div = importJobsDivs[i];
         stage = div.dataset.stage;
         status = div.dataset.status;
-        jobMayNeedUpdate = ((stage == "validate") && (status == "in_progress"));
+        jobMayNeedUpdate = (status == "in_progress");
         if (jobMayNeedUpdate) {
           jobs.push({ jobId: div.dataset.jobId, stage: div.dataset.stage, status: div.dataset.status });
           requestUpdate = true;

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-namespace :stomp do
+namespace :stomp do # rubocop:disable Metrics/BlockLength
   desc 'Start a STOMP listener'
   task listen: :environment do
     # immediately flush stdout, since in production situations
@@ -14,6 +14,7 @@ namespace :stomp do
       puts "Updating job status for #{message.job_id}"
       message.find_job.update_status(message)
       listener.send_ack(message)
+      archelon_status_update(message)
     rescue StandardError => e
       puts "An error occurred processing stomp_msg: #{stomp_msg}"
       listener.send_nack(message)
@@ -24,6 +25,7 @@ namespace :stomp do
       message = PlastronMessage.new(stomp_msg)
       puts "Updating job progress for #{message.job_id}"
       message.find_job.update_progress(message)
+      archelon_status_update(message)
     end
 
     begin
@@ -31,6 +33,17 @@ namespace :stomp do
     rescue Interrupt
       listener.stop
     end
+  end
+
+  # Notifies the Archelon main application that a job status has been updated
+  def archelon_status_update(message)
+    include Rails.application.routes.url_helpers
+    default_url_options[:host] = ARCHELON_SERVER[:host]
+    default_url_options[:port] = ARCHELON_SERVER[:port]
+
+    status_trigger_url = url_for([:status_update, message.find_job])
+    puts "Sending status notification to #{status_trigger_url}"
+    Net::HTTP.get(URI(status_trigger_url))
   end
 end
 

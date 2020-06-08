@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 class ImportJobsController < ApplicationController # rubocop:disable Metrics/ClassLength
-  before_action :set_import_job, only: %i[update show edit import]
+  before_action :set_import_job, only: %i[update show edit import status_update]
   before_action :cancel_workflow?, only: %i[create update]
   helper_method :status_text
+  skip_before_action :authenticate, only: %i[status_update]
 
   # GET /import_jobs
   # GET /import_jobs.json
@@ -119,6 +120,13 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     else
       I18n.t("activerecord.attributes.import_job.status.#{import_job.status}")
     end
+  end
+
+  # GET /import_jobs/1/status_update
+  def status_update
+    # Triggers import job notification to channel
+    ImportJobRelayJob.perform_later(@import_job)
+    render :no_content
   end
 
   private
