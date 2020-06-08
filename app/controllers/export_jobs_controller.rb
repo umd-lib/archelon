@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 class ExportJobsController < ApplicationController # rubocop:disable Metrics/ClassLength
-  before_action -> { authorize! :manage, ExportJob }, except: %i[download download_binaries]
+  before_action -> { authorize! :manage, ExportJob }, except: %i[download download_binaries status_update]
   before_action -> { authorize! :download, ExportJob }, only: %i[download download_binaries]
-  before_action :set_export_job, only: %i[download download_binaries]
+  before_action :set_export_job, only: %i[download download_binaries status_update]
   before_action :cancel_workflow?, only: %i[create review]
   before_action :selected_items?, only: %i[new create review]
   before_action :selected_items_changed?, only: :create
+  skip_before_action :authenticate, only: %i[status_update]
 
   def index
     @jobs =
@@ -53,6 +54,13 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     send_file(@job.binaries_file)
   rescue ActionController::MissingFile
     render file: Rails.root.join('public', '404.html'), status: :not_found
+  end
+
+  # GET /export_jobs/1/status_update
+  def status_update
+    # Triggers export job notification to channel
+    ExportJobRelayJob.perform_later(@job)
+    render :no_content
   end
 
   private

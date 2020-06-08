@@ -52,11 +52,17 @@ Rails.application.routes.draw do # rubocop:disable Metrics/BlockLength
       get ':id/file', to: 'export_jobs#download', as: 'download'
       get ':id/binaries', to: 'export_jobs#download_binaries', as: 'download_binaries'
     end
+    member do
+      get 'status_update', to: 'export_jobs#status_update', as: 'status_update'
+    end
   end
 
   resources :import_jobs do
     collection do
       post ':id/import', to: 'import_jobs#import', as: 'perform_import'
+    end
+    member do
+      get 'status_update', to: 'import_jobs#status_update', as: 'status_update'
     end
   end
 
