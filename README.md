@@ -49,7 +49,9 @@ environment.
 To set up Archelon for development see
 [docs/ArchelonDevelopmentEnvironment.md](docs/ArchelonDevelopmentEnvironment.md).
 
-## Importing Controlled Vocabularies
+## Rake Tasks
+
+### Importing Controlled Vocabularies
 
 Archelon comes with a rake task, [vocab:import](lib/tasks/vocab.rake), to do a
 bulk load of vocabulary terms from a CSV file. Run:
@@ -72,6 +74,39 @@ Other columns are ignored.
 
 The import task currently only supports creating Individuals (a.k.a. Terms),
 and not Types (a.k.a. Classes).
+
+### Importing User Public Keys
+
+Two Rake tasks are provided for importing public keys for a user:
+
+* ```rails user:add_public_key[cas_directory_id,public_key]```
+
+    Adds the given public key for the user with the given CAS directory id.
+
+    A user with the given CAS directory id must already exist.
+
+    Note: Because of the way SSH public keys are expressed, the command
+    should be enclosed in quotes, i.e.:
+
+    ```
+    rails "user:add_public_key[jsmith,ssh-rsa AAAAB3NzaC1yc2E...]"
+    ```
+
+* ```rails user:add_public_key_file[cas_directory_id,public_key_file]```
+
+    Adds the public key from the given file for the user with the given CAS
+    directory id.
+
+    A user with the given CAS directory id must already exist.
+
+    Relative file paths are allowed. If the file path or file name contains
+    a space, the entire command should be enclosed in quotes.
+
+    Example:
+
+    ```
+    rails user:add_public_key_file[jsmith,/home/jsmith/.ssh/id_rsa.pub]
+    ```
 
 ## Docker
 
