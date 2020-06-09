@@ -6,6 +6,8 @@ Rails.application.routes.draw do # rubocop:disable Metrics/BlockLength
   resources :cas_users
   get '/cas_users/:id/history' => 'cas_users#show_history'
 
+  get 'public_keys' => 'public_keys#index'
+
   mount Blacklight::Engine => '/'
   root to: 'catalog#index'
   concern :searchable, Blacklight::Routes::Searchable.new

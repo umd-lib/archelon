@@ -18,7 +18,11 @@ class ApplicationController < ActionController::Base
 
   # Causes a "404 - Not Found" error page to be displayed.
   def not_found
-    render file: Rails.root.join('public', '404.html'), status: :not_found
+    render file: Rails.root.join('public', '404.html'), status: :not_found, layout: false
+  end
+
+  def forbidden
+    render file: Rails.root.join('public', '403.html'), status: :forbidden, layout: false
   end
 
   def impersonating?
