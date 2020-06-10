@@ -18,6 +18,9 @@ Requires:
   git clone git@github.com:umd-lib/archelon.git
   cd archelon
   bundle install
+  rails webpacker:install
+  rails webpacker:install:react
+  rails generate react:install
   ```
 
 2. Set up the database:
@@ -220,9 +223,7 @@ the production Archelon server support concurrent operations.
 File downloads are sent as a "streaming" response, so file downloads should
 start almost immediately, regardless of the size of the file. If large file
 downloads take a long time to start, it might be being buffered by the Rails
-server. For example, see the
-[Passenger Phusion documentation](passenger-phusion) regarding the
-"PassengerBufferResponse" setting.
+server.
 
 ### Concurrent operation in the development environment
 
@@ -292,7 +293,7 @@ In order to avoid this error:
 
 ## Batch Export
 
-The batch export functionality relies on a running [Plastron](plastron)
+The batch export functionality relies on a running [Plastron]
 instance.
 
 ## Metadata Import
@@ -317,11 +318,11 @@ Rails environment.
 
 GitHub (or a vulnerability scanner such as "bundler-audit"), may report that
 this application is vulnerable to CVE-2015-9284, due to its use of the
-"omniauth" gem. More information about this vulnerablity can be found at:
+"omniauth" gem. More information about this vulnerability can be found at:
 
 [https://github.com/omniauth/omniauth/wiki/Resolving-CVE-2015-9284][cve-2015-9284]
 
-As configured, this application uses CAS for authenication. As the application
+As configured, this application uses CAS for authentication. As the application
 does not use OAuth it is not vulnerable to CVE-2015-9284.
 
 ## Action Cable
