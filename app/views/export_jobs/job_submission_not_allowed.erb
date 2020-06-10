@@ -1,0 +1,13 @@
+<h1>Export Job</h1>
+
+<p>
+  The selected job has a binaries download size of
+  <%= number_to_human_size(@job.binaries_size) %> which
+  exceeds the maximum allowed size of  <%= number_to_human_size(@job.max_allowed_binaries_download_size) %>.
+</p>
+
+<p>
+  Please remove some of the selected items to reduce the binaries download size.
+</p>
+
+ <%= link_to "Selected Items", bookmarks_path, class: 'btn btn-success' %>

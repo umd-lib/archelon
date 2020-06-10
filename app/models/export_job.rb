@@ -22,6 +22,8 @@ class ExportJob < ApplicationRecord
     'application/zip' => '.zip'
   }.freeze
 
+  MAX_ALLOWED_BINARIES_DOWNLOAD_SIZE = 4_294_967_296 # 4 gibibytes in bytes
+
   def self.exportable_types
     %w[Image Issue Letter]
   end
@@ -59,6 +61,16 @@ class ExportJob < ApplicationRecord
     self.plastron_status = message.headers['PlastronJobStatus']
     self.download_url = message.body_json['download_uri'] unless message.body_json.nil?
     save!
+  end
+
+  # Returns true if the job can be submitted, false otherwise
+  def job_submission_allowed?
+    !export_binaries || binaries_size.nil? || binaries_size <= MAX_ALLOWED_BINARIES_DOWNLOAD_SIZE
+  end
+
+  # Returns the maximum allowed binaries file size, in bytes
+  def max_allowed_binaries_download_size
+    MAX_ALLOWED_BINARIES_DOWNLOAD_SIZE
   end
 
   private

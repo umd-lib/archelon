@@ -22,18 +22,27 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     @job = ExportJob.new(params.key?(:export_job) ? export_job_params : default_job_params)
   end
 
-  def review
+  def review # rubocop:disable Metrics/MethodLength
     @job = ExportJob.new(export_job_params)
-    @job.item_count = bookmarks.count
-    return unless @job.export_binaries
 
-    binary_stats = BinariesStats.get_stats(bookmarks.map(&:document_id))
-    @job.binaries_size = binary_stats[:total_size]
-    @job.binaries_count = binary_stats[:count]
+    if @job.export_binaries
+      binary_stats = BinariesStats.get_stats(bookmarks.map(&:document_id))
+      @job.binaries_size = binary_stats[:total_size]
+      @job.binaries_count = binary_stats[:count]
+      @job.item_count = bookmarks.count
+    end
+
+    if @job.job_submission_allowed?
+      render :review
+    else
+      render :job_submission_not_allowed
+    end
   end
 
-  def create
+  def create # rubocop:disable Metrics/MethodLength
     @job = create_job(export_job_params)
+    render :job_submission_not_allowed && return unless @job.job_submission_allowed?
+
     return unless @job.save
 
     begin
@@ -104,7 +113,6 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
 
       flash[:notice] = I18n.t(:selected_items_changed)
       review
-      render :review
     end
 
     def create_job(args)
