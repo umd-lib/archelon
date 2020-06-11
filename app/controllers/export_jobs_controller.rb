@@ -26,13 +26,9 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
 
   def review # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     @job = ExportJob.new(export_job_params)
+    @job.item_count = bookmarks.count
 
     if @job.export_binaries
-      binary_stats = BinariesStats.get_stats(bookmarks.map(&:document_id))
-      @job.binaries_size = binary_stats[:total_size]
-      @job.binaries_count = binary_stats[:count]
-      @job.item_count = bookmarks.count
-
       selected_mime_types = params.dig('export_job', 'mime_types')
       if selected_mime_types.blank?
         flash[:error] = I18n.t(:export_job_no_mime_types_selected)
