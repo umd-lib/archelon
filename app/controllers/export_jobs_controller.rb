@@ -20,7 +20,8 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
 
   def new
     @job = ExportJob.new(params.key?(:export_job) ? export_job_params : default_job_params)
-    @mime_types = MimeTypes.mime_types
+    export_uris = bookmarks.map(&:document_id)
+    @mime_types = MimeTypes.mime_types(export_uris)
   end
 
   def review # rubocop:disable Metrics/MethodLength, Metrics/AbcSize

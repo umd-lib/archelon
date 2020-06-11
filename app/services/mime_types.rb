@@ -6,22 +6,45 @@ class MimeTypes
 
   QUERY = {
     q: '*:*',
-    facet: 'on',
-    'facet.field': 'mime_type',
-    'facet.limit': '-1',
-    rows: '0'
+    indent: 'on',
+    rows: '1000',
+    fl: 'id,files:[subquery]',
+    'files.q': '{!terms f=pcdm_file_of v=$row.pcdm_members}',
+    'files.fl': 'mime_type',
+    'files.rows': '1000',
+    'facet': 'on',
+    'facet.field': 'mime_type'
   }.freeze
 
   # Queries Solr and returns an array of Strings representing the MIME types
-  def self.mime_types
+  def self.mime_types(uris)
     solr = Blacklight::Solr::Repository.new(blacklight_config)
-    process_solr_response(solr.search(QUERY))
+    query = query(uris)
+    process_solr_response(solr.search(query))
+  end
+
+  def self.query(uris)
+    QUERY.merge 'fq': uris.map { |uri| "id:\"#{uri}\"" }.join(' OR ')
   end
 
   # Processes the Solr response, returning an array of Strings
-  def self.process_solr_response(solr_response)
-    mime_types_with_count = solr_response.dig('facet_counts', 'facet_fields', 'mime_type')
-    mime_types = mime_types_with_count.each_slice(2).map(&:first)
+  def self.process_solr_response(solr_response) # rubocop:disable Metrics/MethodLength
+    # This method is a bit of a kludge, because it's not clear how to get the
+    # facet list directly from a Solr query. This brute-force method interates
+    # through all the files in the response, generating a set of all the
+    # "mime_type" fields encountered, and then converts it to an array.
+    docs = solr_response.dig('response', 'docs')
+
+    mime_set = Set[]
+    docs.each do |doc|
+      file_docs = doc.dig('files', 'docs')
+      file_docs.each do |file_doc|
+        mime_type = file_doc['mime_type']
+        mime_set << mime_type
+      end
+    end
+
+    mime_types = mime_set.sort.to_a
     mime_types
   end
 end
