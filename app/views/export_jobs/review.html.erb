@@ -10,16 +10,7 @@
 
   <%= render 'summary', export_job: @job %>
   <div>
-    <%= link_to "Back", url_for(action: :new, params:
-      {
-        export_job: {
-          name: @job.name,
-          format: @job.format,
-          export_binaries: @job.export_binaries,
-          mime_types: @job.mime_types
-        }
-      }
-    ), class: 'btn btn-danger' %>
+    <%= render 'back_to_new_button', export_job: @job %>
     <%= f.submit "Cancel", class: 'btn btn-danger' %>
     <%= f.submit "Submit Job", class: 'btn btn-primary' %>
   </div>
