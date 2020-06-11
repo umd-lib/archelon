@@ -20,9 +20,10 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
 
   def new
     @job = ExportJob.new(params.key?(:export_job) ? export_job_params : default_job_params)
+    @mime_types = MimeTypes.mime_types
   end
 
-  def review # rubocop:disable Metrics/MethodLength
+  def review # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     @job = ExportJob.new(export_job_params)
 
     if @job.export_binaries
@@ -30,6 +31,13 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
       @job.binaries_size = binary_stats[:total_size]
       @job.binaries_count = binary_stats[:count]
       @job.item_count = bookmarks.count
+
+      mime_types = params.dig('export_job', 'mime_types')
+      if mime_types.blank?
+        flash[:error] = I18n.t(:export_job_no_mime_types_selected)
+        redirect_to controller: :export_jobs, action: :new
+        return
+      end
     end
 
     if @job.job_submission_allowed?

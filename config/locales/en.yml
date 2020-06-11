@@ -40,6 +40,7 @@ en:
   selected_items_changed: 'Selected items has changed. Please review.'
   import_already_performed: 'Import has completed. Cannot reimport or validate'
   cannot_import_invalid_file: 'Cannot import a file with validation errors.'
+  export_job_no_mime_types_selected: 'Please select at least one MIME type when exporting binaries'
   activerecord:
     attributes:
       datatype:
@@ -111,6 +112,13 @@ en:
       individual: Term
       type: Class
       vocabulary: Vocabulary
+  mime_types:
+    application/pdf: PDF
+    application/xml: XML (Application)
+    image/jp2: JPEG 2000
+    image/tiff: TIFF
+    text/csv: CSV
+    text/xml: XML (Text)
   tooltips:
     identifier: This will be used as the local id and populate the URI of the local vocabulary term.
     same_as: This should be a full URI to an external vocabulary such as LC Genre/Form Terms, AAT, LCSH
