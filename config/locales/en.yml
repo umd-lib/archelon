@@ -113,12 +113,12 @@ en:
       type: Class
       vocabulary: Vocabulary
   mime_types:
-    application/pdf: PDF
-    application/xml: XML (Application)
-    image/jp2: JPEG 2000
-    image/tiff: TIFF
-    text/csv: CSV
-    text/xml: XML (Text)
+    application/pdf: PDF (application/pdf)
+    application/xml: XML (application/xml)
+    image/jp2: JPEG 2000 (image/jp2)
+    image/tiff: TIFF (image/tiff)
+    text/csv: CSV (text/csv)
+    text/xml: XML (text/xml)
   tooltips:
     identifier: This will be used as the local id and populate the URI of the local vocabulary term.
     same_as: This should be a full URI to an external vocabulary such as LC Genre/Form Terms, AAT, LCSH
