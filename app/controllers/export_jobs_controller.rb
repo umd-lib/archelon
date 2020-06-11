@@ -140,8 +140,8 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
       end
     end
 
-    def message_headers(job)
-      {
+    def message_headers(job) # rubocop:disable Metrics/MethodLength
+      headers = {
         PlastronCommand: 'export',
         PlastronJobId: export_job_url(job),
         'PlastronArg-name': job.name,
@@ -151,6 +151,11 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
         'PlastronArg-export-binaries': job.export_binaries.to_s,
         persistent: 'true'
       }
+      return headers unless job.export_binaries
+
+      mime_types = job.selected_mime_types.join(',')
+      headers['PlastronArg-binary-types'] = mime_types
+      headers
     end
 
     def submit_job(uris)
