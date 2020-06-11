@@ -34,7 +34,7 @@
         <div class="panel-body">
           <p>File Types to Export<!-- <input type="button" style="margin-left: 40px" class="btn btn-danger btn-sm" value="Select All"> <input type="button" class="btn btn-danger btn-sm" value="Clear Selected">--></p>
           <% @mime_types.each do |mime_type| %>
-            <% selected = @job.mime_types.include?(mime_type) ? true : false if @job.mime_types %>
+            <% selected = @job.selected_mime_types.include?(mime_type) ? true : false %>
             <%= check_box_tag('export_job[mime_types][]', mime_type, selected, id: "export_job_#{mime_type}", style: "margin-left: 20px") %>
             <label for="export_job_<%= mime_type %>"><%= t("mime_types.#{mime_type}") %></label>
           <% end %>

@@ -63,6 +63,13 @@ class ExportJob < ApplicationRecord
     save!
   end
 
+  # Returns a array of the selected MIME types for the job
+  def selected_mime_types
+    return [] if mime_types.blank?
+
+    mime_types.split(',')
+  end
+
   # Returns true if the job can be submitted, false otherwise
   def job_submission_allowed?
     !export_binaries || binaries_size.nil? || binaries_size <= MAX_ALLOWED_BINARIES_DOWNLOAD_SIZE
