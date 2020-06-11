@@ -6,6 +6,7 @@
   <%= f.hidden_field :export_binaries, value: @job.export_binaries %>
   <%= f.hidden_field :binaries_size, value: @job.binaries_size %>
   <%= f.hidden_field :binaries_count, value: @job.binaries_count %>
+  <%= f.hidden_field :mime_types, value: @job.mime_types %>
 
   <%= render 'summary', export_job: @job %>
   <div>
@@ -14,7 +15,8 @@
         export_job: {
           name: @job.name,
           format: @job.format,
-          export_binaries: @job.export_binaries
+          export_binaries: @job.export_binaries,
+          mime_types: @job.mime_types
         }
       }
     ), class: 'btn btn-danger' %>

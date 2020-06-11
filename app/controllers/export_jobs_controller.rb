@@ -33,12 +33,19 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
       @job.binaries_count = binary_stats[:count]
       @job.item_count = bookmarks.count
 
-      mime_types = params.dig('export_job', 'mime_types')
-      if mime_types.blank?
+      selected_mime_types = params.dig('export_job', 'mime_types')
+      if selected_mime_types.blank?
         flash[:error] = I18n.t(:export_job_no_mime_types_selected)
         redirect_to controller: :export_jobs, action: :new
         return
       end
+
+      binary_stats = BinariesStats.get_stats(bookmarks.map(&:document_id), selected_mime_types)
+      @job.binaries_size = binary_stats[:total_size]
+      @job.binaries_count = binary_stats[:count]
+
+      mime_types = selected_mime_types.join(',')
+      @job.mime_types = mime_types
     end
 
     if @job.job_submission_allowed?
@@ -86,7 +93,7 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     def export_job_params
       params
         .require(:export_job)
-        .permit(:name, :format, :export_binaries, :item_count, :binaries_size, :binaries_count)
+        .permit(:name, :format, :export_binaries, :item_count, :binaries_size, :binaries_count, :mime_types)
         .with_defaults(default_job_params)
     end
 

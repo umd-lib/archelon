@@ -34,6 +34,15 @@
   <% if export_job.export_binaries %>
     <div class="row form-group">
       <div class="col-xs-2">
+        <strong>MIME Types:</strong>
+      </div>
+      <div class="col-xs-10">
+        <% mime_types_array = export_job.mime_types.split(',').map { |mt| I18n.t("mime_types.#{mt}") } %>
+        <%= mime_types_array.join(", ") %>
+      </div>
+    </div>
+    <div class="row form-group">
+      <div class="col-xs-2">
         <strong>Number of Binaries:</strong>
       </div>
       <div class="col-xs-10">
