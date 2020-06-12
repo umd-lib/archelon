@@ -110,7 +110,7 @@ class ExportJobsControllerTest < ActionController::TestCase
     ExportJobsController.any_instance.stub(:selected_items?).and_return(true)
     BinariesStats.stub(:get_stats, count: 1, total_size: max_size) do
       params = {}
-      params[:export_job] = { name: 'test', format: 'CSV', item_count: 2, export_binaries: true }
+      params[:export_job] = { name: 'test', format: 'CSV', item_count: 2, export_binaries: true, mime_types: ['application/pdf'] }
       get :review, params: params
       assert_template :review
     end
@@ -124,7 +124,7 @@ class ExportJobsControllerTest < ActionController::TestCase
     ExportJobsController.any_instance.stub(:selected_items?).and_return(true)
     BinariesStats.stub(:get_stats, count: 1, total_size: too_large) do
       params = {}
-      params[:export_job] = { name: 'test', format: 'CSV', item_count: 2, export_binaries: true }
+      params[:export_job] = { name: 'test', format: 'CSV', item_count: 2, export_binaries: true, mime_types: ['application/pdf'] }
       get :review, params: params
       assert_template :job_submission_not_allowed
     end
@@ -138,7 +138,7 @@ class ExportJobsControllerTest < ActionController::TestCase
     ExportJobsController.any_instance.stub(:selected_items?).and_return(true)
     BinariesStats.stub(:get_stats, count: 1, total_size: too_large) do
       params = {}
-      params[:export_job] = { name: 'test', format: 'CSV', item_count: 2, export_binaries: true }
+      params[:export_job] = { name: 'test', format: 'CSV', item_count: 2, export_binaries: true, mime_types: ['application/pdf'] }
       post :create, params: params
       assert_template :job_submission_not_allowed
     end

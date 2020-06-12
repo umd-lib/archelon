@@ -6,18 +6,11 @@
   <%= f.hidden_field :export_binaries, value: @job.export_binaries %>
   <%= f.hidden_field :binaries_size, value: @job.binaries_size %>
   <%= f.hidden_field :binaries_count, value: @job.binaries_count %>
+  <%= f.hidden_field :mime_types, value: @job.mime_types %>
 
   <%= render 'summary', export_job: @job %>
   <div>
-    <%= link_to "Back", url_for(action: :new, params:
-      {
-        export_job: {
-          name: @job.name,
-          format: @job.format,
-          export_binaries: @job.export_binaries
-        }
-      }
-    ), class: 'btn btn-danger' %>
+    <%= render 'back_to_new_button', export_job: @job %>
     <%= f.submit "Cancel", class: 'btn btn-danger' %>
     <%= f.submit "Submit Job", class: 'btn btn-primary' %>
   </div>

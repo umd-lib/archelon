@@ -20,16 +20,24 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
 
   def new
     @job = ExportJob.new(params.key?(:export_job) ? export_job_params : default_job_params)
+    export_uris = bookmarks.map(&:document_id)
+    @mime_types = MimeTypes.mime_types(export_uris)
   end
 
-  def review # rubocop:disable Metrics/MethodLength
+  def review # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     @job = ExportJob.new(export_job_params)
+    @job.item_count = bookmarks.count
+
+    selected_mime_types = params.dig('export_job', 'mime_types')
+    @job.export_binaries = selected_mime_types.present?
 
     if @job.export_binaries
-      binary_stats = BinariesStats.get_stats(bookmarks.map(&:document_id))
+      binary_stats = BinariesStats.get_stats(bookmarks.map(&:document_id), selected_mime_types)
       @job.binaries_size = binary_stats[:total_size]
       @job.binaries_count = binary_stats[:count]
-      @job.item_count = bookmarks.count
+
+      mime_types = selected_mime_types.join(',')
+      @job.mime_types = mime_types
     end
 
     if @job.job_submission_allowed?
@@ -77,7 +85,7 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     def export_job_params
       params
         .require(:export_job)
-        .permit(:name, :format, :export_binaries, :item_count, :binaries_size, :binaries_count)
+        .permit(:name, :format, :export_binaries, :item_count, :binaries_size, :binaries_count, :mime_types)
         .with_defaults(default_job_params)
     end
 
@@ -124,8 +132,8 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
       end
     end
 
-    def message_headers(job)
-      {
+    def message_headers(job) # rubocop:disable Metrics/MethodLength
+      headers = {
         PlastronCommand: 'export',
         PlastronJobId: export_job_url(job),
         'PlastronArg-name': job.name,
@@ -135,6 +143,11 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
         'PlastronArg-export-binaries': job.export_binaries.to_s,
         persistent: 'true'
       }
+      return headers unless job.export_binaries
+
+      mime_types = job.selected_mime_types.join(',')
+      headers['PlastronArg-binary-types'] = mime_types
+      headers
     end
 
     def submit_job(uris)

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_05_171038) do
+ActiveRecord::Schema.define(version: 2020_06_11_133117) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -101,6 +101,7 @@ ActiveRecord::Schema.define(version: 2020_06_05_171038) do
     t.boolean "export_binaries"
     t.bigint "binaries_size"
     t.integer "binaries_count"
+    t.string "mime_types"
     t.index ["cas_user_id"], name: "index_export_jobs_on_cas_user_id"
   end
 

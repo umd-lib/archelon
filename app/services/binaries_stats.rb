@@ -16,13 +16,15 @@ class BinariesStats
     'pages.q': '{!terms f=id v=$row.pcdm_members}'
   }.freeze
 
-  def self.query(uris)
-    QUERY.merge 'fq': uris.map { |uri| "id:\"#{uri}\"" }.join(' OR ')
+  def self.query(uris, mime_types)
+    fq = QUERY.merge 'fq': uris.map { |uri| "id:\"#{uri}\"" }.join(' OR ')
+    fq = fq.merge 'files.fq': mime_types.map { |mime_type| "mime_type:\"#{mime_type}\"" }.join(' OR ') if mime_types
+    fq
   end
 
-  def self.get_stats(uris)
+  def self.get_stats(uris, mime_types)
     solr = Blacklight::Solr::Repository.new(blacklight_config)
-    process_solr_response(solr.search(query(uris)))
+    process_solr_response(solr.search(query(uris, mime_types)))
   end
 
   def self.process_solr_response(solr_response)

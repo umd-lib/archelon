@@ -10,7 +10,7 @@
           <div>
           <%= f.radio_button :format, type, class: "form-check-input" %>
           <%= f.label :format, label, value: type, class: "form-check-label font-weight-normal" %>
-          </div> 
+          </div>
         <% end %>
       </div>
     </div>
@@ -24,9 +24,20 @@
     </div>
     <div class="form-group">
       <div>
-        <%= check_box_tag 'export_job[export_binaries]', 1, @job.export_binaries %>
-        &nbsp;
-        <%= f.label :export_binaries, class: "col-form-label-lg" %>
+        <%= label_tag nil, "Include Binaries?", class: "col-form-label-lg" %>
+      </div>
+      <div>
+        <% if @mime_types.empty? %>
+          <p>No binaries available for the selected items</p>
+        <% else %>
+          <p>Select any of the following to include binaries in the export:</p>
+          <% @mime_types.each do |mime_type| %>
+            <% selected = @job.selected_mime_types.include?(mime_type) ? true : false %>
+            <%= check_box_tag('export_job[mime_types][]', mime_type, selected, id: "export_job_#{mime_type}", style: "margin-left: 20px") %>
+            <label for="export_job_<%= mime_type %>"><%= t("mime_types.#{mime_type}") %></label>
+          <% end %>
+        <% end %>
+      </div>
       </div>
     </div>
     <div class="form-group">
