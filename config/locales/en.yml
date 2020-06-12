@@ -115,9 +115,13 @@ en:
   mime_types:
     application/pdf: PDF (application/pdf)
     application/xml: XML (application/xml)
+    application/zip: Zip (application/zip)
+    image/jpeg: JPEG (image/jpeg)
     image/jp2: JPEG 2000 (image/jp2)
     image/tiff: TIFF (image/tiff)
     text/csv: CSV (text/csv)
+    text/plain: Text (text/plain)
+    text/turtle: Turtle (text/turtle)
     text/xml: XML (text/xml)
   tooltips:
     identifier: This will be used as the local id and populate the URI of the local vocabulary term.
