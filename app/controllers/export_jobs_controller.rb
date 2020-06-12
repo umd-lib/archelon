@@ -77,7 +77,7 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
   def status_update
     # Triggers export job notification to channel
     ExportJobRelayJob.perform_later(@job)
-    render :no_content
+    render plain: '', status: :no_content
   end
 
   private

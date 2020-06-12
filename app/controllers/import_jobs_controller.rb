@@ -114,7 +114,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
   def status_update
     # Triggers import job notification to channel
     ImportJobRelayJob.perform_later(@import_job)
-    render :no_content
+    render plain: '', status: :no_content
   end
 
   private
