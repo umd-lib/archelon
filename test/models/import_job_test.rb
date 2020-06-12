@@ -64,16 +64,7 @@ class ImportJobTest < ActiveSupport::TestCase
     import_job = import_jobs(:import_job_without_binaries)
     assert_equal false, import_job.binaries?
 
-    import_job = import_jobs(:import_job_with_binary_zip_file)
+    import_job = import_jobs(:import_job_with_binaries_location)
     assert import_job.binaries?
-
-    import_job = import_jobs(:import_job_with_remote_server)
-    assert import_job.binaries?
-  end
-
-  test 'job with both binary_zip_file and remote_server is invalid' do
-    import_job = import_jobs(:import_job_with_binary_zip_file)
-    import_job.remote_server = 'sftp://example.com/'
-    assert_not import_job.valid?
   end
 end

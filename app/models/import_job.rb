@@ -132,6 +132,6 @@ class ImportJob < ApplicationRecord
   # Returns true if a binary zip file is attached, or remote server is
   # specified, false otherwise.
   def binaries?
-    binary_zip_file.attached? || remote_server.present?
+    binaries_location.present?
   end
 end

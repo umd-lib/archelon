@@ -1,0 +1,17 @@
+default: &default
+  binaries_dir: <%= Rails.root.join('imports') %>
+  binaries_base_location: <%= Rails.root.join('imports') %>
+
+development:
+  <<: *default
+
+test:
+  binaries_dir: <%= Rails.root.join('test', 'data') %>
+  binaries_base_location: <%= Rails.root.join('test', 'data') %>
+
+production:
+  # where to find the zip files to list as available for import jobs
+  binaries_dir: <%= ENV['IMPORT_BINARIES_DIR'] %>
+  # the base location to use to generate the binaries-location parameter for plastron
+  # this will be something like zip+sftp://plastron@archelon.lib.umd.edu/imports
+  binaries_base_location: <%= ENV['IMPORT_BINARIES_BASE_LOCATION'] %>

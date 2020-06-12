@@ -126,7 +126,7 @@ ActiveRecord::Schema.define(version: 2020_06_11_133117) do
     t.text "last_response_headers"
     t.string "access"
     t.string "collection"
-    t.string "remote_server"
+    t.string "binaries_location"
     t.integer "binaries_count"
     t.integer "item_count"
     t.index ["cas_user_id"], name: "index_import_jobs_on_cas_user_id"
