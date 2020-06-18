@@ -52,11 +52,11 @@ class TextField extends React.Component {
           this.state.values.map((literal, index) => (
               <div key={literal.key} >
                 <LiteralValue value={literal.value} language={literal.language}/>
-                <button onClick={() => this.handleRemove(index)}>-</button>
+                <button type="button" onClick={() => this.handleRemove(index)}>-</button>
               </div>
           ))
         }
-        <button onClick={() => this.handleAdd()} hidden={!this.state.canAddValues} disabled={!this.state.canAddValues}>+</button>
+        <button type="button" onClick={() => this.handleAdd()} hidden={!this.state.canAddValues} disabled={!this.state.canAddValues}>+</button>
       </div>
     );
   }
