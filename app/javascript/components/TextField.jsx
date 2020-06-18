@@ -9,15 +9,34 @@ class TextField extends React.Component {
   maxValues;
   constructor(props) {
     super(props);
-    this.handleAdd = this.handleAdd.bind(this);
+
+    // Initialize keyCounter
+    this.keyCounter = 0;
+
+    if(props.values) {
+      // Populate initial "value" properties with a "key" field
+      props.values.forEach((value) => {
+        value["key"] = this.keyCounter;
+        this.keyCounter++;
+      });
+    }
     this.state = {
       values: props.values || [],
       canAddValues: lessThanMax(props.values, props.maxValues)
     }
   };
+
+  handleRemove(index) {
+    const values = this.state.values.splice(index, 1);
+    this.setState({
+      canAddValues: lessThanMax(values, this.props.maxValues)
+    })
+  }
+
   handleAdd() {
     const values = this.state.values.slice();
-    values.push({value: '', language: ''});
+    this.keyCounter = this.keyCounter + 1;
+    values.push({value: '', language: '', key: this.keyCounter});
     this.setState({
       values: values,
       canAddValues: lessThanMax(values, this.props.maxValues)
@@ -30,14 +49,14 @@ class TextField extends React.Component {
           {this.props.name}:
         </label>
         {
-          this.state.values.map(literal => (
-              <div>
+          this.state.values.map((literal, index) => (
+              <div key={literal.key} >
                 <LiteralValue value={literal.value} language={literal.language}/>
-                <button>-</button>
+                <button onClick={() => this.handleRemove(index)}>-</button>
               </div>
           ))
         }
-        <button onClick={this.handleAdd} disabled={!this.state.canAddValues}>+</button>
+        <button onClick={() => this.handleAdd()} hidden={!this.state.canAddValues} disabled={!this.state.canAddValues}>+</button>
       </div>
     );
   }
