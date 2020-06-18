@@ -13,16 +13,22 @@ class TextField extends React.Component {
     // Initialize keyCounter
     this.keyCounter = 0;
 
+    let values;
     if(props.values) {
-      // Populate initial "value" properties with a "key" field
-      props.values.forEach((value) => {
-        value["key"] = this.keyCounter;
-        this.keyCounter++;
-      });
+      values = props.values
+    } else {
+      values = [ {value: "", language: "" }]
     }
+
+    // Populate initial "value" properties with a "key" field
+    values.forEach((value) => {
+      value["key"] = this.keyCounter;
+      this.keyCounter++;
+    });
+
     this.state = {
-      values: props.values || [],
-      canAddValues: lessThanMax(props.values, props.maxValues)
+      values: values,
+      canAddValues: lessThanMax(values, props.maxValues)
     }
   };
 
@@ -43,6 +49,7 @@ class TextField extends React.Component {
     })
   };
   render () {
+    let lastIndex = this.state.values.length - 1;
     return (
       <div>
         <label>
@@ -51,12 +58,22 @@ class TextField extends React.Component {
         {
           this.state.values.map((literal, index) => (
               <div key={literal.key} >
-                <LiteralValue name={this.props.name} value={literal.value} language={literal.language}/>
-                <button type="button" onClick={() => this.handleRemove(index)}>-</button>
+                <LiteralValue param_prefix={this.props.param_prefix} name={this.props.name} value={literal.value} language={literal.language}/>
+                {
+                  // Only display remove button if we have more than one item
+                  (lastIndex > 0) &&
+                  <button type="button" onClick={() => this.handleRemove(index)}>-</button>
+                }
+                {
+                  // Only show add button on last item
+                  index === lastIndex &&
+                  <button type="button" onClick={() => this.handleAdd()} hidden={!this.state.canAddValues} disabled={!this.state.canAddValues}>+</button>
+                }
+                {index == lastIndex}
               </div>
           ))
         }
-        <button type="button" onClick={() => this.handleAdd()} hidden={!this.state.canAddValues} disabled={!this.state.canAddValues}>+</button>
+
       </div>
     );
   }

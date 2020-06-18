@@ -22,13 +22,16 @@ class LiteralValue extends React.Component {
     this.setState({language: event.target.value})
   }
   render () {
+    let textbox_name = `${this.props.param_prefix}[${this.props.name}][]`
+    let language_name = `${this.props.param_prefix}[${this.props.name}_language][]`
+
     return (
       <React.Fragment>
-        <input name={this.props.name+"[]"} value={this.state.value} onChange={this.handleTextChange} size="40"/>
+        <input name={textbox_name} value={this.state.value} onChange={this.handleTextChange} size="40"/>
         <label>
           Language
         </label>
-        <select name={this.props.name + '__language[]'} value={this.state.language} onChange={this.handleLanguageChange}>
+        <select name={language_name} value={this.state.language} onChange={this.handleLanguageChange}>
           {Object.entries(this.LANGUAGES).map(([code, name]) => (
               <option key={code} value={code}>{name}</option>
           ))}
