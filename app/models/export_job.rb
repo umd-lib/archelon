@@ -22,7 +22,7 @@ class ExportJob < ApplicationRecord
     'application/zip' => '.zip'
   }.freeze
 
-  MAX_ALLOWED_BINARIES_DOWNLOAD_SIZE = 4_294_967_296 # 4 gibibytes in bytes
+  MAX_ALLOWED_BINARIES_DOWNLOAD_SIZE = 50.gigabytes
 
   def self.exportable_types
     %w[Image Issue Letter]
