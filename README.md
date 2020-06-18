@@ -9,6 +9,10 @@ Requires:
 
 * Ruby 2.6.3
 * Bundler
+* Yarn
+
+See [Installing Prerequisites](docs/Prerequisites.md) for more detailed
+information on these prerequisites.
 
 ### Setup
 
@@ -17,10 +21,8 @@ Requires:
   ```
   git clone git@github.com:umd-lib/archelon.git
   cd archelon
+  yarn
   bundle install
-  rails webpacker:install
-  rails webpacker:install:react
-  rails generate react:install
   ```
 
 2. Set up the database:
