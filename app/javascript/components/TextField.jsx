@@ -51,7 +51,7 @@ class TextField extends React.Component {
         {
           this.state.values.map((literal, index) => (
               <div key={literal.key} >
-                <LiteralValue value={literal.value} language={literal.language}/>
+                <LiteralValue name={this.props.name} value={literal.value} language={literal.language}/>
                 <button type="button" onClick={() => this.handleRemove(index)}>-</button>
               </div>
           ))
