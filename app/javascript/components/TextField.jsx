@@ -52,9 +52,6 @@ class TextField extends React.Component {
     let lastIndex = this.state.values.length - 1;
     return (
       <div>
-        <label>
-          {this.props.name}:
-        </label>
         {
           this.state.values.map((literal, index) => (
               <div key={literal.key} >
