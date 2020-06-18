@@ -49,6 +49,12 @@ environment.
 To set up Archelon for development see
 [docs/ArchelonDevelopmentEnvironment.md](docs/ArchelonDevelopmentEnvironment.md).
 
+## Logging
+
+By default, the development environment for Archelon will log at the DEBUG level,
+while all other environments will log at the INFO level. To change this, set the
+`RAILS_LOG_LEVEL` environment variable in your `.env` file.
+
 ## Rake Tasks
 
 ### Importing Controlled Vocabularies
