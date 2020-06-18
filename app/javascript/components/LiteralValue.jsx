@@ -30,7 +30,7 @@ class LiteralValue extends React.Component {
         </label>
         <select name={this.props.name + '__language'} value={this.state.language} onChange={this.handleLanguageChange}>
           {Object.entries(this.LANGUAGES).map(([code, name]) => (
-              <option value={code}>{name}</option>
+              <option key={code} value={code}>{name}</option>
           ))}
         </select>
       </React.Fragment>
