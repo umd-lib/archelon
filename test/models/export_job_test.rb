@@ -8,7 +8,7 @@ class ExportJobTest < ActiveSupport::TestCase
     job.export_binaries = true
 
     max_size = job.max_allowed_binaries_download_size
-    assert_equal(4_294_967_296, max_size)
+    assert_equal(50.gigabytes, max_size)
 
     job.binaries_size = max_size
     assert job.job_submission_allowed?
