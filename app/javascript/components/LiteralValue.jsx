@@ -1,11 +1,25 @@
 import React from "react"
 import PropTypes from "prop-types"
+
+/**
+ * Input component consisting of a textbox, and language dropdown list.
+ *
+ *  * Sample Rails view usage:
+ *
+ * ```
+ * <%= react_component(:LiteralValue, { param_prefix: 'example', name: 'title', value: "Lorem ipsum", language: "en"}) %>
+ * ```
+ * When used in a form, this will send two arrays `example[title][]` and
+ * `example[title_language][]` as HTML paramaters.
+ */
 class LiteralValue extends React.Component {
+  // The options for the dropdown, using ISO-639 language codes
   LANGUAGES = {
     '': 'None',
     'en': 'English',
     'ja': 'Japanese'
   };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -39,6 +53,27 @@ class LiteralValue extends React.Component {
       </React.Fragment>
     );
   }
+}
+
+LiteralValue.propTypes = {
+  /**
+   * The name of the element, used to with `param_prefix` to construct the
+   * parameter sent via the form submission.
+   */
+  name: PropTypes.string,
+  /**
+   * Combined with the name (`<param_prefix>[<name>][]`) to construct the
+   * parameter sent via the form submission.
+   */
+  param_prefix: PropTypes.string,
+  /**
+   * The default text for the textbox
+   */
+  value: PropTypes.string,
+  /**
+   * The ISO-639 language code to use as the default value for the dropdown
+   */
+  language: PropTypes.string
 }
 
 export default LiteralValue

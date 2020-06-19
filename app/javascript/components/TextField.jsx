@@ -5,8 +5,27 @@ import LiteralValue from "./LiteralValue";
 function lessThanMax(values, max) {
   return max === undefined || values.length < max;
 }
+
+/**
+ * A component that enables LiteralValue components to be dynamically
+ * added and removed.
+ *
+ * Sample Rails view usage:
+ *
+ * ```
+ * <%= react_component  (:TextField, { param_prefix: 'example', name: 'title', maxValues: 3, values: [
+ *   { value: 'First Title', language: 'en' },
+ *   { value: 'Second Title', language: 'ja' }
+ * ]}) %>
+ * ```
+ *
+ * When used in a form, this will send two arrays `example[title][]` and
+ * `example[title_language][]` as HTML paramaters.
+ */
 class TextField extends React.Component {
+  // The maximum number of values the component will allow
   maxValues;
+
   constructor(props) {
     super(props);
 
@@ -32,6 +51,7 @@ class TextField extends React.Component {
     }
   };
 
+  // Removes an entry
   handleRemove(index) {
     const values = this.state.values.splice(index, 1);
     this.setState({
@@ -39,6 +59,7 @@ class TextField extends React.Component {
     })
   }
 
+  // Adds an entry
   handleAdd() {
     const values = this.state.values.slice();
     this.keyCounter = this.keyCounter + 1;
@@ -48,6 +69,7 @@ class TextField extends React.Component {
       canAddValues: lessThanMax(values, this.props.maxValues)
     })
   };
+
   render () {
     let lastIndex = this.state.values.length - 1;
     return (
@@ -77,7 +99,27 @@ class TextField extends React.Component {
 }
 
 TextField.propTypes = {
+  /**
+   * The name of the element, used to with `param_prefix` to construct the
+   * parameter sent via the form submission.
+   */
   name: PropTypes.string,
-  values: PropTypes.array
+  /**
+   * Combined with the name (`<param_prefix>[<name>][]`) to construct the
+   * parameter sent via the form submission.
+   */
+  param_prefix: PropTypes.string,
+  /**
+   * Default values to display. This should be a array of maps, i.e.:
+   *
+   * ```
+   * [ {value: <Text to display>, langauge: <ISO-639 language code> } ]
+   * ```
+   */
+  values: PropTypes.array,
+  /**
+   * The maximum number of entries to allow.
+   */
+  maxValues: PropTypes.number
 }
 export default TextField
