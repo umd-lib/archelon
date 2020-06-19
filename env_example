@@ -91,3 +91,7 @@ VOCAB_LOCAL_AUTHORITY_BASE_URI=
 
 # Base URI for the location where the vocabularies are published
 VOCAB_PUBLICATION_BASE_URI=
+
+# --- config/application.rb
+# Set this if you need to change the default logging level of "info"
+# RAILS_LOG_LEVEL=debug

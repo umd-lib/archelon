@@ -68,4 +68,7 @@ Rails.application.configure do
   # import attachment).
   # See https://github.com/rails/rails/issues/30937
   config.active_job.queue_adapter = :inline
+
+  # default to debug log level unless overridden by the environment
+  config.log_level = ENV.fetch('RAILS_LOG_LEVEL', 'debug')
 end
