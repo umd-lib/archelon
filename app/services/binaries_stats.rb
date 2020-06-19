@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 # Utility to get binary counts and sizes for items
-class BinariesStats
-  include Blacklight::Configurable
-
+class BinariesStats < SolrQueryService
   QUERY = {
     q: '*:*',
     'pages.fq': 'component:Page',
@@ -17,8 +15,8 @@ class BinariesStats
   }.freeze
 
   def self.query(uris, mime_types)
-    fq = QUERY.merge 'fq': uris.map { |uri| "id:\"#{uri}\"" }.join(' OR ')
-    fq = fq.merge 'files.fq': mime_types.map { |mime_type| "mime_type:\"#{mime_type}\"" }.join(' OR ') if mime_types
+    fq = QUERY.merge 'fq': match_any('id', uris)
+    fq = fq.merge 'files.fq': match_any('mime_type', mime_types) if mime_types
     fq
   end
 

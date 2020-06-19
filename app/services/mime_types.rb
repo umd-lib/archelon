@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-# Utility to retrive MIME types from Solr
-class MimeTypes
-  include Blacklight::Configurable
-
+# Utility to retrieve MIME types from Solr
+class MimeTypes < SolrQueryService
   QUERY = {
     q: '*:*',
     indent: 'on',
@@ -24,13 +22,13 @@ class MimeTypes
   end
 
   def self.query(uris)
-    QUERY.merge 'fq': uris.map { |uri| "id:\"#{uri}\"" }.join(' OR ')
+    QUERY.merge 'fq': match_any('id', uris)
   end
 
   # Processes the Solr response, returning an array of Strings
   def self.process_solr_response(solr_response) # rubocop:disable Metrics/MethodLength
     # This method is a bit of a kludge, because it's not clear how to get the
-    # facet list directly from a Solr query. This brute-force method interates
+    # facet list directly from a Solr query. This brute-force method iterates
     # through all the files in the response, generating a set of all the
     # "mime_type" fields encountered, and then converts it to an array.
     docs = solr_response.dig('response', 'docs')
