@@ -22,9 +22,6 @@
 /storage/*
 !/storage/.keep
 
-/node_modules
-/yarn-error.log
-
 /public/assets
 .byebug_history
 
@@ -49,3 +46,11 @@ coverage
 /public/published_vocabularies/*.json
 /public/published_vocabularies/*.ttl
 /public/published_vocabularies/*.nt
+
+# Ignore webpack, yarn, and node
+/public/packs
+/public/packs-test
+/node_modules
+/yarn-error.log
+yarn-debug.log*
+.yarn-integrity
