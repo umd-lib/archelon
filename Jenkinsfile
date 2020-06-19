@@ -97,6 +97,7 @@ pipeline {
     stage('build') {
       steps {
         sh '''
+          yarn
           ruby -v
         '''
       }
