@@ -334,6 +334,24 @@ the GUI.
 
 See [docs/ActionCable.md](docs/ActionCable.md) for more information.
 
+## React Components
+
+React components are documented using "React Styleguidist"
+[https://react-styleguidist.js.org/][react-styleguidist]
+
+In the development environment, web-based interactive documentation can be
+accessed by running:
+
+```
+> yarn styleguidist server
+```
+
+and then accessing the documentation at http://localhost:6060/
+
+See the "Documenting Components" page on the "React Styleguidist" website
+[https://react-styleguidist.js.org/docs/documenting][react-styleguidist-documenting],
+for information about writing documentation for the React components.
+
 ## License
 
 See the [LICENSE](LICENSE.md) file for license rights and limitations
@@ -343,3 +361,5 @@ See the [LICENSE](LICENSE.md) file for license rights and limitations
 [cve-2015-9284]: https://github.com/omniauth/omniauth/wiki/Resolving-CVE-2015-9284
 [fcrepo-vagrant]: https://github.com/umd-lib/fcrepo-vagrant
 [plastron]: https://github.com/umd-lib/plastron
+[react-styleguidist]: https://react-styleguidist.js.org/
+[react-styleguidist-documenting]: https://react-styleguidist.js.org/docs/documenting

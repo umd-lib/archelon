@@ -11,6 +11,7 @@
     "react_ujs": "^2.6.1"
   },
   "devDependencies": {
+    "react-styleguidist": "^11.0.8",
     "webpack-dev-server": "^3.11.0"
   }
 }
