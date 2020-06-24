@@ -4,12 +4,28 @@ import PropTypes from "prop-types"
 import Repeatable from "./Repeatable"
 
 /**
- * RepeatablePlainLiteral component
- *
  * This class is mainly intended to serve as "syntactic sugar" so that the
  * "react-rails" gem can use the "Repeatable" component with the PlainLiteral
  * component, without having to pass anonymous JavaScript functions as
  * properties.
+ *
+ *  Sample Rails view usage:
+ *
+ * ```
+ * <%= react_component(
+ *       "RepeatablePlainLiteral", {
+ *       maxValues: 5,
+ *       param_prefix: "repeatable_plain_literal",
+ *       name: 'title',
+ *       values: [
+ *         {value: 'First Line', language: 'en'},
+ *         {value: '二行目', language: 'ja'},
+ *         {value: 'Third Line', language: 'en'}]
+ *       }
+ *     )
+ * %>
+ * ```
+ *
  */
 class RepeatablePlainLiteral extends React.Component {
   render() {

@@ -4,11 +4,12 @@ import PropTypes from "prop-types"
 /**
  * Input component consisting of a textbox, and language dropdown list.
  *
- *  * Sample Rails view usage:
+ *  Sample Rails view usage:
  *
  * ```
  * <%= react_component(:PlainLiteral, { param_prefix: 'example', name: 'title', value: "Lorem ipsum", language: "en"}) %>
  * ```
+ *
  * When used in a form, this will send two arrays `example[title][]` and
  * `example[title_language][]` as HTML paramaters.
  */

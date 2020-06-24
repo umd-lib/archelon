@@ -4,12 +4,27 @@ import Repeatable from "./Repeatable";
 import TypedLiteral from "./TypedLiteral";
 
 /**
- * RepeatableTypedLiteral component
- *
  * This class is mainly intended to serve as "syntactic sugar" so that the
  * "react-rails" gem can use the "Repeatable" component with the TypedLiteral
  * component, without having to pass anonymous JavaScript functions as
  * properties.
+ *
+ *  Sample Rails view usage:
+ *
+ * ```
+ * <%= react_component(
+ *       "RepeatableTypedLiteral", {
+ *         param_prefix: "repeatable_typed_literal",
+ *         defaultValue: { value: '', datatype: 'http://id.loc.gov/datatypes/edtf' },
+ *         name: 'title',
+ *         values: [
+ *           {value: '2020-06-23', datatype: 'http://id.loc.gov/datatypes/edtf'},
+ *           {value: '1856-03-06', datatype: 'http://www.w3.org/2001/XMLSchema#date'}
+ *         ]
+ *       }
+ *     )
+ * %>
+ * ```
  */
 class RepeatableTypedLiteral extends React.Component {
   render() {

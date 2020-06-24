@@ -4,11 +4,12 @@ import PropTypes from "prop-types"
 /**
  * Input component consisting of a textbox with an associated datatype.
  *
- *  * Sample Rails view usage:
+ *  Sample Rails view usage:
  *
  * ```
  * <%= react_component(:TypedLiteralValue, { param_prefix: 'example', name: 'title', value: "Lorem ipsum", datatype: "http://id.loc.gov/datatypes/edtf"}) %>
  * ```
+ *
  * When used in a form, this will send two arrays `example[title][]` and
  * `example[title_datatype][]` as HTML paramaters.
  */

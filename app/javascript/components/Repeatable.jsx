@@ -8,7 +8,7 @@ import PropTypes from "prop-types"
  * property.
  *
  * The "newElement" property is a function that returns a React element.
- * The function should have take a single "value" argument, which is
+ * The function should take a single "value" argument, which is
  * provided by the "defaultValue" property. If a "defaultValue" property
  * is not provided, an empty Object is passed to the "newElement" function.
  *
@@ -24,6 +24,14 @@ import PropTypes from "prop-types"
  *    defaultValue={{value: "Sample Value"}}
  * />
  * ```
+ *
+ * Note: The above example cannot be used directly in Rails, as the
+ * "react-rails" gem does not support passing anonymous JavaScript functions
+ * as a part of "props".
+ *
+ * In order to use Repeatable with a component in Rails, a "Repeatable" version
+ * of the component is needed. See "RepeatablePlainLiteral" and
+ * "RepeatableTypedLiteral" for examples.
  */
 class Repeatable extends React.Component {
   constructor(props) {
@@ -67,6 +75,7 @@ class Repeatable extends React.Component {
     })
   }
 
+  // Creates the new element to add
   createNewElement(value) {
     let element = this.newElement(value);
     return element;

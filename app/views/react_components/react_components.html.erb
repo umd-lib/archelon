@@ -11,13 +11,15 @@
 
   <h2>TypedLiteral</h2>
 
+  <div>Hover the mouse over the textbox to display a tooltip with the datatype.</div>
+
   <div class="form-group">
     <%= react_component("TypedLiteral", { param_prefix: 'typed_literal', name: 'title', value: "2020-06-23", datatype: "http://id.loc.gov/datatypes/edtf"}) %>
   </div>
 
   <h2>Repeatable</h2>
 
-  <h3>PlainLiteral</h3>
+  <h3>RepeatablePlainLiteral</h3>
 
   <div>The following example is limited to 5 entries:<div>
 
@@ -36,7 +38,7 @@
     %>
   </div>
 
-  <h3>TypedLiteral</h3>
+  <h3>RepeatableTypedLiteral</h3>
 
   <div>The following example has unlimited entries:</div>
 

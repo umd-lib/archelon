@@ -5,7 +5,7 @@ components provided with Archelon.
 
 * https://react-styleguidist.js.org/
 
-## "react-rails" Limitations
+## Composition vs. Inheritance and "react-rails" Limitations
 
 In React, it is strongly suggested that "composition" be preferred over
 "inheritance" when creating React components.
@@ -28,8 +28,7 @@ describing the function.
 
 For the "Repeatable" component, the workaround is to create a second component
 that can provide the "newElement" function to the Repeatable component. See
-"RepeatableLiteralValue" and "RepeatableTypedLiteral" in the
-"RepeatableComponent.jsx" file.
+"RepeatableLiteralValue" and "RepeatableTypedLiteral".
 
 This solution is less than ideal, because it requires creating a "Repeatable"
 version of we might want to make repeatable, but appears to be the only way
