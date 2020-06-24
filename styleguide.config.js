@@ -18,6 +18,18 @@ module.exports = {
         }
       ]
     }
-  }
+  },
+  sections: [
+    {
+      name: 'Introduction',
+      content: 'app/javascript/components/docs/introduction.md'
+    },
+    {
+      name: 'UI Components',
+      components: 'app/javascript/components/**/*.jsx',
+      exampleMode: 'expand', // 'hide' | 'collapse' | 'expand'
+      usageMode: 'expand' // 'hide' | 'collapse' | 'expand'
+    }
+  ]
 }
 

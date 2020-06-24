@@ -336,6 +336,15 @@ See [docs/ActionCable.md](docs/ActionCable.md) for more information.
 
 ## React Components
 
+### Interactive Demo
+
+An interactive demo displaying the React components provided by the application
+is available at:
+
+http://localhost:3000/react_components
+
+### Documenting React Components
+
 React components are documented using "React Styleguidist"
 [https://react-styleguidist.js.org/][react-styleguidist]
 
