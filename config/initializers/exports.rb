@@ -1,1 +1,1 @@
-EXPORT_BINARIES_DIR = ENV['EXPORT_BINARIES_DIR']
+EXPORT_CONFIG = Archelon::Application.config_for(:exports).with_indifferent_access
