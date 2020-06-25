@@ -16,32 +16,18 @@ class ExportJob < ApplicationRecord
     TURTLE_FORMAT => 'Turtle'
   }.freeze
 
-  FORMAT_EXTENSIONS = {
-    CSV_FORMAT => '.csv',
-    TURTLE_FORMAT => '.ttl',
-    'application/zip' => '.zip'
-  }.freeze
-
   MAX_ALLOWED_BINARIES_DOWNLOAD_SIZE = 50.gigabytes
 
   def self.exportable_types
     %w[Image Issue Letter]
   end
 
-  def download_file
-    response = HTTP.get(download_url, ssl_context: SSL_CONTEXT)
-    mime_type = response.content_type.mime_type
-    [
-      response.body,
-      {
-        type: mime_type,
-        filename: filename(content_disposition(response.headers), mime_type)
-      }
-    ]
+  def filename
+    name + '.zip'
   end
 
-  def binaries_file
-    File.join(EXPORT_BINARIES_DIR, name + '_binaries.zip')
+  def path
+    File.join(EXPORT_CONFIG[:dir], filename)
   end
 
   def self.from_uri(uri)
@@ -59,7 +45,6 @@ class ExportJob < ApplicationRecord
 
   def update_status(message)
     self.plastron_status = message.headers['PlastronJobStatus']
-    self.download_url = message.body_json['download_uri'] unless message.body_json.nil?
     save!
   end
 
@@ -84,13 +69,5 @@ class ExportJob < ApplicationRecord
 
     def content_disposition(headers)
       Mechanize::HTTP::ContentDispositionParser.parse(headers[:content_disposition])
-    end
-
-    def filename(content_disposition, mime_type)
-      if content_disposition
-        content_disposition.filename || name + FORMAT_EXTENSIONS[mime_type]
-      else
-        name + FORMAT_EXTENSIONS[mime_type]
-      end
     end
 end

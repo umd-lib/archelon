@@ -50,5 +50,6 @@ coverage
 /public/published_vocabularies/*.ttl
 /public/published_vocabularies/*.nt
 
-# Ignore the imports
-/imports
+# Ignore the imports and exports
+/imports/*.zip
+/exports/*.zip
