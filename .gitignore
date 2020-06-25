@@ -22,9 +22,6 @@
 /storage/*
 !/storage/.keep
 
-/node_modules
-/yarn-error.log
-
 /public/assets
 .byebug_history
 
@@ -53,3 +50,14 @@ coverage
 # Ignore the imports and exports
 /imports/*.zip
 /exports/*.zip
+
+# Ignore webpack, yarn, and node
+/public/packs
+/public/packs-test
+/node_modules
+/yarn-error.log
+yarn-debug.log*
+.yarn-integrity
+
+# React Styleguidist
+styleguide/

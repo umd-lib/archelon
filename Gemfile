@@ -131,3 +131,6 @@ gem 'mechanize'
 gem 'rdf-turtle'
 gem 'json-ld'
 gem 'cancancan'
+
+gem 'webpacker'
+gem 'react-rails'
