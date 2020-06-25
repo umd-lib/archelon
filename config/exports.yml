@@ -1,5 +1,8 @@
 default: &default
+  # where to find the zip files of completed export jobs
   dir: <%= Rails.root.join('exports') %>
+  # the base location to use to generate the output-dest parameter for plastron
+  # this can either be a local file path, or an SFTP URI to a remote server
   base_destination: <%= Rails.root.join('exports') %>
 
 development:
@@ -10,8 +13,6 @@ test:
   base_destination: <%= Rails.root.join('test', 'exports') %>
 
 production:
-  # where to find the zip files of completed export jobs
   dir: <%= ENV['EXPORT_DIR'] %>
-  # the base location to use to generate the output-dest parameter for plastron
-  # this will be something like zip+sftp://plastron@archelon.lib.umd.edu/imports
+  # this should be something like sftp://plastron@archelon.lib.umd.edu/exports
   base_destination: <%= ENV['EXPORT_BASE_DESTINATION'] %>
