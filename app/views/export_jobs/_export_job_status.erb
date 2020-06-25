@@ -5,11 +5,10 @@
   <% end %>
 </td>
 <td>
-  <% if export_job.plastron_status_done? %>
+  <% if export_job.plastron_status_done? && File.exists?(export_job.path) %>
     <%= link_to download_export_jobs_path(export_job), class: 'btn btn-sm btn-success', data: { turbolinks: false } do %>
       <i class="glyphicon glyphicon-download-alt"></i>&nbsp;Download
-      &nbsp;
-      <span class="badge"><%= number_to_human_size File.size(export_job.path) %></span>
+      &nbsp;<span class="badge"><%= number_to_human_size File.size(export_job.path) %></span>
     <% end %>
   <% end %>
 </td>
