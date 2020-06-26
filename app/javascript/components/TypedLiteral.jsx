@@ -7,11 +7,11 @@ import PropTypes from "prop-types"
  *  Sample Rails view usage:
  *
  * ```
- * <%= react_component(:TypedLiteralValue, { param_prefix: 'example', name: 'title', value: "Lorem ipsum", datatype: "http://id.loc.gov/datatypes/edtf"}) %>
+ * <%= react_component(:TypedLiteralValue, { paramPrefix: 'example', name: 'title', value: "2020-06-26", datatype: "http://id.loc.gov/datatypes/edtf"}) %>
  * ```
  *
- * When used in a form, this will send two arrays `example[title][]` and
- * `example[title_datatype][]` as HTML paramaters.
+ * When used in a form, this will submit the array `example[title][]`
+ * with a single value, `{value: "2020-06-26", datatype: "http://id.loc.gov/datatypes/edtf"}`.
  */
 class TypedLiteral extends React.Component {
   constructor(props) {
@@ -33,8 +33,8 @@ class TypedLiteral extends React.Component {
   }
 
   render () {
-    let textbox_name = `${this.props.param_prefix}[${this.props.name}][]`
-    let datatype_name = `${this.props.param_prefix}[${this.props.name}_datatype][]`
+    let textbox_name = `${this.props.paramPrefix}[${this.props.name}][][value]`
+    let datatype_name = `${this.props.paramPrefix}[${this.props.name}][][datatype]`
 
     return (
       <React.Fragment>
@@ -47,15 +47,15 @@ class TypedLiteral extends React.Component {
 
 TypedLiteral.propTypes = {
   /**
-   * The name of the element, used to with `param_prefix` to construct the
+   * The name of the element, used to with `paramPrefix` to construct the
    * parameter sent via the form submission.
    */
   name: PropTypes.string,
   /**
-   * Combined with the name (`<param_prefix>[<name>][]`) to construct the
+   * Combined with the name (`<paramPrefix>[<name>][]`) to construct the
    * parameter sent via the form submission.
    */
-  param_prefix: PropTypes.string,
+  paramPrefix: PropTypes.string,
   /**
    * The default text for the textbox
    */

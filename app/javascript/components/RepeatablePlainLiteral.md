@@ -1,7 +1,7 @@
 ### Basic Example
 
 ```js
-<RepeatablePlainLiteral param_prefix='example' name='title' />
+<RepeatablePlainLiteral paramPrefix='example' name='title' />
 ```
 
 ### RepeatablePlainLiteral with preset values
@@ -13,7 +13,7 @@ let values= [
   {value: 'Third Line', language: 'en'},
 ];
 
-<RepeatablePlainLiteral param_prefix='example' name='title'
+<RepeatablePlainLiteral paramPrefix='example' name='title'
    defaultValue={{value: "", language: ""}}
    values={values}
 />
@@ -22,7 +22,7 @@ let values= [
 ### RepeatablePlainLiteral only allowing up to 3 entries
 
 ```js
-<RepeatablePlainLiteral param_prefix='example' name='title'
+<RepeatablePlainLiteral paramPrefix='example' name='title'
    maxValues={3}
 />
 ```

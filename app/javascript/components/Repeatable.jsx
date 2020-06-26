@@ -77,8 +77,7 @@ class Repeatable extends React.Component {
 
   // Creates the new element to add
   createNewElement(value) {
-    let element = this.newElement(value);
-    return element;
+    return this.newElement(value);
   }
 
   // Adds an entry

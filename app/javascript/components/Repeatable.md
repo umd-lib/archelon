@@ -12,7 +12,7 @@
 ```js
 import PlainLiteral from './PlainLiteral';
 <Repeatable name="test"
-   newElement={(value) => {return <PlainLiteral param_prefix='example' name='title' value={value.value} language={value.language}/>; }}
+   newElement={(value) => {return <PlainLiteral paramPrefix='example' name='title' value={value.value} language={value.language}/>; }}
    defaultValue={{value: "Lorem ipsum", language: ""}}
 />
 ```
@@ -31,7 +31,7 @@ let values= [
 <Repeatable name="test"
    newElement={
      (value) => {
-       return <PlainLiteral param_prefix='example' name='title' value={value.value} language={value.language}/>;
+       return <PlainLiteral paramPrefix='example' name='title' value={value.value} language={value.language}/>;
      }
    }
    defaultValue={{value: "", language: ""}}
@@ -55,7 +55,7 @@ let values = [
    newElement={
      (value) => {
        return (
-         <TypedLiteral param_prefix='example' name='title' value={value.value}
+         <TypedLiteral paramPrefix='example' name='title' value={value.value}
                        datatype={value.datatype} />
         );
      }

@@ -33,6 +33,16 @@ class Vocabulary < ApplicationRecord
 
   scope :by_identifier, -> { order('identifier ASC') }
 
+  def as_hash
+    Hash[terms.map do |term|
+      [term.uri, term.respond_to?(:label) ? term.label : term.identifier]
+    end]
+  end
+
+  def terms
+    individuals + types + datatypes
+  end
+
   def uri
     VOCAB_CONFIG['local_authority_base_uri'] + identifier + '#'
   end
@@ -42,7 +52,7 @@ class Vocabulary < ApplicationRecord
   end
 
   def term_count
-    types.count + individuals.count
+    terms.count
   end
 
   def graph

@@ -1,11 +1,12 @@
-import PropTypes from "prop-types"
 import React from "react"
-import Repeatable from "./Repeatable";
-import TypedLiteral from "./TypedLiteral";
+import PlainLiteral from "./PlainLiteral"
+import PropTypes from "prop-types"
+import Repeatable from "./Repeatable"
+import ControlledURIRef from "./ControlledURIRef";
 
 /**
  * This class is mainly intended to serve as "syntactic sugar" so that the
- * "react-rails" gem can use the "Repeatable" component with the TypedLiteral
+ * "react-rails" gem can use the "Repeatable" component with the ControlledURIRef
  * component, without having to pass anonymous JavaScript functions as
  * properties.
  *
@@ -13,33 +14,33 @@ import TypedLiteral from "./TypedLiteral";
  *
  * ```
  * <%= react_component(
- *       "RepeatableTypedLiteral", {
- *         paramPrefix: "repeatable_typed_literal",
- *         defaultValue: { value: '', datatype: 'http://id.loc.gov/datatypes/edtf' },
- *         name: 'title',
- *         values: [
- *           {value: '2020-06-23', datatype: 'http://id.loc.gov/datatypes/edtf'},
- *           {value: '1856-03-06', datatype: 'http://www.w3.org/2001/XMLSchema#date'}
- *         ]
+ *       "RepeatableControlledURIRef", {
+ *       maxValues: 5,
+ *       paramPrefix: "repeatable_controlled_value",
+ *       name: 'title',
+ *       values: [
+ *         "http://vocab.lib.umd.edu/form#maps",
+ *         "http://vocab.lib.umd.edu/form#newspapers"]
  *       }
  *     )
  * %>
  * ```
+ *
  */
-class RepeatableTypedLiteral extends React.Component {
+class RepeatableControlledURIRef extends React.Component {
   render() {
     return (
       <Repeatable
          maxValues={this.props.maxValues}
          values={this.props.values}
-         newElement={(value) => <TypedLiteral paramPrefix={this.props.paramPrefix} name={this.props.name} value={value.value} datatype={value.datatype} />}
+         newElement={(value) => <ControlledURIRef paramPrefix={this.props.paramPrefix} name={this.props.name} value={value.value} vocab={this.props.vocab} />}
          defaultValue={this.props.defaultValue}
       />
     );
   }
 }
 
-RepeatableTypedLiteral.propTypes = {
+RepeatableControlledURIRef.propTypes = {
   /**
    * The name of the element, used to with `paramPrefix` to construct the
    * parameter sent via the form submission.
@@ -51,7 +52,7 @@ RepeatableTypedLiteral.propTypes = {
    */
   paramPrefix: PropTypes.string,
   /**
-   * The default text and datatype properties for the TypedLiteral entries
+   * The default text and language properties for the PlainLiteral entries
    */
   values: PropTypes.array,
   /**
@@ -64,4 +65,4 @@ RepeatableTypedLiteral.propTypes = {
   defaultValue: PropTypes.object
 }
 
-export default RepeatableTypedLiteral;
+export default RepeatableControlledURIRef;

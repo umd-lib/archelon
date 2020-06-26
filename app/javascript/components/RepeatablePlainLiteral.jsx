@@ -15,7 +15,7 @@ import Repeatable from "./Repeatable"
  * <%= react_component(
  *       "RepeatablePlainLiteral", {
  *       maxValues: 5,
- *       param_prefix: "repeatable_plain_literal",
+ *       paramPrefix: "repeatable_plain_literal",
  *       name: 'title',
  *       values: [
  *         {value: 'First Line', language: 'en'},
@@ -33,7 +33,7 @@ class RepeatablePlainLiteral extends React.Component {
       <Repeatable
          maxValues={this.props.maxValues}
          values={this.props.values}
-         newElement={(value) => <PlainLiteral param_prefix={this.props.param_prefix} name={this.props.name} value={value.value} language={value.language} />}
+         newElement={(value) => <PlainLiteral paramPrefix={this.props.paramPrefix} name={this.props.name} value={value.value} language={value.language} />}
          defaultValue={this.props.defaultValue}
       />
     );
@@ -42,15 +42,15 @@ class RepeatablePlainLiteral extends React.Component {
 
 RepeatablePlainLiteral.propTypes = {
   /**
-   * The name of the element, used to with `param_prefix` to construct the
+   * The name of the element, used to with `paramPrefix` to construct the
    * parameter sent via the form submission.
    */
   name: PropTypes.string,
   /**
-   * Combined with the name (`<param_prefix>[<name>][]`) to construct the
+   * Combined with the name (`<paramPrefix>[<name>][]`) to construct the
    * parameter sent via the form submission.
    */
-  param_prefix: PropTypes.string,
+  paramPrefix: PropTypes.string,
   /**
    * The default text and language properties for the PlainLiteral entries
    */
