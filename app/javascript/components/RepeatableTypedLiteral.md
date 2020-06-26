@@ -1,7 +1,7 @@
 ### Basic Example
 
 ```js
-<RepeatableTypedLiteral param_prefix='example' name='title' />
+<RepeatableTypedLiteral paramPrefix='example' name='title' />
 ```
 
 ### RepeatableTypedLiteral with preset values
@@ -12,7 +12,7 @@ let values = [
   {value: '2019-07-04', datatype: "http://www.w3.org/2001/XMLSchema#date"}
 ];
 
-<RepeatableTypedLiteral param_prefix='example' name='title'
+<RepeatableTypedLiteral paramPrefix='example' name='title'
    defaultValue={{value: "", datatype: ""}}
    values={values}
 />
@@ -21,7 +21,7 @@ let values = [
 ### RepeatableTypedLiteral only allowing up to 3 entries
 
 ```js
-<RepeatableTypedLiteral param_prefix='example' name='title'
+<RepeatableTypedLiteral paramPrefix='example' name='title'
    maxValues={3}
 />
 ```

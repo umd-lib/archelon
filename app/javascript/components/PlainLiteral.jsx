@@ -7,11 +7,11 @@ import PropTypes from "prop-types"
  *  Sample Rails view usage:
  *
  * ```
- * <%= react_component(:PlainLiteral, { param_prefix: 'example', name: 'title', value: "Lorem ipsum", language: "en"}) %>
+ * <%= react_component(:PlainLiteral, { paramPrefix: 'example', name: 'title', value: "Lorem ipsum", language: "en"}) %>
  * ```
  *
- * When used in a form, this will send two arrays `example[title][]` and
- * `example[title_language][]` as HTML paramaters.
+ * When used in a form, this will submit the array `example[title][]`
+ * with a single value, `{value: "Lorem ipsum", language: "en"}`.
  */
 class PlainLiteral extends React.Component {
   // The options for the dropdown, using ISO-639 language codes
@@ -40,8 +40,8 @@ class PlainLiteral extends React.Component {
   }
 
   render () {
-    let textbox_name = `${this.props.param_prefix}[${this.props.name}][]`
-    let language_name = `${this.props.param_prefix}[${this.props.name}_language][]`
+    let textbox_name = `${this.props.paramPrefix}[${this.props.name}][][value]`
+    let language_name = `${this.props.paramPrefix}[${this.props.name}][][language]`
 
     return (
       <React.Fragment>
@@ -61,15 +61,15 @@ class PlainLiteral extends React.Component {
 
 PlainLiteral.propTypes = {
   /**
-   * The name of the element, used to with `param_prefix` to construct the
+   * The name of the element, used to with `paramPrefix` to construct the
    * parameter sent via the form submission.
    */
   name: PropTypes.string,
   /**
-   * Combined with the name (`<param_prefix>[<name>][]`) to construct the
+   * Combined with the name (`<paramPrefix>[<name>][]`) to construct the
    * parameter sent via the form submission.
    */
-  param_prefix: PropTypes.string,
+  paramPrefix: PropTypes.string,
   /**
    * The default text for the textbox
    */
