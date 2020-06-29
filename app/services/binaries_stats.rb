@@ -4,14 +4,12 @@
 class BinariesStats < SolrQueryService
   QUERY = {
     q: '*:*',
-    'pages.fq': 'component:Page',
+    rows: '10000',
     'files.q': '{!terms f=pcdm_file_of v=$row.pcdm_members}',
     indent: 'on',
-    fl: 'id,pages:[subquery],files:[subquery]',
+    fl: 'id,files:[subquery]',
     'files.fl': 'id,size',
-    'files.rows': '10000',
-    'pages.rows': '0',
-    'pages.q': '{!terms f=id v=$row.pcdm_members}'
+    'files.rows': '10000'
   }.freeze
 
   def self.query(uris, mime_types)
