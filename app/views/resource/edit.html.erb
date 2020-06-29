@@ -5,7 +5,7 @@
   <dl class="dl-horizontal dl-invert" id="metadata">
     <dt class="blacklight-title">Title:</dt>
     <dd><%= react_component("RepeatablePlainLiteral", {
-              param_prefix: 'resource', name: 'title',
+              paramPrefix: 'resource', name: 'title',
               values: [{value: @title, language: ''}]
             }) %></dd>
   </dl>
@@ -17,7 +17,7 @@
   <dl class="dl-horizontal dl-invert" id="metadata">
     <dt class="blacklight-date">Date:</dt>
     <dd><%= react_component("TypedLiteral", {
-              param_prefix: 'resource',
+              paramPrefix: 'resource',
               name: 'date',
               value: @date,
               datatype: 'http://id.loc.gov/datatypes/edtf'
