@@ -1,37 +1,35 @@
 import React from "react"
 import PropTypes from "prop-types"
+import PlainLiteral from "./PlainLiteral";
+import TypedLiteral from "./TypedLiteral";
+import ControlledURIRef from "./ControlledURIRef";
+
+// Registry of component types that are repeatable.
+// Adapted from: https://stackoverflow.com/a/37625215
+const registry = {
+  PlainLiteral: PlainLiteral,
+  TypedLiteral: TypedLiteral,
+  ControlledURIRef: ControlledURIRef,
+};
 
 /**
  * Enables multiple instances of an element to be added/removed.
  *
- * Elements are added by defining a "newElement" and a "defaultValue"
+ * Elements are added by defining a "componentType" and a "defaultValue"
  * property.
- *
- * The "newElement" property is a function that returns a React element.
- * The function should take a single "value" argument, which is
- * provided by the "defaultValue" property. If a "defaultValue" property
- * is not provided, an empty Object is passed to the "newElement" function.
  *
  * The "maxValues" property sets the maximum instances that can be created.
  *
  * The following example demonstrates using Repeatable to add up to three
- * input textboxes:
+ * PlainLiteral components:
  *
  * ```
  * <Repeatable
  *    maxValues={3}
- *    newElement={(value) => <input type="text" defaultValue={value.value}/>}
+ *    componentType="PlainLiteral"
  *    defaultValue={{value: "Sample Value"}}
  * />
  * ```
- *
- * Note: The above example cannot be used directly in Rails, as the
- * "react-rails" gem does not support passing anonymous JavaScript functions
- * as a part of "props".
- *
- * In order to use Repeatable with a component in Rails, a "Repeatable" version
- * of the component is needed. See "RepeatablePlainLiteral" and
- * "RepeatableTypedLiteral" for examples.
  */
 class Repeatable extends React.Component {
   constructor(props) {
@@ -41,8 +39,8 @@ class Repeatable extends React.Component {
     this.keyCounter = 0;
 
     this.maxValues = props.maxValues ? parseInt(props.maxValues) : undefined;
-    this.newElement = props.newElement;
     this.defaultValue = props.defaultValue ? props.defaultValue : {};
+    this.componentType = props.componentType;
 
     let values;
     if(props.values) {
@@ -76,8 +74,11 @@ class Repeatable extends React.Component {
   }
 
   // Creates the new element to add
-  createNewElement(value) {
-    return this.newElement(value);
+  createNewElement(newProps) {
+    newProps.paramPrefix = this.props.paramPrefix;
+    newProps.name = this.props.name;
+    newProps.vocab = this.props.vocab;
+    return React.createElement(registry[this.componentType], newProps);
   }
 
   // Adds an entry
@@ -113,11 +114,9 @@ class Repeatable extends React.Component {
                   index === lastIndex &&
                   <button type="button" onClick={() => this.handleAdd()} hidden={!this.state.canAddValues} disabled={!this.state.canAddValues}>+</button>
                 }
-                {index == lastIndex}
               </div>
           ))
         }
-
       </div>
     );
   }
@@ -129,9 +128,9 @@ Repeatable.propTypes = {
    */
   maxValues: PropTypes.number,
   /**
-   * Function for creating additional elements
+   * The component type to repeat ("PlainLiteral", "TypedLiteral", "ControlledURIRef")
    */
-  newElement: PropTypes.func.isRequired,
+  componentType: PropTypes.string,
   /**
    * The default value to use for additional elements
    */

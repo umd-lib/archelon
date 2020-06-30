@@ -2,31 +2,19 @@
 
   <h2>Required Fields</h2>
 
-  <dl class="dl-horizontal dl-invert" id="metadata">
-    <dt class="blacklight-title">Title:</dt>
-    <dd><%= react_component("RepeatablePlainLiteral", {
-              paramPrefix: 'resource', name: 'title',
-              values: [{value: @title, language: ''}]
-            }) %></dd>
-  </dl>
+  <%= render 'metadata_edit_components', fields: @required_fields, item: @item %>
 
   <hr>
 
   <h2>Recommended Fields</h2>
 
-  <dl class="dl-horizontal dl-invert" id="metadata">
-    <dt class="blacklight-date">Date:</dt>
-    <dd><%= react_component("TypedLiteral", {
-              paramPrefix: 'resource',
-              name: 'date',
-              value: @date,
-              datatype: 'http://id.loc.gov/datatypes/edtf'
-            }) %></dd>
-  </dl>
+  <%= render 'metadata_edit_components', fields: @recommended_fields, item: @item %>
 
   <hr>
 
   <h2>Optional Fields</h2>
+
+  <%= render 'metadata_edit_components', fields: @optional_fields, item: @item %>
 
   <div class="form-group">
     <input type="submit" name="submit" value="Submit" class="btn btn-primary form-control" />
