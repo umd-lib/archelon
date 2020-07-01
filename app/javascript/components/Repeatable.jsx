@@ -74,10 +74,13 @@ class Repeatable extends React.Component {
   }
 
   // Creates the new element to add
-  createNewElement(newProps) {
-    newProps.paramPrefix = this.props.paramPrefix;
-    newProps.name = this.props.name;
-    newProps.vocab = this.props.vocab;
+  createNewElement(newValue) {
+    const newProps = {
+      paramPrefix: this.props.paramPrefix,
+      name: this.props.name,
+      value: newValue,
+      vocab: this.props.vocab,
+    }
     return React.createElement(registry[this.componentType], newProps);
   }
 

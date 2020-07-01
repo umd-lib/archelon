@@ -1,15 +1,32 @@
 # frozen_string_literal: true
 
 module ResourceHelper
-  def define_react_components(fields, item) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+  def define_react_components(fields, item, uri) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     fields.map do |field|
       component_type = field[:repeatable] ? 'Repeatable' : field[:type]
-      component_args = { paramPrefix: 'resource', name: field[:name] }.tap do |args|
+      values = item[field[:uri]]
+      component_args = {
+        # this will group fields by their subject ...
+        paramPrefix: uri,
+        # ... and key them by their predicate
+        name: field[:uri]
+      }.tap do |args|
         if field[:repeatable]
-          args[:values] = transform(item[field[:name]])
+          args[:values] = values
         else
-          transform(item[field[:name]]).each { |arg| args.merge!(arg) }
+          # TODO: what do we do when there is more than value in a non-repeatable field?
+          args[:value] = values ? (values[0] || {}) : {}
         end
+
+        # special case for access level
+        if field[:name] == 'access'
+          access_vocab = Vocabulary['access']
+          types = item['@type']
+          values = types.select { |uri| access_vocab.key? uri }
+          args[:value] = { '@id' => values[0] }
+          args[:name] = field[:name]
+        end
+
         args[:vocab] = (Vocabulary[field[:vocab]] || {}) if field[:vocab].present?
         args[:componentType] = field[:type] if field[:repeatable]
       end

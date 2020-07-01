@@ -1,14 +1,12 @@
 <h1>Resource Form Submit</h1>
 
 <h2>Submitted Params</h2>
-<% params_to_skip = ['utf8', 'authenticity_token', 'submit', 'controller', 'action'] %>
-<ul>
-  <% @params.each do |param| %>
-    <% key, value = param %>
-    <% next if params_to_skip.include?(key) %>
-    <li><strong><%= key %></strong>: <%= value %></li>
-  <% end %>
-</ul>
+<pre><%=
+    params_to_skip = %w[utf8 authenticity_token submit controller action]
+    submission = params.to_unsafe_h
+    params_to_skip.each { |key| submission.delete(key) }
+    JSON.pretty_generate(submission)
+%></pre>
 
 <hr />
 

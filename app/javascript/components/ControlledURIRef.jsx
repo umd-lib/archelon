@@ -12,35 +12,37 @@ import PropTypes from "prop-types"
  *     :ControlledURIRef, {
  *       paramPrefix: 'example',
  *       name: 'object_type',
- *       value: 'http://example.com/foo#bar',
- *       vocab: Vocabulary.find_by(identifier: 'foo').as_hash
+ *       vocab: Vocabulary.find_by(identifier: 'object_type').as_hash,
+ *       value: {
+ *         '@id' => 'http://example.com/foo#bar'
+ *       }
  *     }
  *   )
  * %>
  * ```
  *
  * When used in a form, this will submit the array `example[object_type][]`
- * with a single value `'http://example.com/foo#bar'`
+ * with a single value `{"@id": "http://example.com/foo#bar"}`
  */
 class ControlledURIRef extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: props.value
+      uri: props.value['@id']
     }
 
     this.handleChange = this.handleChange.bind(this);
   };
 
   handleChange(event) {
-    this.setState({value: event.target.value})
+    this.setState({ uri: event.target.value })
   };
 
   render () {
-    let inputName = `${this.props.paramPrefix}[${this.props.name}][]`
+    let inputName = `${this.props.paramPrefix}[${this.props.name}][][@id]`
     return (
       <React.Fragment>
-        <select name={inputName} value={this.state.value} onChange={this.handleChange}>
+        <select name={inputName} value={this.state.uri} onChange={this.handleChange}>
           <option key="" value=""/>
           {Object.entries(this.props.vocab).map(([uri, label]) => (
               <option key={uri} value={uri}>{label}</option>
@@ -74,6 +76,7 @@ ControlledURIRef.propTypes = {
 
 ControlledURIRef.defaultProps = {
   vocab: {},
+  value: {},
 }
 
 export default ControlledURIRef
