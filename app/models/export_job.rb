@@ -16,7 +16,12 @@ class ExportJob < ApplicationRecord
     TURTLE_FORMAT => 'Turtle'
   }.freeze
 
-  MAX_ALLOWED_BINARIES_DOWNLOAD_SIZE = 50.gigabytes
+  #  Maximum allowed binaries file size, in bytes
+  MAX_ALLOWED_BINARIES_DOWNLOAD_SIZE = if ENV['MAX_ALLOWED_BINARIES_DOWNLOAD_SIZE']
+                                         ENV['MAX_ALLOWED_BINARIES_DOWNLOAD_SIZE'].to_i
+                                       else
+                                         50.gigabytes
+                                       end
 
   def self.exportable_types
     %w[Image Issue Letter]
