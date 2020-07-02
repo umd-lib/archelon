@@ -1,23 +1,14 @@
-### Basic example, using an "input" textbox
-
-```js
- <Repeatable
-    newElement={(value) => <input type="text" defaultValue={value.value}/>}
-    defaultValue={{value: "Sample Value"}}
- />
-```
-
-### PlainLiteral example
+### Repeatable PlainLiteral example
 
 ```js
 import PlainLiteral from './PlainLiteral';
 <Repeatable name="test"
-   newElement={(value) => {return <PlainLiteral paramPrefix='example' name='title' value={value.value} language={value.language}/>; }}
+   componentType="PlainLiteral"
    defaultValue={{value: "Lorem ipsum", language: ""}}
 />
 ```
 
-### PlainLiteral with preset values
+### Repeatable PlainLiteral with preset values
 
 ```js
 import PlainLiteral from './PlainLiteral';
@@ -29,17 +20,13 @@ let values= [
 ];
 
 <Repeatable name="test"
-   newElement={
-     (value) => {
-       return <PlainLiteral paramPrefix='example' name='title' value={value.value} language={value.language}/>;
-     }
-   }
+   componentType="PlainLiteral"
    defaultValue={{value: "", language: ""}}
    values={values}
 />
 ```
 
-### TypedLiteral only allowing up to 3 entries
+### Repeatable TypedLiteral only allowing up to 3 entries
 
 ```js
 import TypedLiteral from './TypedLiteral';
@@ -50,16 +37,26 @@ let values = [
 ];
 
 <Repeatable name="test"
+   componentType="TypedLiteral"
    maxValues={3}
    values={values}
-   newElement={
-     (value) => {
-       return (
-         <TypedLiteral paramPrefix='example' name='title' value={value.value}
-                       datatype={value.datatype} />
-        );
-     }
-   }
    defaultValue={{value: "", datatype: "http://id.loc.gov/datatypes/edtf"}}
+/>
+```
+
+### Repeatable ControlledURIRef
+
+```js
+import ControlledURIRef from './ControlledURIRef';
+
+let vocab={'http://example.com/vocab#foo': 'Foo', 'http://example.com/vocab#bar': 'Bar'};
+
+let values = [{value: 'http://example.com/vocab#foo'}, {value: 'http://example.com/vocab#bar'}];
+
+<Repeatable name="test"
+   componentType="ControlledURIRef"
+   vocab={vocab}
+   values={values}
+   defaultValue={{ value: 'http://example.com/vocab#foo' }}
 />
 ```

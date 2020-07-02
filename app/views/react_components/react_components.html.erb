@@ -17,16 +17,39 @@
     <%= react_component("TypedLiteral", {paramPrefix: 'typed_literal', name: 'title', value: "2020-06-23", datatype: "http://id.loc.gov/datatypes/edtf"}) %>
   </div>
 
+  <h2>ControlledURIRef</h2>
+
+  <div>This component presents a dropdown using the values defined in the
+    <%= link_to 'controlled vocabularies', vocabularies_url %>.</div>
+
+  <% Vocabulary.all.each do |vocab| %>
+    <h3><%= vocab.identifier %></h3>
+    <div class="form-group">
+      <%=
+        react_component(
+          "ControlledURIRef", {
+          paramPrefix: 'controlled_value',
+          name: vocab.identifier,
+          vocab: vocab.as_hash,
+          value: vocab.terms[0].uri
+        }
+        )
+      %>
+    </div>
+  <% end %>
+
   <h2>Repeatable</h2>
 
-  <h3>RepeatablePlainLiteral</h3>
+  <h3>Repeatable PlainLiteral</h3>
 
   <div>The following example is limited to 5 entries:</div>
 
   <div class="form-group">
     <%= react_component(
-          "RepeatablePlainLiteral", {
+          :Repeatable,
+          {
             maxValues: 5,
+            componentType: :PlainLiteral,
             paramPrefix: "repeatable_plain_literal",
             name: 'title',
             values: [
@@ -34,17 +57,18 @@
               {value: '二行目', language: 'ja'},
               {value: 'Third Line', language: 'en'}]
           }
-        )
-    %>
+        ) %>
   </div>
 
-  <h3>RepeatableTypedLiteral</h3>
+  <h3>Repeatable TypedLiteral</h3>
 
   <div>The following example has unlimited entries:</div>
 
   <div class="form-group">
     <%= react_component(
-          "RepeatableTypedLiteral", {
+          :Repeatable,
+          {
+            componentType: :TypedLiteral,
             paramPrefix: "repeatable_typed_literal",
             defaultValue: { value: '', datatype: 'http://id.loc.gov/datatypes/edtf' },
             name: 'title',
@@ -53,48 +77,27 @@
               {value: '1856-03-06', datatype: 'http://www.w3.org/2001/XMLSchema#date'}
             ]
           }
-        )
-    %>
+        ) %>
   </div>
 
-  <h3>ControlledURIRef</h3>
-
-  <div>This component presents a dropdown using the values defined in the
-  <%= link_to 'controlled vocabularies', vocabularies_url %>.</div>
+  <h3>Repeatable ControlledURIRef</h3>
 
   <% Vocabulary.all.each do |vocab| %>
-    <div><%= vocab.identifier %></div>
+    <h4><%= vocab.identifier %> (repeated)</h4>
     <div class="form-group">
-      <%=
-        react_component(
-            "ControlledURIRef", {
-            paramPrefix: 'controlled_value',
-            name: vocab.identifier,
-            vocab: vocab.as_hash,
-            value: vocab.terms[0].uri
-        }
-        )
-      %>
-    </div>
-  <% end %>
-
-  <h3>RepeatableControlledURIRef</h3>
-
-  <% Vocabulary.all.each do |vocab| %>
-    <div><%= vocab.identifier %> (repeated)</div>
-    <div class="form-group">
-      <%=
-        react_component(
-            "RepeatableControlledURIRef", {
-            paramPrefix: 'repeated_controlled_value',
-            name: vocab.identifier,
-            vocab: vocab.as_hash,
-            values: [
+      <%= react_component(
+            :Repeatable,
+            {
+              componentType: :ControlledURIRef,
+              paramPrefix: 'repeated_controlled_value',
+              name: vocab.identifier,
+              vocab: vocab.as_hash,
+              values: [
                 { value: vocab.terms[0].uri }
-            ],
-            defaultValue: { value: '' }
-        }
-        )
+              ],
+              defaultValue: { value: '' }
+            }
+          )
       %>
     </div>
   <% end %>

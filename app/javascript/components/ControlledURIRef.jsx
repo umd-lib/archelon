@@ -65,7 +65,15 @@ ControlledURIRef.propTypes = {
   /**
    * The default selected value for the dropdown
    */
-  value: PropTypes.string
+  value: PropTypes.string,
+  /**
+   * The vocabulary to display
+   */
+  vocab: PropTypes.object,
+}
+
+ControlledURIRef.defaultProps = {
+  vocab: {},
 }
 
 export default ControlledURIRef
