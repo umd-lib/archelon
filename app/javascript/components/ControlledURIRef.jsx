@@ -67,7 +67,7 @@ ControlledURIRef.propTypes = {
   /**
    * The default selected value for the dropdown
    */
-  value: PropTypes.string,
+  value: PropTypes.object,
   /**
    * The vocabulary to display
    */

@@ -34,7 +34,7 @@ class TypedLiteral extends React.Component {
   }
 
   handleTextChange(event) {
-    this.setState({value: { value: event.target.value } })
+    this.setState({ value: event.target.value })
   }
 
   render () {
