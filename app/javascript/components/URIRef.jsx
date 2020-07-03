@@ -27,7 +27,7 @@ class URIRef extends React.Component {
   }
 
   render () {
-    let textbox_name = `${this.props.paramPrefix}[${this.props.name}][][value]`
+    let textbox_name = `${this.props.paramPrefix}[${this.props.name}][][@id]`
 
     let value = "";
     if ((this.state.value) && (this.state.value["@id"])) {
