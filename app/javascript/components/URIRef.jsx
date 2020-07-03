@@ -11,32 +11,27 @@ import PropTypes, { string } from "prop-types"
  * ```
  *
  * When used in a form, this will submit the array `example[title][]`
- * with a single value, `{value: "http://example.com/vocab#bar"}`.
+ * with a single value, `{"@id": "http://example.com/vocab#bar"}`.
  */
 class URIRef extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: props.value,
+      uri: props.value['@id'],
     };
     this.handleTextChange = this.handleTextChange.bind(this);
   }
 
   handleTextChange(event) {
-    this.setState({value: { "@id": event.target.value} })
+    this.setState({ uri: event.target.value })
   }
 
   render () {
     let textbox_name = `${this.props.paramPrefix}[${this.props.name}][][@id]`
 
-    let value = "";
-    if ((this.state.value) && (this.state.value["@id"])) {
-      value = this.state.value["@id"];
-    }
-
     return (
       <React.Fragment>
-        <input title={this.state.datatype} name={textbox_name} value={value} onChange={this.handleTextChange} size="40"/>
+        <input title={this.state.datatype} name={textbox_name} value={this.state.uri} onChange={this.handleTextChange} size="40"/>
       </React.Fragment>
     );
   }
