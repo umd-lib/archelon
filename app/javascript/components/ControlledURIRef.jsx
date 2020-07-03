@@ -76,7 +76,7 @@ ControlledURIRef.propTypes = {
 
 ControlledURIRef.defaultProps = {
   vocab: {},
-  value: {},
+  value: { '@id': '' },
 }
 
 export default ControlledURIRef

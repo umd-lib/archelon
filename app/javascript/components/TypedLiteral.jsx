@@ -69,7 +69,7 @@ TypedLiteral.propTypes = {
 }
 
 TypedLiteral.defaultProps = {
-  value: {}
+  value: { '@value': '', '@type': '' }
 }
 
 export default TypedLiteral;

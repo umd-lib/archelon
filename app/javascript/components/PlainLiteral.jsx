@@ -86,7 +86,7 @@ PlainLiteral.propTypes = {
 }
 
 PlainLiteral.defaultProps = {
-  value: {}
+  value: { '@value': '', '@language': '' }
 }
 
 export default PlainLiteral;
