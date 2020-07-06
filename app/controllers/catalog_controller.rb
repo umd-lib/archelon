@@ -201,6 +201,17 @@ class CatalogController < ApplicationController
     config.autocomplete_path = 'suggest'
   end
 
+  def show
+    super
+    @show_edit_metadata = CatalogController.show_edit_metadata(@document['component'])
+  end
+
+  # Returns true if the given component has editable metadata, false otherwise.
+  def self.show_edit_metadata(component)
+    uneditable_types = %w[Page Article]
+    !uneditable_types.include?(component)
+  end
+
   private
 
     def solr_connection_error
