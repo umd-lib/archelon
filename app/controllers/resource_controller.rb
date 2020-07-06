@@ -3,61 +3,36 @@
 require 'json/ld'
 
 class ResourceController < ApplicationController
-  def edit # rubocop:disable Metrics/MethodLength
-    response = HTTP[accept: 'application/ld+json'].get(params[:id], ssl_context: SSL_CONTEXT)
-    body = response.body.to_s
-    input = JSON.parse(body)
-    context = {
-      # prefixes
-      bibo: 'http://purl.org/ontology/bibo/',
-      dc: 'http://purl.org/dc/elements/1.1/',
-      dcterms: 'http://purl.org/dc/terms/',
-      fedora: 'http://fedora.info/definitions/v4/repository#',
-      # fields
-      title: 'dcterms:title',
-      date: 'dc:date',
-      volume: 'bibo:volume',
-      issue: 'bibo:issue',
-      edition: 'bibo:edition'
-    }.with_indifferent_access
+  def edit
+    @id = params[:id]
 
-    @required_fields = [
-      {
-        name: 'title',
-        label: 'Title',
-        type: :PlainLiteral,
-        repeatable: true
-      }
-    ]
-    @recommended_fields = [
-      {
-        name: 'date',
-        label: 'Date',
-        type: :TypedLiteral
-      }
-    ]
-    @optional_fields = [
-      {
-        name: 'volume',
-        label: 'Volume',
-        type: :TypedLiteral
-      },
-      {
-        name: 'issue',
-        label: 'Issue',
-        type: :TypedLiteral
-      },
-      {
-        name: 'edition',
-        label: 'Edition',
-        type: :TypedLiteral
-      }
-    ]
-    @item = JSON::LD::API.compact(input, context)
+    # create a hash of resources by their URIs
+    items = Hash[resources(@id).map do |resource|
+      uri = resource.delete('@id')
+      [uri, resource]
+    end]
+
+    @item = items[@id]
+    @content_model = content_model_from_rdf_type
   end
 
   def update
-    @params = params
     render 'form_submit'
   end
+
+  private
+
+    def content_model_from_rdf_type
+      if @item['@type'].include? 'http://purl.org/ontology/bibo/Issue'
+        ContentModels::NEWSPAPER
+      else
+        ContentModels::ITEM
+      end
+    end
+
+    def resources(uri)
+      response = HTTP[accept: 'application/ld+json'].get(uri, ssl_context: SSL_CONTEXT)
+      input = JSON.parse(response.body.to_s)
+      JSON::LD::API.expand(input)
+    end
 end

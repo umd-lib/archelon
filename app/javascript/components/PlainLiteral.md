@@ -6,8 +6,9 @@
 
 ### Pre-populated example
 
-Default values can be pre-populated using the "value" and "language" properties:
+Default values can be pre-populated using the "value" property: 
 
 ```js
-<PlainLiteral paramPrefix='example' name='title' value='Lorem ipsum' language='en'/>
+<PlainLiteral paramPrefix='example' name='title'
+ value={{'@value': 'Lorem ipsum', '@language': 'en'}}/>
 ```

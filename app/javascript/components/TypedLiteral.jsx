@@ -7,34 +7,39 @@ import PropTypes from "prop-types"
  *  Sample Rails view usage:
  *
  * ```
- * <%= react_component(:TypedLiteralValue, { paramPrefix: 'example', name: 'title', value: "2020-06-26", datatype: "http://id.loc.gov/datatypes/edtf"}) %>
+ * <%= react_component(
+ *   :TypedLiteralValue,
+ *   {
+ *     paramPrefix: 'example',
+ *     name: 'title',
+ *     value: {
+ *       '@value': '2020-06-26',
+ *       '@type': 'http://id.loc.gov/datatypes/edtf'
+ *     }
+ *   }
+ * ) %>
  * ```
  *
  * When used in a form, this will submit the array `example[title][]`
- * with a single value, `{value: "2020-06-26", datatype: "http://id.loc.gov/datatypes/edtf"}`.
+ * with a single value, `{"@value": "2020-06-26", "@type": "http://id.loc.gov/datatypes/edtf"}`.
  */
 class TypedLiteral extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: props.value,
-      datatype: props.datatype
+      value: props.value['@value'],
+      datatype: props.value['@type']
     };
     this.handleTextChange = this.handleTextChange.bind(this);
-    this.handleLanguageChange = this.handleLanguageChange.bind(this);
   }
 
   handleTextChange(event) {
-    this.setState({value: event.target.value})
-  }
-
-  handleLanguageChange(event) {
-    this.setState({language: event.target.value})
+    this.setState({ value: event.target.value })
   }
 
   render () {
-    let textbox_name = `${this.props.paramPrefix}[${this.props.name}][][value]`
-    let datatype_name = `${this.props.paramPrefix}[${this.props.name}][][datatype]`
+    let textbox_name = `${this.props.paramPrefix}[${this.props.name}][][@value]`
+    let datatype_name = `${this.props.paramPrefix}[${this.props.name}][][@type]`
 
     return (
       <React.Fragment>
@@ -57,13 +62,14 @@ TypedLiteral.propTypes = {
    */
   paramPrefix: PropTypes.string,
   /**
-   * The default text for the textbox
+   * The initial text and datatype for the component. in the form
+   * `{"@value": "...", "@type": "http://..."}`
    */
-  value: PropTypes.string,
-  /**
-   * The RDF datatype URI, i.e. http://id.loc.gov/datatypes/edtf
-   */
-  datatype: PropTypes.string
+  value: PropTypes.object,
+}
+
+TypedLiteral.defaultProps = {
+  value: { '@value': '', '@type': '' }
 }
 
 export default TypedLiteral;

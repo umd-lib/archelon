@@ -39,8 +39,8 @@ class Repeatable extends React.Component {
     this.keyCounter = 0;
 
     this.maxValues = props.maxValues ? parseInt(props.maxValues) : undefined;
-    this.defaultValue = props.defaultValue ? props.defaultValue : {};
-    this.componentType = props.componentType;
+    this.componentType = registry[props.componentType];
+    this.defaultValue = props.defaultValue || this.componentType.defaultProps.value || {};
 
     let values;
     if(props.values) {
@@ -74,11 +74,14 @@ class Repeatable extends React.Component {
   }
 
   // Creates the new element to add
-  createNewElement(newProps) {
-    newProps.paramPrefix = this.props.paramPrefix;
-    newProps.name = this.props.name;
-    newProps.vocab = this.props.vocab;
-    return React.createElement(registry[this.componentType], newProps);
+  createNewElement(newValue) {
+    const newProps = {
+      paramPrefix: this.props.paramPrefix,
+      name: this.props.name,
+      value: newValue,
+      vocab: this.props.vocab,
+    }
+    return React.createElement(this.componentType, newProps);
   }
 
   // Adds an entry

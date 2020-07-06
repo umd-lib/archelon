@@ -1,11 +1,12 @@
 Basic Example:
 
 ```js
-<TypedLiteral paramPrefix="example" name="title" datatype="http://www.w3.org/2001/XMLSchema#date"/>
+<TypedLiteral paramPrefix="example" name="title"/>
 ```
 
-Default values can be pre-populated using the "value" and "datatype" properties:
+Default values can be pre-populated using the "value" property:
 
 ```js
-<TypedLiteral paramPrefix="example" name="title" value="2020-06-23" datatype="http://id.loc.gov/datatypes/edtf" />
+<TypedLiteral paramPrefix="example" name="title"
+value={{'@value': "2020-06-23", '@type': "http://id.loc.gov/datatypes/edtf"}} />
 ```

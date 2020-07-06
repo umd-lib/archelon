@@ -1,27 +1,26 @@
 ### Repeatable PlainLiteral example
 
 ```js
-import PlainLiteral from './PlainLiteral';
 <Repeatable name="test"
    componentType="PlainLiteral"
-   defaultValue={{value: "Lorem ipsum", language: ""}}
+   defaultValue={{"@value": "Lorem ipsum", "@language": ""}}
 />
 ```
 
 ### Repeatable PlainLiteral with preset values
 
 ```js
-import PlainLiteral from './PlainLiteral';
+import Repeatable from "./Repeatable";
 
 let values= [
-  {value: 'First Line', language: 'en'},
-  {value: '二行目', language: 'ja'},
-  {value: 'Third Line', language: 'en'},
+  {'@value': 'First Line', '@language': 'en'},
+  {'@value': '二行目', '@language': 'ja'},
+  {'@value': 'Third Line', '@language': 'en'},
 ];
 
 <Repeatable name="test"
    componentType="PlainLiteral"
-   defaultValue={{value: "", language: ""}}
+   defaultValue={{"@value": "", "@language": ""}}
    values={values}
 />
 ```
@@ -29,34 +28,35 @@ let values= [
 ### Repeatable TypedLiteral only allowing up to 3 entries
 
 ```js
-import TypedLiteral from './TypedLiteral';
+import Repeatable from "./Repeatable";
 
 let values = [
-  {value: '2020-06-23', datatype: "http://id.loc.gov/datatypes/edtf"},
-  {value: '2019-07-04', datatype: "http://www.w3.org/2001/XMLSchema#date"}
+  {'@value': '2020-06-23', '@type': "http://id.loc.gov/datatypes/edtf"},
+  {'@value': '2019-07-04', '@type': "http://www.w3.org/2001/XMLSchema#date"}
 ];
 
 <Repeatable name="test"
    componentType="TypedLiteral"
    maxValues={3}
    values={values}
-   defaultValue={{value: "", datatype: "http://id.loc.gov/datatypes/edtf"}}
+   paramPrefix="example"
+   defaultValue={{'@value': '', '@type': "http://id.loc.gov/datatypes/edtf"}}
 />
 ```
 
 ### Repeatable ControlledURIRef
 
 ```js
-import ControlledURIRef from './ControlledURIRef';
+import Repeatable from "./Repeatable";
 
 let vocab={'http://example.com/vocab#foo': 'Foo', 'http://example.com/vocab#bar': 'Bar'};
 
-let values = [{value: 'http://example.com/vocab#foo'}, {value: 'http://example.com/vocab#bar'}];
+let values = [{'@id': 'http://example.com/vocab#foo'}, {'@id': 'http://example.com/vocab#bar'}];
 
 <Repeatable name="test"
    componentType="ControlledURIRef"
    vocab={vocab}
    values={values}
-   defaultValue={{ value: 'http://example.com/vocab#foo' }}
+   defaultValue={{ '@id': 'http://example.com/vocab#foo' }}
 />
 ```

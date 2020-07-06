@@ -33,6 +33,11 @@ class Vocabulary < ApplicationRecord
 
   scope :by_identifier, -> { order('identifier ASC') }
 
+  def self.[](identifier)
+    vocab = find_by(identifier: identifier)
+    vocab.nil? ? {} : vocab.as_hash
+  end
+
   def as_hash
     Hash[terms.map do |term|
       [term.uri, term.respond_to?(:label) ? term.label : term.identifier]
