@@ -1,5 +1,5 @@
 <dl class="dl-horizontal dl-invert">
-  <% define_react_components(fields, item, uri).each do |label, type, args| %>
+  <% define_react_components(fields, items, uri).each do |label, type, args| %>
     <dt><%= label %>:</dt>
     <dd>
       <%= react_component(type, **args) %>

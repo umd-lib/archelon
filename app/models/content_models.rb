@@ -79,29 +79,25 @@ module ContentModels # rubocop:disable Metrics/ModuleLength
         name: 'creator',
         uri: 'http://purl.org/dc/terms/creator',
         label: 'Creator',
-        type: :PlainLiteral,
-        repeatable: true
+        type: :LabeledThing
       },
       {
         name: 'contributor',
         uri: 'http://purl.org/dc/terms/contributor',
         label: 'Contributor',
-        type: :PlainLiteral,
-        repeatable: true
+        type: :LabeledThing
       },
       {
         name: 'publisher',
         uri: 'http://purl.org/dc/terms/publisher',
         label: 'Publisher',
-        type: :PlainLiteral,
-        repeatable: true
+        type: :LabeledThing
       },
       {
         name: 'location',
         uri: 'http://purl.org/dc/terms/spatial',
         label: 'Location',
-        type: :PlainLiteral,
-        repeatable: true
+        type: :LabeledThing
       },
       {
         name: 'extent',
@@ -114,8 +110,7 @@ module ContentModels # rubocop:disable Metrics/ModuleLength
         name: 'subject',
         uri: 'http://purl.org/dc/terms/subject',
         label: 'Subject',
-        type: :PlainLiteral,
-        repeatable: true
+        type: :LabeledThing
       },
       {
         name: 'language',
@@ -128,8 +123,7 @@ module ContentModels # rubocop:disable Metrics/ModuleLength
         name: 'rights_holder',
         uri: 'http://purl.org/dc/terms/rightsHolder',
         label: 'Rights Holder',
-        type: :PlainLiteral,
-        repeatable: true
+        type: :LabeledThing
       },
       {
         name: 'bibliographic_citation',
@@ -142,6 +136,23 @@ module ContentModels # rubocop:disable Metrics/ModuleLength
         uri: 'http://purl.org/dc/terms/identifier',
         label: 'Accession Number',
         type: :TypedLiteral
+      }
+    ]
+  }.freeze
+
+  LABELED_THING = {
+    required: [
+      {
+        name: 'Label',
+        uri: 'http://www.w3.org/2000/01/rdf-schema#label',
+        label: 'Label',
+        type: :PlainLiteral
+      },
+      {
+        name: 'same_as',
+        uri: 'http://www.w3.org/2002/07/owl#sameAs',
+        label: 'URI',
+        type: :URIRef
       }
     ]
   }.freeze

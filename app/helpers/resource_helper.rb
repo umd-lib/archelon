@@ -2,7 +2,8 @@
 
 module ResourceHelper
   # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-  def define_react_components(fields, item, uri)
+  def define_react_components(fields, items, uri)
+    item = items[uri]
     fields.map do |field|
       component_type = field[:repeatable] ? 'Repeatable' : field[:type]
       values = item[field[:uri]]
@@ -18,6 +19,8 @@ module ResourceHelper
           # TODO: what do we do when there is more than value in a non-repeatable field?
           args[:value] = values ? (values[0] || {}) : {}
         end
+
+        args[:obj] = items[values[0]['@id']] if field[:type] == :LabeledThing
 
         # special case for access level
         if field[:name] == 'access'
