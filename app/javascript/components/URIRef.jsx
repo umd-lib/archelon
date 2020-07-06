@@ -56,4 +56,8 @@ URIRef.propTypes = {
   })
 }
 
+URIRef.defaultProps = {
+  value: { '@id': '' },
+}
+
 export default URIRef;
