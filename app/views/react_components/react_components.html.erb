@@ -54,6 +54,14 @@
     </div>
   <% end %>
 
+  <h2>URIRef</h2>
+
+  <div>This component presents as a simple textbox</div>
+
+  <div class="form-group">
+    <%= react_component(:URIRef, { paramPrefix: 'uri_ref', name: 'title', value: { "@id": "http://example.com/vocab#bar"} }) %>
+  </div>
+
   <h2>Repeatable</h2>
 
   <h3>Repeatable PlainLiteral</h3>
@@ -117,6 +125,24 @@
       %>
     </div>
   <% end %>
+
+  <h3>Repeatable URIRef</h3>
+
+   <div class="form-group">
+      <%= react_component(
+            :Repeatable,
+            {
+              componentType: :URIRef,
+              paramPrefix: 'repeatable_uri_ref',
+              name: 'title',
+              values: [
+                { '@id': "http://example.com/vocab#bar" }
+              ],
+              defaultValue: { '@id': ''}
+            }
+          )
+      %>
+    </div>
 
   <div class="form-group">
     <input type="submit" name="submit" value="Submit" class="btn btn-primary form-control" />

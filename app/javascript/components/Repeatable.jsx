@@ -3,6 +3,7 @@ import PropTypes from "prop-types"
 import PlainLiteral from "./PlainLiteral";
 import TypedLiteral from "./TypedLiteral";
 import ControlledURIRef from "./ControlledURIRef";
+import URIRef from "./URIRef";
 
 // Registry of component types that are repeatable.
 // Adapted from: https://stackoverflow.com/a/37625215
@@ -10,6 +11,7 @@ const registry = {
   PlainLiteral: PlainLiteral,
   TypedLiteral: TypedLiteral,
   ControlledURIRef: ControlledURIRef,
+  URIRef: URIRef,
 };
 
 /**
