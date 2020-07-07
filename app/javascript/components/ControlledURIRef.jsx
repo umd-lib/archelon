@@ -28,7 +28,7 @@ class ControlledURIRef extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      uri: props.value['@id']
+      uri: props.value['@id'] || ""
     }
 
     this.handleChange = this.handleChange.bind(this);
