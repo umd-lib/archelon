@@ -40,11 +40,16 @@ class ControlledURIRef extends React.Component {
 
   render () {
     let inputName = `${this.props.paramPrefix}[${this.props.name}][][@id]`
+    let entries = Object.entries(this.props.vocab).map(([uri, label]) => ([uri, label]));
+
+    const sortStringValues = (a, b) => (a[1] > b[1] && 1) || (a[1] === b[1] ? 0 : -1)
+    entries.sort(sortStringValues); // Note: sort is "in-place"
+
     return (
       <React.Fragment>
         <select name={inputName} value={this.state.uri} onChange={this.handleChange}>
           <option key="" value=""/>
-          {Object.entries(this.props.vocab).map(([uri, label]) => (
+          {entries.map(([uri, label]) => (
               <option key={uri} value={uri}>{label}</option>
           ))}
         </select>
