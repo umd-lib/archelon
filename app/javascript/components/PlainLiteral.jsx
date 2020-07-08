@@ -28,7 +28,8 @@ class PlainLiteral extends React.Component {
   LANGUAGES = {
     '': 'None',
     'en': 'English',
-    'ja': 'Japanese'
+    'ja': 'Japanese',
+    'ja-latn': 'Japanese (Romanized)',
   };
 
   constructor(props) {
