@@ -19,14 +19,14 @@ module ResourceHelper
           args[:values] = values
         else
           # TODO: what do we do when there is more than value in a non-repeatable field?
-          args[:value] = values ? (values[0] || {}) : {}
+          args[:value] = values&.first || {}
           # special handling for LabeledThing fields
           if field[:type] == :LabeledThing
             target_uri = args[:value].fetch('@id', nil)
             if target_uri
               obj = items[target_uri]
-              args[:label] = obj[label_predicate][0]
-              args[:sameAs] = obj[same_as_predicate][0]
+              args[:label] = obj[label_predicate]&.first || ''
+              args[:sameAs] = obj[same_as_predicate]&.first || ''
             end
           end
         end
