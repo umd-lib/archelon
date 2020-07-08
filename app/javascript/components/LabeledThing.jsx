@@ -10,11 +10,6 @@ const defaultGraph = {}
 defaultGraph[labelPredicate] = [{ '@value': '', '@language': '' }]
 defaultGraph[sameAsPredicate] = [{ '@id': '' }]
 
-function getSingleNode(graph, predicate) {
-  let node = graph.hasOwnProperty(predicate) ? graph[predicate] : defaultGraph[predicate];
-  return (node instanceof Array) ? node[0] : node;
-}
-
 class LabeledThing extends React.Component {
   constructor(props) {
     super(props);
