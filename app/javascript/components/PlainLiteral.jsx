@@ -10,7 +10,7 @@ import PropTypes from "prop-types"
  * <%= react_component(
  *   :PlainLiteral,
  *   {
- *     paramPrefix: 'example',
+ *     subjectURI: 'example',
  *     name: 'title',
  *     value: {
  *       '@id' => "Lorem ipsum",
@@ -51,8 +51,8 @@ class PlainLiteral extends React.Component {
   }
 
   render () {
-    let textbox_name = `${this.props.paramPrefix}[${this.props.name}][][@value]`
-    let language_name = `${this.props.paramPrefix}[${this.props.name}][][@language]`
+    let textbox_name = `${this.props.subjectURI}[${this.props.name}][][@value]`
+    let language_name = `${this.props.subjectURI}[${this.props.name}][][@language]`
 
     return (
       <React.Fragment>
@@ -70,15 +70,15 @@ class PlainLiteral extends React.Component {
 
 PlainLiteral.propTypes = {
   /**
-   * The name of the element, used to with `paramPrefix` to construct the
+   * The name of the element, used to with `subjectURI` to construct the
    * parameter sent via the form submission.
    */
   name: PropTypes.string,
   /**
-   * Combined with the name (`<paramPrefix>[<name>][]`) to construct the
+   * Combined with the name (`<subjectURI>[<name>][]`) to construct the
    * parameter sent via the form submission.
    */
-  paramPrefix: PropTypes.string,
+  subjectURI: PropTypes.string,
   /**
    * The text and ISO-639 language code for the textbox, structured as
    * `{"@value": "...", "@language": "..." }`

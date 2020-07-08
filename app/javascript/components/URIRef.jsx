@@ -7,7 +7,7 @@ import PropTypes, { string } from "prop-types"
  *  Sample Rails view usage:
  *
  * ```
- * <%= react_component(:URIRef, { paramPrefix: 'example', name: 'title', value: { "@id": "http://example.com/vocab#bar"} }) %>
+ * <%= react_component(:URIRef, { subjectURI: 'example', name: 'title', value: { "@id": "http://example.com/vocab#bar"} }) %>
  * ```
  *
  * When used in a form, this will submit the array `example[title][]`
@@ -29,7 +29,7 @@ class URIRef extends React.Component {
   }
 
   render () {
-    let textbox_name = `${this.props.paramPrefix}[${this.props.name}][][@id]`
+    let textbox_name = `${this.props.subjectURI}[${this.props.name}][][@id]`
 
     return (
       <React.Fragment>
@@ -41,15 +41,15 @@ class URIRef extends React.Component {
 
 URIRef.propTypes = {
   /**
-   * The name of the element, used to with `paramPrefix` to construct the
+   * The name of the element, used to with `subjectURI` to construct the
    * parameter sent via the form submission.
    */
   name: PropTypes.string,
   /**
-   * Combined with the name (`<paramPrefix>[<name>][]`) to construct the
+   * Combined with the name (`<subjectURI>[<name>][]`) to construct the
    * parameter sent via the form submission.
    */
-  paramPrefix: PropTypes.string,
+  subjectURI: PropTypes.string,
   /**
    * The default text for the textbox
    */

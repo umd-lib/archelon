@@ -81,7 +81,7 @@ class Repeatable extends React.Component {
   // Creates the new element to add
   createNewElement(newValue) {
     const newProps = {
-      paramPrefix: this.props.paramPrefix,
+      subjectURI: this.props.subjectURI,
       name: this.props.name,
       value: newValue,
       vocab: this.props.vocab,

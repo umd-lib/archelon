@@ -9,7 +9,7 @@ module ResourceHelper
       values = item[field[:uri]]
       component_args = {
         # this will group fields by their subject ...
-        paramPrefix: uri,
+        subjectURI: uri,
         # ... and key them by their predicate
         name: field[:uri]
       }.tap do |args|
