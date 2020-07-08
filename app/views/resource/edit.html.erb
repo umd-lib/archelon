@@ -2,17 +2,17 @@
 
   <% unless @content_model[:required].empty? %>
     <h2>Required Fields</h2>
-    <%= render 'metadata_edit_components', fields: @content_model[:required], item: @item, uri: @id %>
+    <%= render 'metadata_edit_components', fields: @content_model[:required], items: @items, uri: @id %>
   <% end %>
 
   <% unless @content_model[:recommended].empty? %>
     <h2>Recommended Fields</h2>
-    <%= render 'metadata_edit_components', fields: @content_model[:recommended], item: @item, uri: @id %>
+    <%= render 'metadata_edit_components', fields: @content_model[:recommended], items: @items, uri: @id %>
   <% end %>
 
   <% unless @content_model[:optional].empty? %>
     <h2>Optional Fields</h2>
-    <%= render 'metadata_edit_components', fields: @content_model[:optional], item: @item, uri: @id %>
+    <%= render 'metadata_edit_components', fields: @content_model[:optional], items: @items, uri: @id %>
   <% end %>
 
   <div class="form-group">

@@ -2,8 +2,11 @@
 
 module ResourceHelper
   # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-  def define_react_components(fields, item, uri)
-    fields.map do |field|
+  def define_react_components(fields, items, uri)
+    item = items[uri]
+    label_predicate = 'http://www.w3.org/2000/01/rdf-schema#label'
+    same_as_predicate = 'http://www.w3.org/2002/07/owl#sameAs'
+    fields.map do |field| # rubocop:disable Metrics/BlockLength
       component_type = field[:repeatable] ? 'Repeatable' : field[:type]
       values = item[field[:uri]]
       component_args = {
@@ -16,7 +19,16 @@ module ResourceHelper
           args[:values] = values
         else
           # TODO: what do we do when there is more than value in a non-repeatable field?
-          args[:value] = values ? (values[0] || {}) : {}
+          args[:value] = values&.first || {}
+          # special handling for LabeledThing fields
+          if field[:type] == :LabeledThing
+            target_uri = args[:value].fetch('@id', nil)
+            if target_uri
+              obj = items[target_uri]
+              args[:label] = obj[label_predicate]&.first || ''
+              args[:sameAs] = obj[same_as_predicate]&.first || ''
+            end
+          end
         end
 
         # special case for access level

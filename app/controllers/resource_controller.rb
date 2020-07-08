@@ -7,12 +7,12 @@ class ResourceController < ApplicationController
     @id = params[:id]
 
     # create a hash of resources by their URIs
-    items = Hash[resources(@id).map do |resource|
+    @items = Hash[resources(@id).map do |resource|
       uri = resource.delete('@id')
       [uri, resource]
     end]
 
-    @item = items[@id]
+    @item = @items[@id]
     @content_model = content_model_from_rdf_type
   end
 

@@ -62,6 +62,20 @@
     <%= react_component(:URIRef, { paramPrefix: 'uri_ref', name: 'title', value: { "@id": "http://example.com/vocab#bar"} }) %>
   </div>
 
+  <h2>LabeledThing</h2>
+
+  <div>This component is a composite of a PlainLiteral and a URIRef.</div>
+
+  <div class="form-group">
+    <%= react_component(:LabeledThing, {
+      paramPrefix: 'labeled_thing',
+      name: 'title',
+      value: { '@id': 'http://example.com/baz'},
+      label: { '@value': 'Baz' },
+      sameAs: { '@id': 'http://example.com/id/baz' }
+    } ) %>
+  </div>
+
   <h2>Repeatable</h2>
 
   <h3>Repeatable PlainLiteral</h3>
