@@ -2,6 +2,7 @@ import React from "react"
 import PropTypes from "prop-types"
 import URIRef from "./URIRef";
 import PlainLiteral from "./PlainLiteral";
+import uuid from "uuid"
 
 const labelPredicate = 'http://www.w3.org/2000/01/rdf-schema#label';
 const sameAsPredicate = 'http://www.w3.org/2002/07/owl#sameAs';
@@ -13,12 +14,25 @@ defaultGraph[sameAsPredicate] = [{ '@id': '' }]
 class LabeledThing extends React.Component {
   constructor(props) {
     super(props);
-    this.subject = props.value['@id'];
+    let value = props.value
+
+    this.subject = value['value']['@id'];
+
+    // Modify subject with "key" value when used via "Repeatable"
+    this.index = props.value["key"];
+    if (this.index !== undefined && this.index !== null) {
+      this.subject = `${this.subject}${this.index}`;
+    }
+
+    this.label = value["label"];
+    this.sameAs = value["sameAs"];
+
     this.state = {
-      label: props.label,
-      sameAs: props.sameAs,
+      label: value["label"],
+      sameAs: value["sameAs"],
     };
   }
+
   render () {
     let fieldName = `${this.props.paramPrefix}[${this.props.name}][][@id]`
     return (
@@ -55,9 +69,11 @@ LabeledThing.propTypes = {
 }
 
 LabeledThing.defaultProps = {
-  value: { '@id': '' },
-  label: { '@value': '', '@language': '' },
-  sameAs: { '@id': '' },
+  value: {
+    value: { '@id': `labeled-thing-${uuid("labeled-thing")}-` },
+    label: { '@value': '', '@language': '' },
+    sameAs: { '@id': '' },
+  }
 }
 
 export default LabeledThing
