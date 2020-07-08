@@ -20,8 +20,8 @@ class LabeledThing extends React.Component {
     super(props);
     this.subject = props.value['@id'];
     this.state = {
-      label: getSingleNode(props.obj, labelPredicate),
-      sameAs: getSingleNode(props.obj, sameAsPredicate)
+      label: props.label,
+      sameAs: props.sameAs,
     };
   }
   render () {
@@ -55,12 +55,14 @@ LabeledThing.propTypes = {
   /**
    * The graph for the embedded object
    */
-  obj: PropTypes.object
+  label: PropTypes.object,
+  sameAs: PropTypes.object,
 }
 
 LabeledThing.defaultProps = {
   value: { '@id': '' },
-  obj: defaultGraph
+  label: { '@value': '', '@language': '' },
+  sameAs: { '@id': '' },
 }
 
 export default LabeledThing
