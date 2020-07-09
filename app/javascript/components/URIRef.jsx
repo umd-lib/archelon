@@ -16,9 +16,11 @@ import PropTypes, { string } from "prop-types"
 class URIRef extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      uri: props.value['@id'],
+      uri: props.value['@id'] || "",
     };
+
     this.handleTextChange = this.handleTextChange.bind(this);
   }
 
