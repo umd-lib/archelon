@@ -40,13 +40,13 @@ class LabeledThing extends React.Component {
   }
 
   render () {
-    let fieldName = `${this.props.subjectURI}[${this.props.name}][][@id]`
+    let fieldName = `${this.props.subjectURI}[${this.props.predicateURI}][][@id]`
     return (
         <React.Fragment>
           <input type="hidden" name={fieldName} value={this.subject}/>
-          <PlainLiteral subjectURI={this.subject} name={labelPredicate} value={this.state.label}/>
+          <PlainLiteral subjectURI={this.subject} predicateURI={labelPredicate} value={this.state.label}/>
           &nbsp;URI:&nbsp;
-          <URIRef subjectURI={this.subject} name={sameAsPredicate} value={this.state.sameAs}/>
+          <URIRef subjectURI={this.subject} predicateURI={sameAsPredicate} value={this.state.sameAs}/>
         </React.Fragment>
     );
   }
@@ -54,13 +54,13 @@ class LabeledThing extends React.Component {
 
 LabeledThing.propTypes = {
   /**
-   * The name of the element, used to with `subjectURI` to construct the
+   * The predicateURI of the element, used to with `subjectURI` to construct the
    * parameter sent via the form submission.
    */
-  name: PropTypes.string,
+  predicateURI: PropTypes.string,
   /**
-   * Combined with the name (`<subjectURI>[<name>][]`) to construct the
-   * parameter sent via the form submission.
+   * Combined with the predicateURI (`<subjectURI>[<predicateURI>][]`) to
+   * construct the parameter sent via the form submission.
    */
   subjectURI: PropTypes.string,
   /**

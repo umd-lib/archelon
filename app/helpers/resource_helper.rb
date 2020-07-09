@@ -11,7 +11,7 @@ module ResourceHelper
         # this will group fields by their subject ...
         subjectURI: uri,
         # ... and key them by their predicate
-        name: field[:uri]
+        predicateURI: field[:uri]
       }.tap do |args|
         if field[:repeatable]
           args[:values] = values
@@ -37,7 +37,7 @@ module ResourceHelper
           types = item['@type']
           values = types.select { |type_uri| access_vocab.key? type_uri }
           args[:value] = { '@id' => values[0] }
-          args[:name] = field[:name]
+          args[:predicateURI] = field[:name]
         end
 
         args[:vocab] = (Vocabulary[field[:vocab]] || {}) if field[:vocab].present?

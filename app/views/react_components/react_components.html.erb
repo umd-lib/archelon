@@ -11,7 +11,7 @@
   <div class="form-group">
     <%= react_component(:LabeledThing, {
       subjectURI: 'labeled_thing',
-      name: 'title',
+      predicateURI: 'title',
       value: { value: { '@id': 'http://example.com/baz' },
               label: { '@value': 'Baz' },
               sameAs: { '@id': 'http://example.com/id/baz' }
@@ -25,7 +25,7 @@
     <%= react_component(
           "PlainLiteral", {
           subjectURI: 'plain_literal',
-          name: 'title',
+          predicateURI: 'title',
           value: {
             '@value': "Lorem ipsum",
             '@language': "en"
@@ -41,7 +41,7 @@
     <%= react_component(
           "TypedLiteral", {
           subjectURI: 'typed_literal',
-          name: 'title',
+          predicateURI: 'title',
           value: {
             '@value': "2020-06-23",
             '@type': "http://id.loc.gov/datatypes/edtf"
@@ -61,7 +61,7 @@
         react_component(
           "ControlledURIRef", {
           subjectURI: 'controlled_value',
-          name: vocab.identifier,
+          predicateURI: vocab.identifier,
           vocab: vocab.as_hash,
           value: { '@id': vocab.terms[0].uri }
         }
@@ -75,7 +75,7 @@
   <div>This component presents as a simple textbox</div>
 
   <div class="form-group">
-    <%= react_component(:URIRef, { subjectURI: 'uri_ref', name: 'title', value: { "@id": "http://example.com/vocab#bar"} }) %>
+    <%= react_component(:URIRef, { subjectURI: 'uri_ref', predicateURI: 'title', value: { "@id": "http://example.com/vocab#bar"} }) %>
   </div>
 
   <h2>Repeatable</h2>
@@ -88,7 +88,7 @@
       {
         componentType: :LabeledThing,
         subjectURI: "repeatable_labeled_thing",
-        name: 'repeatableLabeledThingPredicate',
+        predicateURI: 'repeatableLabeledThingPredicate',
       }
     )%>
   </div>
@@ -104,7 +104,7 @@
             maxValues: 5,
             componentType: :PlainLiteral,
             subjectURI: "repeatable_plain_literal",
-            name: 'title',
+            predicateURI: 'title',
             values: [
               {'@value': 'First Line', '@language': 'en'},
               {'@value': '二行目', '@language': 'ja'},
@@ -123,8 +123,8 @@
           {
             componentType: :TypedLiteral,
             subjectURI: "repeatable_typed_literal",
+            predicateURI: 'title',
             defaultValue: { '@value': '', '@type': 'http://id.loc.gov/datatypes/edtf' },
-            name: 'title',
             values: [
               {'@value': '2020-06-23', '@type': 'http://id.loc.gov/datatypes/edtf'},
               {'@value': '1856-03-06', '@type': 'http://www.w3.org/2001/XMLSchema#date'}
@@ -143,7 +143,7 @@
             {
               componentType: :ControlledURIRef,
               subjectURI: 'repeated_controlled_value',
-              name: vocab.identifier,
+              predicateURI: vocab.identifier,
               vocab: vocab.as_hash,
               values: [
                 { '@id': vocab.terms[0].uri }
@@ -163,7 +163,7 @@
             {
               componentType: :URIRef,
               subjectURI: 'repeatable_uri_ref',
-              name: 'title',
+              predicateURI: 'title',
               values: [
                 { '@id': "http://example.com/vocab#bar" }
               ],

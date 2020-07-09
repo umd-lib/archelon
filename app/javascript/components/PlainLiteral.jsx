@@ -11,7 +11,7 @@ import PropTypes from "prop-types"
  *   :PlainLiteral,
  *   {
  *     subjectURI: 'example',
- *     name: 'title',
+ *     predicateURI: 'title',
  *     value: {
  *       '@id' => "Lorem ipsum",
  *       '@language' => "en"
@@ -51,8 +51,8 @@ class PlainLiteral extends React.Component {
   }
 
   render () {
-    let textbox_name = `${this.props.subjectURI}[${this.props.name}][][@value]`
-    let language_name = `${this.props.subjectURI}[${this.props.name}][][@language]`
+    let textbox_name = `${this.props.subjectURI}[${this.props.predicateURI}][][@value]`
+    let language_name = `${this.props.subjectURI}[${this.props.predicateURI}][][@language]`
 
     return (
       <React.Fragment>
@@ -70,13 +70,13 @@ class PlainLiteral extends React.Component {
 
 PlainLiteral.propTypes = {
   /**
-   * The name of the element, used to with `subjectURI` to construct the
+   * The predicateURI of the element, used to with `subjectURI` to construct the
    * parameter sent via the form submission.
    */
-  name: PropTypes.string,
+  predicateURI: PropTypes.string,
   /**
-   * Combined with the name (`<subjectURI>[<name>][]`) to construct the
-   * parameter sent via the form submission.
+   * Combined with the predicateURI (`<subjectURI>[<predicateURI>][]`) to
+   * construct the parameter sent via the form submission.
    */
   subjectURI: PropTypes.string,
   /**

@@ -82,7 +82,7 @@ class Repeatable extends React.Component {
   createNewElement(newValue) {
     const newProps = {
       subjectURI: this.props.subjectURI,
-      name: this.props.name,
+      predicateURI: this.props.predicateURI,
       value: newValue,
       vocab: this.props.vocab,
     }
