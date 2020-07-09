@@ -79,25 +79,29 @@ module ContentModels # rubocop:disable Metrics/ModuleLength
         name: 'creator',
         uri: 'http://purl.org/dc/terms/creator',
         label: 'Creator',
-        type: :LabeledThing
+        type: :LabeledThing,
+        repeatable: true
       },
       {
         name: 'contributor',
         uri: 'http://purl.org/dc/terms/contributor',
         label: 'Contributor',
-        type: :LabeledThing
+        type: :LabeledThing,
+        repeatable: true
       },
       {
         name: 'publisher',
         uri: 'http://purl.org/dc/terms/publisher',
         label: 'Publisher',
-        type: :LabeledThing
+        type: :LabeledThing,
+        repeatable: true
       },
       {
         name: 'location',
         uri: 'http://purl.org/dc/terms/spatial',
         label: 'Location',
-        type: :LabeledThing
+        type: :LabeledThing,
+        repeatable: true
       },
       {
         name: 'extent',
@@ -110,7 +114,8 @@ module ContentModels # rubocop:disable Metrics/ModuleLength
         name: 'subject',
         uri: 'http://purl.org/dc/terms/subject',
         label: 'Subject',
-        type: :LabeledThing
+        type: :LabeledThing,
+        repeatable: true
       },
       {
         name: 'language',
@@ -123,7 +128,8 @@ module ContentModels # rubocop:disable Metrics/ModuleLength
         name: 'rights_holder',
         uri: 'http://purl.org/dc/terms/rightsHolder',
         label: 'Rights Holder',
-        type: :LabeledThing
+        type: :LabeledThing,
+        repeatable: true
       },
       {
         name: 'bibliographic_citation',
@@ -212,13 +218,15 @@ module ContentModels # rubocop:disable Metrics/ModuleLength
         name: 'author',
         uri: 'http://id.loc.gov/vocabulary/relators/aut',
         label: 'Author',
-        type: :LabeledThing
+        type: :LabeledThing,
+        repeatable: true
       },
       {
         name: 'recipient',
         uri: 'http://purl.org/ontology/bibo/recipient',
         label: 'Recipient',
-        type: :LabeledThing
+        type: :LabeledThing,
+        repeatable: true
       },
       {
         name: 'place',
