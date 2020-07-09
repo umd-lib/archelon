@@ -1,3 +1,32 @@
+### Repeatable LabeledThing example
+
+```js
+<Repeatable name="test" componentType="LabeledThing" paramPrefix='example' name='creator' />
+```
+
+### Repeatable LabeledThing with preset values
+
+```js
+<Repeatable name="repeatableLabeledThingPredicate" componentType="LabeledThing" paramPrefix='subjectURI'
+            values={[
+               { value: {'@id': 'http://example.com/id/foobar'},
+                 label: {'@value': 'Foobar', '@language': 'en'},
+                 sameAs: {'@id': 'http://example.com/baz'},
+               },
+               { value: {'@id': 'http://example.com/id/quuz'},
+                 label: {'@value': 'Quuz', '@language': 'ja'},
+                 sameAs: {'@id': 'http://example.com/quuzbar'},
+               }
+            ]
+            }
+            defaultValue={{
+                value: {'@id': 'subjectURI#newUUID'},
+                label: {'@value': '', '@language': 'en'},
+                sameAs: {'@id': 'http://example.com/baz'},
+            }}
+            />
+```
+
 ### Repeatable PlainLiteral example
 
 ```js

@@ -1,5 +1,7 @@
 import React from "react"
 import PropTypes from "prop-types"
+
+import LabeledThing from "./LabeledThing"
 import PlainLiteral from "./PlainLiteral";
 import TypedLiteral from "./TypedLiteral";
 import ControlledURIRef from "./ControlledURIRef";
@@ -8,6 +10,7 @@ import URIRef from "./URIRef";
 // Registry of component types that are repeatable.
 // Adapted from: https://stackoverflow.com/a/37625215
 const registry = {
+  LabeledThing: LabeledThing,
   PlainLiteral: PlainLiteral,
   TypedLiteral: TypedLiteral,
   ControlledURIRef: ControlledURIRef,

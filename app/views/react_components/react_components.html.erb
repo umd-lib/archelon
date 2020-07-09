@@ -3,6 +3,22 @@
 <p>This page provides demonstrations of the React components available in Archelon.</p>
 
 <%= form_with do %>
+
+  <h2>LabeledThing</h2>
+
+  <div>This component is a composite of a PlainLiteral and a URIRef.</div>
+
+  <div class="form-group">
+    <%= react_component(:LabeledThing, {
+      paramPrefix: 'labeled_thing',
+      name: 'title',
+      value: { value: { '@id': 'http://example.com/baz' },
+              label: { '@value': 'Baz' },
+              sameAs: { '@id': 'http://example.com/id/baz' }
+             }
+    } ) %>
+  </div>
+
   <h2>PlainLiteral</h2>
 
   <div class="form-group">
@@ -62,21 +78,20 @@
     <%= react_component(:URIRef, { paramPrefix: 'uri_ref', name: 'title', value: { "@id": "http://example.com/vocab#bar"} }) %>
   </div>
 
-  <h2>LabeledThing</h2>
+  <h2>Repeatable</h2>
 
-  <div>This component is a composite of a PlainLiteral and a URIRef.</div>
+  <h3>Repeatable LabeledThing</h3>
 
   <div class="form-group">
-    <%= react_component(:LabeledThing, {
-      paramPrefix: 'labeled_thing',
-      name: 'title',
-      value: { '@id': 'http://example.com/baz'},
-      label: { '@value': 'Baz' },
-      sameAs: { '@id': 'http://example.com/id/baz' }
-    } ) %>
+    <%= react_component(
+      :Repeatable,
+      {
+        componentType: :LabeledThing,
+        paramPrefix: "repeatable_labeled_thing",
+        name: 'repeatableLabeledThingPredicate',
+      }
+    )%>
   </div>
-
-  <h2>Repeatable</h2>
 
   <h3>Repeatable PlainLiteral</h3>
 
