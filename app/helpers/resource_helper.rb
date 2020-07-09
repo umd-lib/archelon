@@ -48,17 +48,20 @@ module ResourceHelper
   end
   # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
-  def get_labeled_thing_value(value, items)
+  def get_labeled_thing_value(value, items) # rubocop:disable Metrics/MethodLength
     target_uri = value.fetch('@id', nil)
     return value unless target_uri
 
     label_predicate = 'http://www.w3.org/2000/01/rdf-schema#label'
     same_as_predicate = 'http://www.w3.org/2002/07/owl#sameAs'
     obj = items[target_uri]
-    {
-      value: value,
-      label: obj[label_predicate]&.first || '',
-      sameAs: obj[same_as_predicate]&.first || ''
+
+    result = {
+      value: value
     }
+
+    result[:label] = obj[label_predicate]&.first if obj[label_predicate]&.first
+    result[:sameAs] = obj[same_as_predicate]&.first if obj[same_as_predicate]&.first
+    result
   end
 end
