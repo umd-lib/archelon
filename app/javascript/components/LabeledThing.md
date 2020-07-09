@@ -1,7 +1,7 @@
 ### Basic Example:
 
 ```js
-<LabeledThing paramPrefix='example' name='creator' />
+<LabeledThing subjectURI='example' predicateURI='creator' />
 ```
 
 ### Pre-populated example
@@ -9,7 +9,7 @@
 Default values can be pre-populated using the "value", "label", and "sameAs" properties:
 
 ```js
-<LabeledThing paramPrefix='example' name='title'
+<LabeledThing subjectURI='example' predicateURI='title'
  value={{
    'value': {'@id': 'http://example.com/id/foobar'},
    'label': {'@value': 'Foobar', '@language': 'en'},

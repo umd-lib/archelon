@@ -1,13 +1,13 @@
 ### Repeatable LabeledThing example
 
 ```js
-<Repeatable name="test" componentType="LabeledThing" paramPrefix='example' name='creator' />
+<Repeatable name="test" componentType="LabeledThing" subjectURI='example' predicateURI='creator' />
 ```
 
 ### Repeatable LabeledThing with preset values
 
 ```js
-<Repeatable name="repeatableLabeledThingPredicate" componentType="LabeledThing" paramPrefix='subjectURI'
+<Repeatable name="test" predicateURI="repeatableLabeledThingPredicate" componentType="LabeledThing" subjectURI='subjectURI'
             values={[
                { value: {'@id': 'http://example.com/id/foobar'},
                  label: {'@value': 'Foobar', '@language': 'en'},
@@ -68,7 +68,7 @@ let values = [
    componentType="TypedLiteral"
    maxValues={3}
    values={values}
-   paramPrefix="example"
+   subjectURI="example"
    defaultValue={{'@value': '', '@type': "http://id.loc.gov/datatypes/edtf"}}
 />
 ```

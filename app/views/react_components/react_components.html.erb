@@ -10,8 +10,8 @@
 
   <div class="form-group">
     <%= react_component(:LabeledThing, {
-      paramPrefix: 'labeled_thing',
-      name: 'title',
+      subjectURI: 'labeled_thing',
+      predicateURI: 'title',
       value: { value: { '@id': 'http://example.com/baz' },
               label: { '@value': 'Baz' },
               sameAs: { '@id': 'http://example.com/id/baz' }
@@ -24,8 +24,8 @@
   <div class="form-group">
     <%= react_component(
           "PlainLiteral", {
-          paramPrefix: 'plain_literal',
-          name: 'title',
+          subjectURI: 'plain_literal',
+          predicateURI: 'title',
           value: {
             '@value': "Lorem ipsum",
             '@language': "en"
@@ -40,8 +40,8 @@
   <div class="form-group">
     <%= react_component(
           "TypedLiteral", {
-          paramPrefix: 'typed_literal',
-          name: 'title',
+          subjectURI: 'typed_literal',
+          predicateURI: 'title',
           value: {
             '@value': "2020-06-23",
             '@type': "http://id.loc.gov/datatypes/edtf"
@@ -60,8 +60,8 @@
       <%=
         react_component(
           "ControlledURIRef", {
-          paramPrefix: 'controlled_value',
-          name: vocab.identifier,
+          subjectURI: 'controlled_value',
+          predicateURI: vocab.identifier,
           vocab: vocab.as_hash,
           value: { '@id': vocab.terms[0].uri }
         }
@@ -75,7 +75,7 @@
   <div>This component presents as a simple textbox</div>
 
   <div class="form-group">
-    <%= react_component(:URIRef, { paramPrefix: 'uri_ref', name: 'title', value: { "@id": "http://example.com/vocab#bar"} }) %>
+    <%= react_component(:URIRef, { subjectURI: 'uri_ref', predicateURI: 'title', value: { "@id": "http://example.com/vocab#bar"} }) %>
   </div>
 
   <h2>Repeatable</h2>
@@ -87,8 +87,8 @@
       :Repeatable,
       {
         componentType: :LabeledThing,
-        paramPrefix: "repeatable_labeled_thing",
-        name: 'repeatableLabeledThingPredicate',
+        subjectURI: "repeatable_labeled_thing",
+        predicateURI: 'repeatableLabeledThingPredicate',
       }
     )%>
   </div>
@@ -103,8 +103,8 @@
           {
             maxValues: 5,
             componentType: :PlainLiteral,
-            paramPrefix: "repeatable_plain_literal",
-            name: 'title',
+            subjectURI: "repeatable_plain_literal",
+            predicateURI: 'title',
             values: [
               {'@value': 'First Line', '@language': 'en'},
               {'@value': '二行目', '@language': 'ja'},
@@ -122,9 +122,9 @@
           :Repeatable,
           {
             componentType: :TypedLiteral,
-            paramPrefix: "repeatable_typed_literal",
+            subjectURI: "repeatable_typed_literal",
+            predicateURI: 'title',
             defaultValue: { '@value': '', '@type': 'http://id.loc.gov/datatypes/edtf' },
-            name: 'title',
             values: [
               {'@value': '2020-06-23', '@type': 'http://id.loc.gov/datatypes/edtf'},
               {'@value': '1856-03-06', '@type': 'http://www.w3.org/2001/XMLSchema#date'}
@@ -142,8 +142,8 @@
             :Repeatable,
             {
               componentType: :ControlledURIRef,
-              paramPrefix: 'repeated_controlled_value',
-              name: vocab.identifier,
+              subjectURI: 'repeated_controlled_value',
+              predicateURI: vocab.identifier,
               vocab: vocab.as_hash,
               values: [
                 { '@id': vocab.terms[0].uri }
@@ -162,8 +162,8 @@
             :Repeatable,
             {
               componentType: :URIRef,
-              paramPrefix: 'repeatable_uri_ref',
-              name: 'title',
+              subjectURI: 'repeatable_uri_ref',
+              predicateURI: 'title',
               values: [
                 { '@id': "http://example.com/vocab#bar" }
               ],

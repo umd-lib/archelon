@@ -10,8 +10,8 @@ import PropTypes from "prop-types"
  * <%=
  *   react_component(
  *     :ControlledURIRef, {
- *       paramPrefix: 'example',
- *       name: 'object_type',
+ *       subjectURI: 'example',
+ *       predicateURI: 'object_type',
  *       vocab: Vocabulary.find_by(identifier: 'object_type').as_hash,
  *       value: {
  *         '@id' => 'http://example.com/foo#bar'
@@ -39,7 +39,7 @@ class ControlledURIRef extends React.Component {
   };
 
   render () {
-    let inputName = `${this.props.paramPrefix}[${this.props.name}][][@id]`
+    let inputName = `${this.props.subjectURI}[${this.props.predicateURI}][][@id]`
     let entries = Object.entries(this.props.vocab).map(([uri, label]) => ([uri, label]));
 
     const sortStringValues = (a, b) => (a[1] > b[1] && 1) || (a[1] === b[1] ? 0 : -1)
@@ -60,15 +60,15 @@ class ControlledURIRef extends React.Component {
 
 ControlledURIRef.propTypes = {
   /**
-   * The name of the element, used to with `paramPrefix` to construct the
+   * The predicateURI of the element, used with `subjectURI` to construct the
    * parameter sent via the form submission.
    */
-  name: PropTypes.string,
+  predicateURI: PropTypes.string,
   /**
-   * Combined with the name (`<paramPrefix>[<name>][]`) to construct the
-   * parameter sent via the form submission.
+   * Combined with the predicateURI (`<subjectURI>[<predicateURI>][]`) to
+   * construct the parameter sent via the form submission.
    */
-  paramPrefix: PropTypes.string,
+  subjectURI: PropTypes.string,
   /**
    * The default selected value for the dropdown
    */
