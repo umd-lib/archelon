@@ -4,7 +4,7 @@ module ResourceHelper
   # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   def define_react_components(fields, items, uri)
     item = items[uri]
-    fields.map do |field|
+    fields.map do |field| # rubocop:disable Metrics/BlockLength
       component_type = field[:repeatable] ? 'Repeatable' : field[:type]
       values = item[field[:uri]]
       component_args = {
@@ -60,6 +60,5 @@ module ResourceHelper
       label: obj[label_predicate]&.first || '',
       sameAs: obj[same_as_predicate]&.first || ''
     }
-
   end
 end
