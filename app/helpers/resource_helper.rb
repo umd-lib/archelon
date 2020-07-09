@@ -9,7 +9,7 @@ module ResourceHelper
     fields.map do |field| # rubocop:disable Metrics/BlockLength
       component_type = field[:repeatable] ? 'Repeatable' : field[:type]
       values = item[field[:uri]]
-      component_args = {
+      component_args = { # rubocop:disable Metrics/BlockLength
         # this will group fields by their subject ...
         paramPrefix: uri,
         # ... and key them by their predicate
@@ -25,8 +25,11 @@ module ResourceHelper
             target_uri = args[:value].fetch('@id', nil)
             if target_uri
               obj = items[target_uri]
-              args[:label] = obj[label_predicate]&.first || ''
-              args[:sameAs] = obj[same_as_predicate]&.first || ''
+              args[:value] = {
+                value: args[:value],
+                label: obj[label_predicate]&.first || '',
+                sameAs: obj[same_as_predicate]&.first || ''
+              }
             end
           end
           # remove the value, so that the component will apply the defaultProps
