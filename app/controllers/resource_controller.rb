@@ -25,6 +25,10 @@ class ResourceController < ApplicationController
     def content_model_from_rdf_type
       if @item['@type'].include? 'http://purl.org/ontology/bibo/Issue'
         ContentModels::NEWSPAPER
+      elsif @item['@type'].include? 'http://purl.org/ontology/bibo/Letter'
+        ContentModels::LETTER
+      elsif @item['@type'].include? 'http://purl.org/ontology/bibo/Image'
+        ContentModels::POSTER
       else
         ContentModels::ITEM
       end
