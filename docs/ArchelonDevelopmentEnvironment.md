@@ -13,6 +13,9 @@ with sample data.
 The directories are set up to be usable in a Mac OS X "Catalina" environment,
 where directories may no longer be placed in the root directory.
 
+See [Installing Prerequisites](Prerequisites.md) for detailed
+information on prerequisites.
+
 ## Useful Resources
 
 * [https://github.com//umd-lib/fcrepo-vagrant](https://github.com//umd-lib/fcrepo-vagrant)
@@ -337,6 +340,14 @@ Set up the Python environment to run Plastron. The following uses "virtualenv".
 > plastron -r repo.yml load -b student_newspapers/batch.yml
 ```
 
+----
+
+**Note:** Additional datasets are available. See the README.md file in the
+[umd-fcrepo-sample-data](https://bitbucket.org/umd-lib/umd-fcrepo-sample-data)
+repository.
+
+----
+
 ## Step 4 - Setup and run Archelon
 
 ### 4.1) Checkout "archelon" repostory
@@ -375,6 +386,12 @@ The following assumes that "rvm" is being used.
 
 ```
 > rails db:migrate
+```
+
+4.2.4) Run "yarn" to install JavaScript dependencies:
+
+```
+> yarn
 ```
 
 ### 4.3) Configure Archelon with fcrepo SSL certificates
