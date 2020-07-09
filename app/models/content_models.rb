@@ -297,9 +297,15 @@ module ContentModels # rubocop:disable Metrics/ModuleLength
         vocab: 'access'
       },
       {
+        name: 'type',
+        uri: 'http://www.europeana.eu/schemas/edm/hasType',
+        label: 'Resource Type',
+        type: :PlainLiteral
+      },
+      {
         name: 'format',
         uri: 'http://purl.org/dc/elements/1.1/format',
-        label: 'Resource Type',
+        label: 'Format',
         type: :PlainLiteral
       },
       {
