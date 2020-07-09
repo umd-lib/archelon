@@ -2,7 +2,7 @@ import React from "react"
 import PropTypes from "prop-types"
 import URIRef from "./URIRef";
 import PlainLiteral from "./PlainLiteral";
-import uuid from "uuid"
+import { v4 as uuid } from "uuid"
 
 const labelPredicate = 'http://www.w3.org/2000/01/rdf-schema#label';
 const sameAsPredicate = 'http://www.w3.org/2002/07/owl#sameAs';
@@ -17,6 +17,9 @@ class LabeledThing extends React.Component {
     let value = props.value
 
     this.subject = value['value']['@id'];
+    if (this.subject === '') {
+      this.subject = props.paramPrefix + '#' + uuid();
+    }
 
     // Modify subject with "key" value when used via "Repeatable"
     this.index = props.value["key"];
@@ -70,7 +73,7 @@ LabeledThing.propTypes = {
 
 LabeledThing.defaultProps = {
   value: {
-    value: { '@id': `labeled-thing-${uuid("labeled-thing")}-` },
+    value: { '@id': '' },
     label: { '@value': '', '@language': '' },
     sameAs: { '@id': '' },
   }
