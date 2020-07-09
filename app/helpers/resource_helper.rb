@@ -29,6 +29,9 @@ module ResourceHelper
               args[:sameAs] = obj[same_as_predicate]&.first || ''
             end
           end
+          # remove the value, so that the component will apply the defaultProps
+          # if there is no value for this field
+          args.delete(:value) if args[:value].empty?
         end
 
         # special case for access level
