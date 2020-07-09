@@ -16,7 +16,10 @@ class LabeledThing extends React.Component {
     super(props);
     let value = props.value
 
-    this.subject = value['value']['@id'];
+    this.subject = "";
+    if (value && value['value'] && value['value']['@id']) {
+      this.subject = value['value']['@id'];
+    }
     if (this.subject === '') {
       this.subject = props.paramPrefix + '#' + uuid();
     }
