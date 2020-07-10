@@ -1,10 +1,12 @@
 <h1>Resource Form Submit</h1>
 
-<h2>Submitted Params</h2>
-<pre><%=
-    @submission
-%></pre>
+<pre><%= @sparql_update %></pre>
 
+<% if @simulate %>
+<h2>Submitted Message</h2>
+<pre><%= @headers %>
+<%= @submission %></pre>
+<% end %>
 <hr />
 
 <a href=<%= resource_edit_url(id: params[:id]) %>>Back to Form</a>

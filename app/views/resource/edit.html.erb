@@ -1,4 +1,5 @@
 <%= form_with do %>
+  <% if @simulate.present? %><input type="hidden" name="simulate" value="1"/><% end %>
 
   <% unless @content_model[:required].empty? %>
     <h2>Required Fields</h2>

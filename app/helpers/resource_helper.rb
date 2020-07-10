@@ -1,54 +1,37 @@
 # frozen_string_literal: true
 
 module ResourceHelper
-  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-  def define_react_components(fields, items, uri)
+  def define_react_components(fields, items, uri) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     item = items[uri]
-    fields.map do |field| # rubocop:disable Metrics/BlockLength
-      component_type = field[:repeatable] ? 'Repeatable' : field[:type]
+    fields.map do |field|
+      component_type = :Repeatable
       values = item[field[:uri]]
       component_args = {
         # this will group fields by their subject ...
         subjectURI: uri,
         # ... and key them by their predicate
-        predicateURI: field[:uri]
+        predicateURI: field[:uri],
+        componentType: field[:type],
+        values: values
       }.tap do |args|
-        if field[:repeatable]
-          args[:values] = values
-          # special handling for LabeledThing fields
-          if field[:type] == :LabeledThing
-            args[:values] = values&.map do |value|
-              get_labeled_thing_value(value, items)
-            end
-          end
-        else
-          # TODO: what do we do when there is more than value in a non-repeatable field?
-          args[:value] = values&.first || {}
-          # special handling for LabeledThing fields
-          args[:value] = get_labeled_thing_value(args[:value], items) if field[:type] == :LabeledThing
-          # remove the value, so that the component will apply the defaultProps
-          # if there is no value for this field
-          args.delete(:value) if args[:value].empty?
-        end
-
-        # special case for access level
-        if field[:name] == 'access'
-          access_vocab = Vocabulary['access']
-          types = item['@type']
-          values = types.select { |type_uri| access_vocab.key? type_uri }
-          args[:value] = { '@id' => values[0] }
-          args[:predicateURI] = field[:name]
-        end
-
+        args[:maxValues] = 1 unless field[:repeatable]
         args[:vocab] = (Vocabulary[field[:vocab]] || {}) if field[:vocab].present?
-        args[:componentType] = field[:type] if field[:repeatable]
+
+        # special handling for LabeledThing fields
+        if field[:type] == :LabeledThing
+          args[:values] = values&.map do |value|
+            get_labeled_thing_value(value, items)
+          end
+        end
+
+        # special handling for the access level field
+        configure_access_level(args, item) if field[:name] == 'access'
       end
       [field[:label], component_type, component_args]
     end
   end
-  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
-  def get_labeled_thing_value(value, items) # rubocop:disable Metrics/MethodLength
+  def get_labeled_thing_value(value, items)
     target_uri = value.fetch('@id', nil)
     return value unless target_uri
 
@@ -56,12 +39,17 @@ module ResourceHelper
     same_as_predicate = 'http://www.w3.org/2002/07/owl#sameAs'
     obj = items[target_uri]
 
-    result = {
-      value: value
-    }
+    { value: value }.tap do |result|
+      result[:label] = obj[label_predicate]&.first if obj[label_predicate]&.first
+      result[:sameAs] = obj[same_as_predicate]&.first if obj[same_as_predicate]&.first
+    end
+  end
 
-    result[:label] = obj[label_predicate]&.first if obj[label_predicate]&.first
-    result[:sameAs] = obj[same_as_predicate]&.first if obj[same_as_predicate]&.first
-    result
+  def configure_access_level(args, item)
+    access_vocab = Vocabulary['access']
+    types = item['@type']
+    values = types.select { |type_uri| access_vocab.key? type_uri }
+    args[:value] = { '@id' => values[0] || '' }
+    args[:predicateURI] = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
   end
 end

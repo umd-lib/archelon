@@ -4,12 +4,12 @@ import URIRef from "./URIRef";
 import PlainLiteral from "./PlainLiteral";
 import { v4 as uuid } from "uuid"
 
+const N3 = require('n3');
+const { DataFactory } = N3;
+const { namedNode, defaultGraph } = DataFactory;
+
 const labelPredicate = 'http://www.w3.org/2000/01/rdf-schema#label';
 const sameAsPredicate = 'http://www.w3.org/2002/07/owl#sameAs';
-
-const defaultGraph = {}
-defaultGraph[labelPredicate] = [{ '@value': '', '@language': '' }]
-defaultGraph[sameAsPredicate] = [{ '@id': '' }]
 
 class LabeledThing extends React.Component {
   constructor(props) {
@@ -23,30 +23,61 @@ class LabeledThing extends React.Component {
     if (this.subject === '') {
       this.subject = props.subjectURI + '#' + uuid();
     }
+    // save the initial value
+    this.initialStatement = this.getStatement(this.subject);
 
-    // Modify subject with "key" value when used via "Repeatable"
-    this.index = props.value["key"];
-    if (this.index !== undefined && this.index !== null) {
-      this.subject = `${this.subject}${this.index}`;
-    }
+    let label = value.label || LabeledThing.defaultProps.value.label;
+    let sameAs = value.sameAs || LabeledThing.defaultProps.value.sameAs;
 
-    this.label = value["label"];
-    this.sameAs = value["sameAs"];
+    // propagate the newness flag
+    label.isNew = value.isNew;
+    sameAs.isNew = value.isNew;
 
     this.state = {
-      label: value["label"],
-      sameAs: value["sameAs"],
+      label: label,
+      labelChanged: false,
+      sameAs: sameAs,
+      sameAsChanged: false,
     };
+
+    this.getStatement = this.getStatement.bind(this);
+    this.handleLabelChange = this.handleLabelChange.bind(this);
+    this.handleSameAsChange = this.handleSameAsChange.bind(this);
+  }
+
+  handleLabelChange(isChanged) {
+    this.setState({ labelChanged: isChanged });
+  }
+
+  handleSameAsChange(isChanged) {
+    this.setState({ sameAsChanged: isChanged })
+  }
+
+  getStatement(uri) {
+    const writer = new N3.Writer({format: 'N-Triples'});
+    return writer.quadToString(
+        namedNode(this.props.subjectURI),
+        namedNode(this.props.predicateURI),
+        namedNode(uri),
+        defaultGraph(),
+    );
+  }
+
+  componentWillUnmount() {
+    if (this.props.notifyContainer && !this.props.value.isNew) {
+      this.props.notifyContainer(this.initialStatement)
+    }
   }
 
   render () {
-    let fieldName = `${this.props.subjectURI}[${this.props.predicateURI}][][@id]`
     return (
         <React.Fragment>
-          <input type="hidden" name={fieldName} value={this.subject}/>
-          <PlainLiteral subjectURI={this.subject} predicateURI={labelPredicate} value={this.state.label}/>
+          <input type="hidden" name="insert[]" value={this.initialStatement} disabled={!(this.state.labelChanged || this.state.sameAsChanged)}/>
+          <PlainLiteral subjectURI={this.subject} predicateURI={labelPredicate} value={this.state.label}
+          onChange={this.handleLabelChange} notifyContainer={this.props.notifyContainer}/>
           &nbsp;URI:&nbsp;
-          <URIRef subjectURI={this.subject} predicateURI={sameAsPredicate} value={this.state.sameAs}/>
+          <URIRef subjectURI={this.subject} predicateURI={sameAsPredicate} value={this.state.sameAs}
+          onChange={this.handleSameAsChange} notifyContainer={this.props.notifyContainer}/>
         </React.Fragment>
     );
   }
@@ -79,7 +110,8 @@ LabeledThing.defaultProps = {
     value: { '@id': '' },
     label: { '@value': '', '@language': '' },
     sameAs: { '@id': '' },
-  }
+  },
+  notifyContainer: undefined
 }
 
 export default LabeledThing
