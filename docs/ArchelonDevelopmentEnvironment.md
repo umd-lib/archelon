@@ -245,6 +245,7 @@ MESSAGE_BROKER:
     JOBS: /queue/plastron.jobs
     JOB_STATUS: /topic/plastron.jobs.status
     COMPLETED_JOBS: /queue/plastron.jobs.completed
+    SYNCHRONOUS_JOBS: /queue/plastron.jobs.synchronous
 COMMANDS:
   EXPORT:
     BINARIES_DIR: exports/
