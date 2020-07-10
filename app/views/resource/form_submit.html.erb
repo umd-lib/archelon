@@ -2,10 +2,7 @@
 
 <h2>Submitted Params</h2>
 <pre><%=
-    params_to_skip = %w[utf8 authenticity_token submit controller action]
-    submission = params.to_unsafe_h
-    params_to_skip.each { |key| submission.delete(key) }
-    JSON.pretty_generate(submission)
+    @submission
 %></pre>
 
 <hr />
