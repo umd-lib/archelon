@@ -16,7 +16,31 @@ class ResourceController < ApplicationController
     @content_model = content_model_from_rdf_type
   end
 
-  def update
+  def update # rubocop:disable Metrics/MethodLength
+    params_to_skip = %w[utf8 authenticity_token submit controller action]
+    submission = params.to_unsafe_h
+    params_to_skip.each { |key| submission.delete(key) }
+    submission_json = JSON.generate(submission)
+    payload = submission_json
+
+    headers = {
+      PlastronCommand: 'echo',
+      # Have Plastron delay the response by 2 seconds
+      'echo-delay': 2
+    }
+
+    begin
+      # Send STOMP message synchronously
+      msg_response = StompService.synchronous_message(:jobs_synchronous, payload, headers)
+
+      # Process response
+      @json = msg_response.undump
+      @submission = JSON.pretty_generate(JSON.parse(@json))
+    rescue Timeout::Error
+      # Handle timeout
+      @submission = 'Error: Message timeout expired.'
+    end
+
     render 'form_submit'
   end
 
