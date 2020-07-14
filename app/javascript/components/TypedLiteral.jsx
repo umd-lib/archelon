@@ -1,6 +1,10 @@
 import React from "react"
 import PropTypes from "prop-types"
 
+const N3 = require('n3');
+const { DataFactory } = N3;
+const { namedNode, literal, defaultGraph } = DataFactory;
+
 /**
  * Input component consisting of a textbox with an associated datatype.
  *
@@ -26,25 +30,45 @@ import PropTypes from "prop-types"
 class TypedLiteral extends React.Component {
   constructor(props) {
     super(props);
+    // save the initial value
+    this.initialStatement = this.getStatement(props.value['@value'], props.value['@type']);
     this.state = {
       value: props.value['@value'],
       datatype: props.value['@type']
     };
     this.handleTextChange = this.handleTextChange.bind(this);
+    this.getStatement = this.getStatement.bind(this);
   }
 
   handleTextChange(event) {
     this.setState({ value: event.target.value })
   }
 
+  getStatement(value, datatype) {
+    const writer = new N3.Writer({format: 'N-Triples'});
+    return writer.quadToString(
+        namedNode(this.props.subjectURI),
+        namedNode(this.props.predicateURI),
+        literal(value, datatype || undefined),
+        defaultGraph(),
+    );
+  }
+
+  componentWillUnmount() {
+    if (this.props.notifyContainer && !this.props.value.isNew) {
+      this.props.notifyContainer(this.initialStatement)
+    }
+  }
+
   render () {
-    let textbox_name = `${this.props.subjectURI}[${this.props.predicateURI}][][@value]`
-    let datatype_name = `${this.props.subjectURI}[${this.props.predicateURI}][][@type]`
+    let statement = this.getStatement(this.state.value, this.state.datatype);
+    let valueIsUnchanged = (this.initialStatement === statement);
 
     return (
       <React.Fragment>
-        <input title={this.state.datatype} name={textbox_name} value={this.state.value} onChange={this.handleTextChange} size="40"/>
-        <input type="hidden" name={datatype_name} value={this.state.datatype}/>
+        <input type="hidden" name="delete[]" value={this.initialStatement} disabled={this.props.value.isNew || valueIsUnchanged}/>
+        <input type="hidden" name="insert[]" value={statement} disabled={valueIsUnchanged}/>
+        <input title={this.state.datatype} value={this.state.value} onChange={this.handleTextChange} size="40"/>
       </React.Fragment>
     );
   }
@@ -69,7 +93,8 @@ TypedLiteral.propTypes = {
 }
 
 TypedLiteral.defaultProps = {
-  value: { '@value': '', '@type': '' }
+  value: { '@value': '', '@type': '' },
+  notifyContainer: undefined,
 }
 
 export default TypedLiteral;

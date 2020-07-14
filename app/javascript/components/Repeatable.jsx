@@ -52,6 +52,7 @@ class Repeatable extends React.Component {
       values = props.values
     } else {
       values = [ this.defaultValue ]
+      values[0].isNew = true;
     }
 
     // Populate initial "value" properties with a "key" field
@@ -62,9 +63,22 @@ class Repeatable extends React.Component {
 
     this.state = {
       values: values,
-      canAddValues: this.lessThanMax(values)
+      deletedStatements: [],
+      canAddValues: this.lessThanMax(values),
     }
+
+    this.nextDeleteKey = 0;
+
+    this.onComponentRemove = this.onComponentRemove.bind(this);
   };
+
+  onComponentRemove(deleteStatement) {
+    console.log(deleteStatement);
+    this.setState(function (state, _props) {
+      state.deletedStatements.push(deleteStatement);
+      return { deletedStatements: state.deletedStatements };
+    });
+  }
 
   lessThanMax(values) {
     return this.maxValues === undefined || values.length < this.maxValues;
@@ -72,36 +86,39 @@ class Repeatable extends React.Component {
 
   // Removes an entry
   handleRemove(index) {
-    const values = this.state.values.splice(index, 1);
+    let values = this.state.values.slice();
+    values.splice(index, 1);
     this.setState({
-      canAddValues: this.lessThanMax(values)
+      values: values,
+      canAddValues: this.lessThanMax(values),
     })
   }
 
   // Creates the new element to add
-  createNewElement(newValue) {
-    const newProps = {
+  buildComponent(value) {
+    const props = {
       subjectURI: this.props.subjectURI,
       predicateURI: this.props.predicateURI,
-      value: newValue,
+      notifyContainer: this.onComponentRemove,
+      value: value,
       vocab: this.props.vocab,
     }
-    return React.createElement(this.componentType, newProps);
+    return React.createElement(this.componentType, props);
   }
 
   // Adds an entry
   handleAdd() {
     const values = this.state.values.slice();
-    let newValue = Object.assign({}, this.defaultValue);
-    newValue['key'] = this.keyCounter;
+    let value = Object.assign({}, this.defaultValue);
+    value['key'] = this.keyCounter;
     this.keyCounter = this.keyCounter + 1;
-    values.push(newValue);
+    value.isNew = true;
+    values.push(value);
     this.setState({
       values: values,
       canAddValues: this.lessThanMax(values, this.props.maxValues)
     })
   };
-
 
   render () {
     let lastIndex = this.state.values.length - 1;
@@ -109,9 +126,14 @@ class Repeatable extends React.Component {
     return (
       <div>
         {
+          this.state.deletedStatements.map((statement) => (
+            <input key={statement} type="hidden" name="delete[]" value={statement}/>
+          ))
+        }
+        {
           this.state.values.map((value, index) => (
               <div key={value.key} >
-                { this.createNewElement(value) }
+                { this.buildComponent(value) }
                 {
                   // Only display remove button if we have more than one item
                   (lastIndex > 0) &&
