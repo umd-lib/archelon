@@ -34,7 +34,7 @@ class StompService
 
     Timeout.timeout(receive_timeout) do
       msg = connection.receive
-      return msg.body
+      return msg
     end
   rescue Stomp::Error::MaxReconnectAttempts
     Rails.logger.error('Unable to connect to STOMP server')
