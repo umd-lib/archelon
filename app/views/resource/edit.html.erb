@@ -10,7 +10,7 @@
     </div>
   <% end %>
 
-<%= form_with do %>
+<%= form_with(local: true) do %>
   <% if @simulate.present? %><input type="hidden" name="simulate" value="1"/><% end %>
 
   <% unless @content_model[:required].empty? %>
