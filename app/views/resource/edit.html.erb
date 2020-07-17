@@ -30,5 +30,6 @@
 
   <div class="form-group">
     <input type="submit" name="submit" value="Submit" class="btn btn-primary form-control" />
+    <%= link_to 'Cancel', solr_document_path(id: @id), class: 'btn btn-danger form-control' %>
   </div>
 <% end %>
