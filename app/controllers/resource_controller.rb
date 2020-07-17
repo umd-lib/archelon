@@ -87,10 +87,12 @@ class ResourceController < ApplicationController
       JSON::LD::API.expand(input)
     end
 
-    def send_to_plastron(id, sparql_update) # rubocop:disable Metrics/MethodLength
+    def send_to_plastron(id, sparql_update) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
       params_to_skip = %w[utf8 authenticity_token submit controller action]
       submission = params.to_unsafe_h
       params_to_skip.each { |key| submission.delete(key) }
+
+      Rails.logger.debug("Sending SPARQL query to Plastron: '#{sparql_update}'")
 
       body = {
         uri: [id],
