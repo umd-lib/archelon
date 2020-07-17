@@ -30,7 +30,7 @@ const { namedNode, literal, defaultGraph } = DataFactory;
 class PlainLiteral extends React.Component {
   // The options for the dropdown, using ISO-639 language codes
   LANGUAGES = {
-    '': 'None',
+    '': '',
     'en': 'English',
     'ja': 'Japanese',
     'ja-latn': 'Japanese (Romanized)',
