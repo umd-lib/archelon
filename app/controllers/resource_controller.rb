@@ -34,8 +34,9 @@ class ResourceController < ApplicationController
 
     if delete_statements.empty? && insert_statements.empty?
       # Go back to the edit page, if there are no changes
-      flash[:error] = t('resource_update_no_change')
-      redirect_to(resource_edit_url(id: @id), turbolinks: false) && return
+      messages = [t('resource_update_no_change')]
+      render json: { messages: messages }
+      return
     end
 
     @sparql_update = "DELETE {\n#{delete_statements.join} } INSERT {\n#{insert_statements.join} } WHERE {}"
@@ -48,12 +49,8 @@ class ResourceController < ApplicationController
       flash[:notice] = t('resource_update_successful')
       redirect_to solr_document_url(id: @id)
     else
-      flash[:error] = t('resource_update_failed')
-      @errors = response[:errors]
-
-      @items = update_items(@id, delete_statements, insert_statements)
-      @content_model = content_model_from_rdf_type(@items[@id]['@type'])
-      render :edit
+      errors = ['An error occurred']
+      return render json: { errors: errors }
     end
   end
 
