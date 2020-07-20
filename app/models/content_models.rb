@@ -244,7 +244,8 @@ module ContentModels # rubocop:disable Metrics/ModuleLength
         name: 'subject',
         uri: 'http://purl.org/dc/terms/subject',
         label: 'Subject',
-        type: :LabeledThing
+        type: :LabeledThing,
+        repeatable: true
       },
       {
         name: 'language',
@@ -363,8 +364,9 @@ module ContentModels # rubocop:disable Metrics/ModuleLength
         name: 'subject',
         uri: 'http://purl.org/dc/elements/1.1/subject',
         label: 'Subject',
-        type: :PlainLiteral
-      },
+        type: :PlainLiteral,
+        repeatable: true
+  },
       {
         name: 'language',
         uri: 'http://purl.org/dc/elements/1.1/language',
