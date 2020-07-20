@@ -50,6 +50,6 @@ module ResourceHelper
     types = item['@type']
     values = types.select { |type_uri| access_vocab.key? type_uri }
     args[:value] = { '@id' => values[0] || '' }
-    args[:predicateURI] = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
+    args[:predicateURI] = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'
   end
 end
