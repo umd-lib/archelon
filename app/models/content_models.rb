@@ -366,7 +366,7 @@ module ContentModels # rubocop:disable Metrics/ModuleLength
         label: 'Subject',
         type: :PlainLiteral,
         repeatable: true
-  },
+      },
       {
         name: 'language',
         uri: 'http://purl.org/dc/elements/1.1/language',
