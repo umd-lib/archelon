@@ -46,10 +46,7 @@ module ResourceHelper
   end
 
   def configure_access_level(args, item)
-    access_vocab = Vocabulary['access']
-    types = item['@type']
-    values = types.select { |type_uri| access_vocab.key? type_uri }
-    args[:value] = { '@id' => values[0] || '' }
-    args[:predicateURI] = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
+    args[:values] = item.fetch('@type', []).select { |uri| args[:vocab].key? uri }.map { |uri| { '@id' => uri } }
+    args[:predicateURI] = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'
   end
 end
