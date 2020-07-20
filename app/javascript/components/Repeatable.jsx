@@ -48,7 +48,7 @@ class Repeatable extends React.Component {
     this.defaultValue = props.defaultValue || this.componentType.defaultProps.value || {};
 
     let values;
-    if(props.values) {
+    if(props.values && props.values.length > 0) {
       values = props.values
     } else {
       values = [ this.defaultValue ]

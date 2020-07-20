@@ -31,10 +31,11 @@ const { namedNode, defaultGraph } = DataFactory;
 class ControlledURIRef extends React.Component {
   constructor(props) {
     super(props);
+    let uri = props.value['@id'] || '';
     // save the initial value
-    this.initialStatement = this.getStatement(props.value['@id']);
+    this.initialStatement = this.getStatement(uri);
     this.state = {
-      uri: props.value['@id'] || ""
+      uri: uri
     }
     this.noStartingValue = (this.state.uri === '');
 
