@@ -3,13 +3,10 @@
 require 'erb'
 require 'addressable/template'
 
-module ApplicationHelper # rubocop:disable Metrics/ModuleLength
-  FEDORA_BASE_URL = Rails.application.config.fcrepo_base_url
-  IIIF_BASE_URL = Rails.application.config.iiif_base_url
+module ApplicationHelper
   PCDM_OBJECT = 'pcdm:Object'
   PCDM_FILE = 'pcdm:File'
   ALLOWED_MIME_TYPE = 'image/tiff'
-  MIRADOR_STATIC_VERSION = Rails.application.config.mirador_static_version
 
   def mirador_displayable?(document)
     rdf_types = document._source[:rdf_type]
@@ -21,11 +18,11 @@ module ApplicationHelper # rubocop:disable Metrics/ModuleLength
 
   def encoded_id(document)
     id = document._source[:id]
-    ERB::Util.url_encode(id.slice(FEDORA_BASE_URL.size, id.size))
+    ERB::Util.url_encode(id.slice(FCREPO_BASE_URL.size, id.size))
   end
 
   def repo_path(url)
-    url.slice(FEDORA_BASE_URL.size, url.size)
+    url.slice(FCREPO_BASE_URL.size, url.size)
   end
 
   def iiif_base_url
@@ -77,7 +74,7 @@ module ApplicationHelper # rubocop:disable Metrics/ModuleLength
   end
 
   def fcrepo_url
-    FEDORA_BASE_URL.sub(%r{fcrepo/rest/?}, '')
+    FCREPO_BASE_URL.sub(%r{fcrepo/rest/?}, '')
   end
 
   def view_in_fedora_link(document)

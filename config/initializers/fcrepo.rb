@@ -1,0 +1,1 @@
+FCREPO_BASE_URL = ENV.fetch('FCREPO_BASE_URL', '')

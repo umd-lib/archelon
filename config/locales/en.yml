@@ -40,20 +40,35 @@ en:
   selected_items_changed: 'Selected items has changed. Please review.'
   import_already_performed: 'Import has completed. Cannot reimport or validate'
   cannot_import_invalid_file: 'Cannot import a file with validation errors.'
+  export_job_no_mime_types_selected: 'Please select at least one MIME type when exporting binaries'
   activerecord:
     attributes:
+      datatype:
+        identifier: Identifier
+        vocabulary: Vocabulary
+        description: Description
+      export_job:
+        format: Metadata Format
+        id: Job ID
+        name: Job Name
       import_job:
         access: Access
+        binaries:
+          label: 'Includes Binaries'
+          true: 'Yes'
+          false: 'No'
         cas_user: User
         collection: Collection
-        file_to_upload: File to Upload
         id: Job ID
+        metadata_file: Metadata File
         model: Content Model
         name: Job Name
+        remote_server: Remote server
         stage:
           import: Import
           validate: Validation
         status:
+          label: Status
           validate_pending: Pending
           validate_success: Validation Successful
           validate_failed: Validation Failed
@@ -85,13 +100,29 @@ en:
       models:
         import_job:
           attributes:
-            file_to_upload:
+            base:
+              multiple_include_binaries_options: When including binaries, choose either an uploaded binary file or remote server, not both.
+            metadata_file:
               required: 'is required'
     models:
+      datatype: Datatype
       download_url: Download URL
+      export_job: Export Job
+      import_job: Import Job
       individual: Term
       type: Class
       vocabulary: Vocabulary
+  mime_types:
+    application/pdf: PDF (application/pdf)
+    application/xml: XML (application/xml)
+    application/zip: Zip (application/zip)
+    image/jpeg: JPEG (image/jpeg)
+    image/jp2: JPEG 2000 (image/jp2)
+    image/tiff: TIFF (image/tiff)
+    text/csv: CSV (text/csv)
+    text/plain: Text (text/plain)
+    text/turtle: Turtle (text/turtle)
+    text/xml: XML (text/xml)
   tooltips:
     identifier: This will be used as the local id and populate the URI of the local vocabulary term.
     same_as: This should be a full URI to an external vocabulary such as LC Genre/Form Terms, AAT, LCSH

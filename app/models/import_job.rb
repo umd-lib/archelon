@@ -46,11 +46,15 @@ class ImportJob < ApplicationRecord
   include PlastronStatus
 
   belongs_to :cas_user
-  has_one_attached :file_to_upload
+  has_one_attached :metadata_file
+  has_one_attached :binary_zip_file
+
+  after_commit { ImportJobRelayJob.perform_later(self) }
 
   validates :name, presence: true
   validates :collection, presence: true
   validate :attachment_validation
+  validate :include_binaries_options
 
   def self.access_vocab
     @access_vocab ||= Vocabulary.find_by identifier: VOCAB_CONFIG['access_vocab_identifier']
@@ -59,7 +63,13 @@ class ImportJob < ApplicationRecord
   # Rails 5.2 does not have attachment validation, so this is needed
   # until at least Rails 6 (see https://stackoverflow.com/questions/48158770/activestorage-file-attachment-validation)
   def attachment_validation
-    errors.add(:file_to_upload, :required) unless file_to_upload.attached?
+    errors.add(:metadata_file, :required) unless metadata_file.attached?
+  end
+
+  # Raises an error if both a "binary_zip_file" and a "remote server" field
+  # is provided
+  def include_binaries_options
+    errors.add(:base, :multiple_include_binaries_options) if binary_zip_file.attached? && remote_server.present?
   end
 
   # Returns a symbol reflecting the current status
@@ -90,26 +100,38 @@ class ImportJob < ApplicationRecord
   end
 
   def update_progress(plastron_message) # rubocop:disable Metrics/AbcSize
-    stats = plastron_message.body_json
+    return if plastron_message.body.blank?
 
-    total_count = stats['count']['total']
+    count = plastron_message.body_json['count'] || {}
+    total_count = count['total']
     # Total could be nil for non-seekable files
     return if total_count.nil? || total_count.zero?
 
-    processed_file_count = stats['count']['updated'] + stats['count']['unchanged'] + stats['count']['errors']
+    processed_count = count['updated'] + count['unchanged'] + count['errors']
 
-    self.progress = (processed_file_count.to_f / total_count * 100).round
+    self.progress = (processed_count.to_f / total_count * 100).round
     save!
   end
 
   def update_status(plastron_message)
+    if plastron_message.body.present?
+      count = plastron_message.body_json['count'] || {}
+      self.item_count = count['total']
+      self.binaries_count = count['files']
+    end
     self.plastron_status = plastron_message.headers['PlastronJobStatus']
-    self.last_response_headers = plastron_message.headers_json
+    self.last_response_headers = plastron_message.headers.to_json
     self.last_response_body = plastron_message.body
     save!
   end
 
   def last_response
     ImportJobResponse.new(last_response_headers, last_response_body)
+  end
+
+  # Returns true if a binary zip file is attached, or remote server is
+  # specified, false otherwise.
+  def binaries?
+    binaries_location.present?
   end
 end

@@ -57,3 +57,13 @@ vocab_editor:
   groups:
     - Users
     - VocabularyEditors
+
+key_user1:
+  cas_directory_id: key_user1
+  name: Key User (id_one)
+  user_type: user
+
+key_user2:
+  cas_directory_id: key_user2
+  name: Key User (id_two)
+  user_type: user

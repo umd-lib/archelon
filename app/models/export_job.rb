@@ -6,6 +6,8 @@ class ExportJob < ApplicationRecord
 
   belongs_to :cas_user
 
+  after_commit { ExportJobRelayJob.perform_later(self) }
+
   CSV_FORMAT = 'text/csv'
   TURTLE_FORMAT = 'text/turtle'
 
@@ -14,26 +16,23 @@ class ExportJob < ApplicationRecord
     TURTLE_FORMAT => 'Turtle'
   }.freeze
 
-  FORMAT_EXTENSIONS = {
-    CSV_FORMAT => '.csv',
-    TURTLE_FORMAT => '.ttl',
-    'application/zip' => '.zip'
-  }.freeze
+  #  Maximum allowed binaries file size, in bytes
+  MAX_ALLOWED_BINARIES_DOWNLOAD_SIZE = if ENV['MAX_ALLOWED_BINARIES_DOWNLOAD_SIZE']
+                                         ENV['MAX_ALLOWED_BINARIES_DOWNLOAD_SIZE'].to_i
+                                       else
+                                         50.gigabytes
+                                       end
 
   def self.exportable_types
     %w[Image Issue Letter]
   end
 
-  def download_file
-    response = HTTP.get(download_url, ssl_context: SSL_CONTEXT)
-    mime_type = response.content_type.mime_type
-    [
-      response.body,
-      {
-        type: mime_type,
-        filename: filename(content_disposition(response.headers), mime_type)
-      }
-    ]
+  def filename
+    name + '.zip'
+  end
+
+  def path
+    File.join(EXPORT_CONFIG[:dir], filename)
   end
 
   def self.from_uri(uri)
@@ -51,21 +50,29 @@ class ExportJob < ApplicationRecord
 
   def update_status(message)
     self.plastron_status = message.headers['PlastronJobStatus']
-    self.download_url = message.body_json['download_uri']
     save!
+  end
+
+  # Returns a array of the selected MIME types for the job
+  def selected_mime_types
+    return [] if mime_types.blank?
+
+    mime_types.split(',')
+  end
+
+  # Returns true if the job can be submitted, false otherwise
+  def job_submission_allowed?
+    !export_binaries || binaries_size.nil? || binaries_size <= MAX_ALLOWED_BINARIES_DOWNLOAD_SIZE
+  end
+
+  # Returns the maximum allowed binaries file size, in bytes
+  def max_allowed_binaries_download_size
+    MAX_ALLOWED_BINARIES_DOWNLOAD_SIZE
   end
 
   private
 
     def content_disposition(headers)
       Mechanize::HTTP::ContentDispositionParser.parse(headers[:content_disposition])
-    end
-
-    def filename(content_disposition, mime_type)
-      if content_disposition
-        content_disposition.filename || name + FORMAT_EXTENSIONS[mime_type]
-      else
-        name + FORMAT_EXTENSIONS[mime_type]
-      end
     end
 end

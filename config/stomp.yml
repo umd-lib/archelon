@@ -1,6 +1,7 @@
 default: &default
   host: <%= ENV['STOMP_HOST'] %>
   port: <%= ENV['STOMP_PORT'] %>
+  archelon_url: <%= ENV['ARCHELON_URL'] %>
   destinations:
     jobs: /queue/plastron.jobs
     job_status: /topic/plastron.jobs.status

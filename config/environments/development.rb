@@ -59,21 +59,6 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
-  # FCREPO & IIIF URLs
-  config.fcrepo_base_url = ENV['FCREPO_BASE_URL'] || 'https://fcrepolocal/fcrepo/rest/'
-  config.iiif_base_url = ENV['IIIF_BASE_URL'] || 'https://iiiflocal/'
-
-  # Mirador version
-  config.mirador_static_version = ENV['MIRADOR_STATIC_VERSION'] || '1.1.0'
-
-  config.audit_database = {
-      dbname: ENV['AUDIT_DATABASE_NAME'] || 'fcrepo_audit',
-      host: ENV['AUDIT_DATABASE_HOST'] || '192.168.40.12',
-      port: ENV['AUDIT_DATABASE_PORT'] || 5432,
-      user: ENV['AUDIT_DATABASE_USERNAME'] || 'archelon',
-      password: ENV['AUDIT_DATABASE_PASSWORD'] || 'archelon',
-  }
-
   # add RDF MIME types so static files in the public dir get served correctly
   Rack::Mime::MIME_TYPES.merge!({'.nt' => 'application/n-triples', '.ttl' => 'text/turtle'})
 
@@ -83,4 +68,7 @@ Rails.application.configure do
   # import attachment).
   # See https://github.com/rails/rails/issues/30937
   config.active_job.queue_adapter = :inline
+
+  # default to debug log level unless overridden by the environment
+  config.log_level = ENV.fetch('RAILS_LOG_LEVEL', 'debug')
 end

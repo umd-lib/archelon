@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
-class ExportJobsController < ApplicationController
-  before_action -> { authorize! :manage, ExportJob }
+class ExportJobsController < ApplicationController # rubocop:disable Metrics/ClassLength
+  before_action -> { authorize! :manage, ExportJob }, except: %i[download status_update]
+  before_action -> { authorize! :download, ExportJob }, only: %i[download]
+  before_action :set_export_job, only: %i[download status_update]
   before_action :cancel_workflow?, only: %i[create review]
   before_action :selected_items?, only: %i[new create review]
   before_action :selected_items_changed?, only: :create
+  skip_before_action :authenticate, only: %i[status_update]
 
   def index
     @jobs =
@@ -16,22 +19,42 @@ class ExportJobsController < ApplicationController
   end
 
   def new
-    name = params[:name] || "#{current_cas_user.cas_directory_id}-#{Time.now.iso8601}"
-    format = params[:_format] || ExportJob::CSV_FORMAT
-    @job = ExportJob.new(name: name, format: format)
+    @job = ExportJob.new(params.key?(:export_job) ? export_job_params : default_job_params)
+    export_uris = bookmarks.map(&:document_id)
+    @mime_types = MimeTypes.mime_types(export_uris)
   end
 
-  def review
-    @job = ExportJob.new(params.require(:export_job).permit(:name, :format))
-    @job.item_count = current_user.bookmarks.count
+  def review # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+    @job = ExportJob.new(export_job_params)
+    @job.item_count = bookmarks.count
+
+    selected_mime_types = params.dig('export_job', 'mime_types')
+    @job.export_binaries = selected_mime_types.present?
+
+    if @job.export_binaries
+      binary_stats = BinariesStats.get_stats(bookmarks.map(&:document_id), selected_mime_types)
+      @job.binaries_size = binary_stats[:total_size]
+      @job.binaries_count = binary_stats[:count]
+
+      mime_types = selected_mime_types.join(',')
+      @job.mime_types = mime_types
+    end
+
+    if @job.job_submission_allowed?
+      render :review
+    else
+      render :job_submission_not_allowed
+    end
   end
 
-  def create
-    @job = create_job(params.require(:export_job).permit(:name, :format, :item_count))
+  def create # rubocop:disable Metrics/MethodLength
+    @job = create_job(export_job_params)
+    render :job_submission_not_allowed && return unless @job.job_submission_allowed?
+
     return unless @job.save
 
     begin
-      submit_job(current_user.bookmarks.map(&:document_id))
+      submit_job(bookmarks.map(&:document_id))
     rescue Stomp::Error::NoCurrentConnection
       @job.plastron_status = :plastron_status_error
       @job.save
@@ -41,11 +64,42 @@ class ExportJobsController < ApplicationController
   end
 
   def download
-    job = ExportJob.find(params[:id])
-    send_data(*job.download_file)
+    send_file(@job.path)
+  rescue ActionController::MissingFile
+    not_found
+  end
+
+  # GET /export_jobs/1/status_update
+  def status_update
+    # Triggers export job notification to channel
+    ExportJobRelayJob.perform_later(@job)
+    render plain: '', status: :no_content
   end
 
   private
+
+    def export_job_params
+      params
+        .require(:export_job)
+        .permit(:name, :format, :export_binaries, :item_count, :binaries_size, :binaries_count, :mime_types)
+        .with_defaults(default_job_params)
+    end
+
+    def default_job_params
+      {
+        name: "#{current_cas_user.cas_directory_id}-#{Time.now.iso8601}",
+        format: ExportJob::CSV_FORMAT,
+        export_binaries: false
+      }
+    end
+
+    def set_export_job
+      @job = ExportJob.find(params[:id])
+    end
+
+    def bookmarks
+      current_user.bookmarks
+    end
 
     def cancel_workflow?
       redirect_to controller: :bookmarks, action: :index if params[:commit] == 'Cancel'
@@ -59,11 +113,10 @@ class ExportJobsController < ApplicationController
     end
 
     def selected_items_changed?
-      return if params[:export_job][:item_count] == current_user.bookmarks.count.to_s
+      return if params[:export_job][:item_count] == bookmarks.count.to_s
 
       flash[:notice] = I18n.t(:selected_items_changed)
       review
-      render :review
     end
 
     def create_job(args)
@@ -75,16 +128,19 @@ class ExportJobsController < ApplicationController
       end
     end
 
-    def message_headers(job)
+    def message_headers(job) # rubocop:disable Metrics/MethodLength
       {
         PlastronCommand: 'export',
         PlastronJobId: export_job_url(job),
-        'PlastronArg-name': job.name,
+        'PlastronArg-output-dest': File.join(EXPORT_CONFIG[:base_destination], job.filename),
         'PlastronArg-on-behalf-of': job.cas_user.cas_directory_id,
         'PlastronArg-format': job.format,
         'PlastronArg-timestamp': job.timestamp,
+        'PlastronArg-export-binaries': job.export_binaries.to_s,
         persistent: 'true'
-      }
+      }.tap do |headers|
+        headers['PlastronArg-binary-types'] = job.selected_mime_types.join(',') if job.export_binaries
+      end
     end
 
     def submit_job(uris)

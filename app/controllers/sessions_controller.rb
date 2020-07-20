@@ -3,10 +3,12 @@
 class SessionsController < ApplicationController
   skip_before_action :authenticate
 
-  def create
+  def create # rubocop:disable Metrics/AbcSize
     @user = CasUser.find_or_create_from_auth_hash(request.env['omniauth.auth'])
     if @user.nil?
-      session[:unauthorized_user] = true
+      session[:unauthorized_user] = true # Not sure if this is actually used anywhere
+      CasAuthentication.sign_out(session, cookies)
+
       render(file: Rails.root.join('public', '403.html'), status: :forbidden, layout: false) and return # rubocop:disable Style/AndOr, Metrics/LineLength
     else
       sign_in(@user)
@@ -15,13 +17,12 @@ class SessionsController < ApplicationController
   end
 
   def sign_in(user)
-    session[:cas_user] = user.cas_directory_id
+    CasAuthentication.sign_in(user.cas_directory_id, session, cookies)
   end
 
   def destroy
-    session.delete(:cas_user)
-    session.delete(:admin_id)
-    cas_logout_url = Rails.application.config.cas_url + '/logout'
+    CasAuthentication.sign_out(session, cookies)
+    cas_logout_url = "#{CAS_URL}/logout"
     redirect_to cas_logout_url
   end
 

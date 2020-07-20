@@ -54,7 +54,7 @@ class ActiveSupport::TestCase
       uid: cas_directory_id
     }
     request.env['omniauth.auth'] = OmniAuth.config.mock_auth[:cas]
-    session[:cas_user] = cas_directory_id
+    CasAuthentication.sign_in(cas_directory_id, session, cookies)
   end
 
   def mock_cas_login_for_integration_tests(cas_directory_id)
@@ -68,14 +68,15 @@ class ActiveSupport::TestCase
 
   def mock_cas_logout
     request.env.delete('omniauth.auth')
-    session.delete(:cas_user)
+    CasAuthentication.sign_out(session, cookies)
   end
 
   # Runs the contents of a block using the given user as the current_user.
   def impersonate_as_user(user) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     current_admin_user = CasUser.find_by(cas_directory_id: session[:cas_user])
     session[:admin_id] = current_admin_user.id
-    session[:cas_user] = user.cas_directory_id
+    # session[:cas_user] = user.cas_directory_id
+    CasAuthentication.sign_in(user.cas_directory_id, session, cookies)
 
     begin
       yield
@@ -83,7 +84,8 @@ class ActiveSupport::TestCase
       raise e
     ensure
       # Restore fake user
-      session[:cas_user] = CasUser.find(session[:admin_id]).cas_directory_id
+      CasAuthentication.sign_in(CasUser.find(session[:admin_id]).cas_directory_id, session, cookies)
+      # session[:cas_user] = CasUser.find(session[:admin_id]).cas_directory_id
       session.delete(:admin_id)
     end
   end

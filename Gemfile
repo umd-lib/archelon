@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.4'
+gem 'rails', '~> 5.2.4.3'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
 # Use Puma as the app server
@@ -111,6 +111,10 @@ group :test do
 
   gem 'rspec'
   gem 'rspec-mocks', '~> 3.8.1'
+
+  # Note: The "action-cable-testing" gem can be removed when migrating to
+  # Rails 6, as the gem is already included as part of Rails 6.
+  gem 'action-cable-testing'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

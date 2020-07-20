@@ -18,7 +18,7 @@
 <% end %>
 
 <div class="row">
-  <div class="col-sm-9">
+  <div class="col-sm-8">
     <div class="panel panel-default panel-vocabulary">
       <div class="panel-heading">
         <div class="h2">
@@ -46,7 +46,7 @@
       </div>
     </div>
   </div>
-  <div class="col-sm-3">
+  <div class="col-sm-4">
     <div class="panel panel-default panel-vocabulary">
       <div class="panel-heading">
         <div class="h2">
@@ -68,6 +68,34 @@
             <tr>
               <td>
                 <%= link_to type.identifier, type %>
+              </td>
+            </tr>
+          <% end %>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel panel-default panel-vocabulary">
+      <div class="panel-heading">
+        <div class="h2">
+          <%= link_to datatypes_path do %>
+            <%= ActiveSupport::Inflector.pluralize(t('activerecord.models.datatype'))  %>
+            <span class="badge badge-secondary"><%= @vocabulary.datatypes.count %></span>
+          <% end %>
+          <% if can? :create, Datatype %>
+            <div class="pull-right">
+              <%= link_to "New #{t 'activerecord.models.datatype'}", new_datatype_path(vocabulary: @vocabulary), class: 'btn btn-sm btn-success' %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="panel-body">
+        <table class="table table-striped">
+          <% @vocabulary.datatypes.each do |datatype| %>
+            <tr>
+              <td>
+                <%= link_to datatype.identifier, datatype %>
               </td>
             </tr>
           <% end %>

@@ -1,8 +1,8 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Metadata Import</h1>
+<h1><%= t('activerecord.models.import_job').pluralize %></h1>
 
-<%= link_to 'New Import Job', new_import_job_path, class: 'btn btn-success' %>
+<%= link_to "New #{t('activerecord.models.import_job')}", new_import_job_path, class: 'btn btn-success' %>
 
 <% if @import_jobs.count > 0 %>
   <div class="row">
@@ -16,44 +16,41 @@
   <table class="table">
     <thead>
       <tr>
-        <th>Job ID</th>
-        <th>Job Name</th>
-        <th>User</th>
-        <th>Timestamp</th>
-        <th>Uploaded File</th>
-        <th>Content Model</th>
-        <th>Status</th>
+        <th><%= t('activerecord.attributes.import_job.id') %></th>
+        <th><%= t('activerecord.attributes.import_job.name') %></th>
+        <th><%= t('activerecord.attributes.import_job.cas_user') %></th>
+        <th><%= t('activerecord.attributes.import_job.timestamp') %></th>
+        <th><%= t('activerecord.attributes.import_job.metadata_file') %></th>
+        <th><%= t('activerecord.attributes.import_job.binaries.label') %></th>
+        <th># of Records</th>
+        <th># of Binaries</th>
+        <th><%= t('activerecord.attributes.import_job.model') %></th>
+        <th><%= t('activerecord.attributes.import_job.status.label') %></th>
         <th></th>
       </tr>
     </thead>
 
     <tbody>
-      <% @import_jobs.each do |import_job| %>
+      <% @import_jobs.each do |job| %>
         <tr>
-          <td><%= link_to import_job.id, import_job_path(import_job) %></td>
-          <td><%= import_job.name %></td>
-          <td><%= import_job.cas_user&.name%></td>
-          <td><%= import_job.timestamp %></td>
-          <td><%= import_job.file_to_upload.filename %></td>
-          <td><%= import_job.model %></td>
-          <td>
-            <%= link_to status_text(import_job), import_job_path(import_job), class: "import_job_status_#{import_job.status}" %>
-          </td>
-          <% if import_job.workflow_action == :resubmit %>
-            <td><%= button_to 'Resubmit', edit_import_job_path(import_job), method: :get, class: 'btn-xs btn-danger' %></td>
-          <% elsif import_job.workflow_action == :import %>
-            <td><%= button_to 'Import', perform_import_import_jobs_path(import_job), class: 'btn-xs btn-success' %></td>
-          <% else %>
-            <td></td>
-          <% end %>
+          <td><%= link_to job.id, import_job_path(job) %></td>
+          <td><%= job.name %></td>
+          <td><%= job.cas_user&.name%></td>
+          <td><%= job.timestamp %></td>
+          <td><%= job.metadata_file.filename if job.metadata_file.attached? %></td>
+          <td><%= job.binaries? ? t('activerecord.attributes.import_job.binaries.true') : t('activerecord.attributes.import_job.binaries.false') %></td>
+          <td><%= job.item_count %></td>
+          <td><%= job.binaries_count if job.binaries? %></td>
+          <td><%= job.model %></td>
+          <%= render partial: 'import_job_status', locals: { import_job: job } %>
         </tr>
       <% end %>
     </tbody>
   </table>
 
-  <%= will_paginate @download_urls, renderer: BootstrapPagination::Rails %>
+  <%= will_paginate @import_jobs, renderer: BootstrapPagination::Rails %>
   <br>
 <% else %>
-  <p>No Import jobs found</p>
+  <p data-channel="import_jobs">No Import jobs found</p>
 <% end %>
 

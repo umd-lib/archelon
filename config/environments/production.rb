@@ -49,10 +49,6 @@ Rails.application.configure do
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
 
-  # Use the lowest log level to ensure availability of diagnostic information
-  # when problems arise.
-  config.log_level = :debug
-
   # Prepend all log lines with the following tags.
   config.log_tags = [ :request_id ]
 
@@ -91,29 +87,4 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
-
-  # FCREPO & IIIF URLs
-  config.fcrepo_base_url = ENV['FCREPO_BASE_URL']
-  config.iiif_base_url = ENV['IIIF_BASE_URL']
-
-  # Mirador version
-  config.mirador_static_version = ENV['MIRADOR_STATIC_VERSION']
-
-  config.audit_database = {
-      dbname: ENV['AUDIT_DATABASE_NAME'],
-      host: ENV['AUDIT_DATABASE_HOST'],
-      port: ENV['AUDIT_DATABASE_PORT'],
-      user: ENV['AUDIT_DATABASE_USERNAME'],
-      password: ENV['AUDIT_DATABASE_PASSWORD'],
-  }
-
-  config.stomp_server = {
-      host: ENV['STOMP_HOST'] || '192.168.40.10',
-      port: ENV['STOMP_PORT'] || 61613
-  }
-
-  config.queues = {
-      export_jobs: '/queue/exportjobs',
-      export_jobs_completed: '/queue/exportjobs.completed'
-  }
 end

@@ -9,9 +9,10 @@
         <th>User</th>
         <th>Timestamp</th>
         <th># of Records</th>
-        <th>Format</th>
-        <th>Status</th>
-        <th></th>
+        <th># of Binaries</th>
+        <th>Size of Binaries</th>
+        <th>Metadata Format</th>
+        <th colspan="2">Status</th>
       </tr>
     </thead>
     <tbody>
@@ -25,18 +26,10 @@
         <td><%= job.cas_user&.name%></td>
         <td><%= job.timestamp %></td>
         <td><%= job.item_count %></td>
+        <td><%= job.binaries_count %></td>
+        <td><%= number_to_human_size job.binaries_size %></td>
         <td><span title="<%= job.format %>"><%= format_label %></span></td>
-        <td class="<%= job.plastron_status %>">
-          <%= ExportJob.plastron_statuses[job.plastron_status] %>
-          <% if job.plastron_status_in_progress? %>
-            (<%= job.progress %>%)
-          <% end %>
-        </td>
-        <td>
-          <% if job.plastron_status_done? && job.download_url %>
-            <%= link_to 'Download', download_export_jobs_url(job), data: { turbolinks: false } %>
-          <% end %>
-        </td>
+        <%= render partial: 'export_job_status', locals: { export_job: job } %>
       </tr>
     <% end %>
     </tbody>

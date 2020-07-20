@@ -46,6 +46,12 @@ AUDIT_DATABASE_PASSWORD=archelon
 STOMP_HOST=
 STOMP_PORT=
 
+# Used by the STOMP listener to generate the URL of the Archelon web application
+# for triggering updates to import/export job status
+# Should be the root URL of the Archelon Rails application. For example, for
+# local development: http://localhost:3000/
+ARCHELON_URL=
+
 # --- config/database.yml
 # (Production only - not needed for local development)
 # The type of database
@@ -85,3 +91,10 @@ VOCAB_LOCAL_AUTHORITY_BASE_URI=
 
 # Base URI for the location where the vocabularies are published
 VOCAB_PUBLICATION_BASE_URI=
+
+# The maximum allowed binaries export download size, in bytes
+MAX_ALLOWED_BINARIES_DOWNLOAD_SIZE=53687091200
+
+# --- config/application.rb
+# Set this if you need to change the default logging level of "info"
+# RAILS_LOG_LEVEL=debug

@@ -59,4 +59,12 @@ class ImportJobTest < ActiveSupport::TestCase
       end
     end
   end
+
+  test 'binaries? indicates whether the import job has a binary zip file or remote server' do
+    import_job = import_jobs(:import_job_without_binaries)
+    assert_equal false, import_job.binaries?
+
+    import_job = import_jobs(:import_job_with_binaries_location)
+    assert import_job.binaries?
+  end
 end

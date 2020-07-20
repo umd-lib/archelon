@@ -4,9 +4,9 @@
       <h2><%= pluralize(import_job.errors.count, "error") %> prohibited this job from being saved:</h2>
 
       <ul>
-      <% import_job.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
+        <% import_job.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
   <% end %>
@@ -54,15 +54,40 @@
 
   <div class="form-group">
     <div>
-      <%= form.label :file_to_upload, class: "col-form-label-lg" %>
+      <%= form.label :metadata_file, 'Metadata File to Upload (CSV)', class: "col-form-label-lg" %>
     </div>
     <div class="p-3 ml-5">
-      <%= form.file_field :file_to_upload, class: "form-control" %>
+      <%= form.file_field :metadata_file, class: "form-control" %>
     </div>
   </div>
 
-    <div class="form-group">
-      <%= form.submit "Cancel", class: 'btn btn-danger form-control' %>
-      <%= form.submit "Next", class: 'btn btn-primary form-control' %>
+  <div class="form-group">
+    <div>
+      <%= form.label :binaries_zip_filename, 'Binaries', class: "col-form-label-lg" %>
     </div>
+    <div class="p-3 ml-5">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Select the zip file containing the binaries for this import job</h3>
+        </div>
+        <div class="panel-body">
+          <ul style="list-style-type: none">
+            <li><label><%= form.radio_button :binaries_zip_filename, '' %> No binaries</label></li>
+            <% @binaries_files&.each do |filename| %>
+              <li>
+                <%= form.radio_button :binaries_zip_filename, filename %>
+                <%= form.label :binaries_zip_filename, filename %>
+                (<%= number_to_human_size File.size(File.join(IMPORT_CONFIG[:binaries_dir], filename)) %>)
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= form.submit "Cancel", class: 'btn btn-danger form-control' %>
+    <%= form.submit "Next", class: 'btn btn-primary form-control' %>
+  </div>
 <% end %>

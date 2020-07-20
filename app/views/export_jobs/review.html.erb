@@ -3,35 +3,15 @@
   <%= f.hidden_field :name, value: @job.name %>
   <%= f.hidden_field :format, value: @job.format %>
   <%= f.hidden_field :item_count, value: @job.item_count %>
-  <div class="p-3 ">
-    <div class="row form-group">
-      <div class="col-xs-2">
-        <strong>Export Format:</strong>
-      </div>
-      <div class="col-xs-10">
-        <%= @job.format %>
-      </div>
-    </div>
-    <div class="row form-group">
-      <div class="col-xs-2">
-        <strong>Job Name:</strong>
-      </div>
-      <div class="col-xs-10">
-        <%= @job.name %>
-      </div>
-    </div>
-    <div class="row form-group">
-      <div class="col-xs-2">
-        <strong>Number of Records:</strong>
-      </div>
-      <div class="col-xs-10">
-        <%= @job.item_count %>
-      </div>
-    </div>
+  <%= f.hidden_field :export_binaries, value: @job.export_binaries %>
+  <%= f.hidden_field :binaries_size, value: @job.binaries_size %>
+  <%= f.hidden_field :binaries_count, value: @job.binaries_count %>
+  <%= f.hidden_field :mime_types, value: @job.mime_types %>
+
+  <%= render 'summary', export_job: @job %>
+  <div>
+    <%= render 'back_to_new_button', export_job: @job %>
+    <%= f.submit "Cancel", class: 'btn btn-danger' %>
+    <%= f.submit "Submit Job", class: 'btn btn-primary' %>
   </div>
-    <div>
-      <%= link_to "Back", new_export_job_path({name: @job.name, _format: @job.format}), class: 'btn btn-danger' %>
-      <%= f.submit "Cancel", class: 'btn btn-danger' %>
-      <%= f.submit "Submit Job", class: 'btn btn-primary' %>
-    </div>
 <% end %>

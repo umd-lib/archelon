@@ -49,3 +49,7 @@ coverage
 /public/published_vocabularies/*.json
 /public/published_vocabularies/*.ttl
 /public/published_vocabularies/*.nt
+
+# Ignore the imports and exports
+/imports/*.zip
+/exports/*.zip

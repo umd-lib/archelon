@@ -1,5 +1,9 @@
-<% job_status = I18n.t("activerecord.attributes.import_job.status.#{import_job.status}") %>
 <% job_status_css_class = "import_job_status_#{import_job.status}" %>
+
+<%# Invisible marker div for setting up ImportJobsChannel for updates for a single import job %>
+<div style="display: none;" data-channel="import_jobs" data-only-update-on-match="true"
+                            data-job-id="<%= import_job.id %>" data-stage="<%= import_job.stage %>" data-status="<%= import_job.status %>">
+</div>
 
 <div class="panel panel-default">
   <div class="panel-heading">
@@ -19,17 +23,16 @@
           <th>Total</th>
         </tr>
       </thead>
-        <tbody>
-          <tr>
-            <td><%= import_job_response.num_valid %></td>
-            <td><%= import_job_response.num_invalid %></td>
-            <td><%= import_job_response.num_error %></td>
-            <td><%= import_job_response.num_updated %></td>
-            <td><%= import_job_response.num_unchanged %></td>
-            <td><%= import_job_response.num_total %></td>
-          </tr>
-        </tbody>
-      </thead>
+      <tbody>
+        <tr>
+          <td><%= import_job_response.num_valid %></td>
+          <td><%= import_job_response.num_invalid %></td>
+          <td><%= import_job_response.num_error %></td>
+          <td><%= import_job_response.num_updated %></td>
+          <td><%= import_job_response.num_unchanged %></td>
+          <td><%= import_job_response.num_total %></td>
+        </tr>
+      </tbody>
     </table>
 
     <% if import_job_response.invalid_lines.any? %>

@@ -1,0 +1,14 @@
+<h1><%= t 'activerecord.models.datatype' %>: <%= @datatype.identifier %></h1>
+
+<div>
+  <%= label :datatype, :vocabulary_id %>
+  <%= link_to @datatype.vocabulary.identifier, @datatype.vocabulary %>
+</div>
+
+<% if can? :edit, @datatype %>
+  <%= link_to 'Edit', edit_datatype_path(@datatype), class: 'btn btn-success' %>
+<% end %>
+
+<div>
+  <%= link_to "All #{ActiveSupport::Inflector.pluralize(t('activerecord.models.datatype'))}", datatypes_path %>
+</div>

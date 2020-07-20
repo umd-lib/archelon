@@ -22,6 +22,13 @@ where directories may no longer be placed in the root directory.
 * [https://github.com/umd-lib/plastron/blob/develop/docs/daemon.md](https://github.com/umd-lib/plastron/blob/develop/docs/daemon.md)
 * [https://bitbucket.org/umd-lib/umd-fcrepo-sample-data](https://bitbucket.org/umd-lib/umd-fcrepo-sample-data)
 
+## Note on VPNs
+
+VPN software may interfere with network communications between the
+Vagrant machines and the host. If you encounter network difficulties with the
+following steps, try running them with the VPN disabled, then turn the VPN
+back on.
+
 ## Base Directory
 
 For the following, the base directory will be `~/git/` (where "~" is your home
@@ -206,11 +213,13 @@ In a web browser, go to each of the following URLs:
 > cd ~/git/plastron
 ```
 
-2.3.2) Create a directory to hold the "plastron" logs and msg stores:
+2.3.2) Create a directory to hold the "plastron" logs, msg stores, and
+       binary exports:
 
 ```
 > mkdir logs
 > mkdir msg
+> mkdir exports
 ```
 
 2.3.3) Create a "daemon-plastron.yml" file:
@@ -236,6 +245,9 @@ MESSAGE_BROKER:
     JOBS: /queue/plastron.jobs
     JOB_STATUS: /topic/plastron.jobs.status
     COMPLETED_JOBS: /queue/plastron.jobs.completed
+COMMANDS:
+  EXPORT:
+    BINARIES_DIR: exports/
 ```
 
 ### 2.4) Run Plastron
