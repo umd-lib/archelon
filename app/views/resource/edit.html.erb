@@ -1,14 +1,5 @@
-  <% if @errors && @errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@errors.count, "error") %> prohibited this record from being updated:</h2>
-
-      <ul>
-        <% @errors.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <div id="error_explanation">
+  </div>
 
 <%= form_with(id: 'resource_edit_form') do %>
   <% if @simulate.present? %><input type="hidden" name="simulate" value="1"/><% end %>

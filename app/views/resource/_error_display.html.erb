@@ -1,0 +1,9 @@
+  <% if @errors && @errors.any? %>
+      <h2><%= pluralize(@errors.count, "error") %> prohibited this record from being updated:</h2>
+
+      <ul>
+        <% @errors.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+  <% end %>

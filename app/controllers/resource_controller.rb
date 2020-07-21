@@ -26,6 +26,13 @@ class ResourceController < ApplicationController
 
   def update # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity, Metrics/LineLength
     @id = params[:id]
+    items = Hash[resources(@id).map do |resource|
+      uri = resource.delete('@id')
+      [uri, resource]
+    end]
+
+    model = plastron_model_from_rdf_type(items[@id]['@type'])
+
     @simulate = params[:simulate]
     send_to_plastron if @simulate
 
@@ -41,7 +48,7 @@ class ResourceController < ApplicationController
 
     @sparql_update = "DELETE {\n#{delete_statements.join} } INSERT {\n#{insert_statements.join} } WHERE {}"
 
-    response = send_to_plastron(@id, @sparql_update)
+    response = send_to_plastron(@id, model, @sparql_update)
 
     success = response[:status] == 'Done'
 
@@ -49,25 +56,13 @@ class ResourceController < ApplicationController
       flash[:notice] = t('resource_update_successful')
       redirect_to solr_document_url(id: @id)
     else
-      errors = ['An error occurred']
-      return render json: { errors: errors }
+      @errors = response[:errors]
+      error_display = render_to_string template: 'resource/_error_display', layout: false
+      return render json: { error_display: error_display }
     end
   end
 
   private
-
-    # Updates the given items, based on the given delete and insert statements
-    def update_items(id, _delete_statements, _insert_statements)
-      resource_model = resource_model(id)
-      items = resource_model[:items]
-
-      # TODO: Do someting here that takes the items, updates them based on
-      # the delete and insert statements and returns them
-      #
-      # Right now, just returning the list of items, without change
-
-      items
-    end
 
     def content_model_from_rdf_type(types)
       if types.include? 'http://purl.org/ontology/bibo/Issue'
@@ -81,13 +76,25 @@ class ResourceController < ApplicationController
       end
     end
 
+    def plastron_model_from_rdf_type(types)
+      if types.include? 'http://purl.org/ontology/bibo/Issue'
+        'Issue'
+      elsif types.include? 'http://purl.org/ontology/bibo/Letter'
+        'Letter'
+      elsif types.include? 'http://purl.org/ontology/bibo/Image'
+        'Poster'
+      else
+        'Item'
+      end
+    end
+
     def resources(uri)
       response = HTTP[accept: 'application/ld+json'].get(uri, ssl_context: SSL_CONTEXT)
       input = JSON.parse(response.body.to_s)
       JSON::LD::API.expand(input)
     end
 
-    def send_to_plastron(id, sparql_update) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+    def send_to_plastron(id, model, sparql_update) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
       params_to_skip = %w[utf8 authenticity_token submit controller action]
       submission = params.to_unsafe_h
       params_to_skip.each { |key| submission.delete(key) }
@@ -104,7 +111,9 @@ class ResourceController < ApplicationController
       headers = {
         PlastronCommand: 'update',
         'PlastronArg-no-transactions': 'True',
-        'PlastronArg-recursive': 'False'
+        'PlastronArg-recursive': 'False',
+        'PlastronArg-validate': 'False',
+        'PlastronArg-model': model
       }
 
       begin

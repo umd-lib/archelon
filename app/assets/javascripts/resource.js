@@ -4,6 +4,18 @@ $(document).on('turbolinks:load', function() {
   if (element) {
     element.addEventListener("ajax:success", (event) => {
       const [data, _status, xhr] = event.detail;
+
+      // ajax.success occurs even if a validation error occurrs, so
+      // check for any errors
+
+      let errorDisplay = data.error_display;
+      if (errorDisplay) {
+        errorDiv = document.querySelector("#error_explanation");
+        errorDiv.innerHTML = errorDisplay;
+        window.scrollTo(0, 0);
+        return;
+      }
+
       let messages = data.messages;
       if (messages) {
         let alertText = messages.join("\n");
@@ -17,4 +29,5 @@ $(document).on('turbolinks:load', function() {
       alert(alertText);
     });
   }
+  errorDiv.innerHTML = "";
 });
