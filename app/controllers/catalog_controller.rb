@@ -125,12 +125,12 @@ class CatalogController < ApplicationController
     # Have BL send the most basic highlighting parameters for you
     config.add_field_configuration_to_solr_request!
 
-    # solr fields to be displayed in the show (single result) view
-    #   The ordering of the field names is the order of the display
-    config.add_show_field 'display_title', label: 'Title'
-    config.add_show_field 'author', label: 'Author'
-    config.add_show_field 'type', label: 'Type'
-    config.add_show_field 'date', label: 'Date'
+    # Solr fields to be displayed in the show (single result) view.
+    # The ordering of the field names is the order of the display.
+    #
+    # Note that as of implementation of in-browser editing of descriptive metadata,
+    # the only fields being displayed form Solr are those relating to structural,
+    # administrative, and technical metadata.
     config.add_show_field 'pcdm_collection', label: 'Collection', helper_method: :collection_from_subquery
     config.add_show_field 'pcdm_member_of', label: 'Member Of', helper_method: :parent_from_subquery
     config.add_show_field 'pcdm_members', label: 'Members', helper_method: :members_from_subquery
@@ -140,15 +140,6 @@ class CatalogController < ApplicationController
     # rubocop:enable Metrics/LineLength
     config.add_show_field 'pcdm_file_of', label: 'File Of', helper_method: :file_parent_from_subquery
     config.add_show_field 'pcdm_files', label: 'Files', helper_method: :files_from_subquery
-    config.add_show_field 'component', label: 'Resource Type'
-    config.add_show_field 'issue_volume', label: 'Volume'
-    config.add_show_field 'issue_issue', label: 'Issue Number'
-    config.add_show_field 'issue_edition', label: 'Edition'
-    config.add_show_field 'issue_lccn', label: 'LCCN'
-    config.add_show_field 'page_number', label: 'Number'
-    config.add_show_field 'page_reel', label: 'Reel'
-    config.add_show_field 'containing_issue', label: 'Issue'
-    config.add_show_field 'page_sequence', label: 'Sequence'
     config.add_show_field 'annotation_source', label: 'Pages', helper_method: :annotation_source_from_subquery
     config.add_show_field 'size', label: 'Size'
     config.add_show_field 'mime_type', label: 'Mime Type'
@@ -204,6 +195,8 @@ class CatalogController < ApplicationController
   def show
     super
     @show_edit_metadata = CatalogController.show_edit_metadata(@document['component'])
+    @id = params[:id]
+    @resource = ResourceService.resource_with_model(@id)
   end
 
   # Returns true if the given component has editable metadata, false otherwise.

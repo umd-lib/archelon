@@ -3,7 +3,10 @@
 require 'erb'
 require 'addressable/template'
 
-module ApplicationHelper
+LABEL_PREDICATE = 'http://www.w3.org/2000/01/rdf-schema#label'
+SAME_AS_PREDICATE = 'http://www.w3.org/2002/07/owl#sameAs'
+
+module ApplicationHelper # rubocop:disable Metrics/ModuleLength
   PCDM_OBJECT = 'pcdm:Object'
   PCDM_FILE = 'pcdm:File'
   ALLOWED_MIME_TYPE = 'image/tiff'
@@ -133,5 +136,45 @@ module ApplicationHelper
     return unless can? :destroy, resource
 
     link_to 'Delete', resource, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger'
+  end
+
+  def language_badge(node)
+    content_tag :span, node['@language'], class: 'badge badge-light', style: 'background: #ddd; color: #333'
+  end
+
+  def datatype_badge(node)
+    link_to node['@type'], node['@type'], class: 'badge badge-light', style: 'background: #ddd; color: #333'
+  end
+
+  def display_node(node, field, items) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/MethodLength, Metrics/LineLength
+    if node.key? '@value'
+      content = content_tag :span, node['@value']
+      content << ' ' << language_badge(node) if node.key? '@language'
+      content << ' ' << datatype_badge(node) if node.key? '@type'
+      content
+    elsif node.key? '@id'
+      uri = node['@id']
+      if items.key? uri
+        # labeled thing display
+        obj = items[uri]
+        label = obj[LABEL_PREDICATE]&.first
+        same_as = obj[SAME_AS_PREDICATE]&.first
+        if same_as
+          content = display_node(label, field, obj)
+          content << ' → ' << link_to(same_as['@id'], same_as['@id'])
+        else
+          content_tag :span, display_node(label, field, obj)
+        end
+      elsif field[:vocab]
+        term = Vocabulary.find_by(identifier: field[:vocab]).term(uri)
+        content = content_tag :span, term.label
+        content << ' → ' << link_to(term.same_as, term.same_as) if term.same_as
+        content
+      else
+        link_to uri, uri
+      end
+    else
+      node
+    end
   end
 end
