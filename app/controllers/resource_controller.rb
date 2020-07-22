@@ -23,7 +23,7 @@ class ResourceController < ApplicationController
     { items: items, content_model: content_model }
   end
 
-  def update # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity, Metrics/LineLength
+  def update # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     @id = params[:id]
     items = Hash[resources(@id).map do |resource|
       uri = resource.delete('@id')
