@@ -1,6 +1,11 @@
 // Handles AJAX response from "update" method in app/controllers/resource_controller.rb
 $(document).on('turbolinks:load', function() {
   const element = document.querySelector("#resource_edit_form");
+  const errorDiv = document.querySelector("#error_explanation");
+  if (errorDiv) {
+    errorDiv.innerHTML = "";
+  }
+
   if (element) {
     element.addEventListener("ajax:success", (event) => {
       const [data, _status, xhr] = event.detail;
@@ -10,7 +15,6 @@ $(document).on('turbolinks:load', function() {
 
       let errorDisplay = data.error_display;
       if (errorDisplay) {
-        errorDiv = document.querySelector("#error_explanation");
         errorDiv.innerHTML = errorDisplay;
         window.scrollTo(0, 0);
         return;
@@ -29,5 +33,4 @@ $(document).on('turbolinks:load', function() {
       alert(alertText);
     });
   }
-  errorDiv.innerHTML = "";
 });
