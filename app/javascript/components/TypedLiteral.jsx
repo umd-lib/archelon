@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 
 const N3 = require('n3');
 const { DataFactory } = N3;
-const { namedNode, literal, defaultGraph } = DataFactory;
+const { namedNode, defaultGraph } = DataFactory;
 
 /**
  * Input component consisting of a textbox with an associated datatype.
@@ -46,12 +46,21 @@ class TypedLiteral extends React.Component {
 
   getStatement(value, datatype) {
     const writer = new N3.Writer({format: 'N-Triples'});
-    return writer.quadToString(
+
+    // Handle literal value in a special manner, because SPARQL requires
+    // "^^" to separate the type, instead of "@" (which is what we would
+    // get from DataFactory.literal
+    let literalValue = { id: `\"${value}\"` }
+    if (datatype) {
+      literalValue = { id: `\"${value}\"^^<${datatype}>` }
+    }
+    let nquads = writer.quadToString(
         namedNode(this.props.subjectURI),
         namedNode(this.props.predicateURI),
-        literal(value, datatype || undefined),
+        literalValue,
         defaultGraph(),
     );
+    return nquads;
   }
 
   componentWillUnmount() {

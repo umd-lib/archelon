@@ -1,18 +1,7 @@
-  <% if @errors && @errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@errors.count, "error") %> prohibited this record from being updated:</h2>
-
-      <ul>
-        <% @errors.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <div id="error_explanation">
+  </div>
 
 <%= form_with(id: 'resource_edit_form') do %>
-  <% if @simulate.present? %><input type="hidden" name="simulate" value="1"/><% end %>
-
   <% unless @content_model[:required].empty? %>
     <h2>Required Fields</h2>
     <%= render 'metadata_edit_components', fields: @content_model[:required], items: @items, uri: @id %>
@@ -29,7 +18,7 @@
   <% end %>
 
   <div class="form-group">
-    <input type="submit" name="submit" value="Submit" class="btn btn-primary form-control" />
+    <input id="resource_form_submit" type="submit" name="submit" value="Submit" class="btn btn-primary form-control" />
     <%= link_to 'Cancel', solr_document_path(id: @id), class: 'btn btn-danger form-control' %>
   </div>
 <% end %>
