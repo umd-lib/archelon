@@ -52,7 +52,12 @@ class ResourceController < ApplicationController
       flash[:notice] = t('resource_update_successful')
       redirect_to solr_document_url(id: @id)
     else
-      @errors = response[:errors]
+      validation_errors = response[:errors]
+      @errors = []
+      if validation_errors.present?
+        validation_errors_from_json = JSON.parse(validation_errors[0].to_s)
+        @errors = validation_errors_from_json
+      end
       error_display = render_to_string template: 'resource/_error_display', layout: false
       return render json: { error_display: error_display }
     end
