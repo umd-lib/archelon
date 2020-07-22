@@ -5,7 +5,6 @@ require 'json/ld'
 class ResourceController < ApplicationController
   def edit
     @id = params[:id]
-    @simulate = params[:simulate]
 
     resource_model = resource_model(@id)
     @items = resource_model[:items]
@@ -32,9 +31,6 @@ class ResourceController < ApplicationController
     end]
 
     model = plastron_model_from_rdf_type(items[@id]['@type'])
-
-    @simulate = params[:simulate]
-    send_to_plastron if @simulate
 
     delete_statements = (params[:delete] || [])
     insert_statements = (params[:insert] || [])

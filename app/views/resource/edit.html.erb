@@ -2,8 +2,6 @@
   </div>
 
 <%= form_with(id: 'resource_edit_form') do %>
-  <% if @simulate.present? %><input type="hidden" name="simulate" value="1"/><% end %>
-
   <% unless @content_model[:required].empty? %>
     <h2>Required Fields</h2>
     <%= render 'metadata_edit_components', fields: @content_model[:required], items: @items, uri: @id %>
