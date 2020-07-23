@@ -36,7 +36,7 @@ class ResourceService
   end
 
   CONTENT_MODEL_MAP = [
-    [:Newspaper, ->(types) { types.include? 'http://purl.org/ontology/bibo/Issue' }],
+    [:Issue, ->(types) { types.include? 'http://purl.org/ontology/bibo/Issue' }],
     [:Letter, ->(types) { types.include? 'http://purl.org/ontology/bibo/Letter' }],
     [:Poster, ->(types) { types.include? 'http://purl.org/ontology/bibo/Image' }],
     [:Page, ->(types) { types.include? 'http://purl.org/spar/fabio/Page' }],

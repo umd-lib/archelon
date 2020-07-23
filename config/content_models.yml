@@ -315,7 +315,7 @@ Poster:
       repeatable: true
 
 
-Newspaper:
+Issue:
   required:
     - name: 'title'
       uri: 'http://purl.org/dc/terms/title'

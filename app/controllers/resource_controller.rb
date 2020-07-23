@@ -47,18 +47,6 @@ class ResourceController < ApplicationController
 
   private
 
-    def plastron_model_from_rdf_type(types)
-      if types.include? 'http://purl.org/ontology/bibo/Issue'
-        'Issue'
-      elsif types.include? 'http://purl.org/ontology/bibo/Letter'
-        'Letter'
-      elsif types.include? 'http://purl.org/ontology/bibo/Image'
-        'Poster'
-      else
-        'Item'
-      end
-    end
-
     def send_to_plastron(id, model, sparql_update) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
       params_to_skip = %w[utf8 authenticity_token submit controller action]
       submission = params.to_unsafe_h
