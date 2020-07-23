@@ -89,7 +89,7 @@ class ResourceController < ApplicationController
       rescue Timeout::Error
         # Handle timeout
         status = 'Error'
-        errors = ['Timeout']
+        errors = [JSON.generate([I18n.t('resource_update_timeout_error')])]
       end
       { status: status, errors: errors }
     end
