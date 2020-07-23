@@ -56,7 +56,7 @@
     <div class="panel-body">
       <ul class="nav">
         <% files.each do |v| %>
-          <li><%= link_to v['display_title'], solr_document_path(v['id']) %></li>
+          <li><%= link_to(v['display_title'].present? ? v['display_title'] : v['id'], solr_document_path(v['id'])) %></li>
         <% end %>
       </ul>
     </div>

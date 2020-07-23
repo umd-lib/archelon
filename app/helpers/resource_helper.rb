@@ -15,7 +15,7 @@ module ResourceHelper
         values: values
       }.tap do |args|
         args[:maxValues] = 1 unless field[:repeatable]
-        args[:vocab] = (Vocabulary[field[:vocab]] || {}) if field[:vocab].present?
+        args[:vocab] = Vocabulary[field[:vocab]] if field[:vocab].present?
 
         # special handling for LabeledThing fields
         if field[:type] == :LabeledThing
@@ -35,13 +35,11 @@ module ResourceHelper
     target_uri = value.fetch('@id', nil)
     return value unless target_uri
 
-    label_predicate = 'http://www.w3.org/2000/01/rdf-schema#label'
-    same_as_predicate = 'http://www.w3.org/2002/07/owl#sameAs'
     obj = items[target_uri]
 
     { value: value }.tap do |result|
-      result[:label] = obj[label_predicate]&.first if obj[label_predicate]&.first
-      result[:sameAs] = obj[same_as_predicate]&.first if obj[same_as_predicate]&.first
+      result[:label] = obj[LABEL_PREDICATE]&.first if obj[LABEL_PREDICATE]&.first
+      result[:sameAs] = obj[SAME_AS_PREDICATE]&.first if obj[SAME_AS_PREDICATE]&.first
     end
   end
 

@@ -212,3 +212,11 @@ input {
   visibility: visible;
   opacity: 1;
 }
+
+.descriptive-metadata-values {
+    margin: 0;
+    padding: 0;
+}
+.descriptive-metadata-value {
+    list-style-type: none;
+}

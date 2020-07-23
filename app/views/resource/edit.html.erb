@@ -1,20 +1,27 @@
-  <div id="error_explanation">
-  </div>
+<div id="error_explanation">
+</div>
+
+<h1><%= @page_title %></h1>
 
 <%= form_with(id: 'resource_edit_form') do %>
-  <% unless @content_model[:required].empty? %>
+  <%
+    content_model = @resource[:content_model]
+    items = @resource[:items]
+  %>
+
+  <% unless content_model[:required].empty? %>
     <h2>Required Fields</h2>
-    <%= render 'metadata_edit_components', fields: @content_model[:required], items: @items, uri: @id %>
+    <%= render 'metadata_edit_components', fields: content_model[:required], items: items, uri: @id %>
   <% end %>
 
-  <% unless @content_model[:recommended].empty? %>
+  <% unless content_model[:recommended].empty? %>
     <h2>Recommended Fields</h2>
-    <%= render 'metadata_edit_components', fields: @content_model[:recommended], items: @items, uri: @id %>
+    <%= render 'metadata_edit_components', fields: content_model[:recommended], items: items, uri: @id %>
   <% end %>
 
-  <% unless @content_model[:optional].empty? %>
+  <% unless content_model[:optional].empty? %>
     <h2>Optional Fields</h2>
-    <%= render 'metadata_edit_components', fields: @content_model[:optional], items: @items, uri: @id %>
+    <%= render 'metadata_edit_components', fields: content_model[:optional], items: items, uri: @id %>
   <% end %>
 
   <div class="form-group">

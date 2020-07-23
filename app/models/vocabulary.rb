@@ -48,6 +48,11 @@ class Vocabulary < ApplicationRecord
     individuals + types + datatypes
   end
 
+  def term(term_uri)
+    id = term_uri.delete_prefix(uri)
+    terms.find { |term| term.identifier == id }
+  end
+
   def uri
     VOCAB_CONFIG['local_authority_base_uri'] + identifier + '#'
   end
