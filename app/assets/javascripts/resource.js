@@ -22,6 +22,11 @@ $(document).on('turbolinks:load', function() {
     }
   }
 
+  function displayErrors(errorHtml) {
+    errorDiv.innerHTML = errorHtml;
+    window.scrollTo(0, 0);
+  }
+
   // Ensure submit button is enabled on form load
   enableSubmitButton();
 
@@ -44,8 +49,7 @@ $(document).on('turbolinks:load', function() {
 
       let errorDisplay = data.error_display;
       if (errorDisplay) {
-        errorDiv.innerHTML = errorDisplay;
-        window.scrollTo(0, 0);
+        displayErrors(errorDisplay)
         return;
       }
 
@@ -56,11 +60,15 @@ $(document).on('turbolinks:load', function() {
       }
     });
     element.addEventListener("ajax:error", () => {
-      enableSubmitButton();
       const [data, _status, xhr] = event.detail;
-      errors = data.errors
-      let alertText = errors.join("\n");
-      alert(alertText);
+
+      enableSubmitButton();
+
+      let errorDisplay = data.error_display;
+      if (errorDisplay) {
+        displayErrors(errorDisplay)
+        return;
+      }
     });
   }
 });
