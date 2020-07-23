@@ -77,7 +77,7 @@ class ResourceController < ApplicationController
         PlastronCommand: 'update',
         'PlastronArg-on-behalf-of': current_user.cas_directory_id,
         'PlastronArg-no-transactions': 'True',
-        'PlastronArg-validate': 'False',
+        'PlastronArg-validate': 'True',
         'PlastronArg-model': model
       }
 
