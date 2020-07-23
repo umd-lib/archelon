@@ -26,7 +26,7 @@ class ResourceController < ApplicationController
 
     @sparql_update = "DELETE {\n#{delete_statements.join} } INSERT {\n#{insert_statements.join} } WHERE {}"
 
-    response = send_to_plastron(@id, resource[:model], @sparql_update)
+    response = send_to_plastron(@id, resource[:content_model_name], @sparql_update)
 
     success = response[:status] == 'Done'
 

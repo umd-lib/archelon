@@ -27,8 +27,12 @@ class ResourceService
       [uri, resource]
     end]
 
-    content_model = content_model_from_rdf_type(items[id]['@type'])
-    { items: items, content_model: content_model }
+    name = content_model_name(items[id]['@type'])
+    {
+      items: items,
+      content_model_name: name,
+      content_model: CONTENT_MODELS[name]
+    }
   end
 
   CONTENT_MODEL_MAP = [
@@ -41,8 +45,7 @@ class ResourceService
     [:Item, ->(types) { types.include? 'http://pcdm.org/models#File' }]
   ].freeze
 
-  def self.content_model_from_rdf_type(types)
-    name = CONTENT_MODEL_MAP.filter { |pair| pair[1].call(types) }.first[0]
-    CONTENT_MODELS[name]
+  def self.content_model_name(types)
+    CONTENT_MODEL_MAP.filter { |pair| pair[1].call(types) }.first[0]
   end
 end
