@@ -71,7 +71,7 @@ class URIRef extends React.Component {
       <React.Fragment>
         <input type="hidden" name="delete[]" value={this.initialStatement} disabled={this.props.value.isNew || valueIsUnchanged}/>
         <input type="hidden" name="insert[]" value={statement} disabled={valueIsUnchanged}/>
-        <input title={this.state.datatype} value={this.state.uri} onChange={this.handleTextChange} size="40"/>
+        <input name={this.props.name} title={this.state.datatype} value={this.state.uri} onChange={this.handleTextChange} size="40"/>
       </React.Fragment>
     );
   }

@@ -73,7 +73,6 @@ class Repeatable extends React.Component {
   };
 
   onComponentRemove(deleteStatement) {
-    console.log(deleteStatement);
     this.setState(function (state, _props) {
       state.deletedStatements.push(deleteStatement);
       return { deletedStatements: state.deletedStatements };
@@ -97,6 +96,7 @@ class Repeatable extends React.Component {
   // Creates the new element to add
   buildComponent(value) {
     const props = {
+      name: this.props.name,
       subjectURI: this.props.subjectURI,
       predicateURI: this.props.predicateURI,
       notifyContainer: this.onComponentRemove,

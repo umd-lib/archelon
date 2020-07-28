@@ -22,8 +22,24 @@ $(document).on('turbolinks:load', function() {
     }
   }
 
-  function displayErrors(errorHtml) {
+  function displayErrors(errorHtml, errors) {
+    // Clear all error fields
+    errorClass = "validation_error";
+    let fields = document.getElementsByClassName(errorClass);
+    while (fields.length > 0) {
+      fields[0].classList.remove(errorClass);
+    }
+
     errorDiv.innerHTML = errorHtml;
+    errors.forEach( error => {
+      let field_name = error['name'];
+      if (field_name) {
+        let fields = document.getElementsByName(field_name);
+        fields.forEach(field => {
+          field.classList.add(errorClass);
+        });
+      }
+    });
     window.scrollTo(0, 0);
   }
 
@@ -47,9 +63,10 @@ $(document).on('turbolinks:load', function() {
       // ajax.success occurs even if a validation error occurrs, so
       // check for any errors
 
-      let errorDisplay = data.error_display;
-      if (errorDisplay) {
-        displayErrors(errorDisplay)
+      let errors = data.errors;
+      let errorHtml = data.error_display;
+      if (errorHtml) {
+        displayErrors(errorHtml, errors)
         return;
       }
 

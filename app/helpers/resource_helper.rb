@@ -7,6 +7,7 @@ module ResourceHelper
       component_type = :Repeatable
       values = item[field[:uri]]
       component_args = {
+        name: field[:name],
         # this will group fields by their subject ...
         subjectURI: uri,
         # ... and key them by their predicate
