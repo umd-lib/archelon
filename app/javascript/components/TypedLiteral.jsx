@@ -30,6 +30,21 @@ const { namedNode, defaultGraph } = DataFactory;
 class TypedLiteral extends React.Component {
   constructor(props) {
     super(props);
+
+    // Special handling for http://purl.org/dc/terms/identifier, which could
+    // be a literal (has an "@value" property), or a URIRef (has an "@id"
+    // property). If a URIRef, moving the "@id" to "@value", but setting a
+    // "isValueUriRef" flag, so that if we delete the value, we know that
+    // it is a URIRef, and not a literal, when we generate the SPARQL update
+    // See LIBHYDRA-362.
+    this.isValueUriRef = false;
+    if (props.predicateURI === 'http://purl.org/dc/terms/identifier') {
+      if ((props.value['@id'] !== undefined) && (props.value['@value'] === undefined)) {
+        this.isValueUriRef = true;
+        props.value['@value'] = props.value['@id'];
+      }
+    }
+
     // save the initial value
     this.initialStatement = this.getStatement(props.value['@value'], props.value['@type']);
     this.state = {
@@ -51,6 +66,12 @@ class TypedLiteral extends React.Component {
     // "^^" to separate the type, instead of "@" (which is what we would
     // get from DataFactory.literal
     let literalValue = { id: `\"${value}\"` }
+
+    if (this.isValueUriRef) {
+      // If value was originally a URIRef, wrap in < >, instead of quotes.
+      literalValue = { id: `<${value}>` };
+    }
+
     if (datatype) {
       literalValue = { id: `\"${value}\"^^<${datatype}>` }
     }
