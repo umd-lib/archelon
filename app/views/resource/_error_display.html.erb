@@ -3,6 +3,7 @@
 
       <ul>
         <% @errors.each do |message| %>
+          <% message = message[:error] if message[:error] %>
           <li><%= message %></li>
         <% end %>
       </ul>

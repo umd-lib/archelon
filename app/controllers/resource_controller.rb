@@ -38,14 +38,44 @@ class ResourceController < ApplicationController
       @errors = []
       if validation_errors.present?
         validation_errors_from_json = JSON.parse(validation_errors[0].to_s)
-        @errors = validation_errors_from_json
+        @errors = parse_errors(validation_errors_from_json)
       end
       error_display = render_to_string template: 'resource/_error_display', layout: false
-      return render json: { error_display: error_display }
+      return render json: { error_display: error_display, errors: @errors }
     end
   end
 
   private
+
+    # Parses the strings returned as validation errors from Python, and
+    # converts them into a map
+    #
+    # Errors from Plastron are expected to look like:
+    # "('<name>', '<status>', '<rule>', '<expected>')"
+    #
+    # These errors are parsed into a Map with "name", "status", "rule", and
+    # "expected" keys.
+    #
+    # Other errors (such as a timeout error) are just a simple string, and
+    # are parsed into a Map that contains an "error" key.
+    def parse_errors(error_strings) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+      errors = []
+
+      error_strings.each do |str|
+        str = str.strip.gsub('(', '').gsub(')', '').gsub("'", '')
+        arr = str.split(',').each(&:strip)
+
+        if arr.length == 4
+          h = { name: arr[0], status: arr[1], rule: arr[2], expected: arr[3] }
+          # Workaround - "alternative" from Plastron should be "alternate_title"
+          h[:name] = 'alternate_title' if h[:name] == 'alternative'
+        else
+          h = { error: str }
+        end
+        errors.append(h)
+      end
+      errors
+    end
 
     def send_to_plastron(id, model, sparql_update) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
       params_to_skip = %w[utf8 authenticity_token submit controller action]
