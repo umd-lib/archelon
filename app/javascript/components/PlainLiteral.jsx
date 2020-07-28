@@ -105,7 +105,7 @@ class PlainLiteral extends React.Component {
       <React.Fragment>
         <input type="hidden" name="delete[]" value={this.initialStatement} disabled={this.props.value.isNew || valueIsUnchanged}/>
         <input type="hidden" name="insert[]" value={statement} disabled={valueIsUnchanged}/>
-        <input value={this.state.value} onChange={this.handleTextChange} size="40"/>
+        <input name={this.props.name} value={this.state.value} onChange={this.handleTextChange} size="40"/>
         &nbsp;Language:&nbsp;
         <select value={this.state.language} onChange={this.handleLanguageChange}>
           {Object.entries(this.LANGUAGES).map(([code, name]) => (

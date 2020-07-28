@@ -73,7 +73,7 @@ class LabeledThing extends React.Component {
     return (
         <React.Fragment>
           <input type="hidden" name="insert[]" value={this.initialStatement} disabled={!(this.state.labelChanged || this.state.sameAsChanged)}/>
-          <PlainLiteral subjectURI={this.subject} predicateURI={labelPredicate} value={this.state.label}
+          <PlainLiteral name={this.props.name} subjectURI={this.subject} predicateURI={labelPredicate} value={this.state.label}
           onChange={this.handleLabelChange} notifyContainer={this.props.notifyContainer}/>
           &nbsp;URI:&nbsp;
           <URIRef subjectURI={this.subject} predicateURI={sameAsPredicate} value={this.state.sameAs}

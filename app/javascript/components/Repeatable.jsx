@@ -97,6 +97,7 @@ class Repeatable extends React.Component {
   // Creates the new element to add
   buildComponent(value) {
     const props = {
+      name: this.props.name,
       subjectURI: this.props.subjectURI,
       predicateURI: this.props.predicateURI,
       notifyContainer: this.onComponentRemove,
