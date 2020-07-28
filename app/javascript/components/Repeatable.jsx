@@ -73,7 +73,6 @@ class Repeatable extends React.Component {
   };
 
   onComponentRemove(deleteStatement) {
-    console.log(deleteStatement);
     this.setState(function (state, _props) {
       state.deletedStatements.push(deleteStatement);
       return { deletedStatements: state.deletedStatements };
