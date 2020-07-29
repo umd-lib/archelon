@@ -28,14 +28,6 @@ const { namedNode, literal, defaultGraph } = DataFactory;
  * with a single value, `{"@value": "Lorem ipsum", "@language": "en"}`.
  */
 class PlainLiteral extends React.Component {
-  // The options for the dropdown, using ISO-639 language codes
-  LANGUAGES = {
-    '': '',
-    'en': 'English',
-    'ja': 'Japanese',
-    'ja-latn': 'Japanese (Romanized)',
-  };
-
   constructor(props) {
     super(props);
 
@@ -124,19 +116,44 @@ class PlainLiteral extends React.Component {
     let statement = this.getStatement(this.state.value, this.state.language);
     let valueIsUnchanged = !(this.state.valueChanged || this.state.languageChanged)
 
+    let languageDropdown = <LanguageDropdown value={this.state.language} handleLanguageChange={this.handleLanguageChange} />
+    if (this.isValueUriRef) {
+      languageDropdown = null;
+    }
+
     return (
       <React.Fragment>
         <input type="hidden" name="delete[]" value={this.initialStatement} disabled={this.props.value.isNew || valueIsUnchanged}/>
         <input type="hidden" name="insert[]" value={statement} disabled={valueIsUnchanged}/>
         <input name={this.props.name} value={this.state.value} onChange={this.handleTextChange} size="40"/>
-        &nbsp;Language:&nbsp;
-        <select value={this.state.language} onChange={this.handleLanguageChange}>
-          {Object.entries(this.LANGUAGES).map(([code, name]) => (
-              <option key={code} value={code}>{name}</option>
-          ))}
-        </select>
+        {languageDropdown}
       </React.Fragment>
     );
+  }
+}
+
+class LanguageDropdown extends React.Component {
+  // The options for the dropdown, using ISO-639 language codes
+  LANGUAGES = {
+    '': '',
+    'en': 'English',
+    'ja': 'Japanese',
+    'ja-latn': 'Japanese (Romanized)',
+  };
+
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (<>
+      &nbsp;Language:&nbsp;
+      <select value={this.props.value} onChange={this.props.handleLanguageChange}>
+        {Object.entries(this.LANGUAGES).map(([code, name]) => (
+            <option key={code} value={code}>{name}</option>
+        ))}
+      </select>
+    </>);
   }
 }
 
