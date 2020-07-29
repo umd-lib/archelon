@@ -38,6 +38,21 @@ class PlainLiteral extends React.Component {
 
   constructor(props) {
     super(props);
+
+    // Special handling for http://www.europeana.eu/schemas/edm/hasType, which
+    // could be a literal (has an "@value" property), or a URIRef (has an "@id"
+    // property). If a URIRef, moving the "@id" to "@value", but setting a
+    // "isValueUriRef" flag, so that if we delete the value, we know that
+    // it is a URIRef, and not a literal, when we generate the SPARQL update
+    // See LIBHYDRA-362.
+    this.isValueUriRef = false;
+    if (props.predicateURI === 'http://www.europeana.eu/schemas/edm/hasType') {
+      if ((props.value['@id'] !== undefined) && (props.value['@value'] === undefined)) {
+        this.isValueUriRef = true;
+        props.value['@value'] = props.value['@id'];
+      }
+    }
+
     // save the initial value
     this.initialStatement = this.getStatement(props.value['@value'], props.value['@language']);
     this.state = {
@@ -83,10 +98,18 @@ class PlainLiteral extends React.Component {
 
   getStatement(value, language) {
     const writer = new N3.Writer({format: 'N-Triples'});
+
+    let literalValue = literal(value, language || undefined)
+
+    if (this.isValueUriRef) {
+      // If value was originally a URIRef, wrap in < >, instead of quotes.
+      literalValue = { id: `<${value}>` };
+    }
+
     return writer.quadToString(
         namedNode(this.props.subjectURI),
         namedNode(this.props.predicateURI),
-        literal(value, language || undefined),
+        literalValue,
         defaultGraph(),
     );
   }
