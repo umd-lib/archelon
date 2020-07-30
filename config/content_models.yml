@@ -152,43 +152,15 @@ Letter:
       label: 'Archival Collection'
       type: :LabeledThing
 
-    - name: 'date'
-      uri: 'http://purl.org/dc/elements/1.1/date'
-      label: 'Date'
-      type: :TypedLiteral
-
     - name: 'description'
       uri: 'http://purl.org/dc/terms/description'
       label: 'Description'
       type: :PlainLiteral
 
-    - name: 'author'
-      uri: 'http://id.loc.gov/vocabulary/relators/aut'
-      label: 'Author'
-      type: :LabeledThing
-      repeatable: true
-
-    - name: 'recipient'
-      uri: 'http://purl.org/ontology/bibo/recipient'
-      label: 'Recipient'
-      type: :LabeledThing
-      repeatable: true
-
-    - name: 'place'
-      uri: 'http://purl.org/dc/terms/spatial'
-      label: 'Location'
-      type: :LabeledThing
-
     - name: 'extent'
       uri: 'http://purl.org/dc/terms/extent'
       label: 'Extent'
       type: :PlainLiteral
-
-    - name: 'subject'
-      uri: 'http://purl.org/dc/terms/subject'
-      label: 'Subject'
-      type: :LabeledThing
-      repeatable: true
 
     - name: 'language'
       uri: 'http://purl.org/dc/elements/1.1/language'
@@ -206,7 +178,34 @@ Letter:
       type: :PlainLiteral
 
   recommended: []
-  optional: []
+  optional:
+    - name: 'date'
+      uri: 'http://purl.org/dc/elements/1.1/date'
+      label: 'Date'
+      type: :TypedLiteral
+
+    - name: 'subject'
+      uri: 'http://purl.org/dc/terms/subject'
+      label: 'Subject'
+      type: :LabeledThing
+      repeatable: true
+
+    - name: 'place'
+      uri: 'http://purl.org/dc/terms/spatial'
+      label: 'Location'
+      type: :LabeledThing
+
+    - name: 'recipient'
+      uri: 'http://purl.org/ontology/bibo/recipient'
+      label: 'Recipient'
+      type: :LabeledThing
+      repeatable: true
+
+    - name: 'author'
+      uri: 'http://id.loc.gov/vocabulary/relators/aut'
+      label: 'Author'
+      type: :LabeledThing
+      repeatable: true
 
 
 Poster:
@@ -215,11 +214,6 @@ Poster:
       uri: 'http://purl.org/dc/terms/identifier'
       label: 'Identifier'
       type: :TypedLiteral
-
-    - name: 'rights'
-      uri: 'http://purl.org/dc/terms/rights'
-      label: 'Rights Statement'
-      type: :URIRef
 
     - name: 'title'
       uri: 'http://purl.org/dc/terms/title'
@@ -248,6 +242,29 @@ Poster:
       type: :PlainLiteral
       repeatable: true
 
+    - name: 'language'
+      uri: 'http://purl.org/dc/elements/1.1/language'
+      label: 'Language'
+      type: :TypedLiteral
+
+    - name: 'locator'
+      uri: 'http://purl.org/ontology/bibo/locator'
+      label: 'Identifier/Call Number'
+      type: :TypedLiteral
+
+    - name: 'rights'
+      uri: 'http://purl.org/dc/terms/rights'
+      label: 'Rights Statement'
+      type: :URIRef
+
+  recommended: []
+  optional:
+    - name: 'alternate_title'
+      uri: 'http://purl.org/dc/terms/alternative'
+      label: 'Alternate Title'
+      type: :PlainLiteral
+      repeatable: true
+
     - name: 'publisher'
       uri: 'http://purl.org/dc/elements/1.1/publisher'
       label: 'Publisher'
@@ -264,9 +281,25 @@ Poster:
       label: 'Description'
       type: :PlainLiteral
 
+    - name: 'extent'
+      uri: 'http://purl.org/dc/terms/extent'
+      label: 'Extent'
+      type: :PlainLiteral
+
+    - name: 'issue'
+      uri: 'http://purl.org/ontology/bibo/issue'
+      label: 'Issue'
+      type: :TypedLiteral
+
     - name: 'location'
       uri: 'http://purl.org/dc/elements/1.1/coverage'
       label: 'Location'
+      type: :PlainLiteral
+      repeatable: true
+
+    - name: 'subject'
+      uri: 'http://purl.org/dc/elements/1.1/subject'
+      label: 'Subject'
       type: :PlainLiteral
       repeatable: true
 
@@ -280,40 +313,6 @@ Poster:
       label: 'Longitude'
       type: :TypedLiteral
 
-    - name: 'extent'
-      uri: 'http://purl.org/dc/terms/extent'
-      label: 'Extent'
-      type: :PlainLiteral
-
-    - name: 'subject'
-      uri: 'http://purl.org/dc/elements/1.1/subject'
-      label: 'Subject'
-      type: :PlainLiteral
-      repeatable: true
-
-    - name: 'language'
-      uri: 'http://purl.org/dc/elements/1.1/language'
-      label: 'Language'
-      type: :TypedLiteral
-
-    - name: 'locator'
-      uri: 'http://purl.org/ontology/bibo/locator'
-      label: 'Identifier/Call Number'
-      type: :TypedLiteral
-
-    - name: 'issue'
-      uri: 'http://purl.org/ontology/bibo/issue'
-      label: 'Issue'
-      type: :TypedLiteral
-
-  recommended: []
-  optional:
-    - name: 'alternate_title'
-      uri: 'http://purl.org/dc/terms/alternative'
-      label: 'Alternate Title'
-      type: :PlainLiteral
-      repeatable: true
-
 
 Issue:
   required:
@@ -321,7 +320,6 @@ Issue:
       uri: 'http://purl.org/dc/terms/title'
       label: 'Title'
       type: :PlainLiteral
-      repeatable: true
 
     - name: 'access'
       label: 'Access Level'
