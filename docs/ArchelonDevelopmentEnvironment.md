@@ -474,7 +474,8 @@ remain empty.
 | VOCAB_LOCAL_AUTHORITY_BASE_URI | http://vocab.lib.umd.edu/ |
 | VOCAB_PUBLICATION_BASE_URI     | http://localhost:3000/published_vocabularies/ |
 
-## 4.5) Run Archelon
+
+## 4.5) Run the Archelon STOMP listener
 
 4.5.1) Switch to the "~/git/archelon/" directory:
 
@@ -482,20 +483,13 @@ remain empty.
 > cd ~/git/archelon/
 ```
 
-4.5.2) Run Archelon using the following command:
+4.5.2) Run the Archelon STOMP listener using the following command:
 
 ```
-> rails server
+> rails stomp:listen
 ```
 
-4.5.3) Verify that Archelon is running by going to:
-
-[http://localhost:3000/](http://localhost:3000/)
-
-After logging in, the Archelon home page should be displayed. The "Collection"
-panel should display a "Student Newspapers" entry.
-
-## 4.6) Run the Archelon STOMP listener
+## 4.6) Run Archelon
 
 4.6.1) Create a new terminal.
 
@@ -505,11 +499,18 @@ panel should display a "Student Newspapers" entry.
 > cd ~/git/archelon/
 ```
 
-4.6.3) Run the Archelon STOMP listener using the following command:
+4.6.3) Run Archelon using the following command:
 
 ```
-> rails stomp:listen
+> rails server
 ```
+
+4.6.4) Verify that Archelon is running by going to:
+
+[http://localhost:3000/](http://localhost:3000/)
+
+After logging in, the Archelon home page should be displayed. The "Collection"
+panel should display a "Student Newspapers" entry.
 
 ## Using the "postgresql" adapter with Action Cable" in the "development" environment
 
