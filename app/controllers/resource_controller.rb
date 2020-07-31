@@ -6,7 +6,7 @@ class ResourceController < ApplicationController
   def edit
     @id = params[:id]
     @resource = ResourceService.resource_with_model(@id)
-    @title = @resource[:items][@id]['http://purl.org/dc/terms/title']&.first&.fetch('@value', @id)
+    @title = ResourceService.display_title(@resource, @id)
     @page_title = "Editing: \"#{@title}\""
   end
 

@@ -48,4 +48,31 @@ class ResourceService
   def self.content_model_name(types)
     CONTENT_MODEL_MAP.filter { |pair| pair[1].call(types) }.first[0]
   end
+
+  # Returns the display title for the Fedora resource, or nil
+  def self.display_title(resource, id)
+    return unless resource && id
+
+    resource_titles = resource.dig(:items, id, 'http://purl.org/dc/terms/title')
+    return if resource_titles.blank?
+
+    sorted_titles = sort_titles_by_language(resource_titles)
+    return sorted_titles.join(', ') if sorted_titles
+  end
+
+  # Sorts resource titles by language to ensure consistent ordering
+  def self.sort_titles_by_language(resource_titles) # rubocop:disable Metrics/MethodLength
+    languages_map = {}
+    resource_titles.each do |title|
+      language = title['@language'] || 'None'
+      language_list = languages_map.fetch(language, [])
+      languages_map[language] = language_list.push(title['@value'])
+    end
+    ordered_languages = %w[None en ja-latn ja]
+    sorted_titles = []
+    ordered_languages.each do |language|
+      sorted_titles.push(*languages_map.fetch(language, []))
+    end
+    sorted_titles
+  end
 end
