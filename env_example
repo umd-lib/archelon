@@ -98,3 +98,22 @@ MAX_ALLOWED_BINARIES_DOWNLOAD_SIZE=53687091200
 # --- config/application.rb
 # Set this if you need to change the default logging level of "info"
 # RAILS_LOG_LEVEL=debug
+
+# Production environment variables
+# The following environment variables are typically only set when using
+# the application in a "production" environment
+
+# --- config/environments/*.rb
+# Serve static files only if this env var is defined
+# RAILS_SERVE_STATIC_FILES=true
+
+# --- config/secrets.yml
+# SECRET_KEY_BASE=
+
+# --- config/imports.yml
+# IMPORT_BINARIES_DIR=/data/imports
+# IMPORT_BINARIES_BASE_LOCATION=zip+sftp://plastron@archelondev.lib.umd.edu/imports
+
+# -- config/exports.yml
+# EXPORT_DIR=/data/exports
+# EXPORT_BASE_DESTINATION=sftp://plastron@archelondev.lib.umd.edu/exports
