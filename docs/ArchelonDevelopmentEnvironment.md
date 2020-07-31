@@ -249,11 +249,13 @@ MESSAGE_BROKER:
     JOB_STATUS: /topic/plastron.jobs.status
     COMPLETED_JOBS: /queue/plastron.jobs.completed
     SYNCHRONOUS_JOBS: /queue/plastron.jobs.synchronous
+COMMANDS:
 ```
 
 ----
-**Note:** For production, an additional "COMMANDS" stanza is needed to
-configure the SSH private key for STFP import/export operations, i.e:
+**Note:** For production, additional variables in the "COMMANDS"
+stanza are needed to configure the SSH private key for STFP
+import/export operations, i.e:
 
 ```
 COMMANDS:
