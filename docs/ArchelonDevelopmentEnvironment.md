@@ -397,8 +397,15 @@ The following assumes that "rvm" is being used.
 
 4.2.3) Set up the database:
 
+----
+
+**Note:** The following command will destroy any data in the local database
+(if one exists).
+
+----
+
 ```
-> rails db:migrate
+> rails db:reset
 ```
 
 4.2.4) Run "yarn" to install JavaScript dependencies:
@@ -475,7 +482,6 @@ remain empty.
 | FCREPO_CLIENT_KEY              | batchloader.key |
 | VOCAB_LOCAL_AUTHORITY_BASE_URI | http://vocab.lib.umd.edu/ |
 | VOCAB_PUBLICATION_BASE_URI     | http://localhost:3000/published_vocabularies/ |
-
 
 ## 4.5) Run the Archelon STOMP listener
 
