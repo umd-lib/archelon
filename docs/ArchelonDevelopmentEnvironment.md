@@ -249,10 +249,20 @@ MESSAGE_BROKER:
     JOB_STATUS: /topic/plastron.jobs.status
     COMPLETED_JOBS: /queue/plastron.jobs.completed
     SYNCHRONOUS_JOBS: /queue/plastron.jobs.synchronous
+```
+
+----
+**Note:** For production, an additional "COMMANDS" stanza is needed to
+configure the SSH private key for STFP import/export operations, i.e:
+
+```
 COMMANDS:
   EXPORT:
-    BINARIES_DIR: exports/
+    SSH_PRIVATE_KEY: /run/secrets/archelon_id
+  IMPORT:
+    SSH_PRIVATE_KEY: /run/secrets/archelon_id
 ```
+----
 
 ### 2.4) Run Plastron
 
@@ -459,8 +469,6 @@ remain empty.
 | Property                       | Value   |
 | ------------------------------ | ------- |
 | LDAP_BIND_PASSWORD             | See the "FCRepo Directory LDAP AuthDN" in the "Identites" document on the shared SSDR Google Drive. |
-| ARCHELON_DATABASE_PASSWORD     | archelon |
-| ARCHELON_DATABASE_HOST         | localhost |
 | FCREPO_CLIENT_CERT             | batchloader.pem |
 | FCREPO_CLIENT_KEY              | batchloader.key |
 | VOCAB_LOCAL_AUTHORITY_BASE_URI | http://vocab.lib.umd.edu/ |
