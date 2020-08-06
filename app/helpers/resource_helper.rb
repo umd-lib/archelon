@@ -37,10 +37,12 @@ module ResourceHelper
     return value unless target_uri
 
     obj = items[target_uri]
+    label = obj&.fetch(LABEL_PREDICATE, nil)&.first
+    same_as = obj&.fetch(SAME_AS_PREDICATE, nil)&.first
 
-    { value: value }.tap do |result|
-      result[:label] = obj[LABEL_PREDICATE]&.first if obj[LABEL_PREDICATE]&.first
-      result[:sameAs] = obj[SAME_AS_PREDICATE]&.first if obj[SAME_AS_PREDICATE]&.first
+    { value: value }.tap do |v|
+      v[:label] = label if label
+      v[:sameAs] = same_as if same_as
     end
   end
 
