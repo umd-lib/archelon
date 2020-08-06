@@ -171,6 +171,9 @@ module ApplicationHelper # rubocop:disable Metrics/ModuleLength
         return link_to uri, uri if vocab.nil?
 
         term = vocab.term(uri)
+        # fall back to displaying the URI if can't find the term
+        return link_to uri, uri if term.nil?
+
         content = content_tag :span, term.label
         content << ' → ' << link_to(term.same_as, term.same_as) if term.same_as
         content
