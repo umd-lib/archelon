@@ -166,7 +166,11 @@ module ApplicationHelper # rubocop:disable Metrics/ModuleLength
           content_tag :span, display_node(label, field, obj)
         end
       elsif field[:vocab]
-        term = Vocabulary.find_by(identifier: field[:vocab]).term(uri)
+        vocab = Vocabulary.find_by(identifier: field[:vocab])
+        # fall back to displaying the URI if the vocab isn't defined on this server
+        return link_to uri, uri if vocab.nil?
+
+        term = vocab.term(uri)
         content = content_tag :span, term.label
         content << ' → ' << link_to(term.same_as, term.same_as) if term.same_as
         content
