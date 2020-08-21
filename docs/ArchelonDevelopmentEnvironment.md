@@ -255,8 +255,9 @@ COMMANDS:
 ```
 
 ----
+
 **Note:** For production, additional variables in the "COMMANDS"
-stanza are needed to configure the SSH private key for STFP
+stanza are needed to configure the SSH private key for SFTP
 import/export operations, i.e:
 
 ```
@@ -266,6 +267,7 @@ COMMANDS:
   IMPORT:
     SSH_PRIVATE_KEY: /run/secrets/archelon_id
 ```
+
 ----
 
 ### 2.4) Run Plastron
