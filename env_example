@@ -117,3 +117,8 @@ MAX_ALLOWED_BINARIES_DOWNLOAD_SIZE=53687091200
 # -- config/exports.yml
 # EXPORT_DIR=/data/exports
 # EXPORT_BASE_DESTINATION=sftp://plastron@archelondev.lib.umd.edu/exports
+
+# ---  config/initializers/public_keys.rb
+# Public key from Plastron server for SFTP transfers
+# Optional for local development, required for production
+PLASTRON_PUBLIC_KEY=
