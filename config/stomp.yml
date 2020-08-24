@@ -6,6 +6,7 @@ default: &default
     jobs: /queue/plastron.jobs
     job_status: /topic/plastron.jobs.status
     jobs_completed: /queue/plastron.jobs.completed
+    jobs_synchronous: /queue/plastron.jobs.synchronous
 
 development:
   <<: *default

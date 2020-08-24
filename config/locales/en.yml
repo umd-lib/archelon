@@ -41,6 +41,10 @@ en:
   import_already_performed: 'Import has completed. Cannot reimport or validate'
   cannot_import_invalid_file: 'Cannot import a file with validation errors.'
   export_job_no_mime_types_selected: 'Please select at least one MIME type when exporting binaries'
+  resource_update_successful: 'Update successful'
+  resource_update_failed: 'Update failed'
+  resource_update_no_change: 'Please make a change before submitting.'
+  resource_update_timeout_error: 'Timeout error. Fedora has taken too long to respond. Please report this error and check back in a few minutes as your changes may have been saved.'
   activerecord:
     attributes:
       datatype:

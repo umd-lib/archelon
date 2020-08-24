@@ -22,6 +22,9 @@ Rails.application.routes.draw do # rubocop:disable Metrics/BlockLength
     concerns :exportable
   end
 
+  get '/edit/:id', controller: 'resource', action: 'edit', constraints: { id: /.*/ }, as: 'resource_edit'
+  post '/edit/:id', controller: 'resource', action: 'update', constraints: { id: /.*/ }
+
   resources :bookmarks, constraints: { id: /.*/ } do
     concerns :exportable
 
@@ -76,6 +79,9 @@ Rails.application.routes.draw do # rubocop:disable Metrics/BlockLength
 
   get 'about' => 'static_pages#about'
   get 'help' => 'static_pages#help'
+
+  get 'react_components' => 'react_components#react_components'
+  post 'react_components' => 'react_components#react_components_submit'
 
   resources :vocabularies
   resources :types

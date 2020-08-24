@@ -1,46 +1,77 @@
 <%= render "mirador/show", document: document %>
+
+<dl class="dl-horizontal dl-invert" id="metadata">
+  <%
+    items = @resource[:items]
+    item = items[@id]
+  %>
+  <% %i(required recommended optional).each do |level| %>
+    <% @resource[:content_model][level].each do |field| %>
+      <%
+        # special handling for the access field
+        if field[:name] == 'access'
+          vocab = Vocabulary[field[:vocab]]
+          values = item.fetch('@type', []).select { |uri| vocab.key? uri }.map { |uri| { '@id' => uri } }
+        else
+          values = item[field[:uri]] || []
+        end
+      %>
+      <% unless values.empty? %>
+        <dt title="<%= field[:uri] %>"><%= field[:label] %>:</dt>
+        <dd>
+          <ul class="descriptive-metadata-values">
+            <%  values.each do |node|  %>
+              <li class="descriptive-metadata-value"><%=  display_node(node, field, items)  %></li>
+            <% end %>
+          </ul>
+        </dd>
+      <% end %>
+    <% end %>
+  <% end %>
+</dl>
+
 <% doc_presenter = show_presenter(document) %>
 <%# default partial to display solr document fields in catalog show view -%>
-<dl class="dl-horizontal dl-invert" id="metadata">
+<dl class="dl-horizontal dl-invert">
   <% document_show_fields(document).each do |field_name, field| %>
     <% if should_render_show_field? document, field %>
       <dt class="blacklight-<%= field_name.parameterize %>">
-      <%= render_document_show_field_label document, field: field_name %>
+        <%= render_document_show_field_label document, field: field_name %>
       </dt>
       <% if field_name=='id' %>
         <dd class="blacklight-<%= field_name.parameterize %>"><%= link_to doc_presenter.field_value(field_name), doc_presenter.field_value(field_name), target: "_blank" %></dd>
       <% elsif field_name == 'pcdm_members' %>
         <dd class="blacklight-<%= field_name.parameterize %>">
-        <% unique_component_types(doc_presenter.field_value(field_name)).each do |component| %>
-          <% subset = doc_presenter.field_value(field_name).select{|member| member['component'] == component} %>
-          <% unless component.nil? %>
-            <strong>
-              <%= component.pluralize subset.size %>
-              <span class="badge"><%= subset.size %></span>
-            </strong>
+          <% unique_component_types(doc_presenter.field_value(field_name)).each do |component| %>
+            <% subset = doc_presenter.field_value(field_name).select{|member| member['component'] == component} %>
+            <% unless component.nil? %>
+              <strong>
+                <%= component.pluralize subset.size %>
+                <span class="badge"><%= subset.size %></span>
+              </strong>
+            <% end %>
+            <ul class="multivalued-field-value">
+              <% subset.sort{|a,b| a['display_title'] <=> b['display_title']}.each do |v| %>
+                <li><%= link_to v['display_title'], solr_document_path(v['id']) %></li>
+              <% end %>
+            </ul>
           <% end %>
+        </dd>
+      <% elsif %w[pcdm_files pcdm_related_objects pcdm_related_object_of pcdm_member_of pcdm_file_of pcdm_collection annotation_source].include?(field_name) %>
+        <dd class="blacklight-<%= field_name.parameterize %>">
           <ul class="multivalued-field-value">
-            <% subset.sort{|a,b| a['display_title'] <=> b['display_title']}.each do |v| %>
-              <li><%= link_to v['display_title'], solr_document_path(v['id']) %></li>
+            <% doc_presenter.field_value(field_name).each do |v| %>
+              <li><%= link_to((v['display_title'].present? ? v['display_title'] : v['id']), solr_document_path(v['id'])) %></li>
             <% end %>
           </ul>
-        <% end %>
-        </dd>
-      <% elsif ['pcdm_files', 'pcdm_related_objects', 'pcdm_related_object_of', 'pcdm_member_of', 'pcdm_file_of', 'pcdm_collection', 'annotation_source'].include?(field_name) %>
-        <dd class="blacklight-<%= field_name.parameterize %>">
-        <ul class="multivalued-field-value">
-          <% doc_presenter.field_value(field_name).each do |v| %>
-            <li><%= link_to v['display_title'], solr_document_path(v['id']) %></li>
-          <% end %>
-        </ul>
         </dd>
       <% elsif field_name == 'rdf_type' %>
         <dd class="blacklight-<%= field_name.parameterize %>">
-        <ul class="multivalued-field-value">
-          <% doc_presenter.field_value(field_name).each do |v| %>
-            <li><%= v %></li>
-          <% end %>
-        </ul>
+          <ul class="multivalued-field-value">
+            <% doc_presenter.field_value(field_name).each do |v| %>
+              <li><%= v %></li>
+            <% end %>
+          </ul>
         </dd>
       <% else %>
         <dd class="blacklight-<%= field_name.parameterize %>"><%= doc_presenter.field_value field_name %></dd>

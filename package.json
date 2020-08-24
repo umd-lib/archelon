@@ -1,5 +1,19 @@
 {
   "name": "archelon",
   "private": true,
-  "dependencies": {}
+  "dependencies": {
+    "@babel/preset-react": "^7.10.1",
+    "@rails/webpacker": "5.1.1",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
+    "n3": "^1.5.0",
+    "prop-types": "^15.7.2",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react_ujs": "^2.6.1",
+    "uuid": "^8.2.0"
+  },
+  "devDependencies": {
+    "react-styleguidist": "^11.0.8",
+    "webpack-dev-server": "^3.11.0"
+  }
 }

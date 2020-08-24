@@ -19,4 +19,12 @@ class Type < ApplicationRecord
   def uri
     vocabulary.uri + identifier
   end
+
+  def label
+    identifier
+  end
+
+  def same_as
+    nil
+  end
 end

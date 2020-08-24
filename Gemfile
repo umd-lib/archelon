@@ -38,7 +38,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'jquery-rails'
 
 # bundle exec rake doc:rails generates the API under doc/api.
-gem 'sdoc', '~> 0.4.0', group: :doc
+gem 'sdoc', '~> 1.1.0', group: :doc
 
 # Blacklight Gems
 gem 'blacklight', '~> 6.0'
@@ -131,3 +131,6 @@ gem 'mechanize'
 gem 'rdf-turtle'
 gem 'json-ld'
 gem 'cancancan'
+
+gem 'webpacker'
+gem 'react-rails'

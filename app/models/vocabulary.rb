@@ -33,6 +33,26 @@ class Vocabulary < ApplicationRecord
 
   scope :by_identifier, -> { order('identifier ASC') }
 
+  def self.[](identifier)
+    vocab = find_by(identifier: identifier)
+    vocab.nil? ? {} : vocab.as_hash
+  end
+
+  def as_hash
+    Hash[terms.map do |term|
+      [term.uri, term.respond_to?(:label) ? term.label : term.identifier]
+    end]
+  end
+
+  def terms
+    individuals + types + datatypes
+  end
+
+  def term(term_uri)
+    id = term_uri.delete_prefix(uri)
+    terms.find { |term| term.identifier == id }
+  end
+
   def uri
     VOCAB_CONFIG['local_authority_base_uri'] + identifier + '#'
   end
@@ -42,7 +62,7 @@ class Vocabulary < ApplicationRecord
   end
 
   def term_count
-    types.count + individuals.count
+    terms.count
   end
 
   def graph

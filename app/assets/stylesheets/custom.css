@@ -124,6 +124,11 @@ input {
   border: 2px solid #a94442;
 }
 
+.validation_error {
+  /* color is state-danger-text */
+  border: 2px solid #a94442;
+}
+
 #retrieve_url {
   text-align: center;
 }
@@ -211,4 +216,12 @@ input {
 .umd_tooltip:hover .umd_tooltiptext {
   visibility: visible;
   opacity: 1;
+}
+
+.descriptive-metadata-values {
+    margin: 0;
+    padding: 0;
+}
+.descriptive-metadata-value {
+    list-style-type: none;
 }
