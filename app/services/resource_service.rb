@@ -27,7 +27,8 @@ class ResourceService
       [uri, resource]
     end]
 
-    name = content_model_name(items[id]['@type'])
+    # default to the Item content model
+    name = content_model_name(items[id]['@type']) || :Item
     {
       items: items,
       content_model_name: name,
@@ -46,7 +47,7 @@ class ResourceService
   ].freeze
 
   def self.content_model_name(types)
-    CONTENT_MODEL_MAP.filter { |pair| pair[1].call(types) }.first[0]
+    CONTENT_MODEL_MAP.find { |pair| pair[1].call(types) }&.first
   end
 
   # Returns the display title for the Fedora resource, or nil
