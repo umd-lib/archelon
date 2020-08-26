@@ -60,7 +60,12 @@ Rails.application.configure do
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
   # add RDF MIME types so static files in the public dir get served correctly
-  Rack::Mime::MIME_TYPES.merge!({'.nt' => 'application/n-triples', '.ttl' => 'text/turtle'})
+  RDF_MIME_TYPES = {
+    '.json' => 'application/ld+json',
+    '.nt' => 'application/n-triples',
+    '.ttl' => 'text/turtle'
+  }
+  Rack::Mime::MIME_TYPES.merge! RDF_MIME_TYPES
 
   # Use "inline" queue to force synchronous operation. This appears to be
   # necessary when using SQLite because of a SQLite3::BusyException: database is locked
