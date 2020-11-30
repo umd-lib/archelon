@@ -2,7 +2,7 @@
 
 one:
   token: one
-  url: MyString
+  url: http://example.com/MyString
   title: MyString
   notes: MyText
   mime_type: MyString
