@@ -13,7 +13,7 @@ class RepositoryCollections
   def self.list
     solr = Blacklight::Solr::Repository.new(blacklight_config)
 
-    solr_response = solr.search fq: 'component:Collection', qt: '/select', q: '*:*'
+    solr_response = solr.search fq: 'component:Collection', qt: '/select', q: '*:*', rows: 100
     process_solr_response(solr_response)
   end
 
