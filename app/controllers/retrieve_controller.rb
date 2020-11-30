@@ -18,9 +18,8 @@ class RetrieveController < ApplicationController
     download_url = DownloadUrl.find_by(token: @token)
     return unless verify_download_url(download_url)
 
-    fedora_url = download_url.url
-    http = HTTP.get(fedora_url, ssl_context: SSL_CONTEXT)
-    data = http.body
+    response = ResourceService.get(download_url.url)
+    data = response.body
 
     download_url.enabled = false
     download_url.accessed_at = Time.zone.now
@@ -29,10 +28,10 @@ class RetrieveController < ApplicationController
     download_url.save
 
     headers['Content-Type'] = download_url.mime_type
-    headers['Content-disposition'] = http['Content-Disposition']
+    headers['Content-disposition'] = response['Content-Disposition']
     headers['Cache-Control'] ||= 'no-cache'
     headers.delete('Content-Length')
-    headers['Content-Length'] = http['Content-Length']
+    headers['Content-Length'] = response['Content-Length']
 
     self.response_body = data
 
