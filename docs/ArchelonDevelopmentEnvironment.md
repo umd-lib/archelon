@@ -46,7 +46,9 @@ filepath for the base directory will be "/Users/jsmith/git/".
     * Fuseki admin console: <http://localhost:3030/>
     * Fedora repository REST API: <http://localhost:8080/rest/>
     * Fedora repository login/user profile page: <http://localhost:8080/user/>
-    
+4. Log in to http://localhost:8080/rest, and add a "pcdm" container, using the
+"Create Child Resource" panel in the right sidebar.
+
 ## Step 2: Create auth tokens for plastron and archelon
 
 Use the following URLs to generate auth tokens for use with plastron and archelon,
@@ -135,7 +137,7 @@ virtualenv:
 3. Load the Student Newspapers data:
     ```bash
     plastron -c ~/git/plastron/config/localhost.yml mkcol -b student_newspapers/batch.yml -n 'Student Newspapers'
-    plastron -c ~/git/plastron/config/localhost.yml repo.yml load -b student_newspapers/batch.yml
+    plastron -c ~/git/plastron/config/localhost.yml load -b student_newspapers/batch.yml
     ```
 
     ℹ️ **Note:** Additional datasets are available. See the README.md file in the
@@ -178,10 +180,10 @@ virtualenv:
 
     | Property                         | Value   |
     | -------------------------------- | ------- |
-    | `LDAP_BIND_PASSWORD`             | See the "FCRepo Directory LDAP AuthDN" in the "Identities" document on the shared SSDR Google Drive. |
+    | `FCREPO_AUTH_TOKEN`              | Value created for archelon in Step 2 |
+    | `LDAP_BIND_PASSWORD`             | See the "FCRepo Directory LDAP AuthDN" in the "Identities" document on Box. |
     | `VOCAB_LOCAL_AUTHORITY_BASE_URI` | http://vocab.lib.umd.edu/ |
     | `VOCAB_PUBLICATION_BASE_URI`     | http://localhost:3000/published_vocabularies/ |
-    | `FCREPO_AUTH_TOKEN`              | Value created for archelon in Step 2 |
 
 7. Run the Archelon STOMP listener:
     ```bash
