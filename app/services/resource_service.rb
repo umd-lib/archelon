@@ -4,8 +4,14 @@ require 'link_header'
 
 # Utilities to retrieve resources from the repository
 class ResourceService
+  def self.fcrepo_http_client
+    headers = {}
+    headers['Authorization'] = "Bearer #{FCREPO_AUTH_TOKEN}" if FCREPO_AUTH_TOKEN
+    HTTP::Client.new(headers: headers, ssl_context: SSL_CONTEXT)
+  end
+
   def self.description_uri(uri)
-    response = HTTP.head(uri, ssl_context: SSL_CONTEXT)
+    response = fcrepo_http_client.head(uri)
     if response.headers.include? 'Link'
       links = LinkHeader.parse(response['Link'].join(','))
       links.find_link(%w[rel describedby])&.href || uri
@@ -14,8 +20,12 @@ class ResourceService
     end
   end
 
+  def self.get(uri, **opts)
+    fcrepo_http_client.get(uri, opts)
+  end
+
   def self.resources(uri)
-    response = HTTP[accept: 'application/ld+json'].get(description_uri(uri), ssl_context: SSL_CONTEXT)
+    response = get(description_uri(uri), headers: { accept: 'application/ld+json' })
     input = JSON.parse(response.body.to_s)
     JSON::LD::API.expand(input)
   end
