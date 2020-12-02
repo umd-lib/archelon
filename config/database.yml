@@ -1,30 +1,4 @@
-# SQLite version 3.x
-#   gem install sqlite3
-#
-#   Ensure the SQLite 3 gem is defined in your Gemfile
-#   gem 'sqlite3'
-#
 default: &default
-  adapter: sqlite3
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  timeout: 5000
-
-development:
-  <<: *default
-  database: db/development.sqlite3
-
-vagrant:
-  <<: *default
-  database: db/vagrant.sqlite3
-
-# Warning: The database defined as "test" will be erased and
-# re-generated from your development database when you run "rake".
-# Do not set this db to the same as development or production.
-test:
-  <<: *default
-  database: db/test.sqlite3
-
-production:
   adapter: <%= ENV["ARCHELON_DATABASE_ADAPTER"] %>
   encoding: <%= ENV["ARCHELON_DATABASE_ENCODING"] %>
   database: <%= ENV["ARCHELON_DATABASE_NAME"] %>
@@ -33,3 +7,18 @@ production:
   host: <%= ENV["ARCHELON_DATABASE_HOST"] %>
   port: <%= ENV["ARCHELON_DATABASE_PORT"] %>
   pool: <%= ENV["ARCHELON_DATABASE_POOL"] %>
+
+development:
+  <<: *default
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+test:
+  adapter: sqlite3
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  timeout: 5000
+  database: db/test.sqlite3
+
+production:
+  <<: *default
