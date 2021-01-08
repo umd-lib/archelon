@@ -4,8 +4,7 @@
 
 This page provides step-by-step instructions for setting up the following:
 
-* fcrepo
-* Plastron
+* fcrepo stack
 * Archelon
 
 with sample data.
@@ -28,9 +27,9 @@ information on prerequisites.
 
 ## Base Directory
 
-For the following, the base directory will be `~/git/` (where "~" is your home
-directory). For example, on Mac OS X, if your username is "jsmith", the full
-filepath for the base directory will be "/Users/jsmith/git/".
+For the following, the base directory will be `~/git/` (where `~` is your home
+directory). For example, on Mac OS X, if your username is `jsmith`, the full
+filepath for the base directory will be `/Users/jsmith/git/`.
 
 ## Step 1: Deploy umd-fcrepo-docker stack
 
@@ -46,27 +45,29 @@ filepath for the base directory will be "/Users/jsmith/git/".
     * Fuseki admin console: <http://localhost:3030/>
     * Fedora repository REST API: <http://localhost:8080/rest/>
     * Fedora repository login/user profile page: <http://localhost:8080/user/>
-4. Log in to http://localhost:8080/rest, and add a "pcdm" container, using the
-"Create Child Resource" panel in the right sidebar.
+4. Log in at <http://localhost:8080/user/>
+5. Go to <http://localhost:8080/rest/>
+6. Add a "pcdm" container, using the "Create Child Resource" panel in the right sidebar.
 
 ## Step 2: Create auth tokens for plastron and archelon
 
-Use the following URLs to generate auth tokens for use with plastron and archelon,
+Use the following URLs to generate auth tokens for use with Plastron and Archelon,
 respectively:
 
 * http://localhost:8080/user/token?subject=plastron&role=fedoraAdmin
 * http://localhost:8080/user/token?subject=archelon&role=fedoraAdmin
     
-## Step 3: Run Plastron as a daemon
+## Step 3: Configure the Plastron CLI to run locally
 
 1. Clone Plastron:
     ```bash
     cd ~/git
-    git clone https://github.com/umd-lib/plastron.git
+    git clone git@github.com:umd-lib/plastron.git
     ```
 2. Create directories to hold the Plastron configurations, logs, msg stores, and
 binary exports:
     ```bash
+    cd plastron
     mkdir config
     mkdir logs
     mkdir msg
@@ -78,15 +79,15 @@ containing the following:
     REPOSITORY:
       REST_ENDPOINT: http://localhost:8080/rest
       RELPATH: /pcdm
-      AUTH_TOKEN: {auth token for plastron created in Step 2 above}
+      AUTH_TOKEN: {auth token for Plastron created in Step 2 above}
       LOG_DIR: logs/
     MESSAGE_BROKER:
       SERVER: localhost:61613
       MESSAGE_STORE_DIR: msg/
       DESTINATIONS:
         JOBS: /queue/plastron.jobs
-        JOB_STATUS: /topic/plastron.jobs.status
-        COMPLETED_JOBS: /queue/plastron.jobs.completed
+        JOB_PROGRESS: /topic/plastron.jobs.progress
+        JOB_STATUS: /queue/plastron.jobs.status
         SYNCHRONOUS_JOBS: /queue/plastron.jobs.synchronous
     COMMANDS:
       EXPORT:
@@ -104,24 +105,15 @@ containing the following:
       IMPORT:
         SSH_PRIVATE_KEY: /run/secrets/archelon_id
     ```
-4. Set up the Python environment to run Plastron. The following uses
-virtualenv:
+4. Set up the Python environment to run Plastron using pyenv:
     ```bash
     cd ~/git/plastron
-    virtualenv venv
-    source venv/bin/activate
+    pyenv install 3.6.2
+    pyenv virtualenv 3.6.2 plastron
+    pyenv local plastron
     pip install -e .
     ```
-5. Run plastron as a daemon, using the new `localhost.yml` config file:
-    ```bash
-    plastrond -c config/localhost.yml
-    ```
-    ℹ️ **Note:** For troubleshooting, the plastron daemon can be run in verbose
-    mode:
-    ```bash
-    plastrond -v -c config/localhost.yml
-    ```
-
+   
 ## Step 4: Load umd-fcrepo-sample-data
 
 1. In a new terminal, clone the umd-fcrepo-sample-data repo:
@@ -130,9 +122,9 @@ virtualenv:
     git clone git@bitbucket.org:umd-lib/umd-fcrepo-sample-data.git
     cd umd-fcrepo-sample-data
     ```
-2. Activate the Plastron virtual environment:
+2. Activate the Plastron environment:
     ```bash
-    source ~/git/plastron/venv/bin/activate
+    pyenv shell plastron
     ```
 3. Load the Student Newspapers data:
     ```bash
@@ -149,7 +141,7 @@ virtualenv:
 1. In a new terminal, clone the archelon repository:
     ```bash
     cd ~/git
-    git clone https://github.com/umd-lib/archelon.git
+    git clone git@github.com:umd-lib/archelon.git
     cd archelon
     ```
 2. Install the Archelon dependencies:
