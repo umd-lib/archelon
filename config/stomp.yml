@@ -4,8 +4,8 @@ default: &default
   archelon_url: <%= ENV['ARCHELON_URL'] %>
   destinations:
     jobs: /queue/plastron.jobs
-    job_status: /topic/plastron.jobs.status
-    jobs_completed: /queue/plastron.jobs.completed
+    job_progress: /topic/plastron.jobs.progress
+    job_status: /queue/plastron.jobs.status
     jobs_synchronous: /queue/plastron.jobs.synchronous
 
 development:

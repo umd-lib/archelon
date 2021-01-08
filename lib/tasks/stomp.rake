@@ -9,7 +9,7 @@ namespace :stomp do # rubocop:disable Metrics/BlockLength
 
     listener = StompListener.new.connect || exit(1)
 
-    listener.subscribe(:jobs_completed, 'client-individual') do |stomp_msg|
+    listener.subscribe(:job_status, 'client-individual') do |stomp_msg|
       message = PlastronMessage.new(stomp_msg)
       puts "Updating job status for #{message.job_id}"
 
@@ -25,7 +25,7 @@ namespace :stomp do # rubocop:disable Metrics/BlockLength
       puts e, e.backtrace
     end
 
-    listener.subscribe(:job_status) do |stomp_msg|
+    listener.subscribe(:job_progress) do |stomp_msg|
       message = PlastronMessage.new(stomp_msg)
       puts "Updating job progress for #{message.job_id}"
 
