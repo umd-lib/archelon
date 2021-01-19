@@ -19,6 +19,7 @@ information on prerequisites.
 
 ## Useful Resources
 
+* [https://github.com/umd-lib/umd-fcrepo](https://github.com/umd-lib/umd-fcrepo)
 * [https://github.com/umd-lib/umd-fcrepo-docker](https://github.com/umd-lib/umd-fcrepo-docker)
 * [https://github.com/umd-lib/plastron](https://github.com/umd-lib/plastron)
 * [https://github.com/umd-lib/archelon](https://github.com/umd-lib/archelon)
@@ -26,37 +27,49 @@ information on prerequisites.
 * [https://github.com/umd-lib/plastron/blob/develop/docs/daemon.md](https://github.com/umd-lib/plastron/blob/develop/docs/daemon.md)
 * [https://bitbucket.org/umd-lib/umd-fcrepo-sample-data](https://bitbucket.org/umd-lib/umd-fcrepo-sample-data)
 
-## Base Directory
+## Step 1: Clone the "umd-fcrepo" repository
 
-The following steps assumes are Git repositories are checked out into
-subdirectories of a base directory. For example, if the base directory is
-"/Users/jsmith/git/" the subdirectories will be:
+1.1) Clone the "umd-fcrepo" repository and its submodules:
 
-```
-/Users/jsmith/git/
-               +- archelon/
-               +- plastron/
-               +- umd-fcrepo-docker/
-               +- umd-fcrepo-sample-data/
-               +- umd-fcrepo-webapp/
+```bash
+git clone --recurse-submodules git@github.com:umd-lib/umd-fcrepo.git
 ```
 
-## Step 1: Deploy umd-fcrepo-docker stack
+1.2) Switch into the "umd-fcrepo" directory:
 
-1.1. Switch to the base directory.
+```bash
+cd umd-fcrepo
+```
 
-1.2. Clone and build the Docker images for the "umd-fcrepo" stack (see the
+The "umd-fcrepo" directory will be considered the "base directory" for the
+following steps.
+
+1.3) (**Optional**) Build and deploy the "umd-camel-processors" jar to the
+Maven Nexus:
+
+```bash
+cd umd-camel-processors
+mvn -DskipTests=true clean deploy
+cd ..
+```
+
+ℹ️ **Note:** Publishing to the Nexus means that it will now be used by everyone
+as the "latest" version of the jar.
+
+## Step 2: Deploy umd-fcrepo-docker stack
+
+2.1. Switch to the base directory.
+
+2.2. Switch to "umd-fcrepo-webapp" and build the Docker images for the
+"umd-fcrepo" stack (see the
 umd-fcrepo-docker [README](https://github.com/umd-lib/umd-fcrepo-docker/blob/develop/README.md#quick-start)
 for canonical instructions):
 
 ```bash
-git clone git@github.com:umd-lib/umd-fcrepo-webapp.git
 cd umd-fcrepo-webapp
 docker build -t docker.lib.umd.edu/fcrepo-webapp .
 
-cd ..
-git clone git@github.com:umd-lib/umd-fcrepo-docker.git
-cd umd-fcrepo-docker
+cd ../umd-fcrepo-docker
 
 docker build -t docker.lib.umd.edu/fcrepo-activemq activemq
 docker build -t docker.lib.umd.edu/fcrepo-solr-fedora4 solr-fedora4
@@ -65,7 +78,7 @@ docker build -t docker.lib.umd.edu/fcrepo-fixity fixity
 docker build -t docker.lib.umd.edu/fcrepo-mail mail
 ```
 
-1.3. Export the following environment variables:
+2.3. Export the following environment variables:
 
 ```bash
 export MODESHAPE_DB_PASSWORD=fcrepo
@@ -78,7 +91,7 @@ so can be different from the above, if desired. The only requirement for
 "JWT_SECRET" is that it be "sufficiently long", which is accomplished by
 the uuidgen command (but any "sufficiently long" string will work).
 
-1.4. Deploy the stack:
+2.4. Deploy the stack:
 
 ```bash
 docker stack deploy -c umd-fcrepo.yml umd-fcrepo
@@ -94,7 +107,7 @@ source .env && docker stack deploy -c umd-fcrepo.yml umd-fcrepo
 
 Any .env file will be ignored by Git.
 
-1.5. Check that the following URLs are all accessible:
+2.5. Check that the following URLs are all accessible:
 
 * ActiveMQ admin console: <http://localhost:8161/admin>
 * Solr admin console: <http://localhost:8983/solr/#/>
@@ -102,38 +115,32 @@ Any .env file will be ignored by Git.
 * Fedora repository REST API: <http://localhost:8080/rest/>
 * Fedora repository login/user profile page: <http://localhost:8080/user/>
 
-## Step 2: Create the "pcdm" container in fcrepo
+## Step 3: Create the "pcdm" container in fcrepo
 
-2.1. Log in at <http://localhost:8080/user/>
+3.1. Log in at <http://localhost:8080/user/>
 
-2.2. Go to <http://localhost:8080/rest/>
+3.2. Go to <http://localhost:8080/rest/>
 
-2.3. Add a "pcdm" container, using the "Create New Child Resource" panel in the
+3.3. Add a "pcdm" container, using the "Create New Child Resource" panel in the
 right sidebar.
 
-## Step 3: Create auth tokens for plastron and archelon
+## Step 4: Create auth tokens for plastron and archelon
 
-3.1. Use the following URLs to generate auth tokens for use with Plastron and
+4.1. Use the following URLs to generate auth tokens for use with Plastron and
 Archelon, respectively:
 
 * http://localhost:8080/user/token?subject=plastron&role=fedoraAdmin
 * http://localhost:8080/user/token?subject=archelon&role=fedoraAdmin
 
-## Step 4: Configure Plastron to run locally
+## Step 5: Configure Plastron to run locally
 
-4.1. Switch to the base directory:
+5.1. Switch to the base directory:
 
 ```bash
 cd ..
 ```
 
-4.2. Clone the Plastron repository:
-
-```bash
-git clone git@github.com:umd-lib/plastron.git
-```
-
-4.3. Create directories to hold the Plastron configurations, logs, msg stores,
+5.2. Create directories to hold the Plastron configurations, logs, msg stores,
 and binary exports:
 
 ```bash
@@ -143,7 +150,7 @@ mkdir msg
 mkdir exports
 ```
 
-4.4. Create a Plastron configuration file `plastron/config/localhost.yml` file:
+5.3. Create a Plastron configuration file `plastron/config/localhost.yml` file:
 
 ```bash
 vi config/localhost.yml
@@ -155,7 +162,7 @@ containing the following:
 REPOSITORY:
     REST_ENDPOINT: http://localhost:8080/rest
     RELPATH: /pcdm
-    AUTH_TOKEN: {auth token for Plastron created in Step 3.1 above}
+    AUTH_TOKEN: {auth token for Plastron created in Step 4.1 above}
     LOG_DIR: logs/
 MESSAGE_BROKER:
     SERVER: localhost:61613
@@ -182,7 +189,7 @@ COMMANDS:
     SSH_PRIVATE_KEY: /run/secrets/archelon_id
 ```
 
-4.5. Set up the Python environment to run Plastron using pyenv:
+5.4. Set up the Python environment to run Plastron using pyenv:
 
 ```bash
 pyenv install 3.6.2
@@ -191,7 +198,7 @@ pyenv local plastron
 pip install -e .
 ```
 
-4.6. Run plastron as a daemon, using the new `localhost.yml` config file:
+5.5. Run plastron as a daemon, using the new `localhost.yml` config file:
 
 ```bash
 plastrond -c config/localhost.yml
@@ -204,24 +211,24 @@ mode:
 plastrond -v -c config/localhost.yml
 ```
 
-## Step 5: Load umd-fcrepo-sample-data
+## Step 6: Load umd-fcrepo-sample-data
 
-5.1. In a new terminal, switch to the base directory.
+6.1.In a new terminal, switch to the base directory.
 
-5.2. Clone the umd-fcrepo-sample-data repo:
+6.2. Clone the umd-fcrepo-sample-data repository:
 
 ```bash
 git clone git@bitbucket.org:umd-lib/umd-fcrepo-sample-data.git
 cd umd-fcrepo-sample-data
 ```
 
-5.3. Activate the Plastron environment:
+6.3. Activate the Plastron environment:
 
 ```bash
 pyenv shell plastron
 ```
 
-5.4. Load the Student Newspapers data:
+6.4. Load the Student Newspapers data:
 
 ```bash
 plastron -c ../plastron/config/localhost.yml mkcol -b student_newspapers/batch.yml -n 'Student Newspapers'
@@ -232,24 +239,23 @@ plastron -c ../plastron/config/localhost.yml load -b student_newspapers/batch.ym
 [umd-fcrepo-sample-data](https://bitbucket.org/umd-lib/umd-fcrepo-sample-data)
 repository for more information.
 
-## Step 6: Setup and run Archelon
+## Step 7: Setup and run Archelon
 
-6.1. In a new terminal, switch to the base directory.
+7.1. In a new terminal, switch to the base directory.
 
-6.2. Clone the archelon repository:
+7.2. Switch to the "archelon" subdirectory
 
 ```bash
-git clone git@github.com:umd-lib/archelon.git
 cd archelon
 ```
 
-6.3. Install the Archelon dependencies:
+7.3. Install the Archelon dependencies:
 
 ```bash
 bundle install
 ```
 
-6.4. Set up the database:
+7.4. Set up the database:
 
 ⚠️ **Warning:** The following command will destroy any data in the local
 database (if one exists).
@@ -258,19 +264,19 @@ database (if one exists).
 rails db:reset
 ```
 
-6.5. Install JavaScript dependencies:
+7.5. Install JavaScript dependencies:
 
 ```bash
 yarn
 ```
 
-6.6. Create a `.env` file for Archelon:
+7.6. Create a `.env` file for Archelon:
 
 ```bash
 cp env_example .env
 ```
 
-6.7. Edit the ".env" file:
+7.7. Edit the ".env" file:
 
 ```bash
 vi .env
@@ -284,27 +290,27 @@ remain empty.
 
 | Property                         | Value   |
 | -------------------------------- | ------- |
-| `FCREPO_AUTH_TOKEN`              | Value created for archelon in Step 3.1 |
+| `FCREPO_AUTH_TOKEN`              | Value created for archelon in Step 4.1 |
 | `LDAP_BIND_PASSWORD`             | See "FCRepo Directory LDAP AuthDN" in the "Identities" document on Box. |
 | `VOCAB_LOCAL_AUTHORITY_BASE_URI` | http://vocab.lib.umd.edu/ |
 | `VOCAB_PUBLICATION_BASE_URI`     | http://localhost:3000/published_vocabularies/ |
 
-6.8. Run the Archelon STOMP listener:
+7.8. Run the Archelon STOMP listener:
 
 ```bash
 rails stomp:listen
 ```
 
-6.9. In a new terminal, switch to the base directory.
+7.9. In a new terminal, switch to the base directory.
 
-6.10. Run Archelon:
+7.10. Run Archelon:
 
 ```bash
 cd archelon
 rails server
 ```
 
-6.10. Verify that Archelon is running by going to <http://localhost:3000/>
+7.11. Verify that Archelon is running by going to <http://localhost:3000/>
 
 After logging in, the Archelon home page should be displayed, and the
 "Collection" panel should display a "Student Newspapers" entry.
