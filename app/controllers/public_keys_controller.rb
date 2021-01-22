@@ -5,9 +5,6 @@ class PublicKeysController < ApplicationController
   skip_before_action :authenticate
 
   def index
-    # only allow this to be viewed from localhost
-    forbidden && return unless requested_from_localhost?
-
     keys = []
 
     # include the Plastron public key from the environment, if set
@@ -20,10 +17,4 @@ class PublicKeysController < ApplicationController
     end
     render plain: keys.join("\n")
   end
-
-  private
-
-    def requested_from_localhost?
-      request.remote_ip =~ /^127\./ || request.remote_ip == '::1'
-    end
 end
