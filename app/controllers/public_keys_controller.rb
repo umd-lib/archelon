@@ -5,7 +5,6 @@ class PublicKeysController < ApplicationController
   skip_before_action :authenticate
 
   def index
-
     keys = []
 
     # include the Plastron public key from the environment, if set
@@ -18,5 +17,4 @@ class PublicKeysController < ApplicationController
     end
     render plain: keys.join("\n")
   end
-
 end
