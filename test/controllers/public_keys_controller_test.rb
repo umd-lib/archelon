@@ -23,9 +23,4 @@ class PublicKeysControllerTest < ActionDispatch::IntegrationTest
       assert_match(/^ssh-rsa /, line)
     end
   end
-
-  test 'should only allow localhost access' do
-    get @index_url, env: { REMOTE_ADDR: '129.2.19.52' }
-    assert_response :forbidden
-  end
 end
