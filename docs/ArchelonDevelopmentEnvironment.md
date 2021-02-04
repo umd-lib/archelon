@@ -49,7 +49,7 @@ Maven Nexus:
 
 ```bash
 cd umd-camel-processors
-mvn -DskipTests=true clean deploy
+mvn clean deploy
 cd ..
 ```
 
@@ -115,7 +115,32 @@ Any .env file will be ignored by Git.
 * Fedora repository REST API: <http://localhost:8080/rest/>
 * Fedora repository login/user profile page: <http://localhost:8080/user/>
 
-## Step 3: Create the "pcdm" container in fcrepo
+## Step 3: Create collection container in fcrepo
+
+Items can be loaded into fcrepo using either a "flat" or "hierarchical"
+structure.
+
+In a "flat" structure, all the resources are loaded as children of the
+"RELPATH" in the Plastron configuration (typically "/pcdm"). Items and
+pages are siblings instead of parent-child items. The "collection" URI is
+a separate resource with no children.
+
+In a "hierarchical" structure, the resources are placed as children under
+the collection URI, with a hierachical parent-child layout.
+
+Older datasets in fcrepo use the "flat" structure. Future datasets will be
+loaded using the "hierarchical" structure.
+
+Choose one of the two structures for loading the data, based on your
+development needs, and follow the corresponding steps.
+
+For hierarchical structure, see the "Proposed Initial List of Collections"
+section in [https://confluence.umd.edu/display/LIB/Fedora%3A+Repository+Structure#][fcrepo-repository-structure]
+for the proposed relative path for each collection. For example, the proposed
+relative path for the "Student Newspapers" collection (used below) is
+"/dc/2016/1".
+
+### Step 3 - Flat structure
 
 3.1. Log in at <http://localhost:8080/user/>
 
@@ -123,6 +148,24 @@ Any .env file will be ignored by Git.
 
 3.3. Add a "pcdm" container, using the "Create New Child Resource" panel in the
 right sidebar.
+
+### Step 3 - Hierarchical Structure
+
+3.1. Log in at <http://localhost:8080/user/>
+
+3.2. Go to <http://localhost:8080/rest/>
+
+3.3. Add a "/dc/2016/1" container, using the "Create New Child Resource" panel
+in the right sidebar.
+
+3.4. Provide the name "Student Newspapers" to the "/dc/2016/1" container by
+entering the following in the "Update Properties" panel in the right sidebar
+and left-clicking the "Update" button:
+
+```
+PREFIX dcterms: <http://purl.org/dc/terms/>
+DELETE {} INSERT { <> dcterms:title "Student Newspapers" } WHERE {}
+```
 
 ## Step 4: Create auth tokens for plastron and archelon
 
@@ -213,6 +256,11 @@ plastrond -v -c config/localhost.yml
 
 ## Step 6: Load umd-fcrepo-sample-data
 
+Follow the appropriate steps, based on whether the "flat" or "hierarchical"
+structure is being used.
+
+### Step 6 - Flat Structure
+
 6.1.In a new terminal, switch to the base directory.
 
 6.2. Clone the umd-fcrepo-sample-data repository:
@@ -233,6 +281,83 @@ pyenv shell plastron
 ```bash
 plastron -c ../plastron/config/localhost.yml mkcol -b student_newspapers/batch.yml -n 'Student Newspapers'
 plastron -c ../plastron/config/localhost.yml load -b student_newspapers/batch.yml
+```
+
+ℹ️ **Note:** Additional datasets are available. See the README.md file in the
+[umd-fcrepo-sample-data](https://bitbucket.org/umd-lib/umd-fcrepo-sample-data)
+repository for more information.
+
+### Step 6 - Hierachical Structure
+
+6.1. In a new terminal, switch to the base directory.
+
+6.2. Clone the umd-fcrepo-sample-data repository:
+
+```bash
+git clone git@bitbucket.org:umd-lib/umd-fcrepo-sample-data.git
+cd umd-fcrepo-sample-data
+```
+
+6.3. Activate the Plastron environment:
+
+```bash
+pyenv shell plastron
+```
+
+6.4. Create a "plastron-student_newspapers-load.yml" configuration file:
+
+```bash
+vi plastron-student_newspapers-load.yml
+```
+
+using the following template:
+
+```
+REPOSITORY:
+    REST_ENDPOINT: http://localhost:8080/rest
+    STRUCTURE: hierarchical
+    RELPATH: {COLLECTION_RELPATH}
+    AUTH_TOKEN: {PLASTRON_AUTH_TOKEN}
+    LOG_DIR: logs/
+```
+
+where {PLASTRON_AUTH_TOKEN} is the Plastron token from Step 4.1 above, and
+ {COLLECTION_RELPATH} is the relative path of the collection. For the
+ "Student Newspapers"  collection (see explanation in Step 3), the
+ {COLLECTION_RELPATH} is "/dc/2016/1", so the configuration file would be:
+
+```
+REPOSITORY:
+    REST_ENDPOINT: http://localhost:8080/rest
+    STRUCTURE: hierarchical
+    RELPATH: /dc/2016/1
+    AUTH_TOKEN: {PLASTRON_AUTH_TOKEN}
+    LOG_DIR: logs/
+```
+
+where {PLASTRON_AUTH_TOKEN} is the Plastron token from Step 4.1 above.
+
+6.5. Edit the "student_newspapers/batch.yml" file:
+
+```bash
+vi student_newspapers/batch.yml
+```
+
+and change the "COLLECTION" value to match the full collection URI path, which
+consists of a base server URL plus the {COLLECTION_RELPATH} from the
+previous step. For example, in the local development enviroment, the base server
+URL is "http://localhost:8080/rest", and the collection relative path is
+"/dc/2016/1", making the full collection URI
+"http://localhost:8080/rest/dc/2016/1":
+
+```
+COLLECTION: http://localhost:8080/rest/dc/2016/1
+```
+
+6.6. Load the Student Newspapers data:
+
+```bash
+plastron -c plastron-student_newspapers-load.yml load -b student_newspapers/batch.yml
 ```
 
 ℹ️ **Note:** Additional datasets are available. See the README.md file in the
@@ -402,3 +527,6 @@ use Postgres by doing the following:
         ```bash
         rails db:reset
         ```
+
+---
+[fcrepo-repository-structure]: https://confluence.umd.edu/display/LIB/Fedora%3A+Repository+Structure
