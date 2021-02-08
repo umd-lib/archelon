@@ -56,6 +56,9 @@ class ImportJob < ApplicationRecord
   validate :attachment_validation
   validate :include_binaries_options
 
+  # The relpath for "flat" structure collections
+  FLAT_LAYOUT_RELPATH = '/pcdm'
+
   def self.access_vocab
     @access_vocab ||= Vocabulary.find_by identifier: VOCAB_CONFIG['access_vocab_identifier']
   end
@@ -136,7 +139,8 @@ class ImportJob < ApplicationRecord
   end
 
   # Returns the relpath of the collection (the collection with the
-  # FCREPO_BASE_URL prefix removed). Will always start with a "/"
+  # FCREPO_BASE_URL prefix removed). Will always start with a "/", and
+  # returns FLAT_LAYOUT_RELPATH if the relpath starts with that value.
   def collection_relpath
     relpath = collection.sub(FCREPO_BASE_URL, '')
 
@@ -145,7 +149,7 @@ class ImportJob < ApplicationRecord
 
     # Any path starting with "/pcdm" uses the flat layout, which always has
     # a relpath of '/pcdm'
-    return '/pcdm' if relpath.starts_with?('/pcdm')
+    return FLAT_LAYOUT_RELPATH if relpath.starts_with?(FLAT_LAYOUT_RELPATH)
 
     relpath
   end
@@ -154,7 +158,7 @@ class ImportJob < ApplicationRecord
   def collection_structure
     relpath = collection_relpath
 
-    return :flat if relpath.starts_with?('/pcdm')
+    return :flat if relpath.starts_with?(FLAT_LAYOUT_RELPATH)
 
     :hierarchical
   end

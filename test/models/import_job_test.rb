@@ -77,8 +77,8 @@ class ImportJobTest < ActiveSupport::TestCase
 
     test_collections = [
       # [Collection, Expected relative path]
-      ['http://example.com/rest/pcdm', '/pcdm'],
-      ['http://example.com/rest/pcdm/51/a4/54/a8/51a454a8-7ad0-45dd-ba2b-85632fe1b618', '/pcdm'],
+      ["http://example.com/rest#{ImportJob::FLAT_LAYOUT_RELPATH}", ImportJob::FLAT_LAYOUT_RELPATH],
+      ["http://example.com/rest#{ImportJob::FLAT_LAYOUT_RELPATH}/51/a4/54/a8/51a454a8-7ad0-45dd-ba2b-85632fe1b618", ImportJob::FLAT_LAYOUT_RELPATH],
       ['http://example.com/rest/dc/2021/2', '/dc/2021/2']
     ]
 
