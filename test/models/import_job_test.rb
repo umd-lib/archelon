@@ -67,4 +67,52 @@ class ImportJobTest < ActiveSupport::TestCase
     import_job = import_jobs(:import_job_with_binaries_location)
     assert import_job.binaries?
   end
+
+  test 'collection_relpath returns the proper relative path' do
+    test_base_urls = [
+      # Test for base urls with and without final slash
+      'http://example.com/rest',
+      'http://example.com/rest/'
+    ]
+
+    test_collections = [
+      # [Collection, Expected relative path]
+      ['http://example.com/rest/pcdm', '/pcdm'],
+      ['http://example.com/rest/dc/2021/2', '/dc/2021/2']
+    ]
+
+    test_base_urls.each do |base_url|
+      with_constant('FCREPO_BASE_URL', base_url) do
+        test_collections.each do |collection, expected_relpath|
+          import_job = ImportJob.new
+          import_job.collection = collection
+          assert_equal expected_relpath, import_job.collection_relpath, "Using base_url: #{base_url}"
+        end
+      end
+    end
+  end
+
+  test 'structure_type returns "hierarchical" for hierarchical collections' do
+    with_constant('FCREPO_BASE_URL', 'http://example.com/rest') do
+      import_job = ImportJob.new
+      import_job.collection = 'http://example.com/rest/dc/2021/2'
+      assert_equal :hierarchical, import_job.collection_structure
+    end
+  end
+
+  test 'structure_type returns "flat" for flat collections' do
+    with_constant('FCREPO_BASE_URL', 'http://example.com/rest/') do
+      import_job = ImportJob.new
+      import_job.collection = 'http://example.com/rest/pcdm'
+      assert_equal :flat, import_job.collection_structure
+    end
+  end
+
+  test 'structure_type returns "flat" for flat collections when FCREPO_BASE_URL does not include final slash' do
+    with_constant('FCREPO_BASE_URL', 'http://example.com/rest') do
+      import_job = ImportJob.new
+      import_job.collection = 'http://example.com/rest/pcdm'
+      assert_equal :flat, import_job.collection_structure
+    end
+  end
 end

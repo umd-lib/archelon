@@ -134,4 +134,24 @@ class ImportJob < ApplicationRecord
   def binaries?
     binaries_location.present?
   end
+
+  # Returns the relpath of the collection (the collection with the
+  # FCREPO_BASE_URL prefix removed). Will always start with a "/"
+  def collection_relpath
+    relpath = collection.sub(FCREPO_BASE_URL, '')
+
+    # Ensure that relpath starts with a "/"
+    relpath = '/' + relpath unless relpath.starts_with?('/')
+
+    relpath
+  end
+
+  # Returns ":flat" or ":hierarchical" based on the collections relpath
+  def collection_structure
+    relpath = collection_relpath
+
+    return :flat if relpath.starts_with?('/pcdm')
+
+    :hierarchical
+  end
 end
