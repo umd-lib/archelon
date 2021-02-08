@@ -143,6 +143,10 @@ class ImportJob < ApplicationRecord
     # Ensure that relpath starts with a "/"
     relpath = '/' + relpath unless relpath.starts_with?('/')
 
+    # Any path starting with "/pcdm" uses the flat layout, which always has
+    # a relpath of '/pcdm'
+    return '/pcdm' if relpath.starts_with?('/pcdm')
+
     relpath
   end
 

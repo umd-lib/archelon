@@ -78,6 +78,7 @@ class ImportJobTest < ActiveSupport::TestCase
     test_collections = [
       # [Collection, Expected relative path]
       ['http://example.com/rest/pcdm', '/pcdm'],
+      ['http://example.com/rest/pcdm/51/a4/54/a8/51a454a8-7ad0-45dd-ba2b-85632fe1b618', '/pcdm'],
       ['http://example.com/rest/dc/2021/2', '/dc/2021/2']
     ]
 
@@ -86,7 +87,7 @@ class ImportJobTest < ActiveSupport::TestCase
         test_collections.each do |collection, expected_relpath|
           import_job = ImportJob.new
           import_job.collection = collection
-          assert_equal expected_relpath, import_job.collection_relpath, "Using base_url: #{base_url}"
+          assert_equal expected_relpath, import_job.collection_relpath, "Using base_url: '#{base_url}'"
         end
       end
     end

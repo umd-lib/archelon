@@ -17,7 +17,8 @@ class ImportJobRequest
       'PlastronArg-on-behalf-of': @job.cas_user.cas_directory_id,
       'PlastronArg-member-of': @job.collection,
       'PlastronArg-timestamp': @job.timestamp,
-      'PlastronArg-structure': @job.collection_structure.to_s
+      'PlastronArg-structure': @job.collection_structure.to_s,
+      'PlastronArg-relpath': @job.collection_relpath
     }.tap do |headers|
       headers['PlastronArg-access'] = "<#{access}>" if @job.access.present?
       headers['PlastronArg-validate-only'] = 'True' if @validate_only

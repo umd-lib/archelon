@@ -15,6 +15,7 @@ class ImportJobRequestTest < ActiveSupport::TestCase
       import_job_request = ImportJobRequest.new('test', import_job, false)
       headers = import_job_request.headers
       assert_equal('flat', headers[:'PlastronArg-structure'])
+      assert_equal('/pcdm', headers[:'PlastronArg-relpath'])
     end
   end
 
@@ -27,6 +28,7 @@ class ImportJobRequestTest < ActiveSupport::TestCase
       import_job_request = ImportJobRequest.new('test', import_job, false)
       headers = import_job_request.headers
       assert_equal('hierarchical', headers[:'PlastronArg-structure'])
+      assert_equal('/dc/2021/2', headers[:'PlastronArg-relpath'])
     end
   end
 end
