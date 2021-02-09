@@ -158,13 +158,15 @@ right sidebar.
 3.3. Add a "/dc/2016/1" container, using the "Create New Child Resource" panel
 in the right sidebar.
 
-3.4. Provide the name "Student Newspapers" to the "/dc/2016/1" container by
-entering the following in the "Update Properties" panel in the right sidebar
-and left-clicking the "Update" button:
+3.4. Provide the name "Student Newspapers" to the "/dc/2016/1" container (and
+identify it as a "pcdm:Collection") by entering the following in the
+"Update Properties" panel in the right sidebar and left-clicking the
+"Update" button:
 
 ```
 PREFIX dcterms: <http://purl.org/dc/terms/>
-DELETE {} INSERT { <> dcterms:title "Student Newspapers" } WHERE {}
+PREFIX pcdm: <http://pcdm.org/models#>
+DELETE {} INSERT { <> a pcdm:Collection; dcterms:title "Student Newspapers" } WHERE {}
 ```
 
 ## Step 4: Create auth tokens for plastron and archelon
