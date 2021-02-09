@@ -1,6 +1,6 @@
 default: &default
   binaries_dir: <%= Rails.root.join('imports') %>
-  binaries_base_location: <%= Rails.root.join('imports') %>
+  binaries_base_location: <%= "zip:#{Rails.root.join('imports')}" %>
 
 development:
   <<: *default
