@@ -107,10 +107,11 @@ class ImportJob < ApplicationRecord
 
     count = plastron_message.body_json['count'] || {}
     total_count = count['total']
+
     # Total could be nil for non-seekable files
     return if total_count.nil? || total_count.zero?
 
-    processed_count = count['updated'] + count['unchanged'] + count['errors']
+    processed_count = count['created'] + count['updated'] + count['unchanged'] + count['errors']
 
     self.progress = (processed_count.to_f / total_count * 100).round
     save!

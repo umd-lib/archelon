@@ -116,4 +116,33 @@ class ImportJobTest < ActiveSupport::TestCase
       assert_equal :flat, import_job.collection_structure
     end
   end
+
+  test 'update_progress should reflect progress in message' do
+    import_job = import_jobs(:one)
+    assert_nil import_job.progress
+
+    stomp_message = Stomp::Message.new('')
+    stomp_message.body = {
+      'time': {
+        'started': 1_612_895_677.028775,
+        'now': 1_612_895_784.956666,
+        'elapsed': 107.92789101600647
+      },
+      'count': {
+        'total': 25,
+        'rows': 25,
+        'errors': 1,
+        'valid': 5,
+        'invalid': 0,
+        'created': 2,
+        'updated': 1,
+        'unchanged': 1,
+        'files': 25
+      }
+    }.to_json
+
+    plastron_message = PlastronMessage.new(stomp_message)
+    import_job.update_progress(plastron_message)
+    assert_equal 20, import_job.progress # (errors + created + updated + unchanged) = 5, 5/25 = 20%
+  end
 end
