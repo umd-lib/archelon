@@ -149,33 +149,17 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     end
 
     def submit_job(import_job, validate_only)
-      body = import_job.metadata_file.download
-      headers = message_headers(import_job, validate_only)
+      job_id = import_job_url(import_job)
+      import_job_request = ImportJobRequest.new(job_id, import_job, validate_only)
 
       import_job.plastron_status = :plastron_status_in_progress
       import_job.save!
-      StompService.publish_message(:jobs, body, headers) && return
+      StompService.publish_message(:jobs, import_job_request.body, import_job_request.headers) && return
 
       # if we were unable to send the message
       import_job.plastron_status = :plastron_status_error
       import_job.save!
       flash[:error] = I18n.t(:active_mq_is_down)
-    end
-
-    def message_headers(job, validate_only) # rubocop:disable Metrics/MethodLength
-      {
-        PlastronCommand: 'import',
-        PlastronJobId: import_job_url(job),
-        'PlastronArg-model': job.model,
-        'PlastronArg-name': job.name,
-        'PlastronArg-on-behalf-of': job.cas_user.cas_directory_id,
-        'PlastronArg-member-of': job.collection,
-        'PlastronArg-timestamp': job.timestamp
-      }.tap do |headers|
-        headers['PlastronArg-access'] = "<#{job.access}>" if job.access.present?
-        headers['PlastronArg-validate-only'] = 'True' if validate_only
-        headers['PlastronArg-binaries-location'] = job.binaries_location if job.binaries_location.present?
-      end
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
