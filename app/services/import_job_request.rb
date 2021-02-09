@@ -20,7 +20,7 @@ class ImportJobRequest
       'PlastronArg-structure': @job.collection_structure.to_s,
       'PlastronArg-relpath': @job.collection_relpath
     }.tap do |headers|
-      headers['PlastronArg-access'] = "<#{access}>" if @job.access.present?
+      headers['PlastronArg-access'] = "<#{@job.access}>" if @job.access.present?
       headers['PlastronArg-validate-only'] = 'True' if @validate_only
       headers['PlastronArg-binaries-location'] = @job.binaries_location if @job.binaries_location.present?
     end
