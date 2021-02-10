@@ -237,8 +237,8 @@ COMMANDS:
 5.4. Set up the Python environment to run Plastron using pyenv:
 
 ```bash
-pyenv install 3.6.2
-pyenv virtualenv 3.6.2 plastron
+pyenv install 3.6.12
+pyenv virtualenv 3.6.12 plastron
 pyenv local plastron
 pip install -e .
 ```
