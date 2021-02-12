@@ -117,6 +117,7 @@ Item:
       uri: 'http://purl.org/dc/terms/identifier'
       label: 'Accession Number'
       type: :TypedLiteral
+      datatype: http://vocab.lib.umd.edu/datatype#accessionNumber
 
 
 Letter:
