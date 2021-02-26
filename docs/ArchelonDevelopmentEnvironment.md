@@ -465,70 +465,46 @@ to use the `postgresql` adapter for testing or troubleshooting. When using the
 
 To set up the development environment, do the following:
 
-1. Modify the "umd-fcrepo-docker/postgres/fcrepo.sh" file by changing the line:
+1. Stop the Archelon STOMP listener and applicaton, if running.
 
-    ```sql
-    CREATE USER archelon WITH PASSWORD 'archelon';
-    ```
+2. In the "$BASE_DIR/archelon" directory, create a ".env.local" file:
 
-    to:
+```bash
+vi .env.local
+```
 
-    ```sql
-    CREATE USER archelon WITH CREATEDB PASSWORD 'archelon';
-    ```
+with the following contents:
 
-2. Kill the running "umd-fcrepo-postgres" Docker container.
+```
+ARCHELON_DATABASE_ADAPTER=postgresql
+ARCHELON_DATABASE_NAME=archelon
+ARCHELON_DATABASE_HOST=localhost
+ARCHELON_DATABASE_PORT=5434
+ARCHELON_DATABASE_USERNAME=postgres
+ARCHELON_DATABASE_PASSWORD=postgres
+  ```
 
-3. Destroy and recreate the "fcrepo-postgres-data" Docker volume
+3. In the `$BASE_DIR/archelon/config/cable.yml` file:
 
-    ```bash
-    docker volume rm fcrepo-postgres-data
-    docker volume create fcrepo-postgres-data
-    ```
+```bash
+vi config/cable.yml
+```
 
-4. Rebuild the "umd-fcrepo-postgres" image:
+change the `development` stanza to:
 
-    ```bash
-    docker build -t umd-fcrepo-postgres .
-    ```
+```yaml
+development:
+  adapter: postgresql
+```
 
-5. Run the "umd-fcrepo-postgres" image:
+4. Reset the Archelon database (this is necessary because the Postgres database
+is now being used, instead of sqlite):
 
-    ```bash
-    docker run -d --rm -p 5432:5432 -v fcrepo-postgres-data:/var/lib/postgresql/data umd-fcrepo-postgres
-    ```
+```bash
+rails db:reset
+```
 
-6. When using the postgresql adapter for Action Cable, it is also necessary to
-use Postgres for the Rails application. Switch the development environment to
-use Postgres by doing the following:
-
-    1. In `$BASE_DIR/archelon/config/database.yml` file, change the `development`
-    stanza to:
-
-        ```yaml
-        development:
-          adapter: postgresql
-          database: <%= ENV["ARCHELON_DATABASE_NAME"] %>
-          username: <%= ENV["ARCHELON_DATABASE_USERNAME"] %>
-          password: <%= ENV["ARCHELON_DATABASE_PASSWORD"] %>
-          host: <%= ENV["ARCHELON_DATABASE_HOST"] %>
-          port: <%= ENV["ARCHELON_DATABASE_PORT"] %>
-          encoding: <%= ENV["ARCHELON_DATABASE_ENCODING"] %>
-        ```
-
-    2. In the `$BASE_DIR/archelon/config/cable.yml` file, change the `development`
-    stanza to:
-
-        ```yaml
-        development:
-          adapter: postgresql
-        ```
-
-    3. Before running the Rails server, reset the database:
-
-        ```bash
-        rails db:reset
-        ```
+5. Restart the Archelon STOMP listener and applicaton.
 
 ---
 [fcrepo-repository-structure]: https://confluence.umd.edu/display/LIB/Fedora%3A+Repository+Structure
