@@ -186,7 +186,7 @@ GEM
     mime-types-data (3.2019.1009)
     mimemagic (0.3.5)
     mini_mime (1.0.2)
-    mini_portile2 (2.4.0)
+    mini_portile2 (2.5.0)
     minitest (5.14.1)
     minitest-reporters (1.4.2)
       ansi
@@ -201,8 +201,9 @@ GEM
       connection_pool (~> 2.2)
     net-ldap (0.16.2)
     nio4r (2.5.2)
-    nokogiri (1.10.9)
-      mini_portile2 (~> 2.4.0)
+    nokogiri (1.11.1)
+      mini_portile2 (~> 2.5.0)
+      racc (~> 1.4)
     ntlm-http (0.1.1)
     omniauth (1.9.1)
       hashie (>= 3.4.6)
@@ -220,6 +221,7 @@ GEM
     public_suffix (4.0.4)
     puma (4.3.5)
       nio4r (~> 2.0)
+    racc (1.5.2)
     rack (2.2.3)
     rack-proxy (0.6.5)
       rack
