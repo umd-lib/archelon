@@ -109,11 +109,11 @@ Any .env file will be ignored by Git.
 
 2.5. Check that the following URLs are all accessible:
 
-* ActiveMQ admin console: <http://localhost:8161/admin>
-* Solr admin console: <http://localhost:8983/solr/#/>
-* Fuseki admin console: <http://localhost:3030/>
-* Fedora repository REST API: <http://localhost:8080/rest/>
-* Fedora repository login/user profile page: <http://localhost:8080/user/>
+* ActiveMQ admin console: <http://fcrepo-local:8161/admin>
+* Solr admin console: <http://fcrepo-local:8983/solr/#/>
+* Fuseki admin console: <http://fcrepo-local:3030/>
+* Fedora repository REST API: <http://fcrepo-local:8080/rest/>
+* Fedora repository login/user profile page: <http://fcrepo-local:8080/user/>
 
 ## Step 3: Create collection container in fcrepo
 
@@ -142,18 +142,18 @@ relative path for the "Student Newspapers" collection (used below) is
 
 ### Step 3 - Flat structure
 
-3.1. Log in at <http://localhost:8080/user/>
+3.1. Log in at <http://fcrepo-local:8080/user/>
 
-3.2. Go to <http://localhost:8080/rest/>
+3.2. Go to <http://fcrepo-local:8080/rest/>
 
 3.3. Add a "pcdm" container, using the "Create New Child Resource" panel in the
 right sidebar.
 
 ### Step 3 - Hierarchical Structure
 
-3.1. Log in at <http://localhost:8080/user/>
+3.1. Log in at <http://fcrepo-local:8080/user/>
 
-3.2. Go to <http://localhost:8080/rest/>
+3.2. Go to <http://fcrepo-local:8080/rest/>
 
 3.3. Add a "/dc/2016/1" container, using the "Create New Child Resource" panel
 in the right sidebar.
@@ -174,8 +174,8 @@ DELETE {} INSERT { <> a pcdm:Collection; dcterms:title "Student Newspapers" } WH
 4.1. Use the following URLs to generate auth tokens for use with Plastron and
 Archelon, respectively:
 
-* http://localhost:8080/user/token?subject=plastron&role=fedoraAdmin
-* http://localhost:8080/user/token?subject=archelon&role=fedoraAdmin
+* http://fcrepo-local:8080/user/token?subject=plastron&role=fedoraAdmin
+* http://fcrepo-local:8080/user/token?subject=archelon&role=fedoraAdmin
 
 ## Step 5: Configure Plastron to run locally
 
@@ -195,22 +195,23 @@ mkdir msg
 mkdir exports
 ```
 
-5.3. Create a Plastron configuration file `plastron/config/localhost.yml` file:
+5.3. Create a Plastron configuration file `plastron/config/fcrepo-local.yml`
+file:
 
 ```bash
-vi config/localhost.yml
+vi config/fcrepo-local.yml
 ```
 
 containing the following:
 
 ```yaml
 REPOSITORY:
-    REST_ENDPOINT: http://localhost:8080/rest
+    REST_ENDPOINT: http://fcrepo-local:8080/rest
     RELPATH: /pcdm
     AUTH_TOKEN: {auth token for Plastron created in Step 4.1 above}
     LOG_DIR: logs/
 MESSAGE_BROKER:
-    SERVER: localhost:61613
+    SERVER: fcrepo-local:61613
     MESSAGE_STORE_DIR: msg/
     DESTINATIONS:
       JOBS: /queue/plastron.jobs
@@ -243,17 +244,17 @@ pyenv local plastron
 pip install -e .
 ```
 
-5.5. Run plastron as a daemon, using the new `localhost.yml` config file:
+5.5. Run plastron as a daemon, using the new `fcrepo-local.yml` config file:
 
 ```bash
-plastrond -c config/localhost.yml
+plastrond -c config/fcrepo-local.yml
 ```
 
 ℹ️ **Note:** For troubleshooting, the plastron daemon can be run in verbose
 mode:
 
 ```bash
-plastrond -v -c config/localhost.yml
+plastrond -v -c config/fcrepo-local.yml
 ```
 
 ## Step 6: Load umd-fcrepo-sample-data
@@ -281,8 +282,8 @@ pyenv shell plastron
 6.4. Load the Student Newspapers data:
 
 ```bash
-plastron -c ../plastron/config/localhost.yml mkcol -b student_newspapers/batch.yml -n 'Student Newspapers'
-plastron -c ../plastron/config/localhost.yml load -b student_newspapers/batch.yml
+plastron -c ../plastron/config/fcrepo-local.yml mkcol -b student_newspapers/batch.yml -n 'Student Newspapers'
+plastron -c ../plastron/config/fcrepo-local.yml load -b student_newspapers/batch.yml
 ```
 
 ℹ️ **Note:** Additional datasets are available. See the README.md file in the
@@ -316,7 +317,7 @@ using the following template:
 
 ```
 REPOSITORY:
-    REST_ENDPOINT: http://localhost:8080/rest
+    REST_ENDPOINT: http://fcrepo-local:8080/rest
     STRUCTURE: hierarchical
     RELPATH: {COLLECTION_RELPATH}
     AUTH_TOKEN: {PLASTRON_AUTH_TOKEN}
@@ -330,7 +331,7 @@ where {PLASTRON_AUTH_TOKEN} is the Plastron token from Step 4.1 above, and
 
 ```
 REPOSITORY:
-    REST_ENDPOINT: http://localhost:8080/rest
+    REST_ENDPOINT: http://fcrepo-local:8080/rest
     STRUCTURE: hierarchical
     RELPATH: /dc/2016/1
     AUTH_TOKEN: {PLASTRON_AUTH_TOKEN}
@@ -348,12 +349,12 @@ vi student_newspapers/batch.yml
 and change the "COLLECTION" value to match the full collection URI path, which
 consists of a base server URL plus the {COLLECTION_RELPATH} from the
 previous step. For example, in the local development enviroment, the base server
-URL is "http://localhost:8080/rest", and the collection relative path is
+URL is "http://fcrepo-local:8080/rest", and the collection relative path is
 "/dc/2016/1", making the full collection URI
-"http://localhost:8080/rest/dc/2016/1":
+"http://fcrepo-local:8080/rest/dc/2016/1":
 
 ```
-COLLECTION: http://localhost:8080/rest/dc/2016/1
+COLLECTION: http://fcrepo-local:8080/rest/dc/2016/1
 ```
 
 6.6. Load the Student Newspapers data:

@@ -180,10 +180,8 @@ DELETE {} INSERT { <> a pcdm:Collection; dcterms:title "Student Newspapers" } WH
 
 ## Step 5: Create auth tokens for plastron and archelon
 
-5.1) Use the following URLs to generate auth tokens for use with Plastron and
-Archelon, respectively:
+5.1) Use the following URL to generate an auth token for use with Archelon:
 
-* http://fcrepo-local:8080/user/token?subject=plastron&role=fedoraAdmin
 * http://fcrepo-local:8080/user/token?subject=archelon&role=fedoraAdmin
 
 ## Step 6: Configure Plastron to run locally
@@ -197,7 +195,6 @@ Archelon, respectively:
 6.2) Build the "docker.lib.umd.edu/plastrond" Docker image:
 
 ```bash
-> cd plastron
 > docker build -t docker.lib.umd.edu/plastrond:latest -f Dockerfile .
 ```
 

@@ -37,6 +37,20 @@ gem install bundler
 
 On OS X with Homebrew, Yarn can be installed with: `brew install yarn`.
 
+## /etc/hosts
+
+Edit this "/etc/hosts" file:
+
+```
+sudo vi /etc/hosts
+```
+
+and add an "fcrepo-local" alias to the "127.0.0.1" entry:
+
+```
+127.0.0.1       localhost fcrepo-local
+```
+
 ---
 
 [Back to Archelon setup](../README.md#setup)
