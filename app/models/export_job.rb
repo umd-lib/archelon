@@ -23,8 +23,16 @@ class ExportJob < ApplicationRecord
                                          50.gigabytes
                                        end
 
-  def self.exportable_types
-    %w[Image Issue Letter]
+  def self.exportable?(document)
+    return false if document[:component].nil?
+
+    # non-exportable types
+    return false if %w[Collection Page Article].include? document[:component]
+
+    # binaries are not directly exportable
+    return false if document[:rdf_type].include? 'fedora:Binary'
+
+    true
   end
 
   def filename
