@@ -11,6 +11,7 @@ WORKDIR /opt/archelon
 # Install npm, to enable "yarn" to be installed
 RUN apt update && \
     apt install -y npm && \
+    apt install -y openssh-server && \
     rm -rf /var/lib/apt/lists/*
 
 
@@ -27,5 +28,33 @@ COPY . /opt/archelon
 RUN npm install --global yarn && \
     yarn
 
-EXPOSE 3000
-CMD ["bin/archelon.sh"]
+# Add "plastron" user from SFTP
+RUN useradd -ms /bin/bash plastron
+
+# Set up directories for import/export
+RUN mkdir -p /data/imports
+RUN mkdir -p /data/exports
+# Note: /data directory must be owned by root:root, and subdirectories
+# should be owned by plastron
+RUN chown -R plastron /data/*
+
+# Set up SFTP
+RUN echo "\
+AllowGroups plastron \n\
+\n\
+Match Group plastron \n\
+ ForceCommand internal-sftp \n\
+ ChrootDirectory /data/ \n\
+ PermitTunnel no \n\
+ AllowAgentForwarding no \n\
+ AllowTcpForwarding no \n\
+ X11Forwarding no \n\
+\n\
+AuthorizedKeysCommand /opt/archelon/get_plastron_authorized_keys.sh \n\
+AuthorizedKeysCommandUser nobody\
+" >> /etc/ssh/sshd_config
+
+EXPOSE 3000 22
+
+CMD ["bin/docker_start.sh"]
+
