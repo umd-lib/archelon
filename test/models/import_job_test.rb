@@ -71,15 +71,15 @@ class ImportJobTest < ActiveSupport::TestCase
   test 'collection_relpath returns the proper relative path' do
     test_base_urls = [
       # Test for base urls with and without final slash
-      'http://example.com/rest',
-      'http://example.com/rest/'
+      'http://fcrepo-base-url.com/rest',
+      'http://fcrepo-base-url.com/rest/'
     ]
 
     test_collections = [
       # [Collection, Expected relative path]
-      ["http://example.com/rest#{ImportJob::FLAT_LAYOUT_RELPATH}", ImportJob::FLAT_LAYOUT_RELPATH],
-      ["http://example.com/rest#{ImportJob::FLAT_LAYOUT_RELPATH}/51/a4/54/a8/51a454a8-7ad0-45dd-ba2b-85632fe1b618", ImportJob::FLAT_LAYOUT_RELPATH],
-      ['http://example.com/rest/dc/2021/2', '/dc/2021/2']
+      ["http://fcrepo-base-url.com/rest#{ImportJob::FLAT_LAYOUT_RELPATH}", ImportJob::FLAT_LAYOUT_RELPATH],
+      ["http://fcrepo-base-url.com/rest#{ImportJob::FLAT_LAYOUT_RELPATH}/51/a4/54/a8/51a454a8-7ad0-45dd-ba2b-85632fe1b618", ImportJob::FLAT_LAYOUT_RELPATH],
+      ['http://fcrepo-base-url.com/rest/dc/2021/2', '/dc/2021/2']
     ]
 
     test_base_urls.each do |base_url|
@@ -88,6 +88,31 @@ class ImportJobTest < ActiveSupport::TestCase
           import_job = ImportJob.new
           import_job.collection = collection
           assert_equal expected_relpath, import_job.collection_relpath, "Using base_url: '#{base_url}'"
+        end
+      end
+    end
+  end
+
+  test 'collection_relpath returns the proper relative path for external urls' do
+    test_external_urls = [
+      # Test for external urls with and without final slash
+      'http://external-url.com/rest',
+      'http://external-url.com/rest/'
+    ]
+
+    test_collections = [
+      # [Collection, Expected relative path]
+      ["http://external-url.com/rest#{ImportJob::FLAT_LAYOUT_RELPATH}", ImportJob::FLAT_LAYOUT_RELPATH],
+      ["http://external-url.com/rest#{ImportJob::FLAT_LAYOUT_RELPATH}/51/a4/54/a8/51a454a8-7ad0-45dd-ba2b-85632fe1b618", ImportJob::FLAT_LAYOUT_RELPATH],
+      ['http://external-url.com/rest/dc/2021/2', '/dc/2021/2']
+    ]
+
+    test_external_urls.each do |external_url|
+      with_constant('REPO_EXTERNAL_URL', external_url) do
+        test_collections.each do |collection, expected_relpath|
+          import_job = ImportJob.new
+          import_job.collection = collection
+          assert_equal expected_relpath, import_job.collection_relpath, "Using external_url: '#{external_url}'"
         end
       end
     end
