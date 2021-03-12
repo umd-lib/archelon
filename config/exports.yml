@@ -1,9 +1,9 @@
 default: &default
   # where to find the zip files of completed export jobs
-  dir: <%= Rails.root.join('exports') %>
+  dir: <%= ENV['EXPORT_DIR'].present? ? ENV['EXPORT_DIR'] : Rails.root.join('exports') %>
   # the base location to use to generate the output-dest parameter for plastron
   # this can either be a local file path, or an SFTP URI to a remote server
-  base_destination: <%= Rails.root.join('exports') %>
+  base_destination: <%= ENV['EXPORT_BASE_DESTINATION'].present? ? ENV['EXPORT_BASE_DESTINATION'] : Rails.root.join('exports') %>
 
 development:
   <<: *default

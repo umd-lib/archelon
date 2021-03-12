@@ -1,0 +1,19 @@
+version: "3.7"
+services:
+  archelon-stomp-listener:
+    image: docker.lib.umd.edu/archelon
+    env_file:
+      - docker-archelon.env
+    command: [ "bundle", "exec", "rails", "stomp:listen" ]
+  archelon:
+    image: docker.lib.umd.edu/archelon
+    ports:
+      - 3000:3000
+    env_file:
+      - docker-archelon.env
+volumes:
+  archelon:
+networks:
+  default:
+    external: true
+    name: umd-fcrepo_default

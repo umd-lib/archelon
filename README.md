@@ -54,6 +54,9 @@ environment.
 To set up Archelon for development see
 [docs/ArchelonDevelopmentEnvironment.md](docs/ArchelonDevelopmentEnvironment.md).
 
+To set up Archelon using Docker, see
+[docs/ArchelonDevelopmentEnvironmentDocker.md](docs/ArchelonDevelopmentEnvironmentDocker.md).
+
 ## Logging
 
 By default, the development environment for Archelon will log at the DEBUG level,

@@ -143,7 +143,10 @@ class ImportJob < ApplicationRecord
   # FCREPO_BASE_URL prefix removed). Will always start with a "/", and
   # returns FLAT_LAYOUT_RELPATH if the relpath starts with that value.
   def collection_relpath
-    relpath = collection.sub(FCREPO_BASE_URL, '')
+    # Collection path could be either REPO_EXTERNAL_URL or FCREPO_BASE_URL,
+    # so just strip both
+    relpath = collection.sub(REPO_EXTERNAL_URL, '')
+    relpath = relpath.sub(FCREPO_BASE_URL, '')
 
     # Ensure that relpath starts with a "/"
     relpath = '/' + relpath unless relpath.starts_with?('/')
