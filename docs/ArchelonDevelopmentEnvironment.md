@@ -223,9 +223,11 @@ COMMANDS:
     BINARIES_DIR: exports/
 ```
 
-ℹ️ **Note:** For production, additional variables in the "COMMANDS" stanza
-are needed to configure the SSH private key for SFTP import/export
-operations, i.e:
+----
+
+**Note:** For production, additional variables in the "COMMANDS"
+stanza are needed to configure the SSH private key for SFTP
+import/export operations, i.e:
 
 ```yaml
 COMMANDS:
@@ -233,6 +235,30 @@ COMMANDS:
     SSH_PRIVATE_KEY: /run/secrets/archelon_id
     IMPORT:
     SSH_PRIVATE_KEY: /run/secrets/archelon_id
+```
+
+----
+
+### 2.4) Run Plastron
+
+Set up the Python environment to run Plastron. The following uses "virtualenv".
+
+2.4.1) Switch to the "~/git/plastron" directory:
+
+```
+> cd ~/git/plastron
+```
+
+2.4.2) Create a virtual environment named "venv":
+
+```
+> virtualenv venv
+```
+
+2.4.3) Activate the virtual environment:
+
+```
+> source venv/bin/activate
 ```
 
 5.4. Set up the Python environment to run Plastron using pyenv:
