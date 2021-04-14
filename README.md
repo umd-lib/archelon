@@ -60,6 +60,27 @@ By default, the development environment for Archelon will log at the DEBUG level
 while all other environments will log at the INFO level. To change this, set the
 `RAILS_LOG_LEVEL` environment variable in your `.env` file.
 
+## Access Restriction
+
+In general, Archelon requires a CAS login to access the application,
+and the user must have been added to the system by an administrator.
+
+Two notable exceptions are the "ping" endpoint and "public keys" endpoint
+(there are also some other minor endpoints, such as import/export status
+updates).
+
+The "ping" endpoint is unrestricted, and is suitable for monitoring the
+health of the application.
+
+The "public keys" endpoint returns a JSON list of the public keys allowed to
+"stfp" to the Archelon server. While these are _public_ keys, and hence not
+technically a security issue, current SSDR policy is to limit access to this
+endpoint to "localhost", or nodes in the Kubernetes cluster.
+
+**Note:** The access restrictions on the "public keys" endpoint are currently
+implemented in the Apache configuration in [archelon-env][archelon-env],
+_not_ in the application itself.
+
 ## Rake Tasks
 
 ### Importing Controlled Vocabularies
@@ -372,6 +393,7 @@ for information about writing documentation for the React components.
 See the [LICENSE](LICENSE.md) file for license rights and limitations
 (Apache 2.0).
 
+[archelon-env]: https://bitbucket.org/umd-lib/archelon-env
 [archelon-vagrant]: https://github.com/umd-lib/archelon-vagrant
 [cve-2015-9284]: https://github.com/omniauth/omniauth/wiki/Resolving-CVE-2015-9284
 [fcrepo-vagrant]: https://github.com/umd-lib/fcrepo-vagrant
