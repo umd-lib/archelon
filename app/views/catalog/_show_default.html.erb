@@ -6,14 +6,15 @@
     item = items[@id]
   %>
   <% %i(required recommended optional).each do |level| %>
-    <% @resource[:content_model][level].each do |field| %>
-      <%
+    <%
+      fields = @resource[:content_model][level]
+      fields.each do |field|
         # special handling for the access field
         if field[:name] == 'access'
           vocab = Vocabulary[field[:vocab]]
           values = item.fetch('@type', []).select { |uri| vocab.key? uri }.map { |uri| { '@id' => uri } }
         else
-          values = item[field[:uri]] || []
+          values = get_field_values(fields, item, field[:uri])
         end
       %>
       <% unless values.empty? %>

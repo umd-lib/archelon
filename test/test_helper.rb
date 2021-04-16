@@ -119,3 +119,18 @@ def stub_repository_collections_solr_response(fixture_filename)
   response = Blacklight::Solr::Response.new(data_hash, nil)
   Blacklight::Solr::Repository.any_instance.stub(:search).and_return(response)
 end
+
+# Allows a constant defined in config/initializers to be be overridden for
+# a single test, and then restored
+def with_constant(constant_name, value)
+  old_value = Rails.const_get(constant_name)
+  silence_warnings do # Silence warning about redefining constant
+    Object.const_set(constant_name, value)
+  end
+
+  yield
+
+  silence_warnings do
+    Object.const_set(constant_name, old_value)
+  end
+end

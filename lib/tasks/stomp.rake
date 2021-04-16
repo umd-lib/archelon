@@ -2,30 +2,38 @@
 
 namespace :stomp do # rubocop:disable Metrics/BlockLength
   desc 'Start a STOMP listener'
-  task listen: :environment do
+  task listen: :environment do # rubocop:disable Metrics/BlockLength
     # immediately flush stdout, since in production situations
     # we will be writing to a logfile
     $stdout.sync = true
 
     listener = StompListener.new.connect || exit(1)
 
-    listener.subscribe(:jobs_completed, 'client-individual') do |stomp_msg|
+    listener.subscribe(:job_status, 'client-individual') do |stomp_msg|
       message = PlastronMessage.new(stomp_msg)
       puts "Updating job status for #{message.job_id}"
-      message.find_job.update_status(message)
-      listener.send_ack(message)
-      archelon_status_update(message)
+
+      # Wrapping in "with_connection" in case connection has timed out
+      ActiveRecord::Base.connection_pool.with_connection do
+        message.find_job.update_status(message)
+        listener.send_ack(message)
+        archelon_status_update(message)
+      end
     rescue StandardError => e
       puts "An error occurred processing stomp_msg: #{stomp_msg}"
       listener.send_nack(message)
       puts e, e.backtrace
     end
 
-    listener.subscribe(:job_status) do |stomp_msg|
+    listener.subscribe(:job_progress) do |stomp_msg|
       message = PlastronMessage.new(stomp_msg)
       puts "Updating job progress for #{message.job_id}"
-      message.find_job.update_progress(message)
-      archelon_status_update(message)
+
+      # Wrapping in "with_connection" in case connection has timed out
+      ActiveRecord::Base.connection_pool.with_connection do
+        message.find_job.update_progress(message)
+        archelon_status_update(message)
+      end
     end
 
     begin

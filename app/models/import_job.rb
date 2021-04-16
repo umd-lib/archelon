@@ -56,6 +56,9 @@ class ImportJob < ApplicationRecord
   validate :attachment_validation
   validate :include_binaries_options
 
+  # The relpath for "flat" structure collections
+  FLAT_LAYOUT_RELPATH = '/pcdm'
+
   def self.access_vocab
     @access_vocab ||= Vocabulary.find_by identifier: VOCAB_CONFIG['access_vocab_identifier']
   end
@@ -104,10 +107,11 @@ class ImportJob < ApplicationRecord
 
     count = plastron_message.body_json['count'] || {}
     total_count = count['total']
+
     # Total could be nil for non-seekable files
     return if total_count.nil? || total_count.zero?
 
-    processed_count = count['updated'] + count['unchanged'] + count['errors']
+    processed_count = count['created'] + count['updated'] + count['unchanged'] + count['errors']
 
     self.progress = (processed_count.to_f / total_count * 100).round
     save!
@@ -133,5 +137,30 @@ class ImportJob < ApplicationRecord
   # specified, false otherwise.
   def binaries?
     binaries_location.present?
+  end
+
+  # Returns the relpath of the collection (the collection with the
+  # FCREPO_BASE_URL prefix removed). Will always start with a "/", and
+  # returns FLAT_LAYOUT_RELPATH if the relpath starts with that value.
+  def collection_relpath
+    relpath = collection.sub(FCREPO_BASE_URL, '')
+
+    # Ensure that relpath starts with a "/"
+    relpath = '/' + relpath unless relpath.starts_with?('/')
+
+    # Any path starting with "/pcdm" uses the flat layout, which always has
+    # a relpath of '/pcdm'
+    return FLAT_LAYOUT_RELPATH if relpath.starts_with?(FLAT_LAYOUT_RELPATH)
+
+    relpath
+  end
+
+  # Returns ":flat" or ":hierarchical" based on the collections relpath
+  def collection_structure
+    relpath = collection_relpath
+
+    return :flat if relpath.starts_with?(FLAT_LAYOUT_RELPATH)
+
+    :hierarchical
   end
 end

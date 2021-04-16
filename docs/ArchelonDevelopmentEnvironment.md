@@ -4,268 +4,234 @@
 
 This page provides step-by-step instructions for setting up the following:
 
-* Fedora 4
+* fcrepo stack
 * Plastron
 * Archelon
 
-with sample data.
+with sample data for local development.
 
-The directories are set up to be usable in a Mac OS X "Catalina" environment,
-where directories may no longer be placed in the root directory.
+The directories are set up to be usable in a Mac OS X Catalina environment,
+where user-created directories may no longer be placed in the system root
+directory.
 
 See [Installing Prerequisites](Prerequisites.md) for detailed
 information on prerequisites.
 
 ## Useful Resources
 
-* [https://github.com//umd-lib/fcrepo-vagrant](https://github.com//umd-lib/fcrepo-vagrant)
+* [https://github.com/umd-lib/umd-fcrepo](https://github.com/umd-lib/umd-fcrepo)
+* [https://github.com/umd-lib/umd-fcrepo-docker](https://github.com/umd-lib/umd-fcrepo-docker)
 * [https://github.com/umd-lib/plastron](https://github.com/umd-lib/plastron)
 * [https://github.com/umd-lib/archelon](https://github.com/umd-lib/archelon)
 * [F4: Development Environment](https://confluence.umd.edu/display/LIB/F4%3A+Development+Environment)
 * [https://github.com/umd-lib/plastron/blob/develop/docs/daemon.md](https://github.com/umd-lib/plastron/blob/develop/docs/daemon.md)
 * [https://bitbucket.org/umd-lib/umd-fcrepo-sample-data](https://bitbucket.org/umd-lib/umd-fcrepo-sample-data)
 
-## Note on VPNs
+## Step 1: Clone the "umd-fcrepo" repository
 
-VPN software may interfere with network communications between the
-Vagrant machines and the host. If you encounter network difficulties with the
-following steps, try running them with the VPN disabled, then turn the VPN
-back on.
+1.1) Clone the "umd-fcrepo" repository and its submodules:
 
-## Base Directory
-
-For the following, the base directory will be `~/git/` (where "~" is your home
-directory). For example, on Mac OS X, if your username is "jsmith", the full
-filepath for the base directory will be "/Users/jsmith/git/".
-
-## Step 1 - fedora-vagrant Setup
-
-### Step 1.1 - Checkout fcrepo-env
-
-1.1.1) Switch to the base directory:
-
-```
-> cd ~/git/
+```bash
+git clone --recurse-submodules git@github.com:umd-lib/umd-fcrepo.git
 ```
 
-1.1.2) Clone the "fcrepo-env" repository:
+1.2) Switch into the "umd-fcrepo" directory:
 
-```
-> git clone git@bitbucket.org:umd-lib/fcrepo-env.git
-```
-
-### Step 1.2 - Checkout fedora-core
-
-1.2.1) Switch to the base directory:
-
-```
-> cd ~/git/
+```bash
+cd umd-fcrepo
 ```
 
-1.2.2) Clone the "fedora4-core" repository:
+The "umd-fcrepo" directory will be considered the "base directory" for the
+following steps.
 
-```
-> git clone git@bitbucket.org:umd-lib/fedora4-core.git
-```
+1.3) (**Optional**) Build and deploy the "umd-camel-processors" jar to the
+Maven Nexus:
 
-### Step 1.3 - Checkout fcrepo-vagrant
-
-1.3.1) Switch to the base directory:
-
-```
-> cd ~/git/
+```bash
+cd umd-camel-processors
+mvn clean deploy
+cd ..
 ```
 
-1.3.2) Clone the "fcrepo-vagrant" respository:
+ℹ️ **Note:** Publishing to the Nexus means that it will now be used by everyone
+as the "latest" version of the jar.
 
-```
-> git clone git@github.com:umd-lib/fcrepo-vagrant
-```
+## Step 2: Deploy umd-fcrepo-docker stack
 
-### Step 1.4 - Start up an instance of Postgres from umd-fcrepo-docker
+2.1. Switch to the base directory.
 
-1.4.1) Switch to the base directory:
+2.2. Switch to "umd-fcrepo-webapp" and build the Docker images for the
+"umd-fcrepo" stack (see the
+umd-fcrepo-docker [README](https://github.com/umd-lib/umd-fcrepo-docker/blob/develop/README.md#quick-start)
+for canonical instructions):
 
-```
-> cd ~/git/
-```
+```bash
+cd umd-fcrepo-webapp
+docker build -t docker.lib.umd.edu/fcrepo-webapp .
 
-1.4.2) Clone the "umd-fcrepo-docker" repository:
+cd ../umd-fcrepo-docker
 
-```
-> git clone https://github.com/umd-lib/umd-fcrepo-docker.git
-```
-
-1.4.3) Change directory to "~/git/umd-fcrepo-docker":
-
-```
-> cd ~/git/umd-fcrepo-docker/postgres
-```
-
-1.4.4) Create a Docker volume named "fcrepo-postgres-data":
-
-```
-> docker volume create fcrepo-postgres-data
+docker build -t docker.lib.umd.edu/fcrepo-activemq activemq
+docker build -t docker.lib.umd.edu/fcrepo-solr-fedora4 solr-fedora4
+docker build -t docker.lib.umd.edu/fcrepo-fuseki fuseki
+docker build -t docker.lib.umd.edu/fcrepo-fixity fixity
+docker build -t docker.lib.umd.edu/fcrepo-mail mail
 ```
 
-1.4.5) Build the "umd-fcrepo-postgres" image:
+2.3. Export the following environment variables:
 
-```
-> docker build -t umd-fcrepo-postgres .
-```
-
-1.4.6) Run the "umd-fcrepo-postgres" image:
-
-```
-> docker run -p 5432:5432 -v fcrepo-postgres-data:/var/lib/postgresql/data umd-fcrepo-postgres
+```bash
+export MODESHAPE_DB_PASSWORD=fcrepo
+export LDAP_BIND_PASSWORD=...     # See "FCRepo Directory LDAP AuthDN" in the "Identities" document on Box.
+export JWT_SECRET=`uuidgen | shasum -a256 | cut -d' ' -f1`
 ```
 
-----
+ℹ️ **Note:** The "MODESHAPE_DB_PASSWORD" and "JWT_SECRET" are arbitrary, and
+so can be different from the above, if desired. The only requirement for
+"JWT_SECRET" is that it be "sufficiently long", which is accomplished by
+the uuidgen command (but any "sufficiently long" string will work).
 
-**Note:** If you want to run "umd-fcrepo-postgres" as a daemon (and destroyed
-when the container exits), use:
+2.4. Deploy the stack:
 
-```
-> docker run -d --rm -p 5432:5432 -v fcrepo-postgres-data:/var/lib/postgresql/data umd-fcrepo-postgres
-```
-
-----
-
-### Step 1.5 - Add "fcrepolocal" and "solrlocal" to /etc/hosts
-
-1.5.1) Run the following commands to add "fcrepolocal" and "solrlocal" hosts to
-       /etc/hosts:
-
-```
-> sudo echo "192.168.40.10 fcrepolocal" >> /etc/hosts
-> sudo echo "192.168.40.11 solrlocal" >> /etc/hosts
+```bash
+docker stack deploy -c umd-fcrepo.yml umd-fcrepo
 ```
 
-### Step 1.6 - Start fcrepo-vagrant
+ℹ️ **Note:** For ease of deploying, you can create a .env file that exports the
+required environment variables from the previous step, and source that file when
+deploying:
 
-1.6.1) Switch to the "~/git/fcrepo-vagrant" directory:
-
-```
-> cd ~/git/fcrepo-vagrant
-```
-
-1.6.2) Start the Solr and fcrepo Vagrant machines:
-
-```
-> vagrant up
+```bash
+source .env && docker stack deploy -c umd-fcrepo.yml umd-fcrepo
 ```
 
-### Step 1.7 - Verify that fcrepo-vagrant is running
+Any .env file will be ignored by Git.
 
-In a web browser, go to each of the following URLs:
+2.5. Check that the following URLs are all accessible:
 
-* Application Landing Page: [https://fcrepolocal/](https://fcrepolocal/)
-* Log in: [https://fcrepolocal/user](https://fcrepolocal/user)
-* Fedora REST interface: [https://fcrepolocal/fcrepo/rest](https://fcrepolocal/fcrepo/rest)
-* Solr Admin interface: [http://solrlocal:8983/solr](http://solrlocal:8983/solr)
-* ActiveMQ Admin Interface: [https://fcrepolocal/activemq/admin](https://fcrepolocal/activemq/admin)
+* ActiveMQ admin console: <http://localhost:8161/admin>
+* Solr admin console: <http://localhost:8983/solr/#/>
+* Fuseki admin console: <http://localhost:3030/>
+* Fedora repository REST API: <http://localhost:8080/rest/>
+* Fedora repository login/user profile page: <http://localhost:8080/user/>
 
-## Step 2 - Setup and Run Plastron as a daemon
+## Step 3: Create collection container in fcrepo
 
-### 2.1) Checkout "plastron" repostory
+Items can be loaded into fcrepo using either a "flat" or "hierarchical"
+structure.
 
-2.1.1) Switch to the base directory:
+In a "flat" structure, all the resources are loaded as children of the
+"RELPATH" in the Plastron configuration (typically "/pcdm"). Items and
+pages are siblings instead of parent-child items. The "collection" URI is
+a separate resource with no children.
 
-```
-> cd ~/git/
-```
+In a "hierarchical" structure, the resources are placed as children under
+the collection URI, with a hierachical parent-child layout.
 
-2.1.2) Clone the "plastron" repository:
+Older datasets in fcrepo use the "flat" structure. Future datasets will be
+loaded using the "hierarchical" structure.
 
-```
-> git clone https://github.com/umd-lib/plastron.git
-```
+Choose one of the two structures for loading the data, based on your
+development needs, and follow the corresponding steps.
 
-### 2.2) Configure plastron with fcrepo SSL certificates
+For hierarchical structure, see the "Proposed Initial List of Collections"
+section in [https://confluence.umd.edu/display/LIB/Fedora%3A+Repository+Structure#][fcrepo-repository-structure]
+for the proposed relative path for each collection. For example, the proposed
+relative path for the "Student Newspapers" collection (used below) is
+"/dc/2016/1".
 
-2.2.1) Switch to the "~/git/fcrepo-vagrant/" directory:
+### Step 3 - Flat structure
 
-```
-> cd ~/git/fcrepo-vagrant/
-```
+3.1. Log in at <http://localhost:8080/user/>
 
-2.2.2) Run the "clientcert" script:
+3.2. Go to <http://localhost:8080/rest/>
 
-```
-> bin/clientcert batchloader ~/git/plastron/batchloader
-```
+3.3. Add a "pcdm" container, using the "Create New Child Resource" panel in the
+right sidebar.
 
-2.2.3) Switch to the "~/git/plastron/" directory:
+### Step 3 - Hierarchical Structure
 
-```
-> cd ~/git/plastron/
-```
+3.1. Log in at <http://localhost:8080/user/>
 
-2.2.4) Copy the "~/git/fcrepo-vagrant/dist/fcrepo/ssl/crt/fcrepolocal.crt" as
-       "repository.pem":
+3.2. Go to <http://localhost:8080/rest/>
 
-```
-> cp ~/git/fcrepo-vagrant/dist/fcrepo/ssl/crt/fcrepolocal.crt ~/git/plastron/repository.pem
-```
+3.3. Add a "/dc/2016/1" container, using the "Create New Child Resource" panel
+in the right sidebar.
 
-### 2.3) Create the Plastron daemon configuration file
-
-2.3.1) Switch to the "~/git/plastron" directory:
-
-```
-> cd ~/git/plastron
-```
-
-2.3.2) Create a directory to hold the "plastron" logs, msg stores, and
-       binary exports:
+3.4. Provide the name "Student Newspapers" to the "/dc/2016/1" container (and
+identify it as a "pcdm:Collection") by entering the following in the
+"Update Properties" panel in the right sidebar and left-clicking the
+"Update" button:
 
 ```
-> mkdir logs
-> mkdir msg
-> mkdir exports
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX pcdm: <http://pcdm.org/models#>
+DELETE {} INSERT { <> a pcdm:Collection; dcterms:title "Student Newspapers" } WHERE {}
 ```
 
-2.3.3) Create a "daemon-plastron.yml" file:
+## Step 4: Create auth tokens for plastron and archelon
 
-```
-> vi daemon-plastron.yml
+4.1. Use the following URLs to generate auth tokens for use with Plastron and
+Archelon, respectively:
+
+* http://localhost:8080/user/token?subject=plastron&role=fedoraAdmin
+* http://localhost:8080/user/token?subject=archelon&role=fedoraAdmin
+
+## Step 5: Configure Plastron to run locally
+
+5.1. Switch to the base directory:
+
+```bash
+cd ..
 ```
 
-and add the following lines:
+5.2. Create directories to hold the Plastron configurations, logs, msg stores,
+and binary exports:
 
+```bash
+cd plastron
+mkdir logs
+mkdir msg
+mkdir exports
 ```
+
+5.3. Create a Plastron configuration file `plastron/config/localhost.yml` file:
+
+```bash
+vi config/localhost.yml
+```
+
+containing the following:
+
+```yaml
 REPOSITORY:
-  REST_ENDPOINT: https://fcrepolocal/fcrepo/rest
-  RELPATH: /pcdm
-  CLIENT_CERT: batchloader.pem
-  CLIENT_KEY: batchloader.key
-  SERVER_CERT: repository.pem
-  LOG_DIR: logs/
+    REST_ENDPOINT: http://localhost:8080/rest
+    RELPATH: /pcdm
+    AUTH_TOKEN: {auth token for Plastron created in Step 4.1 above}
+    LOG_DIR: logs/
 MESSAGE_BROKER:
-  SERVER: fcrepolocal:61613
-  MESSAGE_STORE_DIR: msg/
-  DESTINATIONS:
-    JOBS: /queue/plastron.jobs
-    JOB_STATUS: /topic/plastron.jobs.status
-    COMPLETED_JOBS: /queue/plastron.jobs.completed
-    SYNCHRONOUS_JOBS: /queue/plastron.jobs.synchronous
+    SERVER: localhost:61613
+    MESSAGE_STORE_DIR: msg/
+    DESTINATIONS:
+      JOBS: /queue/plastron.jobs
+      JOB_PROGRESS: /topic/plastron.jobs.progress
+      JOB_STATUS: /queue/plastron.jobs.status
+      SYNCHRONOUS_JOBS: /queue/plastron.jobs.synchronous
 COMMANDS:
-  EXPORT:
+    EXPORT:
     BINARIES_DIR: exports/
 ```
 
-----
+ℹ️ **Note:** For production, additional variables in the "COMMANDS" stanza
+are needed to configure the SSH private key for SFTP import/export
+operations, i.e:
 
-**Note:** For production, additional variables in the "COMMANDS"
-stanza are needed to configure the SSH private key for SFTP
-import/export operations, i.e:
-
-```
+```yaml
 COMMANDS:
-  EXPORT:
-    SSH_PRIVATE_KEY: /run/secrets/archelon_id
-  IMPORT:
-    SSH_PRIVATE_KEY: /run/secrets/archelon_id
+    EXPORT:
+        SSH_PRIVATE_KEY: /run/secrets/archelon_id
+    IMPORT:
+        SSH_PRIVATE_KEY: /run/secrets/archelon_id
 ```
 
 ----
@@ -291,321 +257,280 @@ Set up the Python environment to run Plastron. The following uses "virtualenv".
 ```
 > source venv/bin/activate
 ```
+=======
+>>>>>>> release/1.11.0
 
-2.4.4) Install the requirements:
+5.4. Set up the Python environment to run Plastron using pyenv:
 
-```
-> pip install -e .
-```
-
-2.4.5) Run plastron as a daemon, using the "daemon-plastron.yml" file:
-
-```
-> plastrond -c daemon-plastron.yml
-```
-
-----
-
-**Note:** For troubleshooting, the plastron daemon can be run in "verbose" mode:
-
-```
-> plastrond --verbose -c daemon-plastron.yml
+```bash
+pyenv install 3.6.12
+pyenv virtualenv 3.6.12 plastron
+pyenv local plastron
+pip install -e .
 ```
 
-----
+5.5. Run plastron as a daemon, using the new `localhost.yml` config file:
 
-## Step 3 - Load umd-fcrepo-sample-data
-
-### 3.1) Load the "umd-fcrepo-sample-data" using the following steps:
-
-3.1.1) Create a new terminal.
-
-3.1.2) Switch to the base directory:
-
-```
-> cd ~/git/
+```bash
+plastrond -c config/localhost.yml
 ```
 
-3.1.3) Clone the "umd-fcrepo-sample-data" repository:
+ℹ️ **Note:** For troubleshooting, the plastron daemon can be run in verbose
+mode:
 
-```
-> git clone git@bitbucket.org:umd-lib/umd-fcrepo-sample-data.git
-```
-
-3.1.4) Switch to the "~/git/umd-fcrepo-sample-data" directory:
-
-```
-> cd ~/git/umd-fcrepo-sample-data
+```bash
+plastrond -v -c config/localhost.yml
 ```
 
-3.1.5) Copy the server and client SSL certificates from fcrepo:
+## Step 6: Load umd-fcrepo-sample-data
 
-```
-> ./setup_fcrepo.sh
-```
+Follow the appropriate steps, based on whether the "flat" or "hierarchical"
+structure is being used.
 
-3.1.6) Activate the Plastron virtual environment:
+### Step 6 - Flat Structure
 
-```
-> source ~/git/plastron/venv/bin/activate
-```
+6.1.In a new terminal, switch to the base directory.
 
-3.1.7) Load the Student Newspapers data:
+6.2. Clone the umd-fcrepo-sample-data repository:
 
-```
-> plastron -r repo.yml mkcol -b student_newspapers/batch.yml -n 'Student Newspapers'
-> plastron -r repo.yml load -b student_newspapers/batch.yml
+```bash
+git clone git@bitbucket.org:umd-lib/umd-fcrepo-sample-data.git
+cd umd-fcrepo-sample-data
 ```
 
-----
+6.3. Activate the Plastron environment:
 
-**Note:** Additional datasets are available. See the README.md file in the
+```bash
+pyenv shell plastron
+```
+
+6.4. Load the Student Newspapers data:
+
+```bash
+plastron -c ../plastron/config/localhost.yml mkcol -b student_newspapers/batch.yml -n 'Student Newspapers'
+plastron -c ../plastron/config/localhost.yml load -b student_newspapers/batch.yml
+```
+
+ℹ️ **Note:** Additional datasets are available. See the README.md file in the
 [umd-fcrepo-sample-data](https://bitbucket.org/umd-lib/umd-fcrepo-sample-data)
-repository.
+repository for more information.
 
-----
+### Step 6 - Hierachical Structure
 
-## Step 4 - Setup and run Archelon
+6.1. In a new terminal, switch to the base directory.
 
-### 4.1) Checkout "archelon" repostory
+6.2. Clone the umd-fcrepo-sample-data repository:
 
-4.1.1) Create a new terminal.
-
-4.1.2) Switch to the base directory:
-
-```
-> cd ~/git/
+```bash
+git clone git@bitbucket.org:umd-lib/umd-fcrepo-sample-data.git
+cd umd-fcrepo-sample-data
 ```
 
-4.1.2) Clone the "archelon" repository:
+6.3. Activate the Plastron environment:
 
-```
-> git clone https://github.com/umd-lib/archelon.git
-```
-
-### 4.2) Setup the Archelon dependencies
-
-The following assumes that "rvm" is being used.
-
-4.2.1) Switch to the "~/git/archelon/" directory:
-
-```
-> cd ~/git/archelon/
+```bash
+pyenv shell plastron
 ```
 
-4.2.2) Install the dependencies:
+6.4. Create a "plastron-student_newspapers-load.yml" configuration file:
 
-```
-> bundle install
-```
-
-4.2.3) Set up the database:
-
-----
-
-**Note:** The following command will destroy any data in the local database
-(if one exists).
-
-----
-
-```
-> rails db:reset
+```bash
+vi plastron-student_newspapers-load.yml
 ```
 
-4.2.4) Run "yarn" to install JavaScript dependencies:
+using the following template:
 
 ```
-> yarn
+REPOSITORY:
+    REST_ENDPOINT: http://localhost:8080/rest
+    STRUCTURE: hierarchical
+    RELPATH: {COLLECTION_RELPATH}
+    AUTH_TOKEN: {PLASTRON_AUTH_TOKEN}
+    LOG_DIR: logs/
 ```
 
-### 4.3) Configure Archelon with fcrepo SSL certificates
-
-4.3.1) Switch to the "~/git/fcrepo-vagrant/" directory:
-
-```
-> cd ~/git/fcrepo-vagrant/
-```
-
-4.3.2) Run the "clientcert" script:
+where {PLASTRON_AUTH_TOKEN} is the Plastron token from Step 4.1 above, and
+ {COLLECTION_RELPATH} is the relative path of the collection. For the
+ "Student Newspapers"  collection (see explanation in Step 3), the
+ {COLLECTION_RELPATH} is "/dc/2016/1", so the configuration file would be:
 
 ```
-> bin/clientcert batchloader ~/git/archelon/batchloader
+REPOSITORY:
+    REST_ENDPOINT: http://localhost:8080/rest
+    STRUCTURE: hierarchical
+    RELPATH: /dc/2016/1
+    AUTH_TOKEN: {PLASTRON_AUTH_TOKEN}
+    LOG_DIR: logs/
 ```
 
-4.3.3) Switch to the "~/git/archelon/" directory:
+where {PLASTRON_AUTH_TOKEN} is the Plastron token from Step 4.1 above.
 
-```
-> cd ~/git/archelon/
-```
+6.5. Edit the "student_newspapers/batch.yml" file:
 
-----
-
-**Note:** The "batchloader.jks" and "batchloader.p12" files added by the "clientcert"
-script are not needed and can be removed:
-
-```
-> rm batchloader.jks batchloader.p12
+```bash
+vi student_newspapers/batch.yml
 ```
 
-----
-
-### 4.4) Configure Archelon
-
-4.4.1) Switch to the "~/git/archelon/" directory:
-
-```
-> cd ~/git/archelon/
-```
-
-4.4.2) Copy the "env_example" file to ".env":
+and change the "COLLECTION" value to match the full collection URI path, which
+consists of a base server URL plus the {COLLECTION_RELPATH} from the
+previous step. For example, in the local development enviroment, the base server
+URL is "http://localhost:8080/rest", and the collection relative path is
+"/dc/2016/1", making the full collection URI
+"http://localhost:8080/rest/dc/2016/1":
 
 ```
-> cp env_example .env
+COLLECTION: http://localhost:8080/rest/dc/2016/1
 ```
 
-4.4.5) Edit the ".env":
+6.6. Load the Student Newspapers data:
 
+```bash
+plastron -c plastron-student_newspapers-load.yml load -b student_newspapers/batch.yml
 ```
-> vi .env
+
+ℹ️ **Note:** Additional datasets are available. See the README.md file in the
+[umd-fcrepo-sample-data](https://bitbucket.org/umd-lib/umd-fcrepo-sample-data)
+repository for more information.
+
+## Step 7: Setup and run Archelon
+
+7.1. In a new terminal, switch to the base directory.
+
+7.2. Switch to the "archelon" subdirectory
+
+```bash
+cd archelon
 ```
 
-changing the following:
+7.3. Install the Archelon dependencies:
 
-----
+```bash
+bundle install
+```
 
-**Note:** Some values in the ".env" file are overridden in the
+7.4. Set up the database:
+
+⚠️ **Warning:** The following command will destroy any data in the local
+database (if one exists).
+
+```bash
+rails db:reset
+```
+
+7.5. Install JavaScript dependencies:
+
+```bash
+yarn
+```
+
+7.6. Create a `.env` file for Archelon:
+
+```bash
+cp env_example .env
+```
+
+7.7. Edit the ".env" file:
+
+```bash
+vi .env
+```
+
+and change the following values:
+
+ℹ️ **Note:** Some values in the ".env" file are overridden in the
 ".env.development" file, which is why some variables in the ".env" file can
 remain empty.
 
-----
+| Property                         | Value   |
+| -------------------------------- | ------- |
+| `FCREPO_AUTH_TOKEN`              | Value created for archelon in Step 4.1 |
+| `LDAP_BIND_PASSWORD`             | See "FCRepo Directory LDAP AuthDN" in the "Identities" document on Box. |
+| `VOCAB_LOCAL_AUTHORITY_BASE_URI` | http://vocab.lib.umd.edu/ |
+| `VOCAB_PUBLICATION_BASE_URI`     | http://localhost:3000/published_vocabularies/ |
 
-| Property                       | Value   |
-| ------------------------------ | ------- |
-| LDAP_BIND_PASSWORD             | See the "FCRepo Directory LDAP AuthDN" in the "Identites" document on the shared SSDR Google Drive. |
-| FCREPO_CLIENT_CERT             | batchloader.pem |
-| FCREPO_CLIENT_KEY              | batchloader.key |
-| VOCAB_LOCAL_AUTHORITY_BASE_URI | http://vocab.lib.umd.edu/ |
-| VOCAB_PUBLICATION_BASE_URI     | http://localhost:3000/published_vocabularies/ |
+7.8. Run the Archelon STOMP listener:
 
-## 4.5) Run the Archelon STOMP listener
-
-4.5.1) Switch to the "~/git/archelon/" directory:
-
-```
-> cd ~/git/archelon/
+```bash
+rails stomp:listen
 ```
 
-4.5.2) Run the Archelon STOMP listener using the following command:
+7.9. In a new terminal, switch to the base directory.
 
-```
-> rails stomp:listen
-```
+7.10. Run Archelon:
 
-## 4.6) Run Archelon
-
-4.6.1) Create a new terminal.
-
-4.6.2) Switch to the "~/git/archelon/" directory:
-
-```
-> cd ~/git/archelon/
+```bash
+cd archelon
+rails server
 ```
 
-4.6.3) Run Archelon using the following command:
+7.11. Verify that Archelon is running by going to <http://localhost:3000/>
 
-```
-> rails server
-```
+After logging in, the Archelon home page should be displayed, and the
+"Collection" panel should display a "Student Newspapers" entry.
 
-4.6.4) Verify that Archelon is running by going to:
-
-[http://localhost:3000/](http://localhost:3000/)
-
-After logging in, the Archelon home page should be displayed. The "Collection"
-panel should display a "Student Newspapers" entry.
+ℹ️ **Note:** If you get a "Not Authorized" page when going to
+<http://localhost:3000/>, your browser is likely caching a credential from
+a previous Archelon login. Go to <http://localhost:3000/> in a *private*
+browser window (which should show the CAS login page). Once you log in,
+refresh the "Not Authorized" page -- it should now permit entry.
 
 ## Using the "postgresql" adapter with Action Cable" in the "development" environment
 
-----
-
-**Note:** This section describes how to set up the Archelon application to use
-the "postgresql" adapter for both the database and Action Cable functionality.
+ℹ️ **Note:** This section describes how to set up the Archelon application to use
+the postgresql adapter for both the database and Action Cable functionality.
 This is intended only for those situations in which is it desirable to test such
 functionality, and is not necessary to create a running system.
 
-----
-
-By default, Rails uses the "async" adapter for the "development" and "test"
+By default, Rails uses the `async` adapter for the development and test
 environments for Action Cable functionality.
 
-In some cases, it may be desirable to configure the "development" environment
-to use the "postgresql" adapter for testing or troubleshooting. When using the
-"postgresql" adapter for Action Cable, the database must also use Postgres
-(instead of the default Sqlite).
+In some cases, it may be desirable to configure the development environment
+to use the `postgresql` adapter for testing or troubleshooting. When using the
+`postgresql` adapter for Action Cable, the database **MUST** also use Postgres
+(instead of the default SQLite).
 
-To set up the "development" environment, do the following:
+To set up the development environment, do the following:
 
-1) Modify the "umd-fcrepo-docker/postgres/fcrepo.sh" file by changing the line:
+1. Stop the Archelon STOMP listener and applicaton, if running.
 
-```
-CREATE USER archelon WITH PASSWORD 'archelon';
-```
+2. In the "$BASE_DIR/archelon" directory, create a ".env.local" file:
 
-to
-
-```
-CREATE USER archelon WITH CREATEDB PASSWORD 'archelon';
+```bash
+vi .env.local
 ```
 
-2) Kill the running "umd-fcrepo-postgres" Docker container.
-
-3) Destroy and recreate the "fcrepo-postgres-data" Docker volume
+with the following contents:
 
 ```
-> docker volume rm fcrepo-postgres-data
-> docker volume create fcrepo-postgres-data
+ARCHELON_DATABASE_ADAPTER=postgresql
+ARCHELON_DATABASE_NAME=archelon
+ARCHELON_DATABASE_HOST=localhost
+ARCHELON_DATABASE_PORT=5434
+ARCHELON_DATABASE_USERNAME=postgres
+ARCHELON_DATABASE_PASSWORD=postgres
+  ```
+
+3. In the `$BASE_DIR/archelon/config/cable.yml` file:
+
+```bash
+vi config/cable.yml
 ```
 
-4) Rebuild the "umd-fcrepo-postgres" image:
+change the `development` stanza to:
 
-```
-> docker build -t umd-fcrepo-postgres .
-```
-
-5) Run the "umd-fcrepo-postgres" image:
-
-```
-> docker run -d --rm -p 5432:5432 -v fcrepo-postgres-data:/var/lib/postgresql/data umd-fcrepo-postgres
+```yaml
+development:
+  adapter: postgresql
 ```
 
-6) When using the "postgresql" adapter for Action Cable, it is also necessary
-   to use Postgres for the Rails application. Switch the "development"
-   environment to use Postgres by doing the following:
+4. Reset the Archelon database (this is necessary because the Postgres database
+is now being used, instead of sqlite):
 
-      a) In the "archelon" Rails application, edit the "config/database.yml" file,
-         changing the "development" stanza to:
+```bash
+rails db:reset
+```
 
-      ```
-      development:
-        <<: *default
-        adapter: postgresql
-        database: <%= ENV["ARCHELON_DATABASE_NAME"] %>
-        username: <%= ENV["ARCHELON_DATABASE_USERNAME"] %>
-        password: <%= ENV["ARCHELON_DATABASE_PASSWORD"] %>
-        host: <%= ENV["ARCHELON_DATABASE_HOST"] %>
-        port: <%= ENV["ARCHELON_DATABASE_PORT"] %>
-        encoding: <%= ENV["ARCHELON_DATABASE_ENCODING"] %>
-      ```
+5. Restart the Archelon STOMP listener and applicaton.
 
-      b) In the "config/cable.yml" file, change the "development" stanza to:
-
-      ```
-      development:
-        adapter: postgresql
-      ```
-
-      c) Before running the Rails server, reset the database:
-
-      ```
-      > rails db:reset
-      ```
+---
+[fcrepo-repository-structure]: https://confluence.umd.edu/display/LIB/Fedora%3A+Repository+Structure
