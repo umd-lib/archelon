@@ -15,6 +15,6 @@ class SearchBuilder < Blacklight::SearchBuilder
   def exportable_only(solr_parameters)
     return unless blacklight_params[:exportable_only]
 
-    solr_parameters[:fq] << ExportJob.exportable_types.map { |type| "component:#{type}" }.join(' OR ')
+    solr_parameters[:fq] << '!component:Page AND !component:Article AND !component:Collection AND !rdf_type:fedora\:Binary'
   end
 end
