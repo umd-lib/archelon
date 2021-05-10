@@ -16,7 +16,7 @@ Item:
       uri: 'http://purl.org/dc/terms/rights'
       label: 'Rights Statement'
       type: :ControlledURIRef
-      vocab: 'rights'
+      vocab: 'rightsStatement'
 
     - name: 'title'
       uri: 'http://purl.org/dc/terms/title'
