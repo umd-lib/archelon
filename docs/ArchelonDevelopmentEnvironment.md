@@ -116,8 +116,8 @@ Any .env file will be ignored by Git.
 * ActiveMQ admin console: <http://fcrepo-local:8161/admin>
 * Solr admin console: <http://fcrepo-local:8983/solr/#/>
 * Fuseki admin console: <http://fcrepo-local:3030/>
-* Fedora repository REST API: <http://fcrepo-local:8080/rest/>
-* Fedora repository login/user profile page: <http://fcrepo-local:8080/user/>
+* Fedora repository REST API: <http://fcrepo-local:8080/fcrepo/rest/>
+* Fedora repository login/user profile page: <http://fcrepo-local:8080/fcrepo/user/>
 
 ## Step 3: Create collection container in fcrepo
 
