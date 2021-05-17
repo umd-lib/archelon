@@ -78,10 +78,14 @@ for canonical instructions):
 > cd umd-fcrepo-webapp
 > docker build -t docker.lib.umd.edu/fcrepo-webapp .
 
+> cd ../umd-fcrepo-messaging
+> docker build -t docker.lib.umd.edu/fcrepo-messaging .
+
+> cd ../umd-fcrepo-solr
+> docker build -t docker.lib.umd.edu/fcrepo-solr-fedora4 .
+
 > cd ../umd-fcrepo-docker
 
-> docker build -t docker.lib.umd.edu/fcrepo-activemq activemq
-> docker build -t docker.lib.umd.edu/fcrepo-solr-fedora4 solr-fedora4
 > docker build -t docker.lib.umd.edu/fcrepo-fuseki fuseki
 > docker build -t docker.lib.umd.edu/fcrepo-fixity fixity
 > docker build -t docker.lib.umd.edu/fcrepo-mail mail
@@ -103,7 +107,7 @@ the uuidgen command (but any "sufficiently long" string will work).
 3.4) Deploy the stack:
 
 ```bash
-> docker stack deploy -c umd-fcrepo.yml umd-fcrepo
+> docker stack deploy --with-registry-auth -c umd-fcrepo.yml umd-fcrepo
 ```
 
 ℹ️ **Note:** For ease of deploying, you can create a .env file that exports the
@@ -111,7 +115,7 @@ required environment variables from the previous step, and source that file when
 deploying:
 
 ```bash
-> source .env && docker stack deploy -c umd-fcrepo.yml umd-fcrepo
+> source .env && docker stack deploy --with-registry-auth -c umd-fcrepo.yml umd-fcrepo
 ```
 
 Any .env file will be ignored by Git.
