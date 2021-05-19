@@ -181,7 +181,7 @@ Archelon, respectively:
 * http://fcrepo-local:8080/fcrepo/user/token?subject=plastron&role=fedoraAdmin
 * http://fcrepo-local:8080/fcrepo/user/token?subject=archelon&role=fedoraAdmin
 
-## Step 5: Configure Plastron to run locally
+## Step 5: Setup and run Plastron locally
 
 5.1. Switch to the base directory:
 
@@ -241,29 +241,19 @@ COMMANDS:
 
 ----
 
-### 2.4) Run Plastron
-
-Set up the Python environment to run Plastron. The following uses "virtualenv".
-
-2.4.1) Switch to the "~/git/plastron" directory:
-
-```
-> cd ~/git/plastron
-```
-
-2.4.2) Create a virtual environment named "venv":
+5.4. Create a virtual environment named "venv":
 
 ```
 > virtualenv venv
 ```
 
-2.4.3) Activate the virtual environment:
+5.5. Activate the virtual environment:
 
 ```
 > source venv/bin/activate
 ```
 
-5.4. Set up the Python environment to run Plastron using pyenv:
+5.6. Set up the Python environment to run Plastron using pyenv:
 
 ```bash
 pyenv install 3.6.12
@@ -272,7 +262,7 @@ pyenv local plastron
 pip install -e .
 ```
 
-5.5. Run plastron as a daemon, using the new `fcrepo-local.yml` config file:
+5.7. Run plastron as a daemon, using the new `fcrepo-local.yml` config file:
 
 ```bash
 plastrond -c config/fcrepo-local.yml
