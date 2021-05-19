@@ -146,18 +146,18 @@ relative path for the "Student Newspapers" collection (used below) is
 
 ### Step 3 - Flat structure
 
-3.1. Log in at <http://fcrepo-local:8080/user/>
+3.1. Log in at <http://fcrepo-local:8080/fcrepo/user/>
 
-3.2. Go to <http://fcrepo-local:8080/rest/>
+3.2. Go to <http://fcrepo-local:8080/fcrepo/rest/>
 
 3.3. Add a "pcdm" container, using the "Create New Child Resource" panel in the
 right sidebar.
 
 ### Step 3 - Hierarchical Structure
 
-3.1. Log in at <http://fcrepo-local:8080/user/>
+3.1. Log in at <http://fcrepo-local:8080/fcrepo/user/>
 
-3.2. Go to <http://fcrepo-local:8080/rest/>
+3.2. Go to <http://fcrepo-local:8080/fcrepo/rest/>
 
 3.3. Add a "/dc/2016/1" container, using the "Create New Child Resource" panel
 in the right sidebar.
@@ -178,10 +178,10 @@ DELETE {} INSERT { <> a pcdm:Collection; dcterms:title "Student Newspapers" } WH
 4.1. Use the following URLs to generate auth tokens for use with Plastron and
 Archelon, respectively:
 
-* http://fcrepo-local:8080/user/token?subject=plastron&role=fedoraAdmin
-* http://fcrepo-local:8080/user/token?subject=archelon&role=fedoraAdmin
+* http://fcrepo-local:8080/fcrepo/user/token?subject=plastron&role=fedoraAdmin
+* http://fcrepo-local:8080/fcrepo/user/token?subject=archelon&role=fedoraAdmin
 
-## Step 5: Configure Plastron to run locally
+## Step 5: Setup and run Plastron locally
 
 5.1. Switch to the base directory:
 
@@ -210,7 +210,7 @@ containing the following:
 
 ```yaml
 REPOSITORY:
-    REST_ENDPOINT: http://fcrepo-local:8080/rest
+    REST_ENDPOINT: http://fcrepo-local:8080/fcrepo/rest
     RELPATH: /pcdm
     AUTH_TOKEN: {auth token for Plastron created in Step 4.1 above}
     LOG_DIR: logs/
@@ -241,29 +241,19 @@ COMMANDS:
 
 ----
 
-### 2.4) Run Plastron
-
-Set up the Python environment to run Plastron. The following uses "virtualenv".
-
-2.4.1) Switch to the "~/git/plastron" directory:
-
-```
-> cd ~/git/plastron
-```
-
-2.4.2) Create a virtual environment named "venv":
+5.4. Create a virtual environment named "venv":
 
 ```
 > virtualenv venv
 ```
 
-2.4.3) Activate the virtual environment:
+5.5. Activate the virtual environment:
 
 ```
 > source venv/bin/activate
 ```
 
-5.4. Set up the Python environment to run Plastron using pyenv:
+5.6. Set up the Python environment to run Plastron using pyenv:
 
 ```bash
 pyenv install 3.6.12
@@ -272,7 +262,7 @@ pyenv local plastron
 pip install -e .
 ```
 
-5.5. Run plastron as a daemon, using the new `fcrepo-local.yml` config file:
+5.7. Run plastron as a daemon, using the new `fcrepo-local.yml` config file:
 
 ```bash
 plastrond -c config/fcrepo-local.yml
@@ -345,7 +335,7 @@ using the following template:
 
 ```
 REPOSITORY:
-    REST_ENDPOINT: http://fcrepo-local:8080/rest
+    REST_ENDPOINT: http://fcrepo-local:8080/fcrepo/rest
     STRUCTURE: hierarchical
     RELPATH: {COLLECTION_RELPATH}
     AUTH_TOKEN: {PLASTRON_AUTH_TOKEN}
@@ -359,7 +349,7 @@ where {PLASTRON_AUTH_TOKEN} is the Plastron token from Step 4.1 above, and
 
 ```
 REPOSITORY:
-    REST_ENDPOINT: http://fcrepo-local:8080/rest
+    REST_ENDPOINT: http://fcrepo-local:8080/fcrepo/rest
     STRUCTURE: hierarchical
     RELPATH: /dc/2016/1
     AUTH_TOKEN: {PLASTRON_AUTH_TOKEN}
@@ -377,12 +367,12 @@ vi student_newspapers/batch.yml
 and change the "COLLECTION" value to match the full collection URI path, which
 consists of a base server URL plus the {COLLECTION_RELPATH} from the
 previous step. For example, in the local development enviroment, the base server
-URL is "http://fcrepo-local:8080/rest", and the collection relative path is
-"/dc/2016/1", making the full collection URI
-"http://fcrepo-local:8080/rest/dc/2016/1":
+URL is "http://fcrepo-local:8080/fcrepo/rest", and the collection relative path
+is "/dc/2016/1", making the full collection URI
+"http://fcrepo-local:8080/fcrepo/rest/dc/2016/1":
 
 ```
-COLLECTION: http://fcrepo-local:8080/rest/dc/2016/1
+COLLECTION: http://fcrepo-local:8080/fcrepo/rest/dc/2016/1
 ```
 
 6.6. Load the Student Newspapers data:
