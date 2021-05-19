@@ -241,28 +241,16 @@ COMMANDS:
 
 ----
 
-5.4. Create a virtual environment named "venv":
-
-```
-> virtualenv venv
-```
-
-5.5. Activate the virtual environment:
-
-```
-> source venv/bin/activate
-```
-
-5.6. Set up the Python environment to run Plastron using pyenv:
+5.4. Set up the Python environment:
 
 ```bash
-pyenv install 3.6.12
+pyenv install --skip-existing 3.6.12
 pyenv virtualenv 3.6.12 plastron
 pyenv local plastron
-pip install -e .
+pip install -r requirements.txt -e .
 ```
 
-5.7. Run plastron as a daemon, using the new `fcrepo-local.yml` config file:
+5.5. Run plastron as a daemon, using the new `fcrepo-local.yml` config file:
 
 ```bash
 plastrond -c config/fcrepo-local.yml
