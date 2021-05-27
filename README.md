@@ -49,13 +49,10 @@ self-signed SSL certificates for HTTPS, see the section [SSL setup](#ssl-setup).
 See [archelon-vagrant] for running Archelon application in a Vagrant
 environment.
 
-## Archelon Development Environment Setup
+## Archelon Local Development Environment Setup
 
-To set up Archelon for development see
-[docs/ArchelonDevelopmentEnvironment.md](docs/ArchelonDevelopmentEnvironment.md).
-
-To set up Archelon using Docker, see
-[docs/ArchelonDevelopmentEnvironmentDocker.md](docs/ArchelonDevelopmentEnvironmentDocker.md).
+See the [umd-lib/umd-fcrepo/README.md](https://github.com/umd-lib/umd-fcrepo)
+for information about setting up a local development environment for Archelon.
 
 ## Logging
 
