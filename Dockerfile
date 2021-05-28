@@ -28,6 +28,21 @@ COPY . /opt/archelon
 RUN npm install --global yarn && \
     yarn
 
+ENV RAILS_RELATIVE_URL_ROOT=
+ENV SCRIPT_NAME=
+
+# The following SECRET_KEY_BASE variable is used so that the
+# "assets:precompile" command will run run without throwing an error.
+# It will have no effect on the application when it is actually run.
+#
+# Similarly, the PROD_DATABASE_ADAPTER variable is needed for the
+# "assets:precompile" Rake task to complete, but will have no effect
+# on the application when it is actually run.
+ENV SECRET_KEY_BASE=IGNORE_ME
+RUN cd /opt/archelon/ && \
+    PROD_DATABASE_ADAPTER=postgresql bundle exec rails assets:precompile && \
+    cd .
+
 # Add "plastron" user from SFTP
 RUN useradd -ms /bin/bash plastron
 
