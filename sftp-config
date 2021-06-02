@@ -1,0 +1,16 @@
+
+# configuration to allow the plastron user to SFTP files
+# in and out of Archelon's "dropbox"
+
+AllowGroups plastron
+
+Match Group plastron
+ ForceCommand internal-sftp
+ ChrootDirectory /var/opt/archelon/
+ PermitTunnel no
+ AllowAgentForwarding no
+ AllowTcpForwarding no
+ X11Forwarding no
+
+AuthorizedKeysCommand /opt/archelon/bin/get_plastron_authorized_keys.sh
+AuthorizedKeysCommandUser nobody
