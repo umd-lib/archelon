@@ -1,9 +1,15 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class UMDLibEnvironmentBannerHelperTest < ActiveSupport::TestCase
   def setup
     @banner = Object.new
     @banner.extend(UMDLibEnvironmentBannerHelper)
+
+    # Reset the module - need to do this here, because other tests may have
+    # already set the UMDLibEnvironmentBannerHelper
+    UMDLibEnvironmentBannerHelper.reset
   end
 
   test 'Development environment returns local banner by default' do
@@ -44,7 +50,8 @@ class UMDLibEnvironmentBannerHelperTest < ActiveSupport::TestCase
     ENV['ENVIRONMENT_BANNER_BACKGROUND'] = '#777777'
     assert_equal(
       "<div class='environment-banner' style='background-color: #777777; color: #ff0000;'>TestingForeBack</div>",
-      @banner.umd_lib_environment_banner)
+      @banner.umd_lib_environment_banner
+    )
   end
 
   test 'A ENVIRONMENT_BANNER_ENABLED of "true" enables banner display' do
@@ -54,7 +61,8 @@ class UMDLibEnvironmentBannerHelperTest < ActiveSupport::TestCase
     ENV['ENVIRONMENT_BANNER_ENABLED'] = 'true'
     assert_equal(
       "<div class='environment-banner' style='background-color: #777777; color: #ff0000;'>BannerEnabledTrue</div>",
-      @banner.umd_lib_environment_banner)
+      @banner.umd_lib_environment_banner
+    )
   end
 
   test 'A blank ENVIRONMENT_BANNER_ENABLED enables banner display' do
@@ -64,7 +72,8 @@ class UMDLibEnvironmentBannerHelperTest < ActiveSupport::TestCase
     ENV['ENVIRONMENT_BANNER_ENABLED'] = ''
     assert_equal(
       "<div class='environment-banner' style='background-color: #777777; color: #ff0000;'>BannerEnabledBlank</div>",
-      @banner.umd_lib_environment_banner)
+      @banner.umd_lib_environment_banner
+    )
   end
 
   test 'ENVIRONMENT_BANNER_ENABLED of "false" prevents banner display' do
@@ -96,7 +105,8 @@ class UMDLibEnvironmentBannerHelperTest < ActiveSupport::TestCase
     ENV['ENVIRONMENT_BANNER_BACKGROUND'] = '#777777'
     assert_equal(
       "<div class='environment-banner' style='background-color: #777777; color: #ff0000;'>TestingProdWithEnv</div>",
-      @banner.umd_lib_environment_banner)
+      @banner.umd_lib_environment_banner
+    )
   end
 
   def teardown
@@ -104,7 +114,6 @@ class UMDLibEnvironmentBannerHelperTest < ActiveSupport::TestCase
     Rails.env = 'test'
     ENV.clear
 
-    # Reset the module
     UMDLibEnvironmentBannerHelper.reset
   end
 end
