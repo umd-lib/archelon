@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Start the SSH daemon for SFTP
-service ssh start
-
 # wait for the database to be up
 echo -n Checking database host/port...
 
