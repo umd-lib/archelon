@@ -33,20 +33,10 @@ ENV SCRIPT_NAME=
 ENV SECRET_KEY_BASE=IGNORE_ME
 RUN PROD_DATABASE_ADAPTER=postgresql bundle exec rails assets:precompile
 
-# Add "plastron" user from SFTP
-RUN useradd -ms /bin/bash plastron
+# Set up volumes for import/export
+VOLUME /var/opt/archelon/imports
+VOLUME /var/opt/archelon/exports
 
-# Set up directories for import/export
-VOLUME /var/opt/archelon
-RUN mkdir -p /var/opt/archelon/imports
-RUN mkdir -p /var/opt/archelon/exports
-# Note: data directory must be owned by root:root, and subdirectories
-# should be owned by plastron
-RUN chown -R plastron /var/opt/archelon/*
-
-# Set up SFTP
-RUN cat sftp-config >> /etc/ssh/sshd_config
-
-EXPOSE 3000 22
+EXPOSE 3000
 
 CMD ["bin/docker_start.sh"]
