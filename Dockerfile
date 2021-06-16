@@ -33,11 +33,6 @@ ENV SCRIPT_NAME=
 ENV SECRET_KEY_BASE=IGNORE_ME
 RUN PROD_DATABASE_ADAPTER=postgresql bundle exec rails assets:precompile
 
-# Set up volume and directories for import/export
-VOLUME /var/opt/archelon
-RUN mkdir -p /var/opt/archelon/imports
-RUN mkdir -p /var/opt/archelon/exports
-
 EXPOSE 3000
 
 CMD ["bin/docker_start.sh"]
