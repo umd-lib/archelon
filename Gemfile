@@ -69,7 +69,7 @@ gem 'faker', '~> 1.8'
 gem 'http', '~> 2.2.2'
 
 # RFC-complient URI and URI template handling
-gem 'addressable', '~> 2.5'
+gem 'addressable', '~> 2.8'
 
 gem 'pg'
 
