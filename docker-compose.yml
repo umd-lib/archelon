@@ -11,8 +11,17 @@ services:
       - 3000:3000
     env_file:
       - docker-archelon.env
+  archelon-db:
+    image: postgres:9.5.16
+    environment:
+      POSTGRES_USER: archelon
+      POSTGRES_PASSWORD: archelon
+      POSTGRES_DB: archelon
+    volumes:
+      - "dbdata:/var/lib/postgresql/data"
 volumes:
   archelon:
+  dbdata:
 networks:
   default:
     external: true
