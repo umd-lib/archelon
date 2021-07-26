@@ -11,6 +11,14 @@ services:
       - 3000:3000
     env_file:
       - docker-archelon.env
+    volumes:
+      - archelon-import-export-data:/var/opt/archelon:ro
+  archelon-sftp:
+    image: docker.lib.umd.edu/archelon-sftp:latest
+    ports:
+      - 2200:22
+    volumes:
+      - archelon-import-export-data:/data
   archelon-db:
     image: postgres:9.5.16
     environment:
@@ -20,7 +28,7 @@ services:
     volumes:
       - "dbdata:/var/lib/postgresql/data"
 volumes:
-  archelon:
+  archelon-import-export-data:
   dbdata:
 networks:
   default:
