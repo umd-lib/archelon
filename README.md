@@ -43,12 +43,6 @@ information on these prerequisites.
   rails server
   ```
 
-If you are going to run Archelon against a Solr or Fedora server that uses
-self-signed SSL certificates for HTTPS, see the section [SSL setup](#ssl-setup).
-
-See [archelon-vagrant] for running Archelon application in a Vagrant
-environment.
-
 ## Archelon Local Development Environment Setup
 
 See the [umd-lib/umd-fcrepo/README.md](https://github.com/umd-lib/umd-fcrepo)
@@ -76,10 +70,6 @@ The "public keys" endpoint returns a JSON list of the public keys allowed to
 "stfp" to the Archelon server. While these are _public_ keys, and hence not
 technically a security issue, current SSDR policy is to limit access to this
 endpoint to "localhost", or nodes in the Kubernetes cluster.
-
-**Note:** The access restrictions on the "public keys" endpoint are currently
-implemented in the Apache configuration in [archelon-env][archelon-env],
-_not_ in the application itself.
 
 ## Rake Tasks
 
@@ -149,34 +139,16 @@ docker image:
 docker build -t archelon .
 ```
 
-To run an instance of this image against the dev fcrepo, Solr, and IIIF servers,
-and populate the database with seed data:
+See [umd-lib/umd-fcrepo/README.md](https://github.com/umd-lib/umd-fcrepo)
+for information about setting up a local development environment for Archelon
+using Docker.
+
+When running locally in Docker, the Archelon database can be accessed using:
 
 ```
-id=$(docker run -d --rm -p 3000:3000 \
-    -e SOLR_URL=https://solrdev.lib.umd.edu/solr/fedora4 \
-    -e FCREPO_BASE_URL=https://fcrepodev.lib.umd.edu/fcrepo/rest/ \
-    -e IIIF_BASE_URL=https://iiifdev.lib.umd.edu/ \
-    -e MIRADOR_STATIC_VERSION=1.2.0 \
-    -e RETRIEVE_BASE_URL=http://localhost:3000/retrieve/ \
-    -e LDAP_OVERRIDE=admin \
-    archelon)
+# Archelon database backing the Archelon Rails app
+psql -U archelon -h localhost -p 5434 archelon
 ```
-
-To watch the logs:
-
-```
-docker logs -f "$id"
-```
-
-To stop the running docker container:
-
-```
-docker kill "$id"
-```
-
-See the "LDAP Override" section below for more information about the
-"LDAP_OVERRIDE" environment variable.
 
 ## Embedded Solr
 
@@ -265,61 +237,6 @@ application setting:
   config.allow_concurrency=true
   ```
 
-## SSL setup
-
-For development, Archelon is typically run in conjunction with the servers
-provided by the [fcrepo-vagrant] multi-machine Vagrant setup. This setup uses
-self-signed SSL certificates to enable HTTPS.
-
-Rails needs to be able to verify these self-signed certificates. If it cannot,
-"OpenSSL::SSL::SSLError" with an explanation "certificate verify failed" will be
-displayed in the browser.
-
-In order to avoid this error:
-
-1. Create PEM files for both the "solrlocal" and "fcrepolocal" machines, by
-   running the following commands:
-
-  **Note:** The "solrlocal" and "fcrepolocal" servers must be running.
-
-  ```
-  echo -n \
-      | openssl s_client -connect solrlocal:8984 -tls1 \
-      | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' \
-      > solrlocal.pem
-  ```
-
-  and
-
-  ```
-  echo -n \
-      | openssl s_client -connect fcrepolocal:443 -tls1 \
-      | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' \
-      > fcrepolocal.pem
-```
-
-  This will create two files "solrlocal.pem" and "fcrepolocal.pem" in the
-  current directory, which contain SSL certificates.
-
-2. Combine the two "pem" files from the previous step in to a single "pem" file:
-
-  ```
-  cat solrlocal.pem fcrepolocal.pem \
-      > solrlocal_and_fcrepolocal.pem
-  ```
-
-3. To use the `solrlocal_and_fcrepolocal.pem` file with Rails, set the
-   `SSL_CERT_FILE` environment variable:
-
-  ```
-  export SSL_CERT_FILE=/path/to/solrlocal_and_fcrepolocal.pem
-  rails server
-
-  # or
-
-  SSL_CERT_FILE=/path/to/solrlocal_and_fcrepolocal.pem rails server
-  ```
-
 ## Batch Export
 
 The batch export functionality relies on a running [Plastron]
@@ -393,10 +310,8 @@ for information about writing documentation for the React components.
 See the [LICENSE](LICENSE.md) file for license rights and limitations
 (Apache 2.0).
 
-[archelon-env]: https://bitbucket.org/umd-lib/archelon-env
-[archelon-vagrant]: https://github.com/umd-lib/archelon-vagrant
 [cve-2015-9284]: https://github.com/omniauth/omniauth/wiki/Resolving-CVE-2015-9284
-[fcrepo-vagrant]: https://github.com/umd-lib/fcrepo-vagrant
 [plastron]: https://github.com/umd-lib/plastron
 [react-styleguidist]: https://react-styleguidist.js.org/
 [react-styleguidist-documenting]: https://react-styleguidist.js.org/docs/documenting
+[umd-fcrepo-docker]: https://github.com/umd-lib/umd-fcrepo-docker
