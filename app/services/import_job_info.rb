@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
-# Encapsulates information from the Platron "jobs" endpoint
+# Encapsulates information from the Platron "jobs" endpoint.
+#
+# If an error has occurred, the "error_occurred?" method returns true,
+# and the error message is available in the "error_message" attribute.
 class ImportJobInfo
   attr_reader :completed, :total, :error_message
 
   def initialize(json_rest_result)
+    # Constructed from a JsonRestResult object
     @json_rest_result = json_rest_result
     parsed_json = json_rest_result.parsed_json
 
