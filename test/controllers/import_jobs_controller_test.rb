@@ -107,9 +107,17 @@ class ImportJobsControllerTest < ActionController::TestCase
   end
 
   test 'should get show' do
-    import_job = ImportJob.first
-    get :show, params: { id: import_job.id }
-    assert_response :success
+    # Stub HTTP.get to handle PlastronService request
+    json_fixture_file = 'services/import_job/plastron_job_detail_response.json'
+    json_response = file_fixture(json_fixture_file).read
+    stub_result = OpenStruct.new
+    stub_result.body = json_response
+
+    HTTP.stub :get, stub_result do
+      import_job = ImportJob.first
+      get :show, params: { id: import_job.id }
+      assert_response :success
+    end
   end
 
   test 'should get edit' do

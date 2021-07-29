@@ -21,6 +21,8 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
   # GET /import_jobs/1.json
   def show
     @import_job_response = @import_job.last_response
+    job_id = import_job_url(@import_job)
+    @import_job_info = PlastronService.retrieve_import_job_info(job_id)
   end
 
   # GET /import_jobs/new
