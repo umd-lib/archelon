@@ -28,12 +28,12 @@ $footer-height: $footer-content-height + (2 * $footer-padding-height);
   height: 0;
   overflow: hidden;
 }
- 
+
 /* 16x9 Aspect Ratio */
 .ratio-16x9 {
   padding-bottom: 56.25%;
 }
- 
+
 /* 4x3 Aspect Ratio */
 .ratio-4x3 {
   padding-bottom: 75%;
@@ -43,7 +43,7 @@ $footer-height: $footer-content-height + (2 * $footer-padding-height);
 .ratio-1x1 {
   padding-bottom: 100%;
 }
- 
+
 .intrinsic-container iframe {
   position: absolute;
   top:0;
@@ -138,4 +138,20 @@ footer {
 
 .font-weight-normal {
   font-weight: normal !important;
+}
+
+.nav-tabs {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.tab-pane {
+  box-shadow: 0 0 2px rgba(0,0,0,.4);
+  border-radius: 3px;
+  padding: 15px;
+}
+
+.tab-content {
+  margin-bottom: 15px;
 }

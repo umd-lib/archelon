@@ -25,6 +25,8 @@
 // Bootstrap plugins are needed by the "clipboard" functionality.
 //= require bootstrap/tooltip
 
+//= require bootstrap/tab
+
 // For "clipboard-rails" gem
 //= require clipboard
 

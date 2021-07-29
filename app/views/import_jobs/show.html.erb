@@ -10,6 +10,10 @@
            status_text: status_text(@import_job)
 %>
 
+<%= render "import_job_info_panel",
+           import_job_info: @import_job_info
+%>
+
 <%= link_to 'Back', import_jobs_path, class: 'btn btn-danger' %>
 
 <% if @import_job.workflow_action == :resubmit %>
