@@ -1,0 +1,27 @@
+<strong>Completed Items (<%= import_job_info.completed.count %>)</strong>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>ID</th>
+      <th>Timestamp</th>
+      <th>Title</th>
+      <th>URL</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% import_job_info.completed.each_with_index do |item, index| %>
+      <tr>
+        <td><%= (index+1) %></td>
+        <td><%= item['id'] %></td>
+        <td><%= item['timestamp'] %></td>
+        <td><%= item['title'] %></td>
+        <td>
+          <a href="<%= item['catalog_uri'] %>">
+            <%= item['uri'] %>
+          </a>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

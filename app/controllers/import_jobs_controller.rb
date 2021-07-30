@@ -21,6 +21,15 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
   # GET /import_jobs/1.json
   def show
     @import_job_response = @import_job.last_response
+    job_id = import_job_url(@import_job)
+    @import_job_info = PlastronService.retrieve_import_job_info(job_id)
+
+    # Generate catalog URI for each completed item
+    @import_job_info.completed.each do |item|
+      uri = item['uri']
+      catalog_uri = solr_document_url(uri)
+      item['catalog_uri'] = catalog_uri
+    end
   end
 
   # GET /import_jobs/new

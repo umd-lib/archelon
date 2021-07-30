@@ -1,0 +1,27 @@
+{
+  "@id": "http://localhost:5000/jobs/http%253A%252F%252Flocalhost%253A3000%252Fimport_jobs%252F5",
+  "access": "http://vocab.lib.umd.edu/access#Public",
+  "binaries_location": "zip:///tmp/umd-fcrepo/archelon/imports/libhydra-443-binaries.zip",
+  "completed": {
+    "count": 2,
+    "items": [
+      {
+        "id": "image-id-0",
+        "timestamp": "2021-07-28T14:06:38",
+        "title": "Deimos",
+        "uri": "http://fcrepo-local:8080/fcrepo/rest/dc/2016/solar-system/c4/c6/18/7d/c4c6187d-a7d1-4ec8-b7fe-7494eaaa2c48"
+      },
+      {
+        "id": "image-id-1",
+        "timestamp": "2021-07-28T14:06:50",
+        "title": "Jupiter",
+        "uri": "http://fcrepo-local:8080/fcrepo/rest/dc/2016/solar-system/7a/fe/74/7c/7afe747c-9c21-49d2-bcae-c5ac5a864da8"
+      }
+    ]
+  },
+  "container": "/dc/2016/solar-system",
+  "job_id": "http://localhost:3000/import_jobs/5",
+  "member_of": "http://fcrepo-local:8080/fcrepo/rest/dc/2016/solar-system",
+  "model": "Item",
+  "total": 4
+}

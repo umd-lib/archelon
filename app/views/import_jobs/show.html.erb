@@ -2,12 +2,10 @@
 
 <h1><%= t('activerecord.models.import_job') %></h1>
 
-<%= render "import_job_info_panel", import_job: @import_job %>
+<%= render "import_job_panel", import_job: @import_job %>
 
-<%= render "import_job_validation_panel",
-           import_job: @import_job,
-           import_job_response: @import_job_response,
-           status_text: status_text(@import_job)
+<%= render "import_job_info_panel",
+           import_job_info: @import_job_info
 %>
 
 <%= link_to 'Back', import_jobs_path, class: 'btn btn-danger' %>
