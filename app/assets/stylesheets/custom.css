@@ -165,6 +165,12 @@ input {
   color: #03ab3a;
 }
 
+.retry-import {
+    text-align: center;
+    border-top: 1px solid;
+    padding: .5em;
+}
+
 .panel-vocabulary {
   margin-top: 10px;
 }
