@@ -1,6 +1,6 @@
 <p id="notice"><%= notice %></p>
 
-<h1><%= t('activerecord.models.import_job') %></h1>
+<h1><%= t('activerecord.models.import_job') %>: <%= @import_job.name %></h1>
 
 <%= render "import_job_panel", import_job: @import_job %>
 
@@ -9,9 +9,3 @@
 %>
 
 <%= link_to 'Back', import_jobs_path, class: 'btn btn-danger' %>
-
-<% if @import_job.workflow_action == :resubmit %>
-  <%= link_to 'Resubmit', edit_import_job_path(@import_job), class: 'btn btn-danger' %>
-<% elsif @import_job.workflow_action == :import %>
-  <%= link_to 'Import', perform_import_import_jobs_path(@import_job), method: :post, class: 'btn btn-success' %>
-<% end %>

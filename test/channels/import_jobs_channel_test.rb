@@ -10,13 +10,13 @@ class ImportJobsChannelTest < ActionCable::Channel::TestCase
 
     # Using "update_columns" so we don't trigger "after_commit" hook on
     # the model and cause broadcasts
-    import_job.update_columns(plastron_status: 'plastron_status_done', stage: 'validate') # rubocop:disable Rails/SkipsModelValidations
+    import_job.update_columns(state: :validate_failed) # rubocop:disable Rails/SkipsModelValidations
 
-    assert_equal :validate_failed, import_job.status
+    assert import_job.validate_failed?
     assert_not import_job.cas_user.admin?
 
     job_id = import_job.id.to_s
-    data = { 'jobs' => [{ 'jobId' => job_id, 'status' => 'validate_failed', 'stage' => 'validate' }] }
+    data = { 'jobs' => [{ 'jobId' => job_id, 'state' => 'validate_failed' }] }
 
     user_stream = ImportJobsChannel.stream(import_job.cas_user)
     admins_stream = ImportJobsChannel.admins_stream
@@ -36,13 +36,13 @@ class ImportJobsChannelTest < ActionCable::Channel::TestCase
 
     # Using "update_columns" so we don't trigger "after_commit" hook on
     # the model and cause broadcasts
-    import_job.update_columns(plastron_status: 'plastron_status_done', stage: 'validate') # rubocop:disable Rails/SkipsModelValidations
+    import_job.update_columns(state: :validate_failed) # rubocop:disable Rails/SkipsModelValidations
 
-    assert_equal :validate_failed, import_job.status
+    assert import_job.validate_failed?
     assert_not import_job.cas_user.admin?
 
     job_id = import_job.id.to_s
-    data = { 'jobs' => [{ 'jobId' => job_id, 'status' => 'validate_pending', 'stage' => 'validate' }] }
+    data = { 'jobs' => [{ 'jobId' => job_id, 'status' => 'validate_pending' }] }
 
     user_stream = ImportJobsChannel.stream(import_job.cas_user)
     admins_stream = ImportJobsChannel.admins_stream
@@ -64,14 +64,13 @@ class ImportJobsChannelTest < ActionCable::Channel::TestCase
 
     # Using "update_columns" so we don't trigger "after_commit" hook on
     # the model and cause broadcasts
-    import_job.update_columns(plastron_status: 'plastron_status_done', stage: 'validate') # rubocop:disable Rails/SkipsModelValidations
-    import_job.plastron_status = :plastron_status_done
+    import_job.update_columns(state: :validate_failed) # rubocop:disable Rails/SkipsModelValidations
 
-    assert_equal :validate_failed, import_job.status
+    assert import_job.validate_failed?
     assert import_job.cas_user.admin?
 
     job_id = import_job.id.to_s
-    data = { 'jobs' => [{ 'jobId' => job_id, 'status' => 'validate_pending', 'stage' => 'validate' }] }
+    data = { 'jobs' => [{ 'jobId' => job_id, 'state' => 'validate_pending' }] }
 
     user_stream = ImportJobsChannel.stream(import_job.cas_user)
     admins_stream = ImportJobsChannel.admins_stream

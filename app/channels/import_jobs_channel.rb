@@ -34,19 +34,18 @@ class ImportJobsChannel < ApplicationCable::Channel
   # missed a status update for an import job (such as validation) and there
   # are no further updates, which otherwise would leave the client thinking
   # the job was still in an "in progress" state.
-  def import_job_status_check(data) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+  def import_job_status_check(data) # rubocop:disable Metrics/MethodLength
     jobs = data['jobs']
     return if jobs.nil?
 
     updated_jobs = []
     jobs.each do |job|
       job_id = job['jobId']
-      stage = job['stage']
-      status = job['status']
+      state = job['state']
       import_job = ImportJob.find_by(id: job_id)
       next if import_job.nil?
 
-      needs_update = (import_job.stage != stage) || (import_job.status.to_s != status)
+      needs_update = import_job.state != state
       updated_jobs << import_job if needs_update
     end
 

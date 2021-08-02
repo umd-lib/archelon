@@ -51,7 +51,7 @@ namespace :stomp do # rubocop:disable Metrics/BlockLength
 
     status_trigger_url = url_for([:status_update, message.find_job])
     puts "Sending status notification to #{status_trigger_url}"
-    Net::HTTP.get(URI(status_trigger_url))
+    Net::HTTP.post(URI(status_trigger_url), '')
   end
 end
 

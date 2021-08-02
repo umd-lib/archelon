@@ -11,7 +11,8 @@ SimpleCov.start
 require_relative '../config/environment'
 require 'rails/test_help'
 require 'minitest/reporters'
-Minitest::Reporters.use!
+# only use if we are not running inside the JetBrains RubyMine IDE
+Minitest::Reporters.use! unless ENV['RM_INFO']
 
 # Require minitest Mock functionality
 require 'minitest/autorun'

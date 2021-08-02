@@ -21,7 +21,7 @@ class ExportJobsControllerTest < ActionController::TestCase
       post :create, params: params
     end
     export_job = ExportJob.last
-    assert export_job.plastron_status_in_progress?
+    assert export_job.in_progress?
 
     assert_redirected_to export_jobs_path
     @cas_user.bookmarks.delete_all
@@ -40,7 +40,7 @@ class ExportJobsControllerTest < ActionController::TestCase
       post :create, params: params
     end
     export_job = ExportJob.last
-    assert export_job.plastron_status_error?
+    assert export_job.export_error?
 
     assert_equal I18n.t(:active_mq_is_down), flash[:error]
     assert_redirected_to export_jobs_path

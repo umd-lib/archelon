@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_24_191518) do
+ActiveRecord::Schema.define(version: 2021_08_04_183946) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -95,12 +95,12 @@ ActiveRecord::Schema.define(version: 2020_06_24_191518) do
     t.integer "item_count"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "plastron_status"
     t.integer "progress"
     t.boolean "export_binaries"
-    t.bigint "binaries_size"
+    t.integer "binaries_size"
     t.integer "binaries_count"
     t.string "mime_types"
+    t.integer "state"
     t.index ["cas_user_id"], name: "index_export_jobs_on_cas_user_id"
   end
 
@@ -116,18 +116,14 @@ ActiveRecord::Schema.define(version: 2020_06_24_191518) do
     t.datetime "updated_at", null: false
     t.datetime "timestamp"
     t.string "name"
-    t.string "stage"
-    t.string "status"
-    t.string "plastron_status"
     t.integer "progress"
-    t.text "last_response_body"
     t.string "model"
-    t.text "last_response_headers"
     t.string "access"
     t.string "collection"
     t.string "binaries_location"
     t.integer "binaries_count"
     t.integer "item_count"
+    t.integer "state"
     t.index ["cas_user_id"], name: "index_import_jobs_on_cas_user_id"
   end
 

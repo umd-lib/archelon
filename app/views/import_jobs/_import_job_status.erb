@@ -1,10 +1,19 @@
-<td data-channel="import_jobs" data-job-id="<%= import_job.id %>" data-stage="<%= import_job.stage %>" data-status="<%= import_job.status %>">
-  <%= link_to status_text(import_job), import_job_path(import_job), class: "import_job_status_#{import_job.status}" %>
+<td
+  data-channel="import_jobs"
+  data-job-id="<%= import_job.id %>"
+  <% unless import_job.validate_success? or import_job.import_incomplete? %>
+  colspan="2"
+  <% end %>
+  >
+  <%= link_to status_text(import_job), import_job_path(import_job), class: "import_job_status_#{import_job.state}" %>
+  <% if import_job.stalled? %>(may be stalled)<% end %>
 </td>
-<% if import_job.workflow_action == :resubmit %>
-  <td><%= button_to 'Resubmit', edit_import_job_path(import_job), method: :get, class: 'btn-xs btn-danger' %></td>
-<% elsif import_job.workflow_action == :import %>
+<% if import_job.validate_success? %>
   <td><%= button_to 'Import', perform_import_import_jobs_path(import_job), class: 'btn-xs btn-success' %></td>
+<% elsif import_job.validate_failed? or import_job.validate_error? %>
+  <td><%= link_to 'Edit', edit_import_job_path(import_job), class: 'btn-xs btn-danger' %></td>
+<% elsif import_job.import_incomplete? %>
+  <td><%= button_to 'Resume', perform_import_import_jobs_path(import_job), class: 'btn-xs btn-danger' %></td>
 <% else %>
   <td></td>
 <% end %>

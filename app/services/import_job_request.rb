@@ -2,10 +2,11 @@
 
 # Encapsulates a Plastron import job request message
 class ImportJobRequest
-  def initialize(job_id, import_job, validate_only)
+  def initialize(job_id, import_job, validate_only: false, resume: false)
     @job_id = job_id
     @job = import_job
     @validate_only = validate_only
+    @resume = resume
   end
 
   def headers # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
@@ -23,6 +24,7 @@ class ImportJobRequest
       headers['PlastronArg-access'] = "<#{@job.access}>" if @job.access.present?
       headers['PlastronArg-validate-only'] = 'True' if @validate_only
       headers['PlastronArg-binaries-location'] = @job.binaries_location if @job.binaries_location.present?
+      headers['PlastronArg-resume'] = 'True' if @resume
     end
   end
 
