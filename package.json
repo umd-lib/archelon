@@ -13,7 +13,7 @@
     "uuid": "^8.2.0"
   },
   "devDependencies": {
-    "react-styleguidist": "^11.0.8",
+    "react-styleguidist": ">=11.0.8 <=11.1.6",
     "webpack-dev-server": "^3.11.0"
   }
 }
