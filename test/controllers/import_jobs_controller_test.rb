@@ -126,15 +126,6 @@ class ImportJobsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test 'file attachment is required when updating import_job' do
-    import_job = ImportJob.first
-    patch :update, params: { id: import_job.id, import_job: { name: import_job.name } }
-    result = assigns(:import_job)
-    assert_includes(result.errors.messages[:metadata_file],
-                    I18n.t('activerecord.errors.models.import_job.attributes.metadata_file.required'))
-    assert_template :edit
-  end
-
   test 'name cannot be blank when updating import_job' do
     import_job = ImportJob.first
     patch :update, params: { id: import_job.id, import_job: { name: '' } }

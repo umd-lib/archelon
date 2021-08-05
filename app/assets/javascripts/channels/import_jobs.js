@@ -13,10 +13,15 @@
       // Update the status widget for each job in the received message
       data.import_jobs.forEach(function(msg){
         const {job, statusWidget} = msg;
-        let oldWidget = $('[data-job-id="' + job.id + '"]')
+        const {binaries_count, item_count} = job;
+        let oldWidget = $('[data-job-id="' + job.id + '"]');
         if (oldWidget && statusWidget) {
           oldWidget.replaceWith(statusWidget)
         }
+        // update count columns
+        let td = document.querySelector('[data-job-id="' + job.id + '"]');
+        td.parentElement.querySelector('.binaries-count').innerHTML = binaries_count;
+        td.parentElement.querySelector('.item-count').innerHTML = item_count;
       });
     },
 

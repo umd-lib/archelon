@@ -6,6 +6,6 @@
       <%= form.submit 'Import', class: 'btn-xs btn-success' %>
     <% end %>
   <% elsif import_job.validate_failed? or import_job.validate_error? %>
-    <%= link_to 'Edit', edit_import_job_path(import_job), class: 'btn-xs btn-danger' %>
+    <%= link_to 'Resubmit', edit_import_job_path(import_job), class: 'btn-xs btn-danger' %>
   <% end %>
 </td>

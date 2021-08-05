@@ -1,0 +1,27 @@
+<% if !import_job_info.invalid.empty? %>
+  <strong>Invalid Items (<%= import_job_info.invalid.count %>)</strong>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>#</th>
+      <th>ID</th>
+      <th>Timestamp</th>
+      <th>Title</th>
+      <th>Error</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% import_job_info.invalid.each_with_index do |item, index| %>
+      <tr>
+        <td><%= (index+1) %></td>
+        <td><%= item['id'] %></td>
+        <td><%= item['timestamp'] %></td>
+        <td><%= item['title'] %></td>
+        <td><%= item['reason'] %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>There are no invalid items for this import job.</p>
+<% end %>
