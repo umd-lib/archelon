@@ -12,8 +12,6 @@
   <td><%= button_to 'Import', perform_import_import_jobs_path(import_job), class: 'btn-xs btn-success' %></td>
 <% elsif import_job.validate_failed? or import_job.validate_error? %>
   <td><%= link_to 'Edit', edit_import_job_path(import_job), class: 'btn-xs btn-danger' %></td>
-<% elsif import_job.import_incomplete? %>
-  <td><%= button_to 'Resume', perform_import_import_jobs_path(import_job), class: 'btn-xs btn-danger' %></td>
 <% else %>
   <td></td>
 <% end %>
