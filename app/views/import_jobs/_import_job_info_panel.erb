@@ -9,7 +9,7 @@
       </li>
       <li role="presentation">
         <a href="#dropped" aria-controls="dropped" role="tab" data-toggle="tab">
-          Dropped
+          Dropped <span class="badge"><%= import_job_info.failed.count %></span>
         </a>
       </li>
       <li role="presentation">
@@ -22,15 +22,15 @@
     <!-- Tab panes -->
     <div class="tab-content">
       <div role="tabpanel" class="tab-pane active" id="completed">
-        <p>
         <%= render "import_jobs/import_job_info_panel/completed",
            import_job_info: @import_job_info
         %>
-        </p>
       </div>
 
       <div role="tabpanel" class="tab-pane" id="dropped">
-        <p>TODO - Dropped</p>
+        <%= render "import_jobs/import_job_info_panel/failed",
+                   import_job_info: @import_job_info
+        %>
       </div>
       <div role="tabpanel" class="tab-pane" id="invalid">
         <p>TODO - Invalid</p>

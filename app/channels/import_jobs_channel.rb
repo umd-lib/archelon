@@ -34,19 +34,18 @@ class ImportJobsChannel < ApplicationCable::Channel
   # missed a status update for an import job (such as validation) and there
   # are no further updates, which otherwise would leave the client thinking
   # the job was still in an "in progress" state.
-  def import_job_status_check(data) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+  def import_job_status_check(data) # rubocop:disable Metrics/MethodLength
     jobs = data['jobs']
     return if jobs.nil?
 
     updated_jobs = []
     jobs.each do |job|
       job_id = job['jobId']
-      stage = job['stage']
-      status = job['status']
+      state = job['state']
       import_job = ImportJob.find_by(id: job_id)
       next if import_job.nil?
 
-      needs_update = (import_job.stage != stage) || (import_job.status.to_s != status)
+      needs_update = import_job.state != state
       updated_jobs << import_job if needs_update
     end
 
@@ -55,25 +54,25 @@ class ImportJobsChannel < ApplicationCable::Channel
   end
 
   # Broadcasts import job information to the appropriate stream(s)
-  def self.broadcast(import_jobs)
+  def self.broadcast(import_jobs) # rubocop:disable Metrics/AbcSize
+    # add an HTML fragment to each job that is the current status widget
+    messages = import_jobs.map { |job| { job: job, statusWidget: status_widget(job) } }
+
     # Split the import jobs into groups by user.
     # This prevents users from seeing information about jobs they don't
     # own.
-    import_jobs_by_user = import_jobs.group_by(&:cas_user)
-    users = import_jobs_by_user.keys
+    messages_by_user = messages.group_by { |msg| msg[:job].cas_user }
 
-    users.each do |user|
-      # Don't broadcast on per-user stream if user is an admin, as they
-      # will get the message on the "admins" stream
-      next if user.admin?
-
+    # Don't broadcast on per-user stream if user is an admin, as they
+    # will get the message on the "admins" stream
+    messages_by_user.keys.reject(&:admin?).each do |user|
       user_stream = ImportJobsChannel.stream(user)
-      ActionCable.server.broadcast user_stream, import_jobs: import_jobs_by_user[user]
+      ActionCable.server.broadcast user_stream, import_jobs: messages_by_user[user]
     end
 
     # Admins can see all the jobs
     admins_stream = ImportJobsChannel.admins_stream
-    ActionCable.server.broadcast admins_stream, import_jobs: import_jobs
+    ActionCable.server.broadcast admins_stream, import_jobs: messages
   end
 
   # Stream that sends status message to the user that created the import job
@@ -85,5 +84,10 @@ class ImportJobsChannel < ApplicationCable::Channel
   # the import job.
   def self.admins_stream
     'import_jobs:admins:status'
+  end
+
+  def self.status_widget(import_job)
+    ActionController::Renderer.for(ImportJobsController).render partial: 'import_job_status',
+                                                                locals: { import_job: import_job }
   end
 end

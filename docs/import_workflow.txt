@@ -1,0 +1,24 @@
+@startuml
+[*] --> validate_pending : start_validation
+
+validate_pending --> validate_success
+
+validate_pending --> validate_failed
+
+validate_pending --> validate_error
+
+validate_success --> import_pending : start_import
+
+import_pending --> in_progress
+
+in_progress --> import_complete
+
+in_progress --> import_incomplete
+
+in_progress --> import_error
+
+import_complete --> [*]
+
+import_incomplete --> import_pending : resume_import
+
+@enduml

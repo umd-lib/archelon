@@ -2,12 +2,17 @@
 
 # Convenience class for Plastron STOMP messages
 class PlastronMessage
-  attr_reader :headers, :body, :job_id
+  attr_reader :headers, :body, :job_id, :job_state
 
   def initialize(stomp_msg)
     @headers = stomp_msg.headers.with_indifferent_access
     @body = stomp_msg.body
     @job_id = @headers['PlastronJobId']
+    @job_state = @headers['PlastronJobState']
+  end
+
+  def error?
+    @headers.key?(:PlastronJobError)
   end
 
   # Parse the message body as JSON and return the result.

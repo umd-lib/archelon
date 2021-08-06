@@ -8,6 +8,7 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
   before_action :selected_items?, only: %i[new create review]
   before_action :selected_items_changed?, only: :create
   skip_before_action :authenticate, only: %i[status_update]
+  skip_before_action :verify_authenticity_token, only: :status_update
 
   def index
     @jobs =
@@ -124,7 +125,7 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
         job.timestamp = Time.zone.now
         job.cas_user = current_cas_user
         job.progress = 0
-        job.plastron_status = :plastron_status_pending
+        job.state = :pending
       end
     end
 
@@ -147,10 +148,10 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
       body = uris.join("\n")
       headers = message_headers(@job)
       if StompService.publish_message :jobs, body, headers
-        @job.plastron_status = :plastron_status_in_progress
+        @job.state = :in_progress
         @job.save!
       else
-        @job.plastron_status = :plastron_status_error
+        @job.state = :export_error
         @job.save!
         flash[:error] = I18n.t(:active_mq_is_down)
       end

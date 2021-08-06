@@ -1,27 +1,7 @@
 (function() {
   App.import_jobs = App.cable.subscriptions.create("ImportJobsChannel", {
     importJobsDivs: function() {
-      return $("[data-channel='import_jobs']");
-    },
-
-    // Returns true if the page should be updated only for jobIds currently
-    // on the page, false if the page should be updated on any message receipt.
-    //
-    // This function uses the "data-channel='import_jobs'" and
-    // "data-only-update-on-match='true' attributes to determine if the
-    // page is only interested in updates for jobIds that match the jobIds on
-    // the page. Typically used for the "show" and "edit" pages which are only
-    // showing one job.
-    //
-    // Other pages (with just one or more "[data-channel='import_jobs']" divs)
-    // will update on any received message (typically used for "index" pages
-    // that display a list of jobs).
-    //
-    // Having this distinction enables the same "received" function to be
-    // used across pages (those that want to show new jobs, and those that
-    // don't).
-    onlyUpdateOnMatch: function() {
-      return $("[data-channel='import_jobs'][data-only-update-on-match='true']").length > 0;
+      return document.querySelectorAll('[data-channel="import_jobs"]');
     },
 
     connected: function() {
@@ -30,49 +10,14 @@
     },
 
     received: function(data) {
-      // Processes data received from the server.
-      //
-      // We can't easily distinguish between "new" and "updated" import jobs,
-      // so this function uses the presence of "data-only-update-on-match='true'"
-      // in a div (see the "only_update_on_match_divs") to indicate
-      // that the page should only be reloaded if the given data includes
-      // job ids that appear in one of the data-channel divs.
-      //
-      // If a "data-only-update-on-match='true'" attribute is not present
-      // anywhere in the page, the page will always reload.
-      var importJobsDivs, onlyUpdateOnMatch, divJobId, i, importJobs, j, jobId, jobIds,
-          reloadPage;
-
-      importJobs = data.import_jobs;
-
-      jobIds = importJobs.map(function(job) {
-        return job.id;
-      });
-
-
-      onlyUpdateOnMatch = this.onlyUpdateOnMatch();
-
-      reloadPage = true
-
-      if (onlyUpdateOnMatch) {
-        importJobsDivs = this.importJobsDivs();
-        reloadPage = false;
-        for (i = 0; (i < importJobsDivs.length) && !reloadPage; i++) {
-          divJobId = importJobsDivs[i].dataset.jobId;
-          for (j = 0; j < jobIds.length; j++) {
-            jobId = jobIds[j];
-
-            if (jobId == divJobId) {
-              reloadPage = true;
-              break;
-            }
-          }
+      // Update the status widget for each job in the received message
+      data.import_jobs.forEach(function(msg){
+        const {job, statusWidget} = msg;
+        let oldWidget = $('[data-job-id="' + job.id + '"]')
+        if (oldWidget && statusWidget) {
+          oldWidget.replaceWith(statusWidget)
         }
-      }
-
-      if (reloadPage) {
-        return location.reload();
-      }
+      });
     },
 
     checkForPending: function() {
@@ -88,28 +33,19 @@
       // If all jobs are in a "stable" status, or in a status where another
       // message will definitely occur, then the "import_job_status_check"
       // method will not send a message to the server.
-      var div, importJobsDivs, jobId, jobMayNeedUpdate, jobs, i,
-          requestUpdate, stage, status;
 
-      requestUpdate = false;
-      jobId = "";
-      jobs = [];
+      let jobsToUpdate = [];
 
-      importJobsDivs = this.importJobsDivs();
-
-      for (i = 0; i < importJobsDivs.length; i++) {
-        div = importJobsDivs[i];
-        stage = div.dataset.stage;
-        status = div.dataset.status;
-        jobMayNeedUpdate = (status == "in_progress");
-        if (jobMayNeedUpdate) {
-          jobs.push({ jobId: div.dataset.jobId, stage: div.dataset.stage, status: div.dataset.status });
-          requestUpdate = true;
+      this.importJobsDivs().forEach(function(div) {
+        let state = div.dataset.state;
+        if (state === "in_progress" || state.endsWith("_pending")) {
+          jobsToUpdate.push({ jobId: div.dataset.jobId, state: state });
         }
-      }
-      if (requestUpdate) {
+      });
+
+      if (jobsToUpdate.length > 0) {
         return this.perform('import_job_status_check', {
-          jobs: jobs
+          jobs: jobsToUpdate
         });
       }
     },

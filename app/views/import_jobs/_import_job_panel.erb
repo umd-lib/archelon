@@ -9,6 +9,11 @@
     </p>
 
     <p>
+      <strong>Status:</strong>
+      <%= status_text(import_job) %>
+    </p>
+
+    <p>
       <strong><%= t('activerecord.attributes.import_job.name') %>:</strong>
       <%= import_job.name %>
     </p>
