@@ -8,8 +8,12 @@
       return this.installPageChangeCallback();
     },
     received: function(data) {
-      // Trigger a page reload
-      return location.reload();
+      // Update the display for the export job
+      const {job, htmlUpdate} = data.export_job
+      let currentHtml = $('[data-job-id="' + job.id + '"]')
+      if (currentHtml && htmlUpdate) {
+        currentHtml.replaceWith(htmlUpdate)
+      }
     },
     followExportJobs: function() {
       // Calls "follow" or "unfollow" on ExportJobsChannel, based on whether
