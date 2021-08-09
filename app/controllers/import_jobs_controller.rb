@@ -198,16 +198,10 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     def valid_update
       @import_job.update(import_job_params)
 
-      # Need special handing of "metadata_file", because if we're gotten this
-      # far, the @import_job already has a file attached, so the
-      # "attachment_validation" method on the model won't catch that the
-      # update form submission doesn't have new file attached.
-      #
-      # Need to have the method after the call to @import_job.update, as
-      # update clears the "errors" array
-      if import_job_params['metadata_file'].nil?
-        @import_job.errors.add(:metadata_file, :required)
-        return false
+      if import_job_params['metadata_file'].present?
+        # delete existing attachment and attach new metadata file
+        @import_job.metadata_file.purge
+        @import_job.metadata_file.attach(import_job_params[:metadata_file])
       end
 
       true

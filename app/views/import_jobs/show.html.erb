@@ -4,8 +4,32 @@
 
 <%= render "import_job_panel", import_job: @import_job %>
 
-<%= render "import_job_info_panel",
-           import_job_info: @import_job_info
-%>
+<% if @import_job.validate_failed? || @import_job.validate_error? || @import_job.validate_success? %>
+  <% if @import_job.validate_failed? %>
+    <div class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title">Validation Errors</h3>
+      </div>
+      <div class="panel-body">
+        <p><strong>To continue this import job, please edit your metadata file to correct the
+          validation errors listed below. Then, resubmit this import job to re-upload
+          the metadata file.</strong></p>
+      </div>
+    </div>
+  <% end %>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Validation Report</h3>
+    </div>
+    <div class="panel-body">
+      <%= render "import_jobs/import_job_info_panel/invalid", import_job_info: @import_job_info %>
+    </div>
+  </div>
+<% else %>
+  <%= render "import_job_info_panel", import_job_info: @import_job_info %>
+<% end %>
 
 <%= link_to 'Back', import_jobs_path, class: 'btn btn-danger' %>
+<% if @import_job.validate_failed? %>
+  <%= link_to 'Resubmit', edit_import_job_path(@import_job), class: 'btn btn-success' %>
+<% end %>

@@ -38,8 +38,8 @@
           <td><%= job.timestamp %></td>
           <td><%= job.metadata_file.filename if job.metadata_file.attached? %></td>
           <td><%= job.binaries? ? t('activerecord.attributes.import_job.binaries.true') : t('activerecord.attributes.import_job.binaries.false') %></td>
-          <td><%= job.item_count %></td>
-          <td><%= job.binaries_count if job.binaries? %></td>
+          <td class="item-count"><%= job.item_count %></td>
+          <td class="binaries-count"><%= job.binaries_count if job.binaries? %></td>
           <td><%= job.model %></td>
           <%= render partial: 'import_job_status', locals: { import_job: job } %>
         </tr>
