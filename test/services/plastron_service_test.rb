@@ -26,11 +26,7 @@ class PlastronServiceTest < ActiveSupport::TestCase
 
   test 'retrieve_import_job_info returns ImportJobInfo with parsed JSON on success' do
     json_fixture_file = 'services/import_job/plastron_job_detail_response.json'
-    json_response = file_fixture(json_fixture_file).read
-    stub_result = OpenStruct.new
-    stub_result.body = json_response
-
-    HTTP.stub :get, stub_result do
+    stub_network(file_fixture(json_fixture_file).read) do
       import_job_info = PlastronService.retrieve_import_job_info(@import_job_id)
       assert_not import_job_info.error_occurred?
 
@@ -38,4 +34,27 @@ class PlastronServiceTest < ActiveSupport::TestCase
       assert_equal(4, import_job_info.total)
     end
   end
+
+  private
+
+    # Stubs the HTTP.get call, so that it won't actually make a network
+    # call. Returns an HTTP:Response with a body of an empty String.
+    #
+    # Usage:
+    #
+    # stub_network do
+    #   <Code that calls "get">
+    # end
+    def stub_network(body = '')
+      stub_response = HTTP::Response.new(
+        version: 'HTTP/1.1',
+        uri: URI('https://example.com').to_s,
+        status: '200',
+        body: body
+      )
+
+      HTTP.stub :get, stub_response do
+        yield
+      end
+    end
 end

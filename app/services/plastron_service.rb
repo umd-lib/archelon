@@ -18,14 +18,21 @@ class PlastronService
     plastron_rest_base_url = ENV['PLASTRON_REST_BASE_URL']
     raise StandardError, 'PLASTRON_REST_BASE_URL not set' if plastron_rest_base_url.nil?
 
-    job_relative_path = "jobs/#{import_job_id}"
-    Addressable::URI.join(plastron_rest_base_url, job_relative_path)
+    encoded_job_id = Addressable::URI.encode_component(import_job_id, Addressable::URI::CharacterClasses::UNRESERVED)
+
+    Addressable::URI.join(plastron_rest_base_url, 'jobs/', encoded_job_id)
   end
 
   # Performs the GET request to the given URL, returning a JsonRestResult
   def self.query_server(job_url)
-    body = HTTP.get(job_url).body
-    JsonRestResult.create_from_json(body.to_s)
+    response = HTTP.get(job_url)
+    if response.status.success?
+      JsonRestResult.create_from_json(response.body.to_s)
+    else
+      JsonRestResult.create_error_result(response.status.reason)
+    end
+  rescue HTTP::ConnectionError
+    JsonRestResult.create_error_result('Unable to retrieve detailed job status information.')
   rescue StandardError => e
     JsonRestResult.create_error_result(e.to_s)
   end
