@@ -5,14 +5,8 @@ the Blacklight gem for providing the search functionality.
 
 ## Quick Start
 
-Requires:
-
-* Ruby 2.6.3
-* Bundler
-* Yarn
-
-See [Installing Prerequisites](docs/Prerequisites.md) for more detailed
-information on these prerequisites.
+See [Installing Prerequisites](docs/Prerequisites.md) for information on
+prerequistes on a local workstation.
 
 ### Setup
 
