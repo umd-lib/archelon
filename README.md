@@ -48,6 +48,12 @@ By default, the development environment for Archelon will log at the DEBUG level
 while all other environments will log at the INFO level. To change this, set the
 `RAILS_LOG_LEVEL` environment variable in your `.env` file.
 
+In the developlment environment, the log will be sent to standard output and
+the "log/development.log file, as is standard in Rails application,
+
+In production, set the "RAILS_LOG_TO_STDOUT" environment variable to "true" to
+send the log to standard out.
+
 ## Access Restriction
 
 In general, Archelon requires a CAS login to access the application,

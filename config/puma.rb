@@ -36,6 +36,3 @@ pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }
 # Allow puma to be restarted by `rails restart` command.
 plugin :tmp_restart
 
-unless ENV["RAILS_LOG_TO_STDOUT"].present?
-  stdout_redirect 'log/puma.log', 'log/puma_error.log', true
-end
