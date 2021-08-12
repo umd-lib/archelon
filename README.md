@@ -148,6 +148,21 @@ Two Rake tasks are provided for importing public keys for a user:
     rails user:add_public_key_file[jsmith,/home/jsmith/.ssh/id_rsa.pub]
     ```
 
+### STOMP Listener
+
+Most communication between Archelon and Plastron occurs using the
+[STOMP messaging protocol][stomp], facilitated by an ActiveMQ instance running
+as part of the umd-fcrepo-docker stack.
+
+The "STOMP listener" application connects Archelon to ActiveMQ, and is required
+for performing exports and imports. The STOMP listener application is configured
+via the environment variables in the ".env" file, and run using the following
+Rake task:
+
+```
+rails stomp:listen
+```
+
 ## Docker
 
 Archelon comes with a [Dockerfile](Dockerfile) that can be used to build a
@@ -286,5 +301,6 @@ See the [LICENSE](LICENSE.md) file for license rights and limitations
 [plastron]: https://github.com/umd-lib/plastron
 [react-styleguidist]: https://react-styleguidist.js.org/
 [react-styleguidist-documenting]: https://react-styleguidist.js.org/docs/documenting
+[stomp]: https://stomp.github.io/
 [umd-fcrepo]: https://github.com/umd-lib/umd-fcrepo
 [umd-fcrepo-docker]: https://github.com/umd-lib/umd-fcrepo-docker
