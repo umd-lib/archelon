@@ -17,6 +17,7 @@ On OS X with Homebrew, run the following:
 brew install rbenv
 rbenv init
 ```
+
 Follow the printed instructions to set up rbenv shell integration. Then, in a
 new terminal:
 

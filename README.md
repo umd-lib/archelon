@@ -1,20 +1,60 @@
 # archelon
 
-Archelon is a Rails-based administrative interface for the Fedora 4 repository. It uses
-the Blacklight gem for providing the search functionality.
+Archelon is the Web front-end for a [Fedora 4][fedora] repository-based set of
+applications known collectively as "umd-fcrepo". The umd-fcrepo system consists
+of the following parts:
+
+* [umd-fcrepo-docker][umd-fcrepo-docker] - a set of Docker images for running
+  the Fedora repository platform
+* [Plastron][plastron] - a utility application for performing batch operations
+   on the Fedora repository
+* Archelon - a web GUI providing an administrative interface for
+  Fedora
+
+While Archelon is technically able to run without access to any other
+application, its functionality is extremely limited without Plastron or
+the applications provided by umd-fcrepo-docker.
+
+## Archelon Components
+
+Archelon consists of the following components when run in a production
+environment:
+
+* a Rails application providing an administrative interface to the Fedora
+repository. It uses the [Blacklight][blacklight] gem for providing Solr
+search functionality.
+* A STOMP listener application for communicating with Plastron using the
+[STOMP messaging protocol][stomp] via ActiveMQ
+* an SFTP server, used to upload files for inclusion in import jobs
+
+## Interactions with other umd-fcrepo components
+
+Archelon interacts directly with the following umd-fcrepo components:
+
+* ActiveMQ - Archelon communicates to Plastron using STOMP messaging mediated by
+ActiveMQ queues
+* Solr - Archelon communicates directly with the Solr instance in the
+"umd-fcrepo-docker" stack for metadata search and retrieval
+* Plastron - Archelon uses the HTTP REST interface provided by Plastron to
+retrieve information about export and import jobs (some export/import status
+information is also provided via STOMP messaing).
 
 ## Quick Start
 
-Requires:
-
-* Ruby 2.6.3
-* Bundler
-* Yarn
-
-See [Installing Prerequisites](docs/Prerequisites.md) for more detailed
-information on these prerequisites.
+See [Installing Prerequisites](docs/Prerequisites.md) for information on
+prerequistes on a local workstation.
 
 ### Setup
+
+There are several ways to setup the umd-fcrepo system -- see
+[umd-lib/umd-fcrepo/README.md][umd-fcrepo]
+for information about setting up a local development environment for Archelon.
+
+### Archelon Setup
+
+The following are the basic steps to run the Archelon Rails application.
+Archelon requires other components of the umd-fcrepo system to enable most
+functionality.
 
 1. Checkout the code and install the dependencies:
 
@@ -43,16 +83,17 @@ information on these prerequisites.
   rails server
   ```
 
-## Archelon Local Development Environment Setup
-
-See the [umd-lib/umd-fcrepo/README.md](https://github.com/umd-lib/umd-fcrepo)
-for information about setting up a local development environment for Archelon.
-
 ## Logging
 
 By default, the development environment for Archelon will log at the DEBUG level,
 while all other environments will log at the INFO level. To change this, set the
 `RAILS_LOG_LEVEL` environment variable in your `.env` file.
+
+In the developlment environment, the log will be sent to standard output and
+the "log/development.log" file, as is standard in Rails application.
+
+In production, set the "RAILS_LOG_TO_STDOUT" environment variable to "true" to
+send the log to standard out.
 
 ## Access Restriction
 
@@ -130,18 +171,28 @@ Two Rake tasks are provided for importing public keys for a user:
     rails user:add_public_key_file[jsmith,/home/jsmith/.ssh/id_rsa.pub]
     ```
 
+### STOMP Listener
+
+The "STOMP listener" application connects Archelon to ActiveMQ, and is required
+for performing exports and imports. The STOMP listener application is configured
+via the environment variables in the ".env" file, and run using the following
+Rake task:
+
+```
+rails stomp:listen
+```
+
 ## Docker
 
 Archelon comes with a [Dockerfile](Dockerfile) that can be used to build a
 docker image:
 
 ```
-docker build -t archelon .
+docker build -t docker.lib.umd.edu/archelon -f Dockerfile .
 ```
 
-See [umd-lib/umd-fcrepo/README.md](https://github.com/umd-lib/umd-fcrepo)
-for information about setting up a local development environment for Archelon
-using Docker.
+See [umd-lib/umd-fcrepo/README.md][umd-fcrepo] for information about setting up
+a local development environment for Archelon using Docker.
 
 When running locally in Docker, the Archelon database can be accessed using:
 
@@ -150,55 +201,8 @@ When running locally in Docker, the Archelon database can be accessed using:
 psql -U archelon -h localhost -p 5434 archelon
 ```
 
-## Embedded Solr
-
-### Initial Setup
-
-Verify that the `.solr_wrapper.yml` file is up to date. The `collection > dir`
-property in the file needs to point to a Solr core directory containing the
-configuration files. In addition, the `.env` file must have its `SOLR_URL` set
-to `http://localhost:8983/solr/fedora4`.
-
-The [fedora4-core](https://bitbucket.org/umd-lib/fedora4-core) repository
-includes a script to generate solr package that can be used here.
-
-Create the Solr core as per the configuration in `.solr_wrapper.yml`:
-
-```
-bundle exec rails solr:create_collection
-```
-
-Start the solr server:
-
-```
-bundle exec rails solr:start_server
-```
-
-Load sample data included in the solr package:
-
-```
-bundle exec rails solr:rebuild_index seed_file=/path/to/sample_solr_data.yml
-```
-
-### Usage
-
-Start the solr server:
-
-```
-bundle exec rails solr:start_server
-```
-
-Stop the solr server:
-
-```
-bundle exec rails solr:stop
-```
-
-Clean and reinstall setup:
-
-```
-bundle exec rails solr:clean
-```
+There is also a "Dockerfile.sftp" file, which sets up an SFTP server enabling
+files to be uploaded to Archelon for inclusion in import jobs.
 
 ## File Retrieval configuration
 
@@ -206,9 +210,9 @@ Archelon has the ability to create one-time use URLs, which allow a Fedora
 binary file to be downloaded. The random token used for the URLs, and other
 information, is stored in the DownloadUrl model.
 
-It is assumed that the URL that patrons use to retrieve the files will not
-reference the Archelon server directly. Instead it is anticipated that a new IP
-and Apache virtual host, which proxies back to Archelon, will be used.
+In production, the URL that patrons use to retrieve the files does not reference
+the Archelon server directly, relying instead on a virtual host, which proxies
+back to Archelon.
 
 The base URL of the virtual host (i.e., the entire URL except for the random
 token, but including a trailing slash) should be set in the `RETRIEVE_BASE_URL`
@@ -230,8 +234,8 @@ server.
 
 Rails disables concurrent operation when using the development environment.
 
-Edit the "config/development.rb" file, and add the following line to
-application setting:
+Edit the "config/development.rb" file, and add the following line inside
+the `Rails.application.configure` block:
 
   ```
   config.allow_concurrency=true
@@ -242,9 +246,9 @@ application setting:
 The batch export functionality relies on a running [Plastron]
 instance.
 
-## Metadata Import
+## Batch Import
 
-See [docs/MetadataImport](docs/MetadataImport.md).
+See [docs/BatchImport](docs/BatchImport.md).
 
 ## LDAP Override
 
@@ -310,8 +314,12 @@ for information about writing documentation for the React components.
 See the [LICENSE](LICENSE.md) file for license rights and limitations
 (Apache 2.0).
 
+[blacklight]: https://github.com/projectblacklight/blacklight
 [cve-2015-9284]: https://github.com/omniauth/omniauth/wiki/Resolving-CVE-2015-9284
+[fedora]: https://duraspace.org/fedora/
 [plastron]: https://github.com/umd-lib/plastron
 [react-styleguidist]: https://react-styleguidist.js.org/
 [react-styleguidist-documenting]: https://react-styleguidist.js.org/docs/documenting
+[stomp]: https://stomp.github.io/
+[umd-fcrepo]: https://github.com/umd-lib/umd-fcrepo
 [umd-fcrepo-docker]: https://github.com/umd-lib/umd-fcrepo-docker
