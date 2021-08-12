@@ -1,20 +1,11 @@
 # archelon
 
-Archelon is a Rails-based administrative interface for the Fedora 4 repository.
-It uses the [Blacklight][blacklight] gem for providing the search functionality.
+Archelon is the Web front-end for a [Fedora 4][fedora] repository-based set of
+applications known collectively as "umd-fcrepo". The umd-fcrepo system consists
+of the following parts:
 
-## Quick Start
-
-See [Installing Prerequisites](docs/Prerequisites.md) for information on
-prerequistes on a local workstation.
-
-### Setup
-
-Archelon is the Web front-end for a set of applications known collectively as
-"umd-fcrepo". The umd-fcrepo system consists of the following components:
-
-* [umd-fcrepo-docker][umd-fcrepo-docker] - a set of Docker images for the
-  [Fedora][fedora] repository platform
+* [umd-fcrepo-docker][umd-fcrepo-docker] - a set of Docker images for running
+  the Fedora repository platform
 * [Plastron][plastron] - a utility application for performing batch operations
    on the Fedora repository
 * Archelon - a web GUI providing an administrative interface for
@@ -24,14 +15,46 @@ While Archelon is technically able to run without access to any other
 application, its functionality is extremely limited without Plastron or
 the applications provided by umd-fcrepo-docker.
 
+## Archelon Components
+
+Archelon consists of the following components when run in a production
+environment:
+
+* a Rails application providing an administrative interface to the Fedora
+repository. It uses the [Blacklight][blacklight] gem for providing Solr
+search functionality.
+* A STOMP listener application for communicating with Plastron using the
+[STOMP messaging protocol][stomp] via ActiveMQ
+* an SFTP server, used to upload files for inclusion in import jobs
+
+## Interactions with other umd-fcrepo components
+
+Archelon interacts directly with the following umd-fcrepo components:
+
+* ActiveMQ - Archelon communicates to Plastron using STOMP messaging mediated by
+ActiveMQ queues
+* Solr - Archelon communicates directly with the Solr instance in the
+"umd-fcrepo-docker" stack for metadata search and retrieval
+* Plastron - Archelon uses the HTTP REST interface provided by Plastron to
+retrieve information about export and import jobs (some export/import status
+information is also provided via STOMP messaing).
+
+## Quick Start
+
+See [Installing Prerequisites](docs/Prerequisites.md) for information on
+prerequistes on a local workstation.
+
+### Setup
+
 There are several ways to setup the umd-fcrepo system -- see
 [umd-lib/umd-fcrepo/README.md][umd-fcrepo]
 for information about setting up a local development environment for Archelon.
 
 ### Archelon Setup
 
-The following are the basic steps to run Archelon. Archelon requires other
-components of the umd-fcrepo system to enable most functionality.
+The following are the basic steps to run the Archelon Rails application.
+Archelon requires other components of the umd-fcrepo system to enable most
+functionality.
 
 1. Checkout the code and install the dependencies:
 
@@ -149,10 +172,6 @@ Two Rake tasks are provided for importing public keys for a user:
     ```
 
 ### STOMP Listener
-
-Most communication between Archelon and Plastron occurs using the
-[STOMP messaging protocol][stomp], facilitated by an ActiveMQ instance running
-as part of the umd-fcrepo-docker stack.
 
 The "STOMP listener" application connects Archelon to ActiveMQ, and is required
 for performing exports and imports. The STOMP listener application is configured
