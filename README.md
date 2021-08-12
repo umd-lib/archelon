@@ -1,7 +1,7 @@
 # archelon
 
-Archelon is a Rails-based administrative interface for the Fedora 4 repository. It uses
-the Blacklight gem for providing the search functionality.
+Archelon is a Rails-based administrative interface for the Fedora 4 repository.
+It uses the [Blacklight][blacklight] gem for providing the search functionality.
 
 ## Quick Start
 
@@ -9,6 +9,29 @@ See [Installing Prerequisites](docs/Prerequisites.md) for information on
 prerequistes on a local workstation.
 
 ### Setup
+
+Archelon is the Web front-end for a set of applications known collectively as
+"umd-fcrepo". The umd-fcrepo system consists of the following components:
+
+* [umd-fcrepo-docker][umd-fcrepo-docker] - a set of Docker images for the
+  [Fedora][fedora] repository platform
+* [Plastron][plastron] - a utility application for performing batch operations
+   on the Fedora repository
+* Archelon - a web GUI providing an administrative interface for
+  Fedora
+
+While Archelon is technically able to run without access to any other
+application, its functionality is extremely limited without Plastron or
+the applications provided by umd-fcrepo-docker.
+
+There are several ways to setup the umd-fcrepo system -- see
+[umd-lib/umd-fcrepo/README.md][umd-fcrepo]
+for information about setting up a local development environment for Archelon.
+
+### Archelon Setup
+
+The following are the basic steps to run Archelon. Archelon requires other
+components of the umd-fcrepo system to enable most functionality.
 
 1. Checkout the code and install the dependencies:
 
@@ -37,11 +60,6 @@ prerequistes on a local workstation.
   rails server
   ```
 
-## Archelon Local Development Environment Setup
-
-See the [umd-lib/umd-fcrepo/README.md](https://github.com/umd-lib/umd-fcrepo)
-for information about setting up a local development environment for Archelon.
-
 ## Logging
 
 By default, the development environment for Archelon will log at the DEBUG level,
@@ -49,7 +67,7 @@ while all other environments will log at the INFO level. To change this, set the
 `RAILS_LOG_LEVEL` environment variable in your `.env` file.
 
 In the developlment environment, the log will be sent to standard output and
-the "log/development.log file, as is standard in Rails application,
+the "log/development.log" file, as is standard in Rails application.
 
 In production, set the "RAILS_LOG_TO_STDOUT" environment variable to "true" to
 send the log to standard out.
@@ -136,12 +154,11 @@ Archelon comes with a [Dockerfile](Dockerfile) that can be used to build a
 docker image:
 
 ```
-docker build -t archelon .
+docker build -t docker.lib.umd.edu/archelon -f Dockerfile .
 ```
 
-See [umd-lib/umd-fcrepo/README.md](https://github.com/umd-lib/umd-fcrepo)
-for information about setting up a local development environment for Archelon
-using Docker.
+See [umd-lib/umd-fcrepo/README.md][umd-fcrepo] for information about setting up
+a local development environment for Archelon using Docker.
 
 When running locally in Docker, the Archelon database can be accessed using:
 
@@ -150,15 +167,18 @@ When running locally in Docker, the Archelon database can be accessed using:
 psql -U archelon -h localhost -p 5434 archelon
 ```
 
+There is also a "Dockerfile.sftp" file, which sets up an SFTP server enabling
+files to be uploaded to Archelon for use by import jobs.
+
 ## File Retrieval configuration
 
 Archelon has the ability to create one-time use URLs, which allow a Fedora
 binary file to be downloaded. The random token used for the URLs, and other
 information, is stored in the DownloadUrl model.
 
-It is assumed that the URL that patrons use to retrieve the files will not
-reference the Archelon server directly. Instead it is anticipated that a new IP
-and Apache virtual host, which proxies back to Archelon, will be used.
+In production, the URL that patrons use to retrieve the files does not reference
+the Archelon server directly, relying instead on a virtual host, which proxies
+back to Archelon.
 
 The base URL of the virtual host (i.e., the entire URL except for the random
 token, but including a trailing slash) should be set in the `RETRIEVE_BASE_URL`
@@ -180,8 +200,8 @@ server.
 
 Rails disables concurrent operation when using the development environment.
 
-Edit the "config/development.rb" file, and add the following line to
-application setting:
+Edit the "config/development.rb" file, and add the following line inside
+the `Rails.application.configure` block:
 
   ```
   config.allow_concurrency=true
@@ -260,8 +280,11 @@ for information about writing documentation for the React components.
 See the [LICENSE](LICENSE.md) file for license rights and limitations
 (Apache 2.0).
 
+[blacklight]: https://github.com/projectblacklight/blacklight
 [cve-2015-9284]: https://github.com/omniauth/omniauth/wiki/Resolving-CVE-2015-9284
+[fedora]: https://duraspace.org/fedora/
 [plastron]: https://github.com/umd-lib/plastron
 [react-styleguidist]: https://react-styleguidist.js.org/
 [react-styleguidist-documenting]: https://react-styleguidist.js.org/docs/documenting
+[umd-fcrepo]: https://github.com/umd-lib/umd-fcrepo
 [umd-fcrepo-docker]: https://github.com/umd-lib/umd-fcrepo-docker
