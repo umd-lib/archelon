@@ -7,7 +7,7 @@ messaging.
 
 ## Import Process
 
-The metadata import process occurs in two stages:
+The import process occurs in two stages:
 
 * validate
 * import
@@ -25,7 +25,7 @@ Loading sample data differs depending on whether Archelon running locally,
 in a Docker container, or in Kubernetes.
 
 Instructions for loading sample data is available in the
-["umd-lib/umd-fcrepo"][umd-fcrepo] respository:
+[umd-lib/umd-fcrepo][umd-fcrepo] respository:
 
 * When running in Docker, see
   [docs/archelon-data-import-docker.md][archelon-data-import-docker]
@@ -38,3 +38,7 @@ The following diagram (derived from [import_workflow.txt} using
 [PlantUML](https://plantuml.com/) depicts the import workflow in detail:
 
 ![Import Workflow](import_workflow.png)
+
+[archelon-data-import-docker]: https://github.com/umd-lib/umd-fcrepo/blob/main/docs/archelon-data-import-docker.md
+[archelon-data-import-local]: https://github.com/umd-lib/umd-fcrepo/blob/main/docs/archelon-data-import-local.md
+[umd-fcrepo]: https://github.com/umd-lib/umd-fcrepo

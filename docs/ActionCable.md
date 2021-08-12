@@ -64,11 +64,11 @@ When an admin user accesses the channel, they are subscribed to a global "admin"
 stream, which is shared among all admin users. The "admin" stream receives all
 messages related to *any* job.
 
-Note: There are separate setsof channel streams for "export" and "import" jobs.
+Note: There are separate sets of channel streams for "export" and "import" jobs.
 
 #### Channel Data
 
-### Import Jobs
+##### Import Jobs
 
 For import jobs, status updates to the chaneel consist of a JSON object with
 the following attributes:
@@ -80,7 +80,7 @@ The browser-side JavaScript uses the id in the "job" field to locate the
 appropriate DOM element using the "data-job-id" HTML attribute, and replaces
 the HTML of the element with the "statusWidget" content.
 
-### Export Jobs
+##### Export Jobs
 
 For export jobs, status updates to the channel consist of a JSON object with
 the following attributes:

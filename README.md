@@ -168,7 +168,7 @@ psql -U archelon -h localhost -p 5434 archelon
 ```
 
 There is also a "Dockerfile.sftp" file, which sets up an SFTP server enabling
-files to be uploaded to Archelon for use by import jobs.
+files to be uploaded to Archelon for inclusion in import jobs.
 
 ## File Retrieval configuration
 
