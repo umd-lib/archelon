@@ -192,9 +192,9 @@ application setting:
 The batch export functionality relies on a running [Plastron]
 instance.
 
-## Metadata Import
+## Batch Import
 
-See [docs/MetadataImport](docs/MetadataImport.md).
+See [docs/BatchImport](docs/BatchImport.md).
 
 ## LDAP Override
 
