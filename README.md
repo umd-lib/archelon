@@ -37,12 +37,12 @@ ActiveMQ queues
 "umd-fcrepo-docker" stack for metadata search and retrieval
 * Plastron - Archelon uses the HTTP REST interface provided by Plastron to
 retrieve information about export and import jobs (some export/import status
-information is also provided via STOMP messaing).
+information is also provided via STOMP messaging).
 
 ## Quick Start
 
 See [Installing Prerequisites](docs/Prerequisites.md) for information on
-prerequistes on a local workstation.
+prerequisites on a local workstation.
 
 ### Setup
 
@@ -89,7 +89,7 @@ By default, the development environment for Archelon will log at the DEBUG level
 while all other environments will log at the INFO level. To change this, set the
 `RAILS_LOG_LEVEL` environment variable in your `.env` file.
 
-In the developlment environment, the log will be sent to standard output and
+In the development environment, the log will be sent to standard output and
 the "log/development.log" file, as is standard in Rails application.
 
 In production, set the "RAILS_LOG_TO_STDOUT" environment variable to "true" to
@@ -107,8 +107,8 @@ updates).
 The "ping" endpoint is unrestricted, and is suitable for monitoring the
 health of the application.
 
-The "public keys" endpoint returns a JSON list of the public keys allowed to
-"stfp" to the Archelon server. While these are _public_ keys, and hence not
+The "public keys" endpoint returns a JSON list of the public keys allowed to SFTP
+to the Archelon server. While these are _public_ keys, and hence not
 technically a security issue, current SSDR policy is to limit access to this
 endpoint to "localhost", or nodes in the Kubernetes cluster.
 
@@ -180,6 +180,25 @@ Rake task:
 
 ```
 rails stomp:listen
+```
+
+### Building Docker Images
+
+There are two Rake tasks to build and push Docker images for the Archelon
+application as well as the SFTP service. The image tag version is determined
+by the value of `Archelon::VERSION`. If it contains the string "dev", then
+it is considered a development version as is tagged using "latest". Any other
+value is used as-is.
+
+Note that once a non-"latest" tag has been successfully pushed, further attempts
+to push that same tag will fail.
+
+```
+# builds "docker.lib.umd.edu/archelon:VERSION" and "docker.lib.umd.edu/archelon-sftp:VERSION"
+rails docker:build
+
+# push to the registry
+rails docker:push
 ```
 
 ## Docker
