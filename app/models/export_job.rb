@@ -75,12 +75,31 @@ class ExportJob < ApplicationRecord
     export_complete? || partial_export?
   end
 
+  def downloadable?
+    done? && File.exist?(path)
+  end
+
   # Heuristic method to determine if this job might be stalled
   def stalled?
     # only makes sense for jobs that are in an actively processing state
     return false unless pending? || in_progress?
 
     (Time.zone.now - updated_at) > IDLE_THRESHOLD
+  end
+
+  # Generates status text display for the GUI
+  def status_text
+    return 'Unknown' if state.blank?
+
+    return I18n.t("activerecord.attributes.export_job.status.#{state}") unless in_progress?
+
+    I18n.t('activerecord.attributes.export_job.status.in_progress') + progress_text
+  end
+
+  def progress_text
+    return '' unless !progress.nil? && progress.positive?
+
+    " (#{progress}%)"
   end
 
   # Returns a array of the selected MIME types for the job
