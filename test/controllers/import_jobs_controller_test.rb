@@ -175,6 +175,20 @@ class ImportJobsControllerTest < ActionController::TestCase
     assert_equal(:import_error, result.state.to_sym)
   end
 
+  test 'import should report error when STOMP message cannot be published' do
+    connection_double = double('stomp_connection_with_publish_error')
+    allow(connection_double).to receive(:publish).and_raise(RuntimeError)
+    stub_const('Stomp::Connection', double(new: connection_double))
+
+    import_job = ImportJob.first
+    import_job.state = :validate_success
+    import_job.metadata_file = fixture_file_upload('files/valid_import.csv')
+    import_job.save!
+    patch :import, params: { id: import_job.id }
+    result = assigns(:import_job)
+    assert_equal(:import_error, result.state.to_sym)
+  end
+
   test 'should not be able to edit a job that is in "import" stage' do
     import_job = ImportJob.first
     import_job.state = :import_complete
