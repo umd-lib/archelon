@@ -2,16 +2,27 @@
 
 # Wrapper service for publishing messages to STOMP destinations
 class StompService
+  def self.create_connection
+    Stomp::Connection.new(
+      hosts: [STOMP_SERVER],
+      max_reconnect_attempts: 1
+    )
+  end
+
   def self.publish_message(destination, body, headers)
     destination = STOMP_CONFIG['destinations'][destination.to_s]
     Rails.logger.info("Publishing message to #{destination}")
-    connection = Stomp::Connection.new(hosts: [STOMP_SERVER], max_reconnect_attempts: 1)
+    connection = create_connection
     connection.publish(destination, body, headers)
+  rescue RuntimeError => e
+    # Catch all runtime exceptions and indicate failure to publish the message
+    # TODO: retry failed publish and/or implement asynchronous store-and-forward
+    Rails.logger.error("Error while communicating with STOMP server: #{e}")
+    false
+  else
+    # no errors when connecting or publishing; disconnect and indicate success
     connection.disconnect
     true
-  rescue Stomp::Error::MaxReconnectAttempts
-    Rails.logger.error('Unable to connect to STOMP server')
-    false
   end
 
   # Sends a message to Plastron and waits for a response
@@ -26,7 +37,7 @@ class StompService
 
     Rails.logger.info("Publishing message synchronously to #{destination_queue}")
 
-    connection = Stomp::Connection.new(hosts: [STOMP_SERVER], max_reconnect_attempts: 1)
+    connection = create_connection
     connection.subscribe(receive_queue)
     headers['reply-to'] = receive_queue
     headers['PlastronJobId'] = "SYNCHRONOUS-#{SecureRandom.uuid}"
