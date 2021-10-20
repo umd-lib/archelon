@@ -22,11 +22,11 @@ def push_image(tag:)
 end
 
 def label_pairs
-  labels.map {|k,v| "#{k}=#{v}"}
+  labels.map { |k, v| "#{k}=#{v}" }
 end
 
 def label_args
-  label_pairs.map {|label| ['--label', label]}.flatten
+  label_pairs.map { |label| ['--label', label] }.flatten
 end
 
 def images
