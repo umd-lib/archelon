@@ -14,7 +14,6 @@
 //= require activestorage
 //= require jquery
 //= require jquery_ujs
-//= require turbolinks
 
 // Required by Blacklight
 //= require blacklight/blacklight
@@ -33,7 +32,7 @@
 //= require_tree .
 
 /* See https://github.com/sadiqmmm/clipboard-rails */
-$(document).on('turbolinks:load', function(){
+$(function(){
   // Tooltip
   $('.clipboard-btn').tooltip({
     trigger: 'click',

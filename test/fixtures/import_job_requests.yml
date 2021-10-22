@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  import_job: one
+  validate_only: false
+  resume: false
+
+two:
+  import_job: two
+  validate_only: false
+  resume: false

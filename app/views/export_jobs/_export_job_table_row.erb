@@ -1,7 +1,7 @@
   <%
     format_label = ExportJob::FORMATS[export_job.format] || export_job.format
   %>
-<tr data-channel="export_jobs" data-job-id="<%= export_job.id %>">
+<tr class="export-job" data-export-job-id="<%= export_job.id %>" data-subscribe="<%= not export_job.export_complete? %>">
   <td><%= export_job.id %></td>
   <td><%= export_job.name %></td>
   <td><%= export_job.cas_user&.name%></td>

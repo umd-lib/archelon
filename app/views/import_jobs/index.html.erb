@@ -31,7 +31,7 @@
 
     <tbody>
       <% @import_jobs.each do |job| %>
-        <tr>
+        <tr class="import-job" data-import-job-id="<%= job.id %>" data-subscribe="<%= not job.import_complete? %>">
           <td><%= link_to job.id, import_job_path(job) %></td>
           <td><%= job.name %></td>
           <td><%= job.cas_user&.name%></td>

@@ -89,4 +89,6 @@ Rails.application.routes.draw do # rubocop:disable Metrics/BlockLength
   resources :datatypes
 
   get '/ping' => 'ping#verify'
+
+  mount ActionCable.server, at: '/cable'
 end

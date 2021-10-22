@@ -62,6 +62,7 @@ en:
           export_complete: Done
           partial_export: Done (Partial Export)
           export_error: Error
+          export_starting: Export Starting
       import_job:
         access: Access
         binaries:
@@ -81,14 +82,15 @@ en:
         status:
           label: Status
           validate_pending: Validation Pending
+          validate_in_progress: Validating...
           validate_success: Validation Successful
           validate_failed: Validation Failed
-          validate_error: Validation Error
+          validate_error: System Error during Validation
           import_success: Import Successful
           import_failed: Import Failed
-          import_error: Import Error
+          import_error: System Error during Import
           import_pending: Import Pending
-          in_progress: In Progress
+          import_in_progress: In Progress
           import_complete: Import Complete
           import_incomplete: Import Incomplete
           error: Error

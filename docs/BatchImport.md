@@ -25,7 +25,7 @@ Loading sample data differs depending on whether Archelon running locally,
 in a Docker container, or in Kubernetes.
 
 Instructions for loading sample data is available in the
-[umd-lib/umd-fcrepo][umd-fcrepo] respository:
+[umd-lib/umd-fcrepo][umd-fcrepo] repository:
 
 * When running in Docker, see
   [docs/archelon-data-import-docker.md][archelon-data-import-docker]
@@ -34,8 +34,8 @@ Instructions for loading sample data is available in the
 
 ## Import Workflow
 
-The following diagram (derived from [import_workflow.txt} using
-[PlantUML](https://plantuml.com/) depicts the import workflow in detail:
+The following diagram (derived from [import_workflow.txt](import_workflow.txt)
+using [PlantUML](https://plantuml.com/) depicts the import workflow in detail:
 
 ![Import Workflow](import_workflow.png)
 
