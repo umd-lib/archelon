@@ -414,6 +414,7 @@ DEPENDENCIES
   coffee-rails (~> 4.2)
   dotenv-rails
   faker (~> 1.8)
+  faraday (~> 1.0)
   http (~> 2.2.2)
   jbuilder
   jquery-rails

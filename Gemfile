@@ -68,7 +68,7 @@ gem 'faker', '~> 1.8'
 
 gem 'http', '~> 2.2.2'
 
-# RFC-complient URI and URI template handling
+# RFC-compliant URI and URI template handling
 gem 'addressable', '~> 2.8'
 
 gem 'pg'
@@ -132,3 +132,4 @@ gem 'cancancan'
 
 gem 'webpacker'
 gem 'react-rails'
+gem 'faraday', '~> 1.0'

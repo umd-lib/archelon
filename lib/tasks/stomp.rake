@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'faraday/middleware'
+
 namespace :stomp do # rubocop:disable Metrics/BlockLength
   desc 'Start a STOMP listener'
   task listen: :environment do # rubocop:disable Metrics/BlockLength
@@ -43,6 +45,13 @@ namespace :stomp do # rubocop:disable Metrics/BlockLength
     end
   end
 
+  def http_connection
+    Faraday.new do |f|
+      # retry transient failures
+      f.request :retry
+    end
+  end
+
   # Notifies the Archelon main application that a job status has been updated
   def archelon_status_update(message)
     include Rails.application.routes.url_helpers
@@ -51,7 +60,7 @@ namespace :stomp do # rubocop:disable Metrics/BlockLength
 
     status_trigger_url = url_for([:status_update, message.find_job])
     puts "Sending status notification to #{status_trigger_url}"
-    Net::HTTP.post(URI(status_trigger_url), '')
+    http_connection.post(URI(status_trigger_url))
   end
 end
 

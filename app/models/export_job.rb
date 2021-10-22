@@ -60,9 +60,12 @@ class ExportJob < ApplicationRecord
   end
 
   def update_progress(message)
+    return if message.blank?
+
     stats = message.body_json
     progress = (stats['count']['exported'].to_f / stats['count']['total'] * 100).round
     self.progress = progress
+    self.state = progress.positive? ? :in_progress : :pending
     save!
   end
 

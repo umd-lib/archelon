@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_04_183946) do
+ActiveRecord::Schema.define(version: 2021_10_22_142340) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -87,6 +87,16 @@ ActiveRecord::Schema.define(version: 2021_08_04_183946) do
     t.index ["token"], name: "index_download_urls_on_token", unique: true
   end
 
+  create_table "export_job_requests", force: :cascade do |t|
+    t.integer "export_job_id"
+    t.boolean "validate_only"
+    t.boolean "resume"
+    t.string "job_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["export_job_id"], name: "index_export_job_requests_on_export_job_id"
+  end
+
   create_table "export_jobs", force: :cascade do |t|
     t.string "format"
     t.integer "cas_user_id"
@@ -101,6 +111,7 @@ ActiveRecord::Schema.define(version: 2021_08_04_183946) do
     t.integer "binaries_count"
     t.string "mime_types"
     t.integer "state"
+    t.string "uris"
     t.index ["cas_user_id"], name: "index_export_jobs_on_cas_user_id"
   end
 
@@ -108,6 +119,16 @@ ActiveRecord::Schema.define(version: 2021_08_04_183946) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "import_job_requests", force: :cascade do |t|
+    t.integer "import_job_id"
+    t.boolean "validate_only"
+    t.boolean "resume"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "job_id"
+    t.index ["import_job_id"], name: "index_import_job_requests_on_import_job_id"
   end
 
   create_table "import_jobs", force: :cascade do |t|

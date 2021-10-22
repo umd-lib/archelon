@@ -72,6 +72,10 @@ Rails.application.configure do
   # exception when resubmitting imports (which is attempting to delete the old
   # import attachment).
   # See https://github.com/rails/rails/issues/30937
+  # The major limitation of this approach is that the inline adapter does not
+  # support "perform_later", so automatic retry-ing of jobs (using the exponential
+  # back-off algorithm, what schedules the re-tries for a few seconds in the future)
+  # as well as live updates on the job index page will NOT work as expected.
   config.active_job.queue_adapter = :inline
 
   # default to debug log level unless overridden by the environment
