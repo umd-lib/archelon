@@ -171,6 +171,18 @@ input {
     padding: .5em;
 }
 
+.item-created > .item-status {
+    background-color: lightgreen;
+    font-weight: bold;
+}
+.item-modified > .item-status {
+    background-color: lightblue;
+}
+.item-unchanged > .item-status {
+    background-color: lightgrey;
+    color: #4C4C4C;
+}
+
 .panel-vocabulary {
   margin-top: 10px;
 }
