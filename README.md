@@ -301,6 +301,25 @@ the GUI.
 
 See [docs/ActionCable.md](docs/ActionCable.md) for more information.
 
+## ActiveJob and Resque
+
+*Experimental support for Resque as the ActiveJob adapter*
+
+To run a Redis instance via Docker:
+
+```
+docker run --rm --name archelon-redis -p 6379:6379 redis
+```
+
+To run the Resque worker Rake task:
+
+```
+LOGGING=1 QUEUE=* bundle exec rails resque:work
+```
+
+The Resque monitoring app is mounted at <http://localhost:3000/resque> when
+Archelon is running locally.
+
 ## React Components
 
 ### Interactive Demo

@@ -76,7 +76,7 @@ Rails.application.configure do
   # support "perform_later", so automatic retry-ing of jobs (using the exponential
   # back-off algorithm, what schedules the re-tries for a few seconds in the future)
   # as well as live updates on the job index page will NOT work as expected.
-  config.active_job.queue_adapter = :inline
+  config.active_job.queue_adapter = :resque
 
   # default to debug log level unless overridden by the environment
   config.log_level = ENV.fetch('RAILS_LOG_LEVEL', 'debug')
