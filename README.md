@@ -320,6 +320,16 @@ LOGGING=1 QUEUE=* bundle exec rails resque:work
 The Resque monitoring app is mounted at <http://localhost:3000/resque> when
 Archelon is running locally.
 
+### resque-scheduler
+
+To run scheduled (cron-like) jobs, run the "resque:scheduler" Rake task:
+
+```
+bundle exec rails rails resque:scheduler
+```
+
+To configure scheduled jobs, see [config/resque_schedule.yml](config/resque_schedule.yml).
+
 ## React Components
 
 ### Interactive Demo

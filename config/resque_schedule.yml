@@ -1,0 +1,7 @@
+expire_download_urls:
+  # Run hourly
+  cron: "0 * * * *"
+  class: "DownloadUrlExpirationJob"
+  args:
+  queue: expire_download_urls
+  description: "Disables expired DownloadURLs"
