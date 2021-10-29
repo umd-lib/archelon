@@ -301,6 +301,21 @@ the GUI.
 
 See [docs/ActionCable.md](docs/ActionCable.md) for more information.
 
+## ActiveJob and Delayed::Job
+
+*Experimental support for Delayed::Job as the ActiveJob adapter*
+
+Archelon is configured to use the [Delayed::Job][delayed_job] queue adapter, via
+the [delayed_job_active_record][delayed_job_active_record] gem to store jobs
+in the database.
+
+To enable job execution in development, start the delayed_job workers using
+the "jobs:work" Rails task:
+
+```
+rails jobs:work
+```
+
 ## React Components
 
 ### Interactive Demo
@@ -335,6 +350,8 @@ See the [LICENSE](LICENSE.md) file for license rights and limitations
 
 [blacklight]: https://github.com/projectblacklight/blacklight
 [cve-2015-9284]: https://github.com/omniauth/omniauth/wiki/Resolving-CVE-2015-9284
+[delayed_job]: https://github.com/collectiveidea/delayed_job
+[delayed_job_active_record]: https://github.com/collectiveidea/delayed_job_active_record
 [fedora]: https://duraspace.org/fedora/
 [plastron]: https://github.com/umd-lib/plastron
 [react-styleguidist]: https://react-styleguidist.js.org/
