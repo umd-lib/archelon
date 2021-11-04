@@ -1,5 +1,5 @@
 // Handles AJAX response from "update" method in app/controllers/resource_controller.rb
-$(document).on('turbolinks:load', function() {
+$(document).ready(function() {
 
   const errorDiv = document.querySelector("#error_explanation");
   if (errorDiv) {

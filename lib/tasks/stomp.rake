@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'faraday/middleware'
+
 namespace :stomp do # rubocop:disable Metrics/BlockLength
   desc 'Start a STOMP listener'
   task listen: :environment do # rubocop:disable Metrics/BlockLength
@@ -13,16 +15,18 @@ namespace :stomp do # rubocop:disable Metrics/BlockLength
       message = PlastronMessage.new(stomp_msg)
       puts "Updating job status for #{message.job_id}"
 
-      # Wrapping in "with_connection" in case connection has timed out
-      ActiveRecord::Base.connection_pool.with_connection do
-        message.find_job.update_status(message)
-        listener.send_ack(message)
-        archelon_status_update(message)
+      begin
+        # Wrapping in "with_connection" in case connection has timed out
+        ActiveRecord::Base.connection_pool.with_connection do
+          message.find_job.update_status(message)
+          listener.send_ack(message)
+          notify_archelon(message, type: :status)
+        end
+      rescue StandardError => e
+        puts "An error occurred processing stomp_msg: #{stomp_msg}"
+        listener.send_nack(message)
+        puts e, e.backtrace
       end
-    rescue StandardError => e
-      puts "An error occurred processing stomp_msg: #{stomp_msg}"
-      listener.send_nack(message)
-      puts e, e.backtrace
     end
 
     listener.subscribe(:job_progress) do |stomp_msg|
@@ -32,7 +36,7 @@ namespace :stomp do # rubocop:disable Metrics/BlockLength
       # Wrapping in "with_connection" in case connection has timed out
       ActiveRecord::Base.connection_pool.with_connection do
         message.find_job.update_progress(message)
-        archelon_status_update(message)
+        notify_archelon(message, type: :progress)
       end
     end
 
@@ -43,15 +47,22 @@ namespace :stomp do # rubocop:disable Metrics/BlockLength
     end
   end
 
-  # Notifies the Archelon main application that a job status has been updated
-  def archelon_status_update(message)
+  def http_connection
+    Faraday.new do |f|
+      # retry transient failures
+      f.request :retry
+    end
+  end
+
+  # Notifies the Archelon main application that a job has been updated
+  def notify_archelon(message, type:)
     include Rails.application.routes.url_helpers
     default_url_options[:host] = ARCHELON_SERVER[:host]
     default_url_options[:port] = ARCHELON_SERVER[:port]
 
-    status_trigger_url = url_for([:status_update, message.find_job])
-    puts "Sending status notification to #{status_trigger_url}"
-    Net::HTTP.post(URI(status_trigger_url), '')
+    trigger_url = url_for([:status_update, message.find_job])
+    puts "Sending #{type} notification to #{trigger_url}"
+    http_connection.post(URI(trigger_url))
   end
 end
 

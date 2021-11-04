@@ -39,13 +39,14 @@ class ImportJob < ApplicationRecord
     validate_failed: 3,
     validate_error: 4,
     import_pending: 5,
-    in_progress: 6,
+    import_in_progress: 6,
     import_complete: 7,
     import_incomplete: 8,
-    import_error: 9
+    import_error: 9,
+    validate_in_progress: 10
   }
 
-  after_commit { ImportJobRelayJob.perform_later(self) }
+  after_commit { ImportJobStatusUpdatedJob.perform_now(self) }
 
   validates :name, presence: true
   validates :collection, presence: true
@@ -75,20 +76,21 @@ class ImportJob < ApplicationRecord
     errors.add(:base, :multiple_include_binaries_options) if binary_zip_file.attached? && remote_server.present?
   end
 
-  def update_progress(message) # rubocop:disable Metrics/AbcSize
+  def update_progress(message) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
     return if message.body.blank?
 
-    self.state = :in_progress
+    validate_in_progress! if validate_pending?
+    import_in_progress! if import_pending?
 
     count = message.body_json['count'] || {}
     total_count = count['total']
 
     # Total could be nil for non-seekable files
-    return if total_count.nil? || total_count.zero?
+    unless total_count.nil? || total_count.zero?
+      processed_count = count['created'] + count['updated'] + count['unchanged'] + count['errors']
+      self.progress = (processed_count.to_f / total_count * 100).round
+    end
 
-    processed_count = count['created'] + count['updated'] + count['unchanged'] + count['errors']
-
-    self.progress = (processed_count.to_f / total_count * 100).round
     save!
   end
 
@@ -105,7 +107,7 @@ class ImportJob < ApplicationRecord
       self.state = message.job_state
       if message.body.present?
         self.item_count = message.body_json.dig('count', 'total')
-        self.binaries_count = message.body_json.dig('count', 'total')
+        self.binaries_count = message.body_json.dig('count', 'files')
       end
     end
     save!
@@ -114,9 +116,13 @@ class ImportJob < ApplicationRecord
   # Heuristic method to determine if this job might be stalled
   def stalled?
     # only makes sense for jobs that are in an actively processing state
-    return false unless validate_pending? || import_pending? || in_progress?
+    return false unless active?
 
     (Time.zone.now - updated_at) > IDLE_THRESHOLD
+  end
+
+  def active?
+    validate_pending? || import_pending? || validate_in_progress? || import_in_progress?
   end
 
   # Returns true if a binary zip file is attached, or remote server is
@@ -158,7 +164,7 @@ class ImportJob < ApplicationRecord
     # Set the appropriate error state depending on which phase of the import
     # this job is currently in.
     def set_error_state
-      self.state = :validate_error if validate_pending?
-      self.state = :import_error if import_pending? || in_progress?
+      self.state = :validate_error if validate_pending? || validate_in_progress?
+      self.state = :import_error if import_pending? || import_in_progress?
     end
 end

@@ -105,10 +105,27 @@ class ActiveSupport::TestCase
     end
   end
 
-  # Replaces StompService with a stub
-  def mock_stomp_service(connected:)
-    name = "stomp_service_#{connected ? '' : 'dis'}connected"
-    stub_const('StompService', double(name, publish_message: connected))
+  # Replaces Stomp::Connection with a stub.
+  def mock_stomp_connection(error: :none) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+    connection_double = double('stomp_connection')
+    allow(connection_double).to receive(:disconnect)
+
+    if error == :none
+      allow(connection_double).to receive(:publish)
+    elsif error == :transient
+      # raise an error on the first two calls to publish, to simulate a
+      # short-term, transient network failure
+      call_count = 0
+      allow(connection_double).to receive(:publish) do
+        call_count += 1
+        call_count < 3 ? raise(RuntimeError) : true
+      end
+    elsif error == :permanent
+      # always fail to publish, to simulate a completely dead connection
+      allow(connection_double).to receive(:publish).and_raise(RuntimeError)
+    end
+
+    stub_const('Stomp::Connection', double(new: connection_double))
   end
 end
 

@@ -9,22 +9,6 @@ class StompService
     )
   end
 
-  def self.publish_message(destination, body, headers)
-    destination = STOMP_CONFIG['destinations'][destination.to_s]
-    Rails.logger.info("Publishing message to #{destination}")
-    connection = create_connection
-    connection.publish(destination, body, headers)
-  rescue RuntimeError => e
-    # Catch all runtime exceptions and indicate failure to publish the message
-    # TODO: retry failed publish and/or implement asynchronous store-and-forward
-    Rails.logger.error("Error while communicating with STOMP server: #{e}")
-    false
-  else
-    # no errors when connecting or publishing; disconnect and indicate success
-    connection.disconnect
-    true
-  end
-
   # Sends a message to Plastron and waits for a response
   #
   # Will wait up to "receive_timeout" (in seconds) for a response, which

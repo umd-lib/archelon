@@ -12,7 +12,7 @@ class ExportJob < ApplicationRecord
     export_error: 5
   }
 
-  after_commit { ExportJobRelayJob.perform_later(self) }
+  after_commit { ExportJobStatusUpdatedJob.perform_now(self) }
 
   # If it has been more than IDLE_THRESHOLD since the last update time on this job,
   # and the job is in an active state, then consider it stalled.
@@ -60,9 +60,12 @@ class ExportJob < ApplicationRecord
   end
 
   def update_progress(message)
+    return if message.blank?
+
     stats = message.body_json
     progress = (stats['count']['exported'].to_f / stats['count']['total'] * 100).round
     self.progress = progress
+    self.state = progress.positive? ? :in_progress : :pending
     save!
   end
 

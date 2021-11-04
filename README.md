@@ -57,31 +57,36 @@ Archelon requires other components of the umd-fcrepo system to enable most
 functionality.
 
 1. Checkout the code and install the dependencies:
-
-  ```
-  git clone git@github.com:umd-lib/archelon.git
-  cd archelon
-  yarn
-  bundle install
-  ```
-
-2. Set up the database:
-
-  ```
-  rails db:migrate
-  ```
-
-  **Note:** Sample "Download URL" data can be added by running
-  `rails db:reset_with_sample_data`
-
-3. Create a `.env` file from the `env_example` file and fill in appropriate
+    ```bash
+    git clone git@github.com:umd-lib/archelon.git
+    cd archelon
+    yarn
+    bundle install
+    ```
+2. Create a `.env` file from the `env_example` file and fill in appropriate
    values for the environment variables.
+3. Set up the database:
+    ```bash
+    rails db:migrate
+    ```
+4. *(Optional)* Load sample "Download URL" data:
+    ```bash
+    rails db:reset_with_sample_data
+    ```
+5. Start the STOMP listener:
+    ```bash
+   rails stomp:listen 
+   ```
+6. Start the Delayed Jobs worker:
+    ```bash
+   rails jobs:work
+    ```
+7. Run the web application:
+    ```bash
+    rails server
+    ```
 
-4. Run the web application:
-
-  ```
-  rails server
-  ```
+Archelon will be available at <http://localhost:3000/>
 
 ## Logging
 
@@ -111,6 +116,33 @@ The "public keys" endpoint returns a JSON list of the public keys allowed to SFT
 to the Archelon server. While these are _public_ keys, and hence not
 technically a security issue, current SSDR policy is to limit access to this
 endpoint to "localhost", or nodes in the Kubernetes cluster.
+
+## Docker
+
+Archelon comes with a [Dockerfile](Dockerfile) that can be used to build a
+docker image:
+
+```
+docker build -t docker.lib.umd.edu/archelon -f Dockerfile .
+```
+
+See [umd-lib/umd-fcrepo/README.md][umd-fcrepo] for information about setting up
+a local development environment for Archelon using Docker.
+
+There are also two Rake tasks, `docker:build` and `docker:push`, for use when
+building images to share to the docker.lib.umd.edu hub. See
+[Building Docker Images](#building-docker-images) in the [Rake Tasks](#rake-tasks)
+section.
+
+When running locally in Docker, the Archelon database can be accessed using:
+
+```
+# Archelon database backing the Archelon Rails app
+psql -U archelon -h localhost -p 5434 archelon
+```
+
+There is also a "Dockerfile.sftp" file, which sets up an SFTP server enabling
+files to be uploaded to Archelon for inclusion in import jobs.
 
 ## Rake Tasks
 
@@ -171,7 +203,7 @@ Two Rake tasks are provided for importing public keys for a user:
     rails user:add_public_key_file[jsmith,/home/jsmith/.ssh/id_rsa.pub]
     ```
 
-### STOMP Listener
+### Running the STOMP Listener
 
 The "STOMP listener" application connects Archelon to ActiveMQ, and is required
 for performing exports and imports. The STOMP listener application is configured
@@ -200,28 +232,6 @@ rails docker:build
 # push to the registry
 rails docker:push
 ```
-
-## Docker
-
-Archelon comes with a [Dockerfile](Dockerfile) that can be used to build a
-docker image:
-
-```
-docker build -t docker.lib.umd.edu/archelon -f Dockerfile .
-```
-
-See [umd-lib/umd-fcrepo/README.md][umd-fcrepo] for information about setting up
-a local development environment for Archelon using Docker.
-
-When running locally in Docker, the Archelon database can be accessed using:
-
-```
-# Archelon database backing the Archelon Rails app
-psql -U archelon -h localhost -p 5434 archelon
-```
-
-There is also a "Dockerfile.sftp" file, which sets up an SFTP server enabling
-files to be uploaded to Archelon for inclusion in import jobs.
 
 ## File Retrieval configuration
 
@@ -301,6 +311,19 @@ the GUI.
 
 See [docs/ActionCable.md](docs/ActionCable.md) for more information.
 
+## ActiveJob and Delayed::Job
+
+Archelon is configured to use the [Delayed::Job][delayed_job] queue adapter, via
+the [delayed_job_active_record][delayed_job_active_record] gem to store jobs
+in the database.
+
+To enable job execution in development, start the delayed_job workers using
+the "jobs:work" Rails task:
+
+```
+rails jobs:work
+```
+
 ## React Components
 
 ### Interactive Demo
@@ -335,6 +358,8 @@ See the [LICENSE](LICENSE.md) file for license rights and limitations
 
 [blacklight]: https://github.com/projectblacklight/blacklight
 [cve-2015-9284]: https://github.com/omniauth/omniauth/wiki/Resolving-CVE-2015-9284
+[delayed_job]: https://github.com/collectiveidea/delayed_job
+[delayed_job_active_record]: https://github.com/collectiveidea/delayed_job_active_record
 [fedora]: https://duraspace.org/fedora/
 [plastron]: https://github.com/umd-lib/plastron
 [react-styleguidist]: https://react-styleguidist.js.org/

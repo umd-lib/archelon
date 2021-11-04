@@ -2,50 +2,42 @@
 
 # Channel for Export Jobs
 class ExportJobsChannel < ApplicationCable::Channel
-  def follow
-    stop_all_streams
-    if current_user.admin?
-      stream_from ExportJobsChannel.admins_stream
-    else
-      stream_from ExportJobsChannel.stream(current_user)
+  def subscribed
+    export_job = ExportJob.find(params[:id])
+    Rails.logger.debug("Received subscription for ExportJob #{export_job.id} from user #{username}")
+    stream_for export_job if authorized_to_stream export_job
+  end
+
+  # Called by the client with an export job id. This method triggers an
+  # immediate status update job, where server will send a broadcast message
+  # to trigger a status update on the client.
+  #
+  # This method is intended to work around an issue where the client has
+  # missed a status update for an export job (such as validation) and there
+  # are no further updates, which otherwise would leave the client thinking
+  # the job was still in an "in progress" state.
+  def export_job_status_check(data)
+    job_id = data['jobId']
+    export_job = ExportJob.find(job_id)
+    return if export_job.nil?
+
+    ExportJobStatusUpdatedJob.perform_now(export_job)
+  end
+
+  private
+
+    def username
+      current_user.cas_directory_id
     end
-  end
 
-  def unfollow
-    stop_all_streams
-  end
-
-  # Broadcasts export job information to the appropriate channel(s)
-  def self.broadcast(export_job)
-    user = export_job.cas_user
-
-    message = { job: export_job, htmlUpdate: html_update(export_job) }
-
-    unless user.admin?
-      # Don't broadcast on per-user stream if user is an admin, as they
-      # will get the message on the "admins" stream
-      user_stream = ExportJobsChannel.stream(user)
-      ActionCable.server.broadcast user_stream, export_job: message
+    # confirm that the current user should be able to subscribe to this export job
+    def authorized_to_stream(export_job)
+      if current_user.admin? || export_job.cas_user == current_user
+        Rails.logger.debug("Streaming Export Job #{export_job.id} for user #{username}")
+        true
+      else
+        Rails.logger.warning("User #{username} does not have permission to view ExportJob #{export_job.id}")
+        false
+      end
     end
-
-    admins_stream = ExportJobsChannel.admins_stream
-    ActionCable.server.broadcast admins_stream, export_job: message
-  end
-
-  # Stream that sends status message to the user that created the export job
-  def self.stream(user)
-    "export_jobs:#{user.id}:status"
-  end
-
-  # Stream for sending status messages to admins, regardless of who created
-  # the export job.
-  def self.admins_stream
-    'export_jobs:admins:status'
-  end
-
-  # Returns the updated HTML to render
-  def self.html_update(export_job)
-    ActionController::Renderer.for(ExportJobsController).render partial: 'export_job_table_row',
-                                                                locals: { export_job: export_job }
-  end
 end

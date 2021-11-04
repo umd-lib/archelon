@@ -1,4 +1,4 @@
-<td data-channel="import_jobs" data-job-id="<%= import_job.id %>" data-state="<%= import_job.state %>">
+<td data-job-id="<%= import_job.id %>" data-state="<%= import_job.state %>">
   <%= link_to status_text(import_job), import_job_path(import_job), class: "import_job_status_#{import_job.state}" %>
   <% if import_job.stalled? %>(may be stalled)<% end %>
   <% if import_job.validate_success? %>

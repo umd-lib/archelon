@@ -99,15 +99,17 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
   def status_text(import_job)
     return '' if import_job.state.blank?
 
-    return I18n.t("activerecord.attributes.import_job.status.#{import_job.state}") unless import_job.in_progress?
+    return I18n.t("activerecord.attributes.import_job.status.#{import_job.state}") unless import_job.import_in_progress?
 
-    I18n.t('activerecord.attributes.import_job.status.in_progress') + import_job.progress_text
+    I18n.t('activerecord.attributes.import_job.status.import_in_progress') + import_job.progress_text
   end
 
-  # GET /import_jobs/1/status_update
+  # POST /import_jobs/1/status_update
   def status_update
-    # Triggers import job notification to channel
-    ImportJobRelayJob.perform_later(@import_job)
+    # Triggers import job notification to channel;
+    # it is important to use perform_now so that
+    # ActionCable receives timely updates
+    ImportJobStatusUpdatedJob.perform_now(@import_job)
     render plain: '', status: :no_content
   end
 
@@ -141,44 +143,32 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
       end
     end
 
+    def job_request(job, validate_only: false, resume: false)
+      ImportJobRequest.create(
+        import_job: job,
+        job_id: import_job_url(job),
+        validate_only: validate_only,
+        resume: resume
+      )
+    end
+
+    def jobs_destination
+      STOMP_CONFIG['destinations'][:jobs]
+    end
+
     def start_validation
-      job_id = import_job_url(@import_job)
-      submit_job(ImportJobRequest.new(job_id, @import_job, validate_only: true))
-      @import_job.state = :validate_pending
-    rescue MessagingError
-      @import_job.state = :validate_error
-      flash[:error] = I18n.t(:active_mq_is_down)
-    ensure
-      @import_job.save!
+      SendStompMessageJob.perform_later jobs_destination, job_request(@import_job, validate_only: true)
+      @import_job.validate_pending!
     end
 
     def start_import
-      job_id = import_job_url(@import_job)
-      submit_job(ImportJobRequest.new(job_id, @import_job))
-      @import_job.state = :import_pending
-    rescue MessagingError
-      @import_job.state = :import_error
-      flash[:error] = I18n.t(:active_mq_is_down)
-    ensure
-      @import_job.save!
+      SendStompMessageJob.perform_later jobs_destination, job_request(@import_job)
+      @import_job.import_pending!
     end
 
     def resume_import
-      job_id = import_job_url(@import_job)
-      submit_job(ImportJobRequest.new(job_id, @import_job, resume: true))
-      @import_job.state = :import_pending
-    rescue MessagingError
-      @import_job.state = :import_error
-      flash[:error] = I18n.t(:active_mq_is_down)
-    ensure
-      @import_job.save!
-    end
-
-    def submit_job(import_job_request)
-      StompService.publish_message(:jobs, import_job_request.body, import_job_request.headers) && return
-
-      # if we were unable to send the message
-      raise MessagingError
+      SendStompMessageJob.perform_later jobs_destination, job_request(@import_job, resume: true)
+      @import_job.import_pending!
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
@@ -206,7 +196,4 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
 
       true
     end
-end
-
-class MessagingError < RuntimeError
 end

@@ -67,12 +67,7 @@ Rails.application.configure do
   }
   Rack::Mime::MIME_TYPES.merge! RDF_MIME_TYPES
 
-  # Use "inline" queue to force synchronous operation. This appears to be
-  # necessary when using SQLite because of a SQLite3::BusyException: database is locked
-  # exception when resubmitting imports (which is attempting to delete the old
-  # import attachment).
-  # See https://github.com/rails/rails/issues/30937
-  config.active_job.queue_adapter = :inline
+  config.active_job.queue_adapter = :delayed_job
 
   # default to debug log level unless overridden by the environment
   config.log_level = ENV.fetch('RAILS_LOG_LEVEL', 'debug')

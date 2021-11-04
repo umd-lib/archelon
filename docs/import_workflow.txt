@@ -1,21 +1,29 @@
 @startuml
 [*] --> validate_pending : start_validation
 
-validate_pending --> validate_success
+validate_pending --> validate_in_progress : (message received by STOMP queue)
 
-validate_pending --> validate_failed
+validate_pending --> validate_error : (STOMP communication error)
 
-validate_pending --> validate_error
+validate_in_progress --> validate_success
+
+validate_in_progress --> validate_failed
+
+validate_failed --> validate_pending : (user resubmits metadata)
+
+validate_in_progress --> validate_error : (Plastron error)
 
 validate_success --> import_pending : start_import
 
-import_pending --> in_progress
+import_pending --> import_in_progress : (message received by STOMP queue)
 
-in_progress --> import_complete
+import_pending --> import_error : (STOMP communication error)
 
-in_progress --> import_incomplete
+import_in_progress --> import_incomplete
 
-in_progress --> import_error
+import_in_progress --> import_error : (Plastron error)
+
+import_in_progress --> import_complete
 
 import_complete --> [*]
 

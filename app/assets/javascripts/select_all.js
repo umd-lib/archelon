@@ -135,7 +135,7 @@ enableDisableCheckboxes = () => {
   }
 }
 
-$(document).on("turbolinks:load", () => {
+$(document).ready(() => {
   addSelectAllHandler()
   updateSelectAll()
   updateSelectAllResults()
