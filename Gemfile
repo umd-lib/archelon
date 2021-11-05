@@ -132,3 +132,5 @@ gem 'webpacker'
 gem 'react-rails'
 gem 'delayed_job_active_record', '~> 4.1'
 gem 'faraday', '~> 1.0'
+gem 'delayed_cron_job', '~> 0.8'
+

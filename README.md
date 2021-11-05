@@ -75,7 +75,7 @@ functionality.
     ```
 5. Start the STOMP listener:
     ```bash
-   rails stomp:listen 
+   rails stomp:listen
    ```
 6. Start the Delayed Jobs worker:
     ```bash
@@ -324,6 +324,31 @@ the "jobs:work" Rails task:
 rails jobs:work
 ```
 
+## Cron Jobs
+
+The [delayed_cron_job][delayed_cron_job] gem is used to schedule jobs to run on
+a cron-like schedule.
+
+The "CronJob" class [app/cron_jobs/cron_job.rb](app/cron_jobs/cron_job.rb)
+should be used as the superclass, and all implementations should be placed in
+the "app/cron_jobs" directory.
+
+CronJob implementations in the "app/cron_jobs" directory are automatically
+scheduled when the "db:migrate" Rails task is run, via the "db:schedule_jobs"
+Rake task (see [lib/tasks/jobs.rake](lib/tasks/jobs.rake)).
+
+### Changing the schedule for a CronJob
+
+The "Changing the schedule" section of the "delayed_cron_job" README.md file
+indicates that when the "cron_expression" of a CronJob is changed, any
+previously scheduled instances will need to be manually removed.
+
+In this implementation, the "db:schedule_jobs" task removes existing CronJob
+implementations from the database before adding them back in. Therefore, it
+should *not* be necessary to manually delete existing CronJobs from the database
+after modifying the "cron_expression" for a CronJob (as long as
+"db:schedule_jobs" or "db:migrate" is run after the modification).
+
 ## React Components
 
 ### Interactive Demo
@@ -358,6 +383,7 @@ See the [LICENSE](LICENSE.md) file for license rights and limitations
 
 [blacklight]: https://github.com/projectblacklight/blacklight
 [cve-2015-9284]: https://github.com/omniauth/omniauth/wiki/Resolving-CVE-2015-9284
+[delayed_cron_job]: https://github.com/codez/delayed_cron_job
 [delayed_job]: https://github.com/collectiveidea/delayed_job
 [delayed_job_active_record]: https://github.com/collectiveidea/delayed_job_active_record
 [fedora]: https://duraspace.org/fedora/
