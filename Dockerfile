@@ -28,11 +28,11 @@ ENV SCRIPT_NAME=
 # "assets:precompile" command will run run without throwing an error.
 # It will have no effect on the application when it is actually run.
 #
-# Similarly, the PROD_DATABASE_ADAPTER variable is needed for the
+# Similarly, the ARCHELON_DATABASE_ADAPTER variable is needed for the
 # "assets:precompile" Rake task to complete, but will have no effect
 # on the application when it is actually run.
 ENV SECRET_KEY_BASE=IGNORE_ME
-RUN PROD_DATABASE_ADAPTER=postgresql bundle exec rails assets:precompile
+RUN ARCHELON_DATABASE_ADAPTER=postgresql bundle exec rails assets:precompile
 
 EXPOSE 3000
 
