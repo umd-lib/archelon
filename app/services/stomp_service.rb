@@ -21,20 +21,29 @@ class StompService
 
     Rails.logger.info("Publishing message synchronously to #{destination_queue}")
 
-    connection = create_connection
+    begin
+      connection = create_connection
+    rescue Stomp::Error::MaxReconnectAttempts
+      Rails.logger.error('Unable to connect to STOMP server')
+      raise MessagingError('Unable to connect to STOMP server.')
+    end
+
     connection.subscribe(receive_queue)
     headers['reply-to'] = receive_queue
     headers['PlastronJobId'] = "SYNCHRONOUS-#{SecureRandom.uuid}"
     connection.publish(destination_queue, body, headers)
 
-    Timeout.timeout(receive_timeout) do
-      msg = connection.receive
-      return msg
+    begin
+      Timeout.timeout(receive_timeout) do
+        stomp_message = connection.receive
+        raise MessagingError('No message received') if stomp_message.nil?
+
+        return PlastronMessage.new(stomp_message)
+      rescue Timeout::Error
+        raise MessagingError("No message received in #{receive_timeout} seconds. #{t('resource_update_timeout_error')}")
+      ensure
+        connection.disconnect
+      end
     end
-  rescue Stomp::Error::MaxReconnectAttempts
-    Rails.logger.error('Unable to connect to STOMP server')
-    'Unable to connect to STOMP server.'
-  ensure
-    connection&.disconnect
   end
 end

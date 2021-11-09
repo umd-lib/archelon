@@ -24,7 +24,7 @@ $(document).ready(function() {
 
   function displayErrors(errorHtml, errors) {
     // Clear all error fields
-    errorClass = "validation_error";
+    let errorClass = "validation_error";
     let fields = document.getElementsByClassName(errorClass);
     while (fields.length > 0) {
       fields[0].classList.remove(errorClass);
@@ -46,11 +46,10 @@ $(document).ready(function() {
   // Ensure submit button is enabled on form load
   enableSubmitButton();
 
-
   const resourceForm = document.querySelector("#resource_edit_form");
   if (resourceForm) {
     resourceForm.addEventListener("submit", (event) => {
-      disableSubmitButton()
+      disableSubmitButton();
     });
   }
 
@@ -58,34 +57,22 @@ $(document).ready(function() {
   if (element) {
     element.addEventListener("ajax:success", (event) => {
       const [data, _status, xhr] = event.detail;
-
-      enableSubmitButton();
-      // ajax.success occurs even if a validation error occurrs, so
+      // ajax.success occurs even if a validation error occurs, so
       // check for any errors
 
-      let errors = data.errors;
-      let errorHtml = data.error_display;
-      if (errorHtml) {
+      if (data.state === 'update_complete') {
+        window.location.href = data.destination;
+      } else if (data.state === 'update_failed') {
+        let {errors, errorHtml} = data;
         displayErrors(errorHtml, errors)
-        return;
-      }
-
-      let messages = data.messages;
-      if (messages) {
-        let alertText = messages.join("\n");
-        alert(alertText);
+        enableSubmitButton();
       }
     });
     element.addEventListener("ajax:error", () => {
       const [data, _status, xhr] = event.detail;
-
+      let {errorHtml} = data;
+      displayErrors(errorHtml);
       enableSubmitButton();
-
-      let errorDisplay = data.error_display;
-      if (errorDisplay) {
-        displayErrors(errorDisplay)
-        return;
-      }
     });
   }
 });
