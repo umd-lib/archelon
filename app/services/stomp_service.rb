@@ -25,7 +25,7 @@ class StompService
       connection = create_connection
     rescue Stomp::Error::MaxReconnectAttempts
       Rails.logger.error('Unable to connect to STOMP server')
-      raise MessagingError('Unable to connect to STOMP server.')
+      raise MessagingError, 'Unable to connect to STOMP server.'
     end
 
     connection.subscribe(receive_queue)
@@ -36,11 +36,13 @@ class StompService
     begin
       Timeout.timeout(receive_timeout) do
         stomp_message = connection.receive
-        raise MessagingError('No message received') if stomp_message.nil?
+        raise MessagingError, 'No message received' if stomp_message.nil?
+
         return PlastronMessage.new(stomp_message)
       end
     rescue Timeout::Error
-      raise MessagingError("No message received in #{receive_timeout} seconds. #{I18n.t('resource_update_timeout_error')}")
+      raise MessagingError,
+            "No message received in #{receive_timeout} seconds. #{I18n.t('resource_update_timeout_error')}"
     ensure
       connection.disconnect
     end
