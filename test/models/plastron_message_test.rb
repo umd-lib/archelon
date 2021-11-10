@@ -32,7 +32,7 @@ class PlastronMessageTest < ActiveSupport::TestCase
     response = PlastronMessage.new(stomp_message)
     errors = response.parse_errors(id)
 
-    assert_equal [{ name: 'title', status: ' failed', rule: ' required', expected: ' True' }], errors
+    assert_equal [{ name: 'title', status: 'failed', rule: 'required', expected: 'True' }], errors
   end
 
   test 'parse_errors handles messsage with single "other" error' do

@@ -60,7 +60,7 @@ class PlastronMessage
 
     [*validation_errors, *other_errors].each do |str|
       str = str.strip.gsub('(', '').gsub(')', '').gsub("'", '')
-      arr = str.split(',').each(&:strip)
+      arr = str.split(',').each(&:strip!)
 
       if arr.length == 4
         h = { name: arr[0], status: arr[1], rule: arr[2], expected: arr[3] }
