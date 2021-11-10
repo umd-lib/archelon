@@ -37,13 +37,12 @@ class StompService
       Timeout.timeout(receive_timeout) do
         stomp_message = connection.receive
         raise MessagingError('No message received') if stomp_message.nil?
-
         return PlastronMessage.new(stomp_message)
-      rescue Timeout::Error
-        raise MessagingError("No message received in #{receive_timeout} seconds. #{t('resource_update_timeout_error')}")
-      ensure
-        connection.disconnect
       end
+    rescue Timeout::Error
+      raise MessagingError("No message received in #{receive_timeout} seconds. #{I18n.t('resource_update_timeout_error')}")
+    ensure
+      connection.disconnect
     end
   end
 end
