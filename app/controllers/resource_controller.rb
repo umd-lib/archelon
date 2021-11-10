@@ -17,12 +17,13 @@ class ResourceController < ApplicationController
       render json: update_complete
     else
       response = send_to_plastron(@id, @resource[:content_model_name], sparql_update)
+
       if response.ok? && response.state == 'update_complete'
         flash[:notice] = t('resource_update_successful')
         return render json: update_complete
       end
 
-      @errors = parse_errors(response)
+      @errors = response.parse_errors(@id)
       error_display = render_to_string template: 'resource/_error_display', layout: false
       render json: { state: 'update_failed', errorHtml: error_display, errors: @errors }
     end
@@ -33,39 +34,6 @@ class ResourceController < ApplicationController
     def set_resource
       @id = params[:id]
       @resource = ResourceService.resource_with_model(@id)
-    end
-
-    # Parses the strings returned as validation errors from Python, and
-    # converts them into a map
-    #
-    # Errors from Plastron are expected to look like:
-    # "('<name>', '<status>', '<rule>', '<expected>')"
-    #
-    # These errors are parsed into a Map with "name", "status", "rule", and
-    # "expected" keys.
-    #
-    # Other errors (such as a timeout error) are just a simple string, and
-    # are parsed into a Map that contains an "error" key.
-    def parse_errors(response) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-      stats = response.body_json['stats']
-      validation_errors = stats['invalid'][@id]
-      other_errors = stats['errors'][@id]
-      errors = []
-
-      [*validation_errors, *other_errors].each do |str|
-        str = str.strip.gsub('(', '').gsub(')', '').gsub("'", '')
-        arr = str.split(',').each(&:strip)
-
-        if arr.length == 4
-          h = { name: arr[0], status: arr[1], rule: arr[2], expected: arr[3] }
-          # Workaround - "alternative" from Plastron should be "alternate_title"
-          h[:name] = 'alternate_title' if h[:name] == 'alternative'
-        else
-          h = { error: str }
-        end
-        errors.append(h)
-      end
-      errors
     end
 
     def send_to_plastron(id, model, sparql_update)
