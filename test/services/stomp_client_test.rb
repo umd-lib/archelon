@@ -10,7 +10,7 @@ class StompClientTest < Minitest::Test
     cas_user = CasUser.first
     job = ExportJob.new(name: 'test job', cas_user: cas_user)
     job.save!
-    message = create_message(job.id, 'Done', :export_complete)
+    message = create_message(job.id, :export_complete)
     message.find_job.update_status(message)
     job.reload
     assert job.export_complete?
@@ -20,19 +20,18 @@ class StompClientTest < Minitest::Test
     cas_user = CasUser.first
     job = ExportJob.new(name: 'test job', cas_user: cas_user)
     job.save!
-    message = create_message(job.id, 'Error', :export_error)
+    message = create_message(job.id, :export_error)
     message.find_job.update_status(message)
     job.reload
     assert job.export_error?
   end
 
-  def create_message(job_id, status, state) # rubocop:disable Metrics/MethodLength
+  def create_message(job_id, state)
     PlastronMessage.new(
       Stomp::Message.new('').tap do |message|
         message.command = 'MESSAGE'
         message.headers = {
           PlastronJobId: "http://localhost:3000/export_jobs/#{job_id}",
-          PlastronJobStatus: status,
           PlastronJobState: state.to_s
         }
         message.body = JSON.generate(download_uri: 'http://example.com/foo')
