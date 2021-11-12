@@ -48,7 +48,7 @@ class ResourceController < ApplicationController
         sparql_update: sparql_update
       }
 
-      # Send STOMP message synchronously
+      # Send synchronously to STOMP
       begin
         stomp_message = StompService.synchronous_message(:jobs_synchronous, body.to_json, update_headers(model))
         return PlastronMessage.new(stomp_message)

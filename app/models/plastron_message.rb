@@ -50,7 +50,7 @@ class PlastronMessage
   # "('<name>', '<status>', '<rule>', '<expected>')". These errors are parsed
   # into a Map with "name", "status", "rule", and "expected" keys.
   #
-  # Other errors (such as a timeout error) are just a simple string, and
+  # Other errors from Plastron are reported as just a simple string, and
   # are parsed into a Map that contains an "error" key.
   def parse_errors(resource_id) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     stats = body_json['stats']

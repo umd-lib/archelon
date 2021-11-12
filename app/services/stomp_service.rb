@@ -9,10 +9,12 @@ class StompService
     )
   end
 
-  # Sends a message to the STOMP server and waits for a response
+  # Sends a message to the STOMP server and waits for a response.
   #
   # Will wait up to "receive_timeout" (in seconds) for a response, which
   # defaults to 2 minutes.
+  #
+  # On success, will return a Stomp::Message
   #
   # Raises a MessagingError if cannot connect to the STOMP server, a timeout
   # occurs, or a nil STOMP message is received.
