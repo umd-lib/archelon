@@ -36,7 +36,7 @@ class ResourceController < ApplicationController
       @resource = ResourceService.resource_with_model(@id)
     end
 
-    def send_to_plastron(id, model, sparql_update)
+    def send_to_plastron(id, model, sparql_update) # rubocop:disable Metrics/MethodLength
       params_to_skip = %w[utf8 authenticity_token submit controller action]
       submission = params.to_unsafe_h
       params_to_skip.each { |key| submission.delete(key) }
@@ -49,7 +49,11 @@ class ResourceController < ApplicationController
       }
 
       # Send STOMP message synchronously
-      StompService.synchronous_message(:jobs_synchronous, body.to_json, update_headers(model))
+      begin
+        return StompService.synchronous_message(:jobs_synchronous, body.to_json, update_headers(model))
+      rescue MessagingError => e
+        return PlastronExceptionMessage.new(e.message)
+      end
     end
 
     def update_headers(model)

@@ -41,8 +41,8 @@ class StompService
         return PlastronMessage.new(stomp_message)
       end
     rescue Timeout::Error
-      raise MessagingError,
-            "No message received in #{receive_timeout} seconds. #{I18n.t('resource_update_timeout_error')}"
+      return raise MessagingError,
+                   "No message received in #{receive_timeout} seconds. #{I18n.t('resource_update_timeout_error')}"
     ensure
       connection.disconnect
     end
