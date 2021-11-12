@@ -9,12 +9,13 @@ class StompService
     )
   end
 
-  # Sends a message to Plastron and waits for a response
+  # Sends a message to the STOMP server and waits for a response
   #
   # Will wait up to "receive_timeout" (in seconds) for a response, which
   # defaults to 2 minutes.
   #
-  # Throws a Timeout::Error if the response timeout expires
+  # Raises a MessagingError if cannot connect to the STOMP server, a timeout
+  # occurs, or a nil STOMP message is received.
   def self.synchronous_message(destination, body, headers, receive_timeout = 120) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/LineLength
     destination_queue = STOMP_CONFIG['destinations'][destination.to_s]
     receive_queue = '/temp-queue/synchronous'
@@ -30,7 +31,6 @@ class StompService
 
     connection.subscribe(receive_queue)
     headers['reply-to'] = receive_queue
-    headers['PlastronJobId'] = "SYNCHRONOUS-#{SecureRandom.uuid}"
     connection.publish(destination_queue, body, headers)
 
     begin
@@ -38,7 +38,7 @@ class StompService
         stomp_message = connection.receive
         raise MessagingError, 'No message received' if stomp_message.nil?
 
-        return PlastronMessage.new(stomp_message)
+        return stomp_message
       end
     rescue Timeout::Error
       return raise MessagingError,

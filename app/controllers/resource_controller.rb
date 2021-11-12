@@ -50,7 +50,8 @@ class ResourceController < ApplicationController
 
       # Send STOMP message synchronously
       begin
-        return StompService.synchronous_message(:jobs_synchronous, body.to_json, update_headers(model))
+        stomp_message = StompService.synchronous_message(:jobs_synchronous, body.to_json, update_headers(model))
+        return PlastronMessage.new(stomp_message)
       rescue MessagingError => e
         return PlastronExceptionMessage.new(e.message)
       end
@@ -62,7 +63,8 @@ class ResourceController < ApplicationController
         'PlastronArg-on-behalf-of': current_user.cas_directory_id,
         'PlastronArg-no-transactions': 'True',
         'PlastronArg-validate': 'True',
-        'PlastronArg-model': model
+        'PlastronArg-model': model,
+        'PlastronJobId': "SYNCHRONOUS-#{SecureRandom.uuid}"
       }
     end
 

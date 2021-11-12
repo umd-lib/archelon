@@ -22,9 +22,8 @@ class ResourceControllerTest < ActionController::TestCase
   test 'update should complete when valid update processed' do
     resource_id = 'http://example.com/123'
     stomp_message = create_stomp_message_with_no_errors(resource_id)
-    plastron_message = PlastronMessage.new(stomp_message)
 
-    StompService.should_receive(:synchronous_message).and_return(plastron_message)
+    StompService.should_receive(:synchronous_message).and_return(stomp_message)
     ResourceService.should_receive(:resource_with_model).and_return({})
     post :update, params: { id: resource_id, insert: ["<plain_literal> <title> \"Lorem ipsum\"@en .\r\n"] }
 
@@ -36,8 +35,8 @@ class ResourceControllerTest < ActionController::TestCase
   test 'update should display validation errors from STOMP message' do
     resource_id = 'http://example.com/123'
     stomp_message = create_stomp_message_with_validation_error(resource_id)
-    plastron_message = PlastronMessage.new(stomp_message)
-    StompService.should_receive(:synchronous_message).and_return(plastron_message)
+
+    StompService.should_receive(:synchronous_message).and_return(stomp_message)
     ResourceService.should_receive(:resource_with_model).and_return({})
 
     post :update, params: { id: resource_id, insert: ["<plain_literal> <title> \"Lorem ipsum\"@en .\r\n"] }
@@ -48,8 +47,8 @@ class ResourceControllerTest < ActionController::TestCase
   test 'update should display other errors from STOMP message' do
     resource_id = 'http://example.com/123'
     stomp_message = create_stomp_message_with_other_error(resource_id)
-    plastron_message = PlastronMessage.new(stomp_message)
-    StompService.should_receive(:synchronous_message).and_return(plastron_message)
+
+    StompService.should_receive(:synchronous_message).and_return(stomp_message)
     ResourceService.should_receive(:resource_with_model).and_return({})
 
     post :update, params: { id: resource_id, insert: ["<plain_literal> <title> \"Lorem ipsum\"@en .\r\n"] }
