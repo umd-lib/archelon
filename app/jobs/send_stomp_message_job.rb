@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-class MessagingError < RuntimeError
-end
-
 # Submit a message to the external message queue via STOMP
 class SendStompMessageJob < ApplicationJob
   attr_reader :request
