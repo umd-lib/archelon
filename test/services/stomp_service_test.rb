@@ -10,8 +10,8 @@ class StompServiceTest < Minitest::Test
     @receive_timeout = 5
 
     # Default mock setup
-    @mock_stomp_connection = instance_double("Stomp::Connection",
-     subscribe: nil, receive: nil, publish: nil, disconnect: nil
+    @mock_stomp_connection = instance_double(
+      'Stomp::Connection', subscribe: nil, receive: nil, publish: nil, disconnect: nil
     )
     allow(Stomp::Connection).to receive(:new).and_return(@mock_stomp_connection)
   end
