@@ -10,9 +10,10 @@ class StompServiceTest < Minitest::Test
     @receive_timeout = 5
 
     # Default mock setup
-    Stomp::Connection.any_instance.stub(:receive).and_return(nil)
-    Stomp::Connection.any_instance.stub(:publish).and_return(nil)
-    Stomp::Connection.any_instance.stub(:subscribe).and_return(nil)
+    @mock_stomp_connection = instance_double("Stomp::Connection",
+     subscribe: nil, receive: nil, publish: nil, disconnect: nil
+    )
+    allow(Stomp::Connection).to receive(:new).and_return(@mock_stomp_connection)
   end
 
   def test_stomp_service_raises_error_when_max_reconnect_attempts_fail
@@ -26,8 +27,6 @@ class StompServiceTest < Minitest::Test
   end
 
   def test_stomp_service_raises_error_when_a_nil_message_is_received
-    Stomp::Connection.any_instance.stub(:receive).and_return(nil)
-
     exception = assert_raises(MessagingError) do
       StompService.synchronous_message(@destination, @body, @headers, @receive_timeout)
     end
@@ -36,7 +35,7 @@ class StompServiceTest < Minitest::Test
   end
 
   def test_stomp_service_raises_error_when_timeout_occurs
-    Stomp::Connection.any_instance.stub(:receive).and_raise(Timeout::Error)
+    allow(@mock_stomp_connection).to receive(:receive).and_raise(Timeout::Error)
 
     exception = assert_raises(MessagingError) do
       StompService.synchronous_message(@destination, @body, @headers, @receive_timeout)
