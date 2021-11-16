@@ -9,32 +9,44 @@ class StompService
     )
   end
 
-  # Sends a message to Plastron and waits for a response
+  # Sends a message to the STOMP server and waits for a response.
   #
   # Will wait up to "receive_timeout" (in seconds) for a response, which
   # defaults to 2 minutes.
   #
-  # Throws a Timeout::Error if the response timeout expires
+  # On success, will return a Stomp::Message
+  #
+  # Raises a MessagingError if cannot connect to the STOMP server, a timeout
+  # occurs, or a nil STOMP message is received.
   def self.synchronous_message(destination, body, headers, receive_timeout = 120) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/LineLength
     destination_queue = STOMP_CONFIG['destinations'][destination.to_s]
     receive_queue = '/temp-queue/synchronous'
 
     Rails.logger.info("Publishing message synchronously to #{destination_queue}")
 
-    connection = create_connection
+    begin
+      connection = create_connection
+    rescue Stomp::Error::MaxReconnectAttempts
+      Rails.logger.error('Unable to connect to STOMP server')
+      raise MessagingError, 'Unable to connect to STOMP server.'
+    end
+
     connection.subscribe(receive_queue)
     headers['reply-to'] = receive_queue
-    headers['PlastronJobId'] = "SYNCHRONOUS-#{SecureRandom.uuid}"
     connection.publish(destination_queue, body, headers)
 
-    Timeout.timeout(receive_timeout) do
-      msg = connection.receive
-      return msg
+    begin
+      Timeout.timeout(receive_timeout) do
+        stomp_message = connection.receive
+        raise MessagingError, 'No message received' if stomp_message.nil?
+
+        return stomp_message
+      end
+    rescue Timeout::Error
+      return raise MessagingError,
+                   "No message received in #{receive_timeout} seconds. #{I18n.t('resource_update_timeout_error')}"
+    ensure
+      connection.disconnect
     end
-  rescue Stomp::Error::MaxReconnectAttempts
-    Rails.logger.error('Unable to connect to STOMP server')
-    'Unable to connect to STOMP server.'
-  ensure
-    connection&.disconnect
   end
 end
