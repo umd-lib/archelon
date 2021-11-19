@@ -34,10 +34,13 @@ Instructions for loading sample data is available in the
 
 ## Import Workflow
 
-The following diagram (derived from [import_workflow.txt](import_workflow.txt)
-using [PlantUML](https://plantuml.com/) depicts the import workflow in detail:
+![Import Workflow](img/ImportWorkflow.svg)
 
-![Import Workflow](import_workflow.png)
+Source: [ImportWorkflow.puml](ImportWorkflow.puml)
+
+![Message Flow](img/MessageFlow.svg)
+
+Source: [MessageFlow.puml](MessageFlow.puml)
 
 [archelon-data-import-docker]: https://github.com/umd-lib/umd-fcrepo/blob/main/docs/archelon-data-import-docker.md
 [archelon-data-import-local]: https://github.com/umd-lib/umd-fcrepo/blob/main/docs/archelon-data-import-local.md
