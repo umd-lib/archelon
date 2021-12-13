@@ -5,6 +5,7 @@ class PlastronService
   # Contacts the Plastron /jobs/<path:job_id> endpoint and returns ImportJobInfo
   def self.retrieve_import_job_info(import_job_id)
     job_url = construct_import_job_url(import_job_id)
+    Rails.logger.info("Requesting #{job_url}")
     json_rest_result = query_server(job_url)
     ImportJobInfo.new(json_rest_result)
   rescue StandardError => e
