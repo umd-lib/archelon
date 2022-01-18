@@ -200,7 +200,7 @@ GEM
       connection_pool (~> 2.2)
     net-ldap (0.16.2)
     nio4r (2.5.8)
-    nokogiri (1.12.1)
+    nokogiri (1.12.5)
       mini_portile2 (~> 2.6.1)
       racc (~> 1.4)
     ntlm-http (0.1.1)
