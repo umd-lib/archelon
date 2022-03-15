@@ -270,7 +270,7 @@ GEM
     rdf-turtle (3.1.0)
       ebnf (~> 1.2)
       rdf (~> 3.1)
-    rdoc (6.2.1)
+    rdoc (6.3.1)
     react-rails (2.6.1)
       babel-transpiler (>= 0.7.0)
       connection_pool
