@@ -73,7 +73,7 @@ class Vocabulary < ApplicationRecord
     end
   end
 
-  def publish_rdf
+  def publish_rdf # rubocop:disable Metrics/AbcSize
     FileUtils.makedirs vocab_dir
     FORMAT_EXTENSIONS.each do |format, extension|
       path = Rails.root.join(vocab_dir, "#{identifier}.#{extension}")
