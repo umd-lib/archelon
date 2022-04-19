@@ -84,6 +84,8 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
+
+  gem "boathook", git: 'https://github.com/umd-lib/boathook', branch: 'main'
 end
 
 group :test do
@@ -133,4 +135,3 @@ gem 'react-rails'
 gem 'delayed_job_active_record', '~> 4.1'
 gem 'faraday', '~> 1.0'
 gem 'delayed_cron_job', '~> 0.8'
-

@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/umd-lib/boathook
+  revision: 513db1964fe2ddd854d4c249dd5488549f079880
+  branch: main
+  specs:
+    boathook (1.0.0.pre.dev)
+      mattock (~> 0.5.2)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -183,6 +191,9 @@ GEM
     mail (2.7.1)
       mini_mime (>= 0.1.1)
     marcel (1.0.2)
+    mattock (0.5.2)
+      tilt (> 0)
+      valise (>= 0.9.1)
     mechanize (2.7.7)
       domain_name (~> 0.5, >= 0.5.1)
       http-cookie (~> 1.0)
@@ -385,6 +396,7 @@ GEM
       unf_ext
     unf_ext (0.0.7.7)
     unicode-display_width (1.6.1)
+    valise (1.2.1)
     web-console (3.7.0)
       actionview (>= 5.0)
       activemodel (>= 5.0)
@@ -417,6 +429,7 @@ DEPENDENCIES
   action-cable-testing
   addressable (~> 2.8)
   blacklight (~> 6.0)
+  boathook!
   bootsnap (>= 1.1.0)
   byebug
   cancancan
