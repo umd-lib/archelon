@@ -1,15 +1,16 @@
-<td>
-  <span class="export_job_status_<%= export_job.state %>" <% unless export_job.done? %> colspan="3"<% end %>>
-    <%= t("activerecord.attributes.export_job.status.#{export_job.state}") %>
-    <% if export_job.in_progress? %>(<%= export_job.progress %>%)<% end %>
-  </span>
-  <% if export_job.stalled? %>(may be stalled)<% end %>
-</td>
-<td>
-  <% if (export_job.export_complete? || export_job.partial_export?) && File.exists?(export_job.path) %>
-    <%= link_to download_export_jobs_path(export_job), class: 'btn btn-sm btn-success', data: { turbolinks: false } do %>
-      <i class="glyphicon glyphicon-download-alt"></i>&nbsp;Download
-      &nbsp;<span class="badge"><%= number_to_human_size File.size(export_job.path) %></span>
+<td class="export-job-status" data-job-id="<%= export_job.id %>" data-state="<%= export_job.state %>">
+  <div class="export-job-state">
+    <span class="export_job_status_<%= export_job.state %>">
+      <%= export_job.status_text %>
+    </span>
+    <% if export_job.stalled? %>(may be stalled)<% end %>
+  </div>
+  <div class="export-job-download">
+    <% if export_job.downloadable? %>
+      <%= link_to download_export_jobs_path(export_job), class: 'btn btn-sm btn-success' do %>
+        <i class="glyphicon glyphicon-download-alt"></i>&nbsp;Download
+        &nbsp;<span class="badge"><%= number_to_human_size File.size(export_job.path) %></span>
+      <% end %>
     <% end %>
-  <% end %>
+  </div>
 </td>

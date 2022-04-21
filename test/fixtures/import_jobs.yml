@@ -5,12 +5,14 @@ one:
   timestamp: 2019-08-12 15:45:29
   name: MyString
   collection: http://example.com/foo/bar
+  state: validate_pending
 
 two:
   cas_user: test_user
   timestamp: 2020-04-02 15:45:29
   name: MyString
   collection: http://example.com/quuz/bax
+  state: validate_pending
 
 test_admin_import_job:
   cas_user: test_admin

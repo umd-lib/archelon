@@ -1,5 +1,5 @@
 # STOMP server and destinations
-STOMP_CONFIG = Archelon::Application.config_for :stomp
+STOMP_CONFIG = Archelon::Application.config_for(:stomp).with_indifferent_access
 
 # Convenient shorthand for passing host and port to Stomp::Client and Stomp::Connection
 STOMP_SERVER = { host: STOMP_CONFIG['host'], port: STOMP_CONFIG['port'] }.freeze

@@ -64,7 +64,7 @@ class ImportJobsControllerTest < ActionController::TestCase
   end
 
   test 'should create import_job' do
-    mock_stomp_service(connected: true)
+    mock_stomp_connection
 
     name = "#{@cas_user.cas_directory_id}-#{Time.now.iso8601}"
     assert_difference('ImportJob.count') do
@@ -135,46 +135,6 @@ class ImportJobsControllerTest < ActionController::TestCase
     assert_template :edit
   end
 
-  test 'create should report error when STOMP client is not connected' do
-    mock_stomp_service(connected: false)
-    expect(StompService).to receive(:publish_message)
-    assert_not StompService.publish_message(nil, nil, nil)
-
-    post :create, params: {
-      import_job: { name: name, collection: 'http://example.com/foo/baz',
-                    metadata_file: fixture_file_upload('files/valid_import.csv') }
-    }
-
-    import_job = assigns(:import_job)
-    assert_equal(:validate_error, import_job.state.to_sym)
-  end
-
-  test 'update should report error when STOMP client is not connected' do
-    mock_stomp_service(connected: false)
-    expect(StompService).to receive(:publish_message)
-    assert_not StompService.publish_message(nil, nil, nil)
-
-    import_job = ImportJob.first
-    patch :update, params: { id: import_job.id,
-                             import_job: { name: import_job.name, metadata_file: fixture_file_upload('files/valid_import.csv') } }
-    result = assigns(:import_job)
-    assert_equal(:validate_error, result.state.to_sym)
-  end
-
-  test 'import should report error when STOMP client is not connected' do
-    mock_stomp_service(connected: false)
-    expect(StompService).to receive(:publish_message)
-    assert_not StompService.publish_message(nil, nil, nil)
-
-    import_job = ImportJob.first
-    import_job.state = :validate_success
-    import_job.metadata_file = fixture_file_upload('files/valid_import.csv')
-    import_job.save!
-    patch :import, params: { id: import_job.id }
-    result = assigns(:import_job)
-    assert_equal(:import_error, result.state.to_sym)
-  end
-
   test 'should not be able to edit a job that is in "import" stage' do
     import_job = ImportJob.first
     import_job.state = :import_complete
@@ -239,14 +199,14 @@ class ImportJobsControllerTest < ActionController::TestCase
         expected_text: I18n.t('activerecord.attributes.import_job.status.import_error') },
 
       # In Progress (with non-zero percentage)
-      { state: :in_progress, progress: 20,
-        expected_text: "#{I18n.t('activerecord.attributes.import_job.status.in_progress')} (20%)" },
+      { state: :import_in_progress, progress: 20,
+        expected_text: "#{I18n.t('activerecord.attributes.import_job.status.import_in_progress')} (20%)" },
 
       # In Progress (zero percentage)
-      { state: :in_progress, progress: 0,
-        expected_text: I18n.t('activerecord.attributes.import_job.status.in_progress') },
-      { state: :in_progress, progress: 0,
-        expected_text: I18n.t('activerecord.attributes.import_job.status.in_progress') }
+      { state: :import_in_progress, progress: 0,
+        expected_text: I18n.t('activerecord.attributes.import_job.status.import_in_progress') },
+      { state: :import_in_progress, progress: 0,
+        expected_text: I18n.t('activerecord.attributes.import_job.status.import_in_progress') }
     ]
 
     tests.each do |test|

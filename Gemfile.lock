@@ -94,6 +94,14 @@ GEM
     concurrent-ruby (1.1.9)
     connection_pool (2.2.3)
     crass (1.0.6)
+    delayed_cron_job (0.8.0)
+      delayed_job (>= 4.1)
+      fugit (>= 1.5)
+    delayed_job (4.1.9)
+      activesupport (>= 3.0, < 6.2)
+    delayed_job_active_record (4.1.6)
+      activerecord (>= 3.0, < 6.2)
+      delayed_job (>= 3.0, < 5)
     deprecation (1.0.0)
       activesupport
     diff-lcs (1.3)
@@ -108,12 +116,17 @@ GEM
       rdf (~> 3.1)
       sxp (~> 1.1)
     erubi (1.10.0)
+    et-orbi (1.2.6)
+      tzinfo
     execjs (2.7.0)
     faker (1.9.6)
       i18n (>= 0.7)
     faraday (1.0.1)
       multipart-post (>= 1.2, < 3)
     ffi (1.12.2)
+    fugit (1.5.2)
+      et-orbi (~> 1.1, >= 1.1.8)
+      raabro (~> 1.4)
     globalid (1.0.0)
       activesupport (>= 5.0)
     hamster (3.0.0)
@@ -220,6 +233,7 @@ GEM
     public_suffix (4.0.6)
     puma (4.3.11)
       nio4r (~> 2.0)
+    raabro (1.4.0)
     racc (1.6.0)
     rack (2.2.3)
     rack-proxy (0.7.0)
@@ -279,7 +293,6 @@ GEM
       tilt
     ref (2.0.0)
     regexp_parser (1.7.0)
-    retriable (3.1.2)
     rsolr (2.3.0)
       builder (>= 2.1.2)
       faraday (>= 0.9.0)
@@ -336,11 +349,6 @@ GEM
     simplecov-html (0.12.2)
     simplecov-rcov (0.2.3)
       simplecov (>= 0.4.1)
-    solr_wrapper (2.2.0)
-      faraday
-      retriable
-      ruby-progressbar
-      rubyzip
     sparql-client (3.1.0)
       net-http-persistent (~> 3.1)
       rdf (~> 3.1)
@@ -365,9 +373,6 @@ GEM
     thor (1.2.1)
     thread_safe (0.3.6)
     tilt (2.0.10)
-    turbolinks (5.2.1)
-      turbolinks-source (~> 5.2)
-    turbolinks-source (5.2.0)
     twitter-typeahead-rails (0.11.1.pre.corejavascript)
       actionpack (>= 3.1)
       jquery-rails
@@ -418,8 +423,11 @@ DEPENDENCIES
   capybara (>= 2.15)
   clipboard-rails (~> 1.7.1)
   coffee-rails (~> 4.2)
+  delayed_cron_job (~> 0.8)
+  delayed_job_active_record (~> 4.1)
   dotenv-rails
   faker (~> 1.8)
+  faraday (~> 1.0)
   http (~> 2.2.2)
   jbuilder
   jquery-rails
@@ -430,7 +438,7 @@ DEPENDENCIES
   net-ldap (~> 0.16.1)
   omniauth-cas (~> 1.1.1)
   pg
-  puma (>= 3.12.4)
+  puma (>= 4.3.11)
   rails (~> 5.2.6.2)
   rails-controller-testing
   ransack
@@ -447,14 +455,12 @@ DEPENDENCIES
   selenium-webdriver
   simplecov
   simplecov-rcov
-  solr_wrapper (>= 0.3)
   sparql-client (~> 3.0)
   spring
   spring-watcher-listen (~> 2.0.0)
   sqlite3
   stomp
   therubyracer
-  turbolinks (~> 5)
   tzinfo-data
   uglifier (>= 1.3.0)
   web-console (>= 3.3.0)
