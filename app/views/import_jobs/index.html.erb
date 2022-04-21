@@ -26,21 +26,20 @@
         <th># of Binaries</th>
         <th><%= t('activerecord.attributes.import_job.model') %></th>
         <th><%= t('activerecord.attributes.import_job.status.label') %></th>
-        <th></th>
       </tr>
     </thead>
 
     <tbody>
       <% @import_jobs.each do |job| %>
-        <tr>
+        <tr class="import-job" data-import-job-id="<%= job.id %>" data-subscribe="<%= not job.import_complete? %>">
           <td><%= link_to job.id, import_job_path(job) %></td>
           <td><%= job.name %></td>
           <td><%= job.cas_user&.name%></td>
           <td><%= job.timestamp %></td>
           <td><%= job.metadata_file.filename if job.metadata_file.attached? %></td>
           <td><%= job.binaries? ? t('activerecord.attributes.import_job.binaries.true') : t('activerecord.attributes.import_job.binaries.false') %></td>
-          <td><%= job.item_count %></td>
-          <td><%= job.binaries_count if job.binaries? %></td>
+          <td class="item-count"><%= job.item_count %></td>
+          <td class="binaries-count"><%= job.binaries_count if job.binaries? %></td>
           <td><%= job.model %></td>
           <%= render partial: 'import_job_status', locals: { import_job: job } %>
         </tr>

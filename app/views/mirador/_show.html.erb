@@ -1,6 +1,6 @@
 <% if mirador_displayable?(document) %>
   <div class="skip-link">
-    <a href="#metadata" data-turbolinks="false">Go to Metadata</a>
+    <a href="#metadata">Go to Metadata</a>
     <% if @show_edit_metadata %>
       &nbsp;
       <a href="<%= resource_edit_url(id: @document.id) %>">Edit Metadata</a>

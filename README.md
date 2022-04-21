@@ -1,64 +1,104 @@
 # archelon
 
-Archelon is a Rails-based administrative interface for the Fedora 4 repository. It uses
-the Blacklight gem for providing the search functionality.
+Archelon is the Web front-end for a [Fedora 4][fedora] repository-based set of
+applications known collectively as "umd-fcrepo". The umd-fcrepo system consists
+of the following parts:
+
+* [umd-fcrepo-docker][umd-fcrepo-docker] - a set of Docker images for running
+  the Fedora repository platform
+* [Plastron][plastron] - a utility application for performing batch operations
+   on the Fedora repository
+* Archelon - a web GUI providing an administrative interface for
+  Fedora
+
+While Archelon is technically able to run without access to any other
+application, its functionality is extremely limited without Plastron or
+the applications provided by umd-fcrepo-docker.
+
+## Archelon Components
+
+Archelon consists of the following components when run in a production
+environment:
+
+* A Rails application providing an administrative interface to the Fedora
+repository. It uses the [Blacklight][blacklight] gem for providing Solr
+search functionality.
+* A STOMP listener application for communicating with Plastron using the
+[STOMP messaging protocol][stomp] via ActiveMQ
+* An SFTP server, used to upload files for inclusion in import jobs
+
+## Interactions with other umd-fcrepo components
+
+Archelon interacts directly with the following umd-fcrepo components:
+
+* [ActiveMQ] - Archelon communicates to Plastron using STOMP messaging mediated by
+ActiveMQ queues.
+* [Solr] - Archelon communicates directly with the Solr instance in the
+"umd-fcrepo-docker" stack for metadata search and retrieval.
+* [Plastron] - Archelon uses the HTTP REST interface provided by Plastron to
+retrieve information about export and import jobs (some export/import status
+information is also provided via STOMP messaging).
 
 ## Quick Start
 
-Requires:
-
-* Ruby 2.6.3
-* Bundler
-* Yarn
-
-See [Installing Prerequisites](docs/Prerequisites.md) for more detailed
-information on these prerequisites.
+See [Installing Prerequisites](docs/Prerequisites.md) for information on
+prerequisites on a local workstation.
 
 ### Setup
 
+There are several ways to setup the umd-fcrepo system -- see
+[umd-lib/umd-fcrepo/README.md][umd-fcrepo]
+for information about setting up a local development environment for Archelon.
+
+### Archelon Setup
+
+The following are the basic steps to run the Archelon Rails application.
+Archelon requires other components of the umd-fcrepo system to enable most
+functionality.
+
 1. Checkout the code and install the dependencies:
-
-  ```
-  git clone git@github.com:umd-lib/archelon.git
-  cd archelon
-  yarn
-  bundle install
-  ```
-
-2. Set up the database:
-
-  ```
-  rails db:migrate
-  ```
-
-  **Note:** Sample "Download URL" data can be added by running
-  `rails db:reset_with_sample_data`
-
-3. Create a `.env` file from the `env_example` file and fill in appropriate
+    ```bash
+    git clone git@github.com:umd-lib/archelon.git
+    cd archelon
+    yarn
+    bundle install
+    ```
+2. Create a `.env` file from the `env_example` file and fill in appropriate
    values for the environment variables.
+3. Set up the database:
+    ```bash
+    rails db:migrate
+    ```
+4. *(Optional)* Load sample "Download URL" data:
+    ```bash
+    rails db:reset_with_sample_data
+    ```
+5. Start the STOMP listener:
+    ```bash
+   rails stomp:listen
+   ```
+6. Start the Delayed Jobs worker:
+    ```bash
+   rails jobs:work
+    ```
+7. Run the web application:
+    ```bash
+    rails server
+    ```
 
-4. Run the web application:
-
-  ```
-  rails server
-  ```
-
-If you are going to run Archelon against a Solr or Fedora server that uses
-self-signed SSL certificates for HTTPS, see the section [SSL setup](#ssl-setup).
-
-See [archelon-vagrant] for running Archelon application in a Vagrant
-environment.
-
-## Archelon Development Environment Setup
-
-To set up Archelon for development see
-[docs/ArchelonDevelopmentEnvironment.md](docs/ArchelonDevelopmentEnvironment.md).
+Archelon will be available at <http://localhost:3000/>
 
 ## Logging
 
 By default, the development environment for Archelon will log at the DEBUG level,
 while all other environments will log at the INFO level. To change this, set the
 `RAILS_LOG_LEVEL` environment variable in your `.env` file.
+
+In the development environment, the log will be sent to standard output and
+the `log/development.log` file, as is standard in Rails application.
+
+In production, set the `RAILS_LOG_TO_STDOUT` environment variable to `true` to
+send the log to standard out.
 
 ## Access Restriction
 
@@ -72,73 +112,10 @@ updates).
 The "ping" endpoint is unrestricted, and is suitable for monitoring the
 health of the application.
 
-The "public keys" endpoint returns a JSON list of the public keys allowed to
-"stfp" to the Archelon server. While these are _public_ keys, and hence not
+The "public keys" endpoint returns a JSON list of the public keys allowed to SFTP
+to the Archelon server. While these are _public_ keys, and hence not
 technically a security issue, current SSDR policy is to limit access to this
 endpoint to "localhost", or nodes in the Kubernetes cluster.
-
-**Note:** The access restrictions on the "public keys" endpoint are currently
-implemented in the Apache configuration in [archelon-env][archelon-env],
-_not_ in the application itself.
-
-## Rake Tasks
-
-### Importing Controlled Vocabularies
-
-Archelon comes with a rake task, [vocab:import](lib/tasks/vocab.rake), to do a
-bulk load of vocabulary terms from a CSV file. Run:
-
-```
-rails vocab:import[filename.csv,vocabulary]
-```
-
-where `filename.csv` is the path to a CSV file containing the vocabulary terms
-to be imported, and `vocabulary` is the string name of the vocabulary to add
-those terms to. This vocabulary will be created if it doesn't already exist.
-
-The CSV file must have the following three columns:
-
-* label
-* identifier
-* uri
-
-Other columns are ignored.
-
-The import task currently only supports creating Individuals (a.k.a. Terms),
-and not Types (a.k.a. Classes).
-
-### Importing User Public Keys
-
-Two Rake tasks are provided for importing public keys for a user:
-
-* ```rails user:add_public_key[cas_directory_id,public_key]```
-
-    Adds the given public key for the user with the given CAS directory id.
-
-    A user with the given CAS directory id must already exist.
-
-    Note: Because of the way SSH public keys are expressed, the command
-    should be enclosed in quotes, i.e.:
-
-    ```
-    rails "user:add_public_key[jsmith,ssh-rsa AAAAB3NzaC1yc2E...]"
-    ```
-
-* ```rails user:add_public_key_file[cas_directory_id,public_key_file]```
-
-    Adds the public key from the given file for the user with the given CAS
-    directory id.
-
-    A user with the given CAS directory id must already exist.
-
-    Relative file paths are allowed. If the file path or file name contains
-    a space, the entire command should be enclosed in quotes.
-
-    Example:
-
-    ```
-    rails user:add_public_key_file[jsmith,/home/jsmith/.ssh/id_rsa.pub]
-    ```
 
 ## Docker
 
@@ -146,87 +123,29 @@ Archelon comes with a [Dockerfile](Dockerfile) that can be used to build a
 docker image:
 
 ```
-docker build -t archelon .
+docker build -t docker.lib.umd.edu/archelon -f Dockerfile .
 ```
 
-To run an instance of this image against the dev fcrepo, Solr, and IIIF servers,
-and populate the database with seed data:
+See [umd-lib/umd-fcrepo/README.md][umd-fcrepo] for information about setting up
+a local development environment for Archelon using Docker.
+
+There are also two [Rake tasks](docs/RakeTasks.md#dockerbuild-dockerpush),
+`docker:build` and `docker:push`, for use when building images to share to the
+docker.lib.umd.edu hub.
+
+When running locally in Docker, the Archelon database can be accessed using:
 
 ```
-id=$(docker run -d --rm -p 3000:3000 \
-    -e SOLR_URL=https://solrdev.lib.umd.edu/solr/fedora4 \
-    -e FCREPO_BASE_URL=https://fcrepodev.lib.umd.edu/fcrepo/rest/ \
-    -e IIIF_BASE_URL=https://iiifdev.lib.umd.edu/ \
-    -e MIRADOR_STATIC_VERSION=1.2.0 \
-    -e RETRIEVE_BASE_URL=http://localhost:3000/retrieve/ \
-    -e LDAP_OVERRIDE=admin \
-    archelon)
+# Archelon database backing the Archelon Rails app
+psql -U archelon -h localhost -p 5434 archelon
 ```
 
-To watch the logs:
+There is also a "Dockerfile.sftp" file, which sets up an SFTP server enabling
+files to be uploaded to Archelon for inclusion in import jobs.
 
-```
-docker logs -f "$id"
-```
+## Rake Tasks
 
-To stop the running docker container:
-
-```
-docker kill "$id"
-```
-
-See the "LDAP Override" section below for more information about the
-"LDAP_OVERRIDE" environment variable.
-
-## Embedded Solr
-
-### Initial Setup
-
-Verify that the `.solr_wrapper.yml` file is up to date. The `collection > dir`
-property in the file needs to point to a Solr core directory containing the
-configuration files. In addition, the `.env` file must have its `SOLR_URL` set
-to `http://localhost:8983/solr/fedora4`.
-
-The [fedora4-core](https://bitbucket.org/umd-lib/fedora4-core) repository
-includes a script to generate solr package that can be used here.
-
-Create the Solr core as per the configuration in `.solr_wrapper.yml`:
-
-```
-bundle exec rails solr:create_collection
-```
-
-Start the solr server:
-
-```
-bundle exec rails solr:start_server
-```
-
-Load sample data included in the solr package:
-
-```
-bundle exec rails solr:rebuild_index seed_file=/path/to/sample_solr_data.yml
-```
-
-### Usage
-
-Start the solr server:
-
-```
-bundle exec rails solr:start_server
-```
-
-Stop the solr server:
-
-```
-bundle exec rails solr:stop
-```
-
-Clean and reinstall setup:
-
-```
-bundle exec rails solr:clean
-```
+See [Rake Tasks](docs/RakeTasks.md)
 
 ## File Retrieval configuration
 
@@ -234,9 +153,9 @@ Archelon has the ability to create one-time use URLs, which allow a Fedora
 binary file to be downloaded. The random token used for the URLs, and other
 information, is stored in the DownloadUrl model.
 
-It is assumed that the URL that patrons use to retrieve the files will not
-reference the Archelon server directly. Instead it is anticipated that a new IP
-and Apache virtual host, which proxies back to Archelon, will be used.
+In production, the URL that patrons use to retrieve the files does not reference
+the Archelon server directly, relying instead on a virtual host, which proxies
+back to Archelon.
 
 The base URL of the virtual host (i.e., the entire URL except for the random
 token, but including a trailing slash) should be set in the `RETRIEVE_BASE_URL`
@@ -258,76 +177,20 @@ server.
 
 Rails disables concurrent operation when using the development environment.
 
-Edit the "config/development.rb" file, and add the following line to
-application setting:
+Edit the "config/development.rb" file, and add the following line inside
+the `Rails.application.configure` block:
 
-  ```
-  config.allow_concurrency=true
-  ```
-
-## SSL setup
-
-For development, Archelon is typically run in conjunction with the servers
-provided by the [fcrepo-vagrant] multi-machine Vagrant setup. This setup uses
-self-signed SSL certificates to enable HTTPS.
-
-Rails needs to be able to verify these self-signed certificates. If it cannot,
-"OpenSSL::SSL::SSLError" with an explanation "certificate verify failed" will be
-displayed in the browser.
-
-In order to avoid this error:
-
-1. Create PEM files for both the "solrlocal" and "fcrepolocal" machines, by
-   running the following commands:
-
-  **Note:** The "solrlocal" and "fcrepolocal" servers must be running.
-
-  ```
-  echo -n \
-      | openssl s_client -connect solrlocal:8984 -tls1 \
-      | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' \
-      > solrlocal.pem
-  ```
-
-  and
-
-  ```
-  echo -n \
-      | openssl s_client -connect fcrepolocal:443 -tls1 \
-      | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' \
-      > fcrepolocal.pem
 ```
-
-  This will create two files "solrlocal.pem" and "fcrepolocal.pem" in the
-  current directory, which contain SSL certificates.
-
-2. Combine the two "pem" files from the previous step in to a single "pem" file:
-
-  ```
-  cat solrlocal.pem fcrepolocal.pem \
-      > solrlocal_and_fcrepolocal.pem
-  ```
-
-3. To use the `solrlocal_and_fcrepolocal.pem` file with Rails, set the
-   `SSL_CERT_FILE` environment variable:
-
-  ```
-  export SSL_CERT_FILE=/path/to/solrlocal_and_fcrepolocal.pem
-  rails server
-
-  # or
-
-  SSL_CERT_FILE=/path/to/solrlocal_and_fcrepolocal.pem rails server
-  ```
+config.allow_concurrency=true
+```
 
 ## Batch Export
 
-The batch export functionality relies on a running [Plastron]
-instance.
+The batch export functionality relies on a running [Plastron] instance.
 
-## Metadata Import
+## Batch Import
 
-See [docs/MetadataImport](docs/MetadataImport.md).
+See [BatchImport](docs/BatchImport.md).
 
 ## LDAP Override
 
@@ -359,7 +222,39 @@ does not use OAuth it is not vulnerable to CVE-2015-9284.
 The Rails "Action Cable" functionality is used to provide dynamic updates to
 the GUI.
 
-See [docs/ActionCable.md](docs/ActionCable.md) for more information.
+See [ActionCable](docs/ActionCable.md) for more information.
+
+## ActiveJob and Delayed::Job
+
+Archelon is configured to use the [Delayed::Job][delayed_job] queue adapter, via
+the [delayed_job_active_record][delayed_job_active_record] gem to store jobs
+in the database.
+
+
+## Cron Jobs
+
+The [delayed_cron_job][delayed_cron_job] gem is used to schedule jobs to run on
+a cron-like schedule.
+
+The "CronJob" class [app/cron_jobs/cron_job.rb](app/cron_jobs/cron_job.rb)
+should be used as the superclass, and all implementations should be placed in
+the "app/cron_jobs" directory.
+
+CronJob implementations in the "app/cron_jobs" directory are automatically
+scheduled when the "db:migrate" Rails task is run, via the "db:schedule_jobs"
+Rake task (see [lib/tasks/jobs.rake](lib/tasks/jobs.rake)).
+
+### Changing the schedule for a CronJob
+
+The "Changing the schedule" section of the "delayed_cron_job" README.md file
+indicates that when the "cron_expression" of a CronJob is changed, any
+previously scheduled instances will need to be manually removed.
+
+In this implementation, the "db:schedule_jobs" task removes existing CronJob
+implementations from the database before adding them back in. Therefore, it
+should *not* be necessary to manually delete existing CronJobs from the database
+after modifying the "cron_expression" for a CronJob (as long as
+"db:schedule_jobs" or "db:migrate" is run after the modification).
 
 ## React Components
 
@@ -393,10 +288,17 @@ for information about writing documentation for the React components.
 See the [LICENSE](LICENSE.md) file for license rights and limitations
 (Apache 2.0).
 
-[archelon-env]: https://bitbucket.org/umd-lib/archelon-env
-[archelon-vagrant]: https://github.com/umd-lib/archelon-vagrant
+[ActiveMQ]: https://github.com/umd-lib/umd-fcrepo-messaging
+[blacklight]: https://github.com/projectblacklight/blacklight
 [cve-2015-9284]: https://github.com/omniauth/omniauth/wiki/Resolving-CVE-2015-9284
-[fcrepo-vagrant]: https://github.com/umd-lib/fcrepo-vagrant
+[delayed_cron_job]: https://github.com/codez/delayed_cron_job
+[delayed_job]: https://github.com/collectiveidea/delayed_job
+[delayed_job_active_record]: https://github.com/collectiveidea/delayed_job_active_record
+[fedora]: https://duraspace.org/fedora/
 [plastron]: https://github.com/umd-lib/plastron
 [react-styleguidist]: https://react-styleguidist.js.org/
 [react-styleguidist-documenting]: https://react-styleguidist.js.org/docs/documenting
+[Solr]: https://github.com/umd-lib/umd-fcrepo-solr
+[stomp]: https://stomp.github.io/
+[umd-fcrepo]: https://github.com/umd-lib/umd-fcrepo
+[umd-fcrepo-docker]: https://github.com/umd-lib/umd-fcrepo-docker

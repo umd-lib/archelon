@@ -8,6 +8,7 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
   before_action :selected_items?, only: %i[new create review]
   before_action :selected_items_changed?, only: :create
   skip_before_action :authenticate, only: %i[status_update]
+  skip_before_action :verify_authenticity_token, only: :status_update
 
   def index
     @jobs =
@@ -47,19 +48,14 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     end
   end
 
-  def create # rubocop:disable Metrics/MethodLength
+  def create
     @job = create_job(export_job_params)
     render :job_submission_not_allowed && return unless @job.job_submission_allowed?
+    @job.uris = bookmarks.map(&:document_id).join("\n")
 
     return unless @job.save
 
-    begin
-      submit_job(bookmarks.map(&:document_id))
-    rescue Stomp::Error::NoCurrentConnection
-      @job.plastron_status = :plastron_status_error
-      @job.save
-      flash[:error] = I18n.t(:active_mq_is_down)
-    end
+    submit_job
     redirect_to action: 'index', status: :see_other
   end
 
@@ -69,10 +65,12 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     not_found
   end
 
-  # GET /export_jobs/1/status_update
+  # POST /export_jobs/1/status_update
   def status_update
-    # Triggers export job notification to channel
-    ExportJobRelayJob.perform_later(@job)
+    # Triggers export job notification to channel;
+    # it is important to use perform_now so that
+    # ActionCable receives timely updates
+    ExportJobStatusUpdatedJob.perform_now(@job)
     render plain: '', status: :no_content
   end
 
@@ -124,35 +122,16 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
         job.timestamp = Time.zone.now
         job.cas_user = current_cas_user
         job.progress = 0
-        job.plastron_status = :plastron_status_pending
+        job.state = :pending
       end
     end
 
-    def message_headers(job) # rubocop:disable Metrics/MethodLength
-      {
-        PlastronCommand: 'export',
-        PlastronJobId: export_job_url(job),
-        'PlastronArg-output-dest': File.join(EXPORT_CONFIG[:base_destination], job.filename),
-        'PlastronArg-on-behalf-of': job.cas_user.cas_directory_id,
-        'PlastronArg-format': job.format,
-        'PlastronArg-timestamp': job.timestamp,
-        'PlastronArg-export-binaries': job.export_binaries.to_s,
-        persistent: 'true'
-      }.tap do |headers|
-        headers['PlastronArg-binary-types'] = job.selected_mime_types.join(',') if job.export_binaries
-      end
-    end
-
-    def submit_job(uris)
-      body = uris.join("\n")
-      headers = message_headers(@job)
-      if StompService.publish_message :jobs, body, headers
-        @job.plastron_status = :plastron_status_in_progress
-        @job.save!
-      else
-        @job.plastron_status = :plastron_status_error
-        @job.save!
-        flash[:error] = I18n.t(:active_mq_is_down)
-      end
+    def submit_job
+      request = ExportJobRequest.create(
+        export_job: @job,
+        job_id: export_job_url(@job)
+      )
+      destination = STOMP_CONFIG['destinations'][:jobs]
+      SendStompMessageJob.perform_later destination, request
     end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_24_191518) do
+ActiveRecord::Schema.define(version: 2021_11_04_190827) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -69,6 +69,22 @@ ActiveRecord::Schema.define(version: 2020_06_24_191518) do
     t.index ["vocabulary_id"], name: "index_datatypes_on_vocabulary_id"
   end
 
+  create_table "delayed_jobs", force: :cascade do |t|
+    t.integer "priority", default: 0, null: false
+    t.integer "attempts", default: 0, null: false
+    t.text "handler", null: false
+    t.text "last_error"
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string "locked_by"
+    t.string "queue"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string "cron"
+    t.index ["priority", "run_at"], name: "delayed_jobs_priority"
+  end
+
   create_table "download_urls", force: :cascade do |t|
     t.string "token"
     t.string "url"
@@ -87,6 +103,16 @@ ActiveRecord::Schema.define(version: 2020_06_24_191518) do
     t.index ["token"], name: "index_download_urls_on_token", unique: true
   end
 
+  create_table "export_job_requests", force: :cascade do |t|
+    t.integer "export_job_id"
+    t.boolean "validate_only"
+    t.boolean "resume"
+    t.string "job_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["export_job_id"], name: "index_export_job_requests_on_export_job_id"
+  end
+
   create_table "export_jobs", force: :cascade do |t|
     t.string "format"
     t.integer "cas_user_id"
@@ -95,12 +121,13 @@ ActiveRecord::Schema.define(version: 2020_06_24_191518) do
     t.integer "item_count"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "plastron_status"
     t.integer "progress"
     t.boolean "export_binaries"
-    t.bigint "binaries_size"
+    t.integer "binaries_size"
     t.integer "binaries_count"
     t.string "mime_types"
+    t.integer "state"
+    t.string "uris"
     t.index ["cas_user_id"], name: "index_export_jobs_on_cas_user_id"
   end
 
@@ -110,24 +137,30 @@ ActiveRecord::Schema.define(version: 2020_06_24_191518) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "import_job_requests", force: :cascade do |t|
+    t.integer "import_job_id"
+    t.boolean "validate_only"
+    t.boolean "resume"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "job_id"
+    t.index ["import_job_id"], name: "index_import_job_requests_on_import_job_id"
+  end
+
   create_table "import_jobs", force: :cascade do |t|
     t.integer "cas_user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "timestamp"
     t.string "name"
-    t.string "stage"
-    t.string "status"
-    t.string "plastron_status"
     t.integer "progress"
-    t.text "last_response_body"
     t.string "model"
-    t.text "last_response_headers"
     t.string "access"
     t.string "collection"
     t.string "binaries_location"
     t.integer "binaries_count"
     t.integer "item_count"
+    t.integer "state"
     t.index ["cas_user_id"], name: "index_import_jobs_on_cas_user_id"
   end
 

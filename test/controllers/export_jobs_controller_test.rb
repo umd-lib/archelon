@@ -8,45 +8,6 @@ class ExportJobsControllerTest < ActionController::TestCase
     mock_cas_login(@cas_user.cas_directory_id)
   end
 
-  test 'create new export job' do
-    stub_const('StompService', double('stomp_service_connected', publish_message: true))
-    expect(StompService).to receive(:publish_message)
-
-    assert_difference('ExportJob.count') do
-      @cas_user.bookmarks.create(document_id: 'http://example.com/1', document_type: 'SolrDocument')
-      @cas_user.bookmarks.create(document_id: 'http://example.com/2', document_type: 'SolrDocument')
-      params = {}
-      params[:export_job] = { name: 'test1', format: 'CSV', item_count: 2 }
-
-      post :create, params: params
-    end
-    export_job = ExportJob.last
-    assert export_job.plastron_status_in_progress?
-
-    assert_redirected_to export_jobs_path
-    @cas_user.bookmarks.delete_all
-  end
-
-  test 'creating new export job when not connected should raise error' do
-    stub_const('StompService', double('stomp_service_disconnected', publish_message: false))
-    expect(StompService).to receive(:publish_message)
-
-    assert_difference('ExportJob.count') do
-      @cas_user.bookmarks.create(document_id: 'http://example.com/1', document_type: 'SolrDocument')
-      @cas_user.bookmarks.create(document_id: 'http://example.com/2', document_type: 'SolrDocument')
-      params = {}
-      params[:export_job] = { name: 'test1', format: 'CSV', item_count: 2 }
-
-      post :create, params: params
-    end
-    export_job = ExportJob.last
-    assert export_job.plastron_status_error?
-
-    assert_equal I18n.t(:active_mq_is_down), flash[:error]
-    assert_redirected_to export_jobs_path
-    @cas_user.bookmarks.delete_all
-  end
-
   test "index page should show only user's jobs when user is not an admin" do
     assert ExportJob.count > 1, 'Test requires at least two export jobs'
 

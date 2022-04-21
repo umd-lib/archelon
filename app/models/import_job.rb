@@ -2,19 +2,8 @@
 
 # Model for metadata import jobs
 #
-# This model provides a simple workflow, tracking where the
-# job is via the "stage" field. The "stage" field can have the
-# following values:
-#
-#   * validate - The job is in the "validate" stage
-#   * import - The job is in the "import" stage
-#
-# The normal workflow is for a job to move from "validate" to "import" when
-# file validation is successful. If the file is not valid, the model stays
-# in the "validate" stage.
-#
-# The "status" method generates the current status of the job from the
-# Plastron response message. The possible statuses are:
+# The "state" field records the current step in the processing of this job. The
+# possible states are:
 #
 #   * :validate_pending - A "validate" request has been sent to Plastron, but
 #                         no response has been received.
@@ -28,11 +17,9 @@
 #   * :import_pending - An "import" request has been sent to Plastron, but
 #                       no response has been received.
 #
-#   * :import_success - A Plastron response was received indicating that the
-#                       import succeeded.
+#   * :import_complete - All items in this import job have been successfully processed.
 #
-#   * :import_failed - A Plastron response was received indicating that the
-#                      import failed
+#   * :import_incomplete - Not all items in this import job have been successfully processed.
 #
 #   * :in_progress - Returned for any other status
 #
@@ -41,15 +28,25 @@
 #
 #   * :import_error - An error has occurred during import, such as the
 #                     STOMP client not being connected
-#   * :error - Generic error when stage is nil
 class ImportJob < ApplicationRecord
-  include PlastronStatus
-
   belongs_to :cas_user
   has_one_attached :metadata_file
   has_one_attached :binary_zip_file
 
-  after_commit { ImportJobRelayJob.perform_later(self) }
+  enum state: {
+    validate_pending: 1,
+    validate_success: 2,
+    validate_failed: 3,
+    validate_error: 4,
+    import_pending: 5,
+    import_in_progress: 6,
+    import_complete: 7,
+    import_incomplete: 8,
+    import_error: 9,
+    validate_in_progress: 10
+  }
+
+  after_commit { ImportJobStatusUpdatedJob.perform_now(self) }
 
   validates :name, presence: true
   validates :collection, presence: true
@@ -58,6 +55,10 @@ class ImportJob < ApplicationRecord
 
   # The relpath for "flat" structure collections
   FLAT_LAYOUT_RELPATH = '/pcdm'
+
+  # If it has been more than IDLE_THRESHOLD since the last update time on this job,
+  # and the job is in an active state, then consider it stalled.
+  IDLE_THRESHOLD = 30.seconds
 
   def self.access_vocab
     @access_vocab ||= Vocabulary.find_by identifier: VOCAB_CONFIG['access_vocab_identifier']
@@ -75,62 +76,53 @@ class ImportJob < ApplicationRecord
     errors.add(:base, :multiple_include_binaries_options) if binary_zip_file.attached? && remote_server.present?
   end
 
-  # Returns a symbol reflecting the current status
-  def status # rubocop:disable Metrics/AbcSize
-    if plastron_status_error?
-      return stage ? "#{stage}_error".to_sym : :error
-    end
+  def update_progress(message) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
+    return if message.body.blank?
 
-    return "#{stage}_pending".to_sym if plastron_status_pending?
+    validate_in_progress! if validate_pending?
+    import_in_progress! if import_pending?
 
-    return :in_progress unless plastron_status_done?
-
-    response = ImportJobResponse.new(last_response_headers, last_response_body)
-    return "#{stage}_success".to_sym if response.valid?
-
-    "#{stage}_failed".to_sym
-  end
-
-  # Returns the next workflow action, based on the current status, or nil if
-  # no workflow action is available.
-  def workflow_action
-    case status
-    when :validate_success
-      :import
-    when :validate_failed, :validate_error
-      :resubmit
-    end
-  end
-
-  def update_progress(plastron_message) # rubocop:disable Metrics/AbcSize
-    return if plastron_message.body.blank?
-
-    count = plastron_message.body_json['count'] || {}
+    count = message.body_json['count'] || {}
     total_count = count['total']
 
     # Total could be nil for non-seekable files
-    return if total_count.nil? || total_count.zero?
-
-    processed_count = count['created'] + count['updated'] + count['unchanged'] + count['errors']
-
-    self.progress = (processed_count.to_f / total_count * 100).round
-    save!
-  end
-
-  def update_status(plastron_message)
-    if plastron_message.body.present?
-      count = plastron_message.body_json['count'] || {}
-      self.item_count = count['total']
-      self.binaries_count = count['files']
+    unless total_count.nil? || total_count.zero?
+      processed_count = count['created'] + count['updated'] + count['unchanged'] + count['errors']
+      self.progress = (processed_count.to_f / total_count * 100).round
     end
-    self.plastron_status = plastron_message.headers['PlastronJobStatus']
-    self.last_response_headers = plastron_message.headers.to_json
-    self.last_response_body = plastron_message.body
+
     save!
   end
 
-  def last_response
-    ImportJobResponse.new(last_response_headers, last_response_body)
+  def progress_text
+    return '' unless !progress.nil? && progress.positive?
+
+    " (#{progress}%)"
+  end
+
+  def update_status(message)
+    if message.error?
+      set_error_state
+    else
+      self.state = message.job_state
+      if message.body.present?
+        self.item_count = message.body_json.dig('count', 'total')
+        self.binaries_count = message.body_json.dig('count', 'files')
+      end
+    end
+    save!
+  end
+
+  # Heuristic method to determine if this job might be stalled
+  def stalled?
+    # only makes sense for jobs that are in an actively processing state
+    return false unless active?
+
+    (Time.zone.now - updated_at) > IDLE_THRESHOLD
+  end
+
+  def active?
+    validate_pending? || import_pending? || validate_in_progress? || import_in_progress?
   end
 
   # Returns true if a binary zip file is attached, or remote server is
@@ -143,7 +135,10 @@ class ImportJob < ApplicationRecord
   # FCREPO_BASE_URL prefix removed). Will always start with a "/", and
   # returns FLAT_LAYOUT_RELPATH if the relpath starts with that value.
   def collection_relpath
-    relpath = collection.sub(FCREPO_BASE_URL, '')
+    # Collection path could be either REPO_EXTERNAL_URL or FCREPO_BASE_URL,
+    # so just strip both
+    relpath = collection.sub(REPO_EXTERNAL_URL, '')
+    relpath = relpath.sub(FCREPO_BASE_URL, '')
 
     # Ensure that relpath starts with a "/"
     relpath = '/' + relpath unless relpath.starts_with?('/')
@@ -163,4 +158,13 @@ class ImportJob < ApplicationRecord
 
     :hierarchical
   end
+
+  private
+
+    # Set the appropriate error state depending on which phase of the import
+    # this job is currently in.
+    def set_error_state
+      self.state = :validate_error if validate_pending? || validate_in_progress?
+      self.state = :import_error if import_pending? || import_in_progress?
+    end
 end

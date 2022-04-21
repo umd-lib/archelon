@@ -51,11 +51,13 @@
 
   <h2>ControlledURIRef</h2>
 
-  <div>This component presents a dropdown using the values defined in the
+  <h3>Typical Usage</h3>
+
+  <div>This component presents dropdowns using the values defined in the
     <%= link_to 'controlled vocabularies', vocabularies_url %>.</div>
 
   <% Vocabulary.all.each do |vocab| %>
-    <h3><%= vocab.identifier %></h3>
+    <h4><%= vocab.identifier %></h4>
     <div class="form-group">
       <%=
         react_component(
@@ -69,6 +71,26 @@
       %>
     </div>
   <% end %>
+
+  <h3>Value not in vocabulary</h3>
+
+  <div>This example presents a dropdown where the provided value is not
+       present in the controlled vocabulary list.</div>
+
+  <% vocab = Vocabulary.find_by(identifier:'access') %>
+  <h4><%= vocab.identifier %></h4>
+  <div class="form-group">
+    <%=
+      react_component(
+        "ControlledURIRef", {
+        subjectURI: 'controlled_value',
+        predicateURI: vocab.identifier,
+        vocab: vocab.as_hash,
+        value: { '@id': 'not-in-vocabulary' }
+      }
+      )
+    %>
+  </div>
 
   <h2>URIRef</h2>
 

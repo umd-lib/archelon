@@ -61,3 +61,6 @@ yarn-debug.log*
 
 # React Styleguidist
 styleguide/
+
+# Docker configuration file
+docker-archelon.env

@@ -1,6 +1,6 @@
 default: &default
-  binaries_dir: <%= Rails.root.join('imports') %>
-  binaries_base_location: <%= "zip:#{Rails.root.join('imports')}" %>
+  binaries_dir: <%= ENV['IMPORT_BINARIES_DIR'].present? ? ENV['IMPORT_BINARIES_DIR'] : Rails.root.join('imports') %>
+  binaries_base_location: <%= ENV['IMPORT_BINARIES_BASE_LOCATION'].present? ? ENV['IMPORT_BINARIES_BASE_LOCATION'] : "zip:#{Rails.root.join('imports')}" %>
 
 development:
   <<: *default

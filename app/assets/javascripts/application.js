@@ -14,7 +14,6 @@
 //= require activestorage
 //= require jquery
 //= require jquery_ujs
-//= require turbolinks
 
 // Required by Blacklight
 //= require blacklight/blacklight
@@ -25,13 +24,15 @@
 // Bootstrap plugins are needed by the "clipboard" functionality.
 //= require bootstrap/tooltip
 
+//= require bootstrap/tab
+
 // For "clipboard-rails" gem
 //= require clipboard
 
 //= require_tree .
 
 /* See https://github.com/sadiqmmm/clipboard-rails */
-$(document).on('turbolinks:load', function(){
+$(function(){
   // Tooltip
   $('.clipboard-btn').tooltip({
     trigger: 'click',

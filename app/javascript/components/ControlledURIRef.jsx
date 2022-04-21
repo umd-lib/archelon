@@ -39,6 +39,21 @@ class ControlledURIRef extends React.Component {
     }
     this.noStartingValue = (this.state.uri === '');
 
+    // Determine if the "uri" value is in the vocabulary
+    let isUriInVocabulary = false;
+    for (const [uri, label] of Object.entries(this.props.vocab)) {
+      if (uri === this.state.uri) {
+        isUriInVocabulary = true;
+        break;
+      }
+    }
+
+    // If uri is not in vocabulary, append it to the vocabulary so that it
+    // shows up in the dropdown
+    if (!isUriInVocabulary) {
+      props.vocab[this.state.uri] = this.state.uri;
+    }
+
     this.handleChange = this.handleChange.bind(this);
     this.getStatement = this.getStatement.bind(this);
   };

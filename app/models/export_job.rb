@@ -2,11 +2,21 @@
 
 # An export job from Fedora
 class ExportJob < ApplicationRecord
-  include PlastronStatus
-
   belongs_to :cas_user
 
-  after_commit { ExportJobRelayJob.perform_later(self) }
+  enum state: {
+    pending: 1,
+    in_progress: 2,
+    export_complete: 3,
+    partial_export: 4,
+    export_error: 5
+  }
+
+  after_commit { ExportJobStatusUpdatedJob.perform_now(self) }
+
+  # If it has been more than IDLE_THRESHOLD since the last update time on this job,
+  # and the job is in an active state, then consider it stalled.
+  IDLE_THRESHOLD = 30.seconds
 
   CSV_FORMAT = 'text/csv'
   TURTLE_FORMAT = 'text/turtle'
@@ -50,15 +60,49 @@ class ExportJob < ApplicationRecord
   end
 
   def update_progress(message)
+    return if message.blank?
+
     stats = message.body_json
     progress = (stats['count']['exported'].to_f / stats['count']['total'] * 100).round
     self.progress = progress
+    self.state = progress.positive? ? :in_progress : :pending
     save!
   end
 
   def update_status(message)
-    self.plastron_status = message.headers['PlastronJobStatus']
+    self.state = message.job_state
     save!
+  end
+
+  def done?
+    export_complete? || partial_export?
+  end
+
+  def downloadable?
+    done? && File.exist?(path)
+  end
+
+  # Heuristic method to determine if this job might be stalled
+  def stalled?
+    # only makes sense for jobs that are in an actively processing state
+    return false unless pending? || in_progress?
+
+    (Time.zone.now - updated_at) > IDLE_THRESHOLD
+  end
+
+  # Generates status text display for the GUI
+  def status_text
+    return 'Unknown' if state.blank?
+
+    return I18n.t("activerecord.attributes.export_job.status.#{state}") unless in_progress?
+
+    I18n.t('activerecord.attributes.export_job.status.in_progress') + progress_text
+  end
+
+  def progress_text
+    return '' unless !progress.nil? && progress.positive?
+
+    " (#{progress}%)"
   end
 
   # Returns a array of the selected MIME types for the job

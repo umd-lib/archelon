@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 class ImportJobsController < ApplicationController # rubocop:disable Metrics/ClassLength
-  before_action :set_import_job, only: %i[update show edit import status_update]
+  before_action :set_import_job, only: %i[update show edit start_validation start_import resume_import
+                                          import status_update]
   before_action :cancel_workflow?, only: %i[create update]
   helper_method :status_text
   skip_before_action :authenticate, only: %i[status_update]
+  skip_before_action :verify_authenticity_token, only: :status_update
 
   # GET /import_jobs
   # GET /import_jobs.json
@@ -20,7 +22,15 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
   # GET /import_jobs/1
   # GET /import_jobs/1.json
   def show
-    @import_job_response = @import_job.last_response
+    job_id = import_job_url(@import_job)
+    @import_job_info = PlastronService.retrieve_import_job_info(job_id)
+
+    # Generate catalog URI for each completed item
+    @import_job_info.completed.each do |item|
+      uri = item['uri']
+      catalog_uri = solr_document_url(uri)
+      item['catalog_uri'] = catalog_uri
+    end
   end
 
   # GET /import_jobs/new
@@ -33,13 +43,11 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
 
   # GET /import_jobs/1/edit
   def edit
-    if @import_job.stage == 'import'
+    if @import_job.import_complete?
       flash[:error] = I18n.t(:import_already_performed)
-      redirect_to action: 'index', status: :see_other
-      return
+      return redirect_to action: 'index', status: :see_other
     end
 
-    @import_job_response = @import_job.last_response
     @collections_options_array = retrieve_collections
     @binaries_files = Dir.children(IMPORT_CONFIG[:binaries_dir])&.select { |filename| filename =~ /\.zip$/ }
   end
@@ -49,71 +57,59 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
   def create
     @import_job = create_job(import_job_params)
     if @import_job.save
-      submit_job(@import_job, true)
-      redirect_to action: 'index', status: :see_other
-      return
+      start_validation
+      return redirect_to action: 'index', status: :see_other
     end
 
     @collections_options_array = retrieve_collections
     render :new
   end
 
-  def update # rubocop:disable Metrics/MethodLength
-    if @import_job.stage == 'import'
+  def update
+    if @import_job.import_complete?
       flash[:error] = I18n.t(:import_already_performed)
-      redirect_to action: 'index', status: :see_other
-      return
+      return redirect_to action: 'index', status: :see_other
     end
 
     if valid_update && @import_job.save
-      submit_job(@import_job, true)
-      redirect_to action: 'index', status: :see_other
-      return
+      start_validation
+      return redirect_to action: 'index', status: :see_other
     end
 
-    @import_job_response = @import_job.last_response
     @collections_options_array = retrieve_collections
     render :edit
   end
 
   def import # rubocop:disable Metrics/MethodLength
-    if @import_job.status == :import_success || @import_job.status == :import_failed
+    if @import_job.import_complete?
       flash[:error] = I18n.t(:import_already_performed)
-      redirect_to action: 'index', status: :see_other
-      return
-    end
-
-    if @import_job.status == :validate_failed
+    elsif @import_job.validate_failed?
       flash[:error] = I18n.t(:cannot_import_invalid_file)
-      redirect_to action: 'index', status: :see_other
-      return
+    elsif @import_job.validate_success?
+      start_import
+    elsif @import_job.import_incomplete?
+      resume_import
+    else
+      flash[:error] = 'Cannot start or resume this import'
     end
-
-    submit_job(@import_job, false)
-    @import_job.stage = 'import'
-    @import_job.save!
     redirect_to action: 'index', status: :see_other
   end
 
   # Generates status text display for the GUI
-  def status_text(import_job) # rubocop:disable Metrics/MethodLength
-    if import_job.status == :in_progress
-      status_text = I18n.t('activerecord.attributes.import_job.status.in_progress')
-      progress = import_job.progress
-      if !progress.nil? && progress.positive?
-        stage_text = I18n.t("activerecord.attributes.import_job.stage.#{import_job.stage}")
-        status_text = "#{stage_text} (#{progress}%)"
-      end
-      status_text
-    else
-      I18n.t("activerecord.attributes.import_job.status.#{import_job.status}")
-    end
+  def status_text(import_job)
+    return '' if import_job.state.blank?
+
+    return I18n.t("activerecord.attributes.import_job.status.#{import_job.state}") unless import_job.import_in_progress?
+
+    I18n.t('activerecord.attributes.import_job.status.import_in_progress') + import_job.progress_text
   end
 
-  # GET /import_jobs/1/status_update
+  # POST /import_jobs/1/status_update
   def status_update
-    # Triggers import job notification to channel
-    ImportJobRelayJob.perform_later(@import_job)
+    # Triggers import job notification to channel;
+    # it is important to use perform_now so that
+    # ActionCable receives timely updates
+    ImportJobStatusUpdatedJob.perform_now(@import_job)
     render plain: '', status: :no_content
   end
 
@@ -143,23 +139,36 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
       ImportJob.new(args).tap do |job|
         job.timestamp = Time.zone.now
         job.cas_user = current_cas_user
-        job.stage = 'validate'
-        job.plastron_status = :plastron_status_pending
+        job.state = :validate_pending
       end
     end
 
-    def submit_job(import_job, validate_only)
-      job_id = import_job_url(import_job)
-      import_job_request = ImportJobRequest.new(job_id, import_job, validate_only)
+    def job_request(job, validate_only: false, resume: false)
+      ImportJobRequest.create(
+        import_job: job,
+        job_id: import_job_url(job),
+        validate_only: validate_only,
+        resume: resume
+      )
+    end
 
-      import_job.plastron_status = :plastron_status_in_progress
-      import_job.save!
-      StompService.publish_message(:jobs, import_job_request.body, import_job_request.headers) && return
+    def jobs_destination
+      STOMP_CONFIG['destinations'][:jobs]
+    end
 
-      # if we were unable to send the message
-      import_job.plastron_status = :plastron_status_error
-      import_job.save!
-      flash[:error] = I18n.t(:active_mq_is_down)
+    def start_validation
+      SendStompMessageJob.perform_later jobs_destination, job_request(@import_job, validate_only: true)
+      @import_job.validate_pending!
+    end
+
+    def start_import
+      SendStompMessageJob.perform_later jobs_destination, job_request(@import_job)
+      @import_job.import_pending!
+    end
+
+    def resume_import
+      SendStompMessageJob.perform_later jobs_destination, job_request(@import_job, resume: true)
+      @import_job.import_pending!
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
@@ -179,16 +188,10 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     def valid_update
       @import_job.update(import_job_params)
 
-      # Need special handing of "metadata_file", because if we're gotten this
-      # far, the @import_job already has a file attached, so the
-      # "attachment_validation" method on the model won't catch that the
-      # update form submission doesn't have new file attached.
-      #
-      # Need to have the method after the call to @import_job.update, as
-      # update clears the "errors" array
-      if import_job_params['metadata_file'].nil?
-        @import_job.errors.add(:metadata_file, :required)
-        return false
+      if import_job_params['metadata_file'].present?
+        # delete existing attachment and attach new metadata file
+        @import_job.metadata_file.purge
+        @import_job.metadata_file.attach(import_job_params[:metadata_file])
       end
 
       true

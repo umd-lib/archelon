@@ -1,0 +1,14 @@
+  <%
+    format_label = ExportJob::FORMATS[export_job.format] || export_job.format
+  %>
+<tr class="export-job" data-export-job-id="<%= export_job.id %>" data-subscribe="<%= not export_job.export_complete? %>">
+  <td><%= export_job.id %></td>
+  <td><%= export_job.name %></td>
+  <td><%= export_job.cas_user&.name%></td>
+  <td><%= export_job.timestamp %></td>
+  <td><%= export_job.item_count %></td>
+  <td><%= export_job.binaries_count %></td>
+  <td><%= number_to_human_size export_job.binaries_size %></td>
+  <td><span title="<%= export_job.format %>"><%= format_label %></span></td>
+  <%= render partial: 'export_job_status', locals: { export_job: export_job } %>
+</tr>

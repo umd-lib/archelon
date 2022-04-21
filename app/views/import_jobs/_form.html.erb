@@ -57,6 +57,9 @@
       <%= form.label :metadata_file, 'Metadata File to Upload (CSV)', class: "col-form-label-lg" %>
     </div>
     <div class="p-3 ml-5">
+      <% if import_job.metadata_file.attachment.present? %>
+        <div class="current-file"><strong>Current file:</strong> <%= import_job.metadata_file.filename %></div>
+      <% end %>
       <%= form.file_field :metadata_file, class: "form-control" %>
     </div>
   </div>
@@ -71,11 +74,12 @@
           <h3 class="panel-title">Select the zip file containing the binaries for this import job</h3>
         </div>
         <div class="panel-body">
+          <% current_filename = import_job.binaries_location&.gsub(IMPORT_CONFIG[:binaries_base_location], '') %>
           <ul style="list-style-type: none">
             <li><label><%= form.radio_button :binaries_zip_filename, '' %> No binaries</label></li>
             <% @binaries_files&.each do |filename| %>
               <li>
-                <%= form.radio_button :binaries_zip_filename, filename %>
+                <%= form.radio_button :binaries_zip_filename, filename, checked: current_filename == filename %>
                 <%= form.label :binaries_zip_filename, filename %>
                 (<%= number_to_human_size File.size(File.join(IMPORT_CONFIG[:binaries_dir], filename)) %>)
               </li>

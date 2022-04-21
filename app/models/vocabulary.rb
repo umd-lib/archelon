@@ -73,10 +73,11 @@ class Vocabulary < ApplicationRecord
     end
   end
 
-  def publish_rdf
+  def publish_rdf # rubocop:disable Metrics/AbcSize
     FileUtils.makedirs vocab_dir
     FORMAT_EXTENSIONS.each do |format, extension|
       path = Rails.root.join(vocab_dir, "#{identifier}.#{extension}")
+      Rails.logger.info("Writing #{identifier} vocabulary to #{path}")
       File.open(path, 'w') { |f| f << graph.dump(format, prefixes: PREFIXES.dup) }
     end
   end

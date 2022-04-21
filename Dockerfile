@@ -1,14 +1,39 @@
+# Dockerfile for the generating the Archelon Docker image
+#
+# To build:
+#
+# docker build -t docker.lib.umd.edu/archelon:<VERSION> -f Dockerfile .
+#
+# where <VERSION> is the Docker image version to create.
 FROM ruby:2.6.3
 WORKDIR /opt/archelon
 
-# Workaround until https://login.umd.edu gets a better SSL certificate
-# This is intended to fix an "OpenSSL::SSL::SSLError (SSL_connect returned=1 errno=0 state=error: dh key too small)"
-# error when connecting to https://login.umd.edu
-RUN sed '/CipherString = DEFAULT@SECLEVEL=2/d' /etc/ssl/openssl.cnf > /etc/ssl/openssl.cnf.fixed && \
-    mv /etc/ssl/openssl.cnf.fixed /etc/ssl/openssl.cnf
+# Install npm, to enable "yarn" to be installed
+# And netcat, for checking if the database is available
+RUN apt-get update && \
+    apt-get install -y npm netcat-openbsd && \
+    rm -rf /var/lib/apt/lists/*
 
 COPY ./Gemfile ./Gemfile.lock /opt/archelon/
 RUN bundle install --deployment
 COPY . /opt/archelon
+
+RUN npm install --global yarn && \
+    yarn
+
+ENV RAILS_RELATIVE_URL_ROOT=
+ENV SCRIPT_NAME=
+
+# The following SECRET_KEY_BASE variable is used so that the
+# "assets:precompile" command will run run without throwing an error.
+# It will have no effect on the application when it is actually run.
+#
+# Similarly, the ARCHELON_DATABASE_ADAPTER variable is needed for the
+# "assets:precompile" Rake task to complete, but will have no effect
+# on the application when it is actually run.
+ENV SECRET_KEY_BASE=IGNORE_ME
+RUN ARCHELON_DATABASE_ADAPTER=postgresql bundle exec rails assets:precompile
+
 EXPOSE 3000
-CMD ["bin/archelon.sh"]
+
+CMD ["bin/docker_start.sh"]

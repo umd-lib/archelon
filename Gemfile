@@ -16,8 +16,6 @@ gem 'uglifier', '>= 1.3.0'
 
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
-# Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
-gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder'
 # Use Redis adapter to run Action Cable in production
@@ -69,15 +67,13 @@ gem 'faker', '~> 1.8'
 gem 'http', '~> 2.2.2'
 
 # RFC-complient URI and URI template handling
-gem 'addressable', '~> 2.5'
+gem 'addressable', '~> 2.8'
 
 gem 'pg'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
-
-  gem 'solr_wrapper', '>= 0.3'
 end
 
 group :development do
@@ -134,3 +130,7 @@ gem 'cancancan'
 
 gem 'webpacker'
 gem 'react-rails'
+gem 'delayed_job_active_record', '~> 4.1'
+gem 'faraday', '~> 1.0'
+gem 'delayed_cron_job', '~> 0.8'
+
