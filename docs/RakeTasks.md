@@ -1,6 +1,6 @@
 # Archelon Rake Tasks
 
-* [docker:build, docker:push](#dockerbuild-dockerpush) - Build and Push Docker Images
+* [docker:tags, docker:build, docker:push](#dockertags-dockerbuild-dockerpush) - Build and Push Docker Images
 * [jobs:work](#jobswork) - Run the DelayedJobs Workers
 * [user:add_public_key](#useradd_public_key) - Add User Public Key
 * [user:add_public_key_file](#useradd_public_key_file) - Add User Public Key File
@@ -8,9 +8,9 @@
 * [stomp:listen](#stomplisten) - Run the STOMP Listener
 * [vocab:import](#vocabimport) - Importing Controlled Vocabularies
 
-## docker:build, docker:push
+## docker:tags, docker:build, docker:push
 
-There are two Rake tasks to build and push Docker images for the Archelon
+There arethree Rake tasks to list, build, and push Docker images for the Archelon
 application as well as the SFTP service. The image tag version is determined
 by the value of `Archelon::VERSION`. If it contains the string "dev", then
 it is considered a development version as is tagged using "latest". Any other
@@ -20,6 +20,9 @@ Note that once a non-"latest" tag has been successfully pushed, further attempts
 to push that same tag will fail.
 
 ```bash
+# lists the tags that would be built or pushed
+rails docker:tags
+
 # builds "docker.lib.umd.edu/archelon:VERSION" and "docker.lib.umd.edu/archelon-sftp:VERSION"
 rails docker:build
 
@@ -27,7 +30,7 @@ rails docker:build
 rails docker:push
 ```
 
-Source: [docker.rake](../lib/tasks/docker.rake)
+Implemented using **Boathook::DockerTasks** from the [boathook](https://github.com/umd-lib/boathook) gem; source: [docker.rake](../lib/tasks/docker.rake)
 
 ## jobs:work
 

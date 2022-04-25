@@ -15,7 +15,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 COPY ./Gemfile ./Gemfile.lock /opt/archelon/
-RUN bundle install --deployment
+RUN bundle install --deployment --without development test
 COPY . /opt/archelon
 
 RUN npm install --global yarn && \

@@ -119,29 +119,36 @@ endpoint to "localhost", or nodes in the Kubernetes cluster.
 
 ## Docker
 
-Archelon comes with a [Dockerfile](Dockerfile) that can be used to build a
-docker image:
+Archelon uses the [boathook] gem to provide [Rake tasks](lib/tasks/docker.rake)
+for building and pushing Docker images, as described in the following Dockerfiles:
 
-```
-docker build -t docker.lib.umd.edu/archelon -f Dockerfile .
+|Dockerfile                        |Image Name                        |Application|
+|----------------------------------|----------------------------------|-----------|
+|[Dockerfile](Dockerfile)          |`docker.lib.umd.edu/archelon`     |main Rails application|
+|[Dockerfile.sftp](Dockerfile.sftp)|`docker.lib.umd.edu/archelon-sftp`|SFTP server for import/export|
+
+Usage:
+
+```bash
+# list the images that would be built, and the metadata for them
+rails docker:tags
+
+# builds the images
+rails docker:build
+
+# pushes to docker.lib.umd.edu hub
+rails docker:push
 ```
 
 See [umd-lib/umd-fcrepo/README.md][umd-fcrepo] for information about setting up
 a local development environment for Archelon using Docker.
 
-There are also two [Rake tasks](docs/RakeTasks.md#dockerbuild-dockerpush),
-`docker:build` and `docker:push`, for use when building images to share to the
-docker.lib.umd.edu hub.
-
 When running locally in Docker, the Archelon database can be accessed using:
 
-```
+```bash
 # Archelon database backing the Archelon Rails app
 psql -U archelon -h localhost -p 5434 archelon
 ```
-
-There is also a "Dockerfile.sftp" file, which sets up an SFTP server enabling
-files to be uploaded to Archelon for inclusion in import jobs.
 
 ## Rake Tasks
 
@@ -230,7 +237,6 @@ Archelon is configured to use the [Delayed::Job][delayed_job] queue adapter, via
 the [delayed_job_active_record][delayed_job_active_record] gem to store jobs
 in the database.
 
-
 ## Cron Jobs
 
 The [delayed_cron_job][delayed_cron_job] gem is used to schedule jobs to run on
@@ -302,3 +308,4 @@ See the [LICENSE](LICENSE.md) file for license rights and limitations
 [stomp]: https://stomp.github.io/
 [umd-fcrepo]: https://github.com/umd-lib/umd-fcrepo
 [umd-fcrepo-docker]: https://github.com/umd-lib/umd-fcrepo-docker
+[boathook]: https://github.com/umd-lib/boathook
