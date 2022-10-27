@@ -32,7 +32,8 @@ ENV SCRIPT_NAME=
 # "assets:precompile" Rake task to complete, but will have no effect
 # on the application when it is actually run.
 ENV SECRET_KEY_BASE=IGNORE_ME
-RUN ARCHELON_DATABASE_ADAPTER=postgresql bundle exec rails assets:precompile
+RUN ARCHELON_DATABASE_ADAPTER=postgresql RAILS_ENV=production \
+    bundle exec rails assets:precompile
 
 EXPOSE 3000
 
