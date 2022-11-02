@@ -131,7 +131,7 @@ GEM
       i18n (>= 0.7)
     faraday (1.0.1)
       multipart-post (>= 1.2, < 3)
-    ffi (1.12.2)
+    ffi (1.15.5)
     fugit (1.5.2)
       et-orbi (~> 1.1, >= 1.1.8)
       raabro (~> 1.4)
