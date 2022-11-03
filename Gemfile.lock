@@ -180,6 +180,7 @@ GEM
       kaminari-core (= 1.2.1)
     kaminari-core (1.2.1)
     libv8 (3.16.14.19)
+    libv8-node (16.10.0.0)
     link_header (0.0.8)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
@@ -210,6 +211,8 @@ GEM
     mime-types-data (3.2020.1104)
     mini_mime (1.1.2)
     mini_portile2 (2.8.0)
+    mini_racer (0.6.3)
+      libv8-node (~> 16.10.0.0)
     minitest (5.15.0)
     minitest-reporters (1.4.2)
       ansi
@@ -447,6 +450,7 @@ DEPENDENCIES
   json-ld
   listen (>= 3.0.5, < 3.2)
   mechanize
+  mini_racer
   minitest-reporters
   net-ldap (~> 0.16.1)
   omniauth-cas (~> 1.1.1)

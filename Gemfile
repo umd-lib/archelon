@@ -40,7 +40,16 @@ gem 'sdoc', '~> 1.1.0', group: :doc
 
 # Blacklight Gems
 gem 'blacklight', '~> 6.0'
-gem 'therubyracer'
+
+# ARM processor (e.g. Apple M1 Macbook)
+install_if -> {RUBY_PLATFORM.include?('arm64')} do
+  gem 'mini_racer'
+end
+
+# AMD processor
+install_if -> {RUBY_PLATFORM.include?('amd64')} do
+  gem 'therubyracer'
+end
 
 # CAS Authentication
 gem 'omniauth-cas', '~> 1.1.1'
@@ -66,7 +75,7 @@ gem 'faker', '~> 1.8'
 
 gem 'http', '~> 2.2.2'
 
-# RFC-complient URI and URI template handling
+# RFC-compliant URI and URI template handling
 gem 'addressable', '~> 2.8'
 
 gem 'pg'
