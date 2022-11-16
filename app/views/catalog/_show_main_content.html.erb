@@ -24,7 +24,7 @@
       <% end %>
     </div>
     <div class="image-viewer intrinsic-container ratio-4x3">
-      <iframe src="<%= mirador_viewer_url(@document, @current_query) %>" allowfullscreen></iframe>
+      <iframe src="<%= iiif_viewer_url(@document.id, @current_query) %>" allowfullscreen></iframe>
     </div>
   <% end %>
   <%# End UMD Customization %>
