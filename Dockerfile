@@ -5,7 +5,7 @@
 # docker build -t docker.lib.umd.edu/archelon:<VERSION> -f Dockerfile .
 #
 # where <VERSION> is the Docker image version to create.
-FROM ruby:2.6.3
+FROM ruby:2.7.6
 WORKDIR /opt/archelon
 
 # Install npm, to enable "yarn" to be installed
@@ -15,6 +15,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 COPY ./Gemfile ./Gemfile.lock /opt/archelon/
+RUN gem install bundler:1.17.2
 RUN bundle install --deployment --without development test
 COPY . /opt/archelon
 

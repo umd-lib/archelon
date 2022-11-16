@@ -73,18 +73,19 @@ functionality.
     ```bash
     rails db:reset_with_sample_data
     ```
-5. Start the STOMP listener:
-    ```bash
-   rails stomp:listen
-   ```
-6. Start the Delayed Jobs worker:
-    ```bash
-   rails jobs:work
-    ```
-7. Run the web application:
-    ```bash
-    rails server
-    ```
+5. In three separate terminals:
+   1. Start the STOMP listener:
+       ```bash
+      rails stomp:listen
+      ```
+   2. Start the Delayed Jobs worker:
+       ```bash
+      rails jobs:work
+       ```
+   3. Run the web application:
+       ```bash
+       rails server
+       ```
 
 Archelon will be available at <http://localhost:3000/>
 
@@ -148,6 +149,21 @@ When running locally in Docker, the Archelon database can be accessed using:
 ```bash
 # Archelon database backing the Archelon Rails app
 psql -U archelon -h localhost -p 5434 archelon
+```
+
+### Multi-Platform Docker Builds
+
+It is possible to build a multi-platform Docker image using the `docker buildx`
+command and targeting both the `linux/amd64` and `linux/arm64` platforms. As
+long as there is a `local` builder configured for buildx, the following will
+build and push a multi-platform image:
+
+```bash
+docker buildx build \
+    --builder local \
+    --platform linux/amd64,linux/arm64 \
+    --tag docker.lib.umd.edu/archelon:latest \
+    --push .
 ```
 
 ## Rake Tasks

@@ -10,7 +10,7 @@
 
 ## docker:tags, docker:build, docker:push
 
-There arethree Rake tasks to list, build, and push Docker images for the Archelon
+There are three Rake tasks to list, build, and push Docker images for the Archelon
 application as well as the SFTP service. The image tag version is determined
 by the value of `Archelon::VERSION`. If it contains the string "dev", then
 it is considered a development version as is tagged using "latest". Any other
