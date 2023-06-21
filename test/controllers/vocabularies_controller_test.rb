@@ -3,6 +3,8 @@
 require 'test_helper'
 
 class VocabulariesControllerTest < ActionController::TestCase
+  include ActiveJob::TestHelper
+
   setup do
     @vocabulary = vocabularies(:vocab_one)
     @cas_user = cas_users(:vocab_editor)
@@ -44,7 +46,9 @@ class VocabulariesControllerTest < ActionController::TestCase
 
   test 'should destroy vocabulary' do
     assert_difference('Vocabulary.count', -1) do
-      delete :destroy, params: { id: @vocabulary.id }
+      perform_enqueued_jobs do
+        delete :destroy, params: { id: @vocabulary.id }
+      end
     end
 
     assert_redirected_to controller: :vocabularies, action: :index
