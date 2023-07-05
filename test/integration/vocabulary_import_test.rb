@@ -5,7 +5,7 @@ require 'test_helper'
 # Integration test for vocabulary import functionality
 class VocabularyImportTest < ActiveSupport::TestCase
   def setup
-    Archelon::Application.load_tasks unless Rake.const_defined?('Task')
+    Archelon::Application.load_tasks
     # Need to reenable Rake tasks for each task, as otherwise once it's run it
     # will remember the arguments
     Rake::Task['vocab:import'].reenable

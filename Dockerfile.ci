@@ -5,7 +5,7 @@
 # the application. It should _not_ be used for creating Docker images for use
 # in production.
 
-FROM ruby:2.6.3-slim
+FROM ruby:2.7.6-slim
 
 RUN apt-get update && \
     apt-get install -y build-essential && \
@@ -22,13 +22,6 @@ RUN apt-get update && \
     apt-get install -y wget && \
     apt-get clean
 
-# Install Google Chrome for system tests
-RUN echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list && \
-    wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-    apt-get update && \
-    apt-get install -y google-chrome-stable && \
-    apt-get clean
-
 # Copy in the Gemfile and Gemfile.lock, and install the gems
 # This makes builds where the Gemfile/Gemfile.lock file hasn't
 # changed faster by having the correct gems already downloaded
@@ -37,6 +30,7 @@ COPY Gemfile* /tmp/
 
 # Run bundler to install the gems
 WORKDIR /tmp
+RUN gem install bundler:1.17.2
 RUN bundle install --without production
 
 WORKDIR /

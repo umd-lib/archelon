@@ -21,7 +21,7 @@ class JsonRestResultTest < ActiveSupport::TestCase
   test 'create_from_json given empty string returns JsonRestResult with error message' do
     result = JsonRestResult.create_from_json('')
     assert result.error_occurred?
-    assert_equal("767: unexpected token at ''", result.error_message)
+    assert result.error_message.include? "unexpected token at ''"
   end
 
   test 'create_from_json given valid JSON string returns parsed hash' do
