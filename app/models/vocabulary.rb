@@ -29,7 +29,7 @@ class Vocabulary < ApplicationRecord
   has_many :datatypes, dependent: :destroy
 
   after_save :publish_rdf_async
-  after_destroy :delete_published_rdf_async
+  before_destroy :delete_published_rdf_async
 
   scope :by_identifier, -> { order('identifier ASC') }
 
