@@ -87,7 +87,7 @@ functionality.
        rails server
        ```
 
-Archelon will be available at <http://localhost:3000/>
+Archelon will be available at <http://archelon-local:3000/>
 
 ## Logging
 
@@ -285,7 +285,7 @@ after modifying the "cron_expression" for a CronJob (as long as
 An interactive demo displaying the React components provided by the application
 is available at:
 
-http://localhost:3000/react_components
+http://archelon-local:3000/react_components
 
 ### Documenting React Components
 
