@@ -53,7 +53,7 @@ sudo vi /etc/hosts
 and add "fcrepo-local" and "archelon-local" aliases to the "127.0.0.1" entry:
 
 ```
-127.0.0.1       localhost fcrepo-local arcehlon-local
+127.0.0.1       localhost fcrepo-local archelon-local
 ```
 
 ---
