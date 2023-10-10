@@ -4,7 +4,7 @@ STOMP_CONFIG = Archelon::Application.config_for(:stomp).with_indifferent_access
 # Convenient shorthand for passing host and port to Stomp::Client and Stomp::Connection
 STOMP_SERVER = { host: STOMP_CONFIG['host'], port: STOMP_CONFIG['port'] }.freeze
 
-archelon_url = STOMP_CONFIG['archelon_url'] || 'http://localhost:3000/'
+archelon_url = STOMP_CONFIG['archelon_url'] || 'http://archelon-local:3000/'
 
 archelon_uri = URI(archelon_url)
 valid_url = (archelon_uri.scheme == 'http' || archelon_uri.scheme == 'https') &&
