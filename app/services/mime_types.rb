@@ -6,7 +6,7 @@ class MimeTypes < SolrQueryService
     q: '*:*',
     indent: 'on',
     rows: '1000',
-    fl: 'id,files:[subquery]',
+    fl: 'id,pcdm_members,files:[subquery]',
     'files.q': '{!terms f=pcdm_file_of v=$row.pcdm_members}',
     'files.fl': 'mime_type',
     'files.rows': '1000',
