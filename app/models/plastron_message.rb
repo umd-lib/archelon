@@ -17,6 +17,10 @@ class PlastronMessage
     @headers[:PlastronJobState]
   end
 
+  def job_error
+    @headers[:PlastronJobError]
+  end
+
   def error?
     @headers.key?(:PlastronJobError)
   end
@@ -53,6 +57,7 @@ class PlastronMessage
   # Other errors from Plastron are reported as just a simple string, and
   # are parsed into a Map that contains an "error" key.
   def parse_errors(resource_id) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    return [{ error: "PlastronJobError: #{job_error}" }] if body_json == nil && error?
     stats = body_json['stats']
     validation_errors = stats['invalid'][resource_id]
     other_errors = stats['errors'][resource_id]
