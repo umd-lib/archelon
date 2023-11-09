@@ -7,7 +7,7 @@ class BinariesStats < SolrQueryService
     rows: '10000',
     'files.q': '{!terms f=pcdm_file_of v=$row.pcdm_members}',
     indent: 'on',
-    fl: 'id,files:[subquery]',
+    fl: 'id,pcdm_members,files:[subquery]',
     'files.fl': 'id,size',
     'files.rows': '10000'
   }.freeze
