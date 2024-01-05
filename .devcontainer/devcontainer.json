@@ -1,0 +1,16 @@
+{
+  "build": { "dockerfile": "../Dockerfile.vscode" },
+
+  "customizations": {
+    "vscode": {
+      "extensions": []
+    }
+  },
+
+  // Only forward specific ports, as having auto-forwarding turned on will
+  // mask the ports needed to contact fcrepo, Solr, and Plastron
+  "forwardPorts": [3000,5000,8080],
+  "otherPortsAttributes": {
+    "onAutoForward": "ignore"
+  }
+}
