@@ -15,6 +15,9 @@ class BookmarksController < CatalogController
   # Bump max per page to 1000 for bookmarks
   blacklight_config.max_per_page = 1000
 
+  # Disabling email functionality due to https://umd-dit.atlassian.net/browse/LIBHYDRA-519
+  blacklight_config.show.document_actions.delete(:email)
+
   add_show_tools_partial(:export, path: :new_export_job_url, modal: false)
 
   def toggle_multiple_selections # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
