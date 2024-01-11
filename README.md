@@ -50,7 +50,7 @@ There are several ways to setup the umd-fcrepo system -- see
 [umd-lib/umd-fcrepo/README.md][umd-fcrepo]
 for information about setting up a local development environment for Archelon.
 
-### Archelon Setup
+### Archelon Setup (Currently not working, use the VSCode Dev Container Setup below instead)
 
 The following are the basic steps to run the Archelon Rails application.
 Archelon requires other components of the umd-fcrepo system to enable most
@@ -88,6 +88,53 @@ functionality.
        ```
 
 Archelon will be available at <http://archelon-local:3000/>
+
+### Archelon Setup (VSCode Dev Container)
+Archelon requires other components of the umd-fcrepo system to enable most
+functionality.
+
+1. Checkout the repo, and open the codebase in VSCode:
+    ```bash
+    git clone git@github.com:umd-lib/archelon.git
+    cd archelon
+    code .
+2. When opening the codebase, there will be a notification to reopen the directory in a dev container, select "Reopen in Container"
+
+    ℹ️ **Note:** If there isn't a notification, you can also open the command palette (cmd+shift+p) and type “Dev Containers: Rebuild and Reopen in Container”
+
+    The dev container will take a moment to build the docker image, and install the javascript and ruby dependencies.
+
+2. Create a `.env` file from the `env_example` file, and adding these environment variables:
+    - LDAP_BIND_PASSWORD (Obtained from LastPass)
+    - FCREPO_AUTH_TOKEN (Obtained from generating a JWT token from the local fcrepo stack)
+    - PLASTRON_REST_BASE_URL=docker.for.mac.localhost:5000/
+
+3. Run yarn install
+    ```bash
+    yarn install
+    ```
+    <!-- https://umd-dit.atlassian.net/browse/LIBHYDRA-540 -->
+<!-- 4. *(Optional)* Load sample "Download URL" data:
+    ```bash
+    rails db:reset_with_sample_data
+    ``` -->
+4. Open three separate terminals in VSCode and run these respectively in each:
+   - Start the STOMP listener:
+       ```bash
+      rails stomp:listen
+      ```
+   - Start the Delayed Jobs worker:
+       ```bash
+      rails jobs:work
+       ```
+   - Run the web application:
+       ```bash
+       rails server
+       ```
+
+Archelon will be available at <http://archelon-local:3000/>
+
+**Note:** If a 403 Not Authorized Error occurs when visiting, visit the page in a private window.
 
 ## Logging
 
