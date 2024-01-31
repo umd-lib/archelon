@@ -64,3 +64,6 @@ styleguide/
 
 # Docker configuration file
 docker-archelon.env
+
+# vendor bundles
+vendor/bundle
