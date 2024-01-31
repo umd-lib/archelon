@@ -13,7 +13,8 @@
 // ---  END LICENSE_HEADER BLOCK  ---
 
 updateSelectAll = () => {
-  $("#bookmarks_selectall").prop("checked", $("input.toggle_bookmark:not(:checked)").size() == 0)
+  $("#bookmarks_selectall").prop("checked", $("input.toggle_bookmark").size() != 0 && $("input.toggle_bookmark:not(:checked)").size() == 0)
+  $("#bookmarks_selectall").prop("disabled", $("input.toggle_bookmark").size() == 0)
 }
 
 updateSelectAllResults = () => {
