@@ -148,6 +148,8 @@ class CatalogController < ApplicationController
     config.add_show_field 'created', label: 'Created'
     config.add_show_field 'last_modified', label: 'Last Modified'
     config.add_show_field 'rdf_type', label: 'RDF Type', helper_method: :rdf_type_list
+    config.add_show_field 'publication_status', label: 'Publication Status'
+    config.add_show_field 'visibility', label: 'Discoverability'
 
     # "fielded" search configuration. Used by pulldown among other places.
     # For supported keys in hash, see rdoc for Blacklight::SearchFields
