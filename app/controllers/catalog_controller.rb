@@ -87,7 +87,7 @@ class CatalogController < ApplicationController
     config.add_facet_field 'type', label: 'Type', limit: 10
     config.add_facet_field 'component_not_tokenized', label: 'Resource Type', limit: 10
     config.add_facet_field 'rdf_type', label: 'RDF Type', limit: 10
-    config.add_facet_field 'visibility', label: 'Discoverability'
+    config.add_facet_field 'visibility', label: 'Visibility'
     config.add_facet_field 'publication_status', label: 'Publication'
     # config.add_facet_field 'pub_date', label: 'Publication Year', single: true
     # config.add_facet_field 'subject_topic_facet', label: 'Topic', limit: 20, index_range: 'A'..'Z'
