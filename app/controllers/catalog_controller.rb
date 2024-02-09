@@ -132,6 +132,8 @@ class CatalogController < ApplicationController
     # the only fields being displayed form Solr are those relating to structural,
     # administrative, and technical metadata.
     config.add_show_field 'pcdm_collection', label: 'Collection', helper_method: :collection_from_subquery
+    config.add_show_field 'publication_status', label: 'Publication Status'
+    config.add_show_field 'visibility', label: 'Visibility'
     config.add_show_field 'pcdm_member_of', label: 'Member Of', helper_method: :parent_from_subquery
     config.add_show_field 'pcdm_members', label: 'Members', helper_method: :members_from_subquery
     config.add_show_field 'pcdm_related_object_of', label: 'Related To', helper_method: :related_object_of_from_subquery
