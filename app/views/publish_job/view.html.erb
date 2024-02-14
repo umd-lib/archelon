@@ -1,0 +1,106 @@
+<% if @status == "Submission pending" %>
+  <h1> <%= @publish == true ? "Publishing Job #{@id}" : "Unpublishing Job #{@id}" %> </h1>
+<% else %>
+  <h1> <%= @publish == true ? "Summary of Publishing Job #{@id}" : "Summary of Unpublishing Job #{@id}" %> </h1>
+<% end %>
+
+<b>
+  <font color='red'>
+    <%= "#{@result_documents.length} items currently selected for #{@publish == true ? "publishing" : "unpublishing"}" %>
+  </font>
+</b>
+
+<br>
+<b> <%= "#{@published} items" %> </b> currently published
+<br>
+<b> <%= "#{@unpublished} items" %> </b> currently unpublished
+<br>
+<b> <%= "#{@hidden} items" %> </b> hidden in search
+<br>
+
+<% if @status == "Submission pending"%>
+  <label for="visibility">Make all items visible in search: </label>
+  <input type="checkbox" id="visibility">
+<% end %>
+
+<br>
+
+<div class="tableFixHead">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Resource Type</th>
+        <th>Access Level</th>
+        <th>Member Of</th>
+        <th>Collection Information</th>
+        <th>Handle Identifier</th>
+        <th>Current Status</th>
+        <th colspan="2"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @result_documents.each do |doc| %>
+        <tr>
+          <% if doc._source.exclude? "title" %>
+            <td>"Title" not found</td>
+          <% else %>
+            <td><%= doc._source["title"][0] %> </td>
+          <% end %>
+
+          <% if doc._source.exclude? "component" %>
+            <td>"Resource Type" not found</td>
+          <% else %>
+            <td><%= doc._source["component"] %> </td>
+          <% end %>
+
+          <% if doc._source.exclude? "rdf_type" %>
+            <td>rdf_type not found</td>
+          <% elsif doc._source["rdf_type"].include? "umd_access:public" %>
+            <td>Public</td>
+          <% elsif doc._source["rdf_type"].include? "umd_access:campus" %>
+            <td>Campus</td>
+          <% else %>
+            <td>None</td>
+          <% end %>
+
+          <% if doc._source.exclude? "collection_title_facet" %>
+            <td>"Member Of" not found</td>
+          <% else %>
+            <td><%= doc._source["collection_title_facet"][0] %> </td>
+          <% end %>
+
+          <% if doc._source.exclude? "citation" %>
+            <td>"Collection Information" not found</td>
+          <% else %>
+            <td><%= doc._source["citation"][0] %> </td>
+          <% end %>
+
+          <% if doc._source.exclude? "handle" %>
+            <td> "Handle" not found </td>
+          <% else %>
+            <td><%= doc._source["handle"] %> </td>
+          <% end %>
+
+          <% if doc._source.exclude? "is_published" %>
+            <td> "Published" field not found </td>
+          <% elsif doc._source.exclude? "is_hidden" %>
+            <td> "Hidden" field not found </td>
+          <% else %>
+            <% published = doc.source["is_published"] == "true" ? "Published" : "Unpublished" %>
+            <% hidden = doc.source["is_hidden"] == "true" ? "Hidden" : "Visible" %>
+            <td><%= published + " and " + hidden %> </td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<% if @status == "Submission pending" %>
+  <%= link_to "Submit Job", "/publish_job/submit/#{@id}", class:"btn btn-danger" %>
+  <%= link_to "Delete Job", "/publish_job/delete/#{@id}", class:"btn btn-danger", data: { confirm: 'Delete job?' } %>
+<% end %>
+
+<br>
+<br>

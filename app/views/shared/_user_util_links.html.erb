@@ -18,10 +18,12 @@
           <% if current_cas_user.admin? %>
             <li><%= link_to 'Users', controller: 'cas_users', action: 'index' %></li>
           <% end %>
-          <li><%= link_to t('activerecord.models.download_url').pluralize, controller: 'download_urls', action: 'index' %></li>
+          <li><%= link_to 'Collections Summary', controller: 'collection', action: 'index' %></li>
+          <li><%= link_to 'Publication Jobs', controller: 'publish_job', action: 'index' %></li>
+          <li><%= link_to 'Download URLs', controller: 'download_urls', action: 'index' %></li>
           <li><%= link_to 'Export Queue', controller: 'export_jobs', action: 'index' %></li>
-          <li><%= link_to t('activerecord.models.import_job').pluralize, controller: 'import_jobs', action: 'index' %></li>
-          <li><%= link_to t('activerecord.models.vocabulary').pluralize, controller: 'vocabularies', action: 'index' %></li>
+          <li><%= link_to 'Import Jobs', controller: 'import_jobs', action: 'index' %></li>
+          <li><%= link_to 'Vocabularies', controller: 'vocabularies', action: 'index' %></li>
         </ul>
       </div>
     </li>
