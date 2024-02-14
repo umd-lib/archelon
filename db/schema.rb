@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_04_190827) do
+ActiveRecord::Schema.define(version: 2024_02_13_215834) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -180,6 +180,15 @@ ActiveRecord::Schema.define(version: 2021_11_04_190827) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["cas_user_id"], name: "index_public_keys_on_cas_user_id"
+  end
+
+  create_table "publish_jobs", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "publish"
+    t.text "solr_ids", default: "--- []\n"
+    t.string "cas_user"
+    t.string "status"
   end
 
   create_table "searches", force: :cascade do |t|
