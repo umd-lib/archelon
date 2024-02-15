@@ -29,11 +29,39 @@ class ResourceController < ApplicationController
     end
   end
 
+  def update_state
+    result = update_command.new(uri: @id, user: current_user).call
+
+    if result.error_occurred?
+      flash[:error] = "Unable to update this item: #{result.error_message}"
+    else
+      # Solr indexing happends more slowly than a page refresh, so when the detail page is
+      # immediately redirected to, the metadata it reads from Solr is usually out of date.
+      flash[:notice] = 'Update submitted. Please note that you may need to refresh this page
+        to see the updated publication status of this item.'
+    end
+
+    redirect_to solr_document_url(@id)
+  end
+
   private
 
     def set_resource
       @id = params[:id]
       @resource = ResourceService.resource_with_model(@id)
+    end
+
+    def update_command
+      case params[:command]
+      when 'Publish'
+        PlastronServices::HTTP::PublishItem
+      when 'Publish Hidden'
+        PlastronServices::HTTP::PublishHiddenItem
+      when 'Unpublish'
+        PlastronServices::HTTP::UnpublishItem
+      else
+        raise "Unknown command #{params[:command]}"
+      end
     end
 
     def send_to_plastron(id, model, sparql_update) # rubocop:disable Metrics/MethodLength

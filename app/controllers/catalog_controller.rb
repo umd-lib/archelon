@@ -201,6 +201,7 @@ class CatalogController < ApplicationController
     @show_edit_metadata = CatalogController.show_edit_metadata(@document['component'])
     @id = params[:id]
     @resource = ResourceService.resource_with_model(@id)
+    @published = @resource[:items][@id]['@type'].include?('http://vocab.lib.umd.edu/access#Published')
   end
 
   # Returns true if the given component has editable metadata, false otherwise.

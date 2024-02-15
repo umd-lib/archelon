@@ -25,6 +25,8 @@ Rails.application.routes.draw do # rubocop:disable Metrics/BlockLength
   get '/edit/:id', controller: 'resource', action: 'edit', constraints: { id: /.*/ }, as: 'resource_edit'
   post '/edit/:id', controller: 'resource', action: 'update', constraints: { id: /.*/ }
 
+  post '/update/:id', controller: 'resource', action: 'update_state', constraints: { id: /.*/ }, as: 'update_resource'
+
   resources :bookmarks, constraints: { id: /.*/ } do
     concerns :exportable
 

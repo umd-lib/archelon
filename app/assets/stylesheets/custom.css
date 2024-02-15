@@ -262,3 +262,8 @@ input {
 .descriptive-metadata-value {
     list-style-type: none;
 }
+
+.publish-controls {
+  display: inline-block;
+  margin-left: 1em;
+}
