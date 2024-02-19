@@ -5,7 +5,7 @@ class CatalogController < ApplicationController
   before_action :make_current_query_accessible, only: %i[show index] # rubocop:disable Rails/LexicallyScopedActionFilter
 
   rescue_from Blacklight::Exceptions::ECONNREFUSED, with: :solr_connection_error
-  rescue_from Blacklight::Exceptions::InvalidRequest, with: :solr_connection_error
+
 
   configure_blacklight do |config| # rubocop:disable Metrics/BlockLength
     ## Class for sending and receiving requests from a search index
@@ -131,7 +131,7 @@ class CatalogController < ApplicationController
     # The ordering of the field names is the order of the display.
     #
     # Note that as of implementation of in-browser editing of descriptive metadata,
-    # the only fields being displayed form Solr are those relating to structural,
+    # the only fields being displayed from Solr are those relating to structural,
     # administrative, and technical metadata.
     config.add_show_field 'pcdm_collection', label: 'Collection', helper_method: :collection_from_subquery
     config.add_show_field 'publication_status', label: 'Publication Status'
@@ -211,7 +211,8 @@ class CatalogController < ApplicationController
 
   private
 
-    def solr_connection_error
+    def solr_connection_error(e)
+      puts e.message
       flash[:error] = I18n.t(:solr_is_down)
       redirect_to(about_url)
     end
