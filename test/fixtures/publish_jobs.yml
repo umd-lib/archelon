@@ -1,7 +1,17 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  document: MyString
+  cas_user: test_user
+  status: "Submission pending"
+  solr_ids: ["another fake solr id", "Test solr Id"]
+  publish: true
+  updated_at: 2024-02-19 14:53:29
+  created_at: 2024-02-19 14:53:29
 
 two:
-  document: MyString
+  cas_user: test_admin
+  status: "Submission pending"
+  solr_ids: ["another fake solr id", "Test solr Id"]
+  publish: true
+  updated_at: 2024-02-19 14:53:29
+  created_at: 2024-02-19 14:53:29
