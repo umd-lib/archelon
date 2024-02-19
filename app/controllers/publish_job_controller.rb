@@ -36,7 +36,7 @@ class PublishJobController < BookmarksController
     job = PublishJob.find(@id)
     @publish = job.publish
     @result_documents = job.solr_ids.map { |solr_id| fetch(solr_id)[1] }
-    @name = job.cas_user
+    @name = job.cas_user.cas_directory_id
     @status = job.status
 
     @hidden = @result_documents.sum { |doc| (doc._source.include? "is_hidden" && doc._source["is_hidden"] == "true") ? 1 : 0 }
@@ -70,7 +70,7 @@ class PublishJobController < BookmarksController
     def create_job(ids, publish, status)
       PublishJob.create(:solr_ids => ids,
                         :publish => publish,
-                        :cas_user => current_cas_user.cas_directory_id,
+                        :cas_user => current_cas_user,
                         :status => status)
     end
 end

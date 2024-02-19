@@ -13,7 +13,7 @@
     <% @jobs.each do |job| %>
      <tr>
       <td> <%= link_to "#{job.id}", "/publish_job/#{job.id}" %> </td>
-      <td> <%= job.cas_user %> </td>
+      <td> <%= job.cas_user.cas_directory_id %> </td>
       <td> <%= job.created_at %> </td>
       <td> <%= job.publish == true ? "Publish" : "Unpublish" %> </td>
       <td> <%= job.status %> </td>
