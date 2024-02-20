@@ -27,7 +27,7 @@ class PublishJobController < BookmarksController
       if current_cas_user.admin?
         PublishJob.all.order('updated_at DESC')
       else
-        PublishJob.where(cas_user: current_cas_user.cas_directory_id).order('updated_at DESC')
+        PublishJob.where(cas_user: current_cas_user).order('updated_at DESC')
       end
   end
 
