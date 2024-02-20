@@ -28,6 +28,7 @@ Item:
       label: 'Access Level'
       type: :ControlledURIRef
       vocab: 'access'
+      terms: ['Public', 'Campus']
 
   recommended:
     - name: 'format'
