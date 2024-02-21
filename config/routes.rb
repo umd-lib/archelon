@@ -83,7 +83,7 @@ Rails.application.routes.draw do # rubocop:disable Metrics/BlockLength
   get 'react_components' => 'react_components#react_components'
   post 'react_components' => 'react_components#react_components_submit'
 
-  resources :vocabularies, :types, :individuals, :datatypes, :collection
+  resources :vocabularies, :types, :individuals, :datatypes
 
   get '/publish_job' => 'publish_job#index'
   get '/publish_job/:id' => 'publish_job#view'
