@@ -1,0 +1,24 @@
+<h1>Publication Jobs</h1>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Created By</th>
+      <th>Created At</th>
+      <th>Type</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @jobs.each do |job| %>
+     <tr>
+      <td> <%= link_to "#{job.id}", "/publish_job/#{job.id}" %> </td>
+      <td> <%= job.cas_user.cas_directory_id %> </td>
+      <td> <%= job.created_at %> </td>
+      <td> <%= job.publish == true ? "Publish" : "Unpublish" %> </td>
+      <td> <%= job.status %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+
