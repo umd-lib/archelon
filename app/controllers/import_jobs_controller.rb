@@ -72,7 +72,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     end
 
     if valid_update && @import_job.save
-      start_validation
+      start_validation resume: true
       return redirect_to action: 'index', status: :see_other
     end
 
@@ -156,8 +156,8 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
       STOMP_CONFIG['destinations'][:jobs]
     end
 
-    def start_validation
-      SendStompMessageJob.perform_later jobs_destination, job_request(@import_job, validate_only: true)
+    def start_validation(resume: false)
+      SendStompMessageJob.perform_later jobs_destination, job_request(@import_job, validate_only: true, resume: resume)
       @import_job.validate_pending!
     end
 
