@@ -19,8 +19,8 @@ class BookmarksController < CatalogController
   blacklight_config.show.document_actions.delete(:email)
 
   add_show_tools_partial(:export, path: :new_export_job_url, modal: false)
-  add_show_tools_partial(:publish_job, path: :new_publish_job_url, modal: false, label:"Publish")
-  add_show_tools_partial(:unpublish_job, path: :new_unpublish_job_url, modal: false, label:"Unpublish")
+  add_show_tools_partial(:publish_job, path: :new_publish_job_url, modal: false, label: 'Publish')
+  add_show_tools_partial(:unpublish_job, path: :new_unpublish_job_url, modal: false, label: 'Unpublish')
 
   def toggle_multiple_selections # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     item_ids = params.fetch(:document_ids, []).uniq

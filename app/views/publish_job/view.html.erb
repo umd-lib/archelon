@@ -1,12 +1,12 @@
-<% if @status == "Submission pending" %>
-  <h1> <%= @publish == true ? "Publishing Job #{@id}" : "Unpublishing Job #{@id}" %> </h1>
+<% if @job.status == "Submission pending" %>
+  <h1> <%= @job.publish == true ? "Publishing Job #{@job.id}" : "Unpublishing Job #{@job.id}" %> </h1>
 <% else %>
-  <h1> <%= @publish == true ? "Summary of Publishing Job #{@id}" : "Summary of Unpublishing Job #{@id}" %> </h1>
+  <h1> <%= @job.publish == true ? "Summary of Publishing Job #{@job.id}" : "Summary of Unpublishing Job #{@job.id}" %> </h1>
 <% end %>
 
 <b>
   <font color='red'>
-    <%= "#{@result_documents.length} items currently selected for #{@publish == true ? "publishing" : "unpublishing"}" %>
+    <%= "#{@result_documents.length} items currently selected for #{@job.publish == true ? "publishing" : "unpublishing"}" %>
   </font>
 </b>
 
@@ -18,7 +18,7 @@
 <b> <%= "#{@hidden} items" %> </b> hidden in search
 <br>
 
-<% if @status == "Submission pending"%>
+<% if @job.status == "Submission pending"%>
   <label for="visibility">Make all items visible in search: </label>
   <input type="checkbox" id="visibility">
 <% end %>
@@ -82,10 +82,8 @@
             <td><%= doc._source["handle"] %> </td>
           <% end %>
 
-          <% if doc._source.exclude? "is_published" %>
-            <td> "Published" field not found </td>
-          <% elsif doc._source.exclude? "is_hidden" %>
-            <td> "Hidden" field not found </td>
+          <% if doc._source.exclude? "is_published" or doc._source.exclude? "is_hidden" %>
+            <td> Status Unknown </td>
           <% else %>
             <% published = doc.source["is_published"] == "true" ? "Published" : "Unpublished" %>
             <% hidden = doc.source["is_hidden"] == "true" ? "Hidden" : "Visible" %>
@@ -97,9 +95,9 @@
   </table>
 </div>
 
-<% if @status == "Submission pending" %>
-  <%= link_to "Submit Job", "/publish_job/submit/#{@id}", class:"btn btn-danger" %>
-  <%= link_to "Delete Job", "/publish_job/delete/#{@id}", class:"btn btn-danger", data: { confirm: 'Delete job?' } %>
+<% if @job.status == "Submission pending" %>
+  <%= link_to "Submit Job", "/publish_job/submit/#{@job.id}", class:"btn btn-danger" %>
+  <%= link_to "Delete Job", "/publish_job/delete/#{@job.id}", class:"btn btn-danger", data: { confirm: 'Delete job?' } %>
 <% end %>
 
 <br>
