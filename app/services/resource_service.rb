@@ -31,7 +31,7 @@ class ResourceService
     # Start with an unfrozen empty string (created using the unary '+' operator), then
     # accumulate the body chunks.
     body = +''
-    response.body.each {|chunk| body << chunk}
+    response.body.each { |chunk| body << chunk }
     input = JSON.parse(body)
     JSON::LD::API.expand(input)
   end
