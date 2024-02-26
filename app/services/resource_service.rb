@@ -26,7 +26,13 @@ class ResourceService
 
   def self.resources(uri)
     response = get(description_uri(uri), headers: { accept: 'application/ld+json' })
-    input = JSON.parse(response.body.to_s)
+    # This is a bit of a kludge to get around problems with building a string from the
+    # response body content when the "frozen_string_literal: true" pragma is in effect.
+    # Start with an unfrozen empty string (created using the unary '+' operator), then
+    # accumulate the body chunks.
+    body = +''
+    response.body.each { |chunk| body << chunk }
+    input = JSON.parse(body)
     JSON::LD::API.expand(input)
   end
 
