@@ -8,7 +8,7 @@ services:
   archelon:
     image: docker.lib.umd.edu/archelon
     ports:
-      - 3000:3000
+      - "3000:3000"
     env_file:
       - docker-archelon.env
     volumes:
@@ -24,7 +24,7 @@ services:
   archelon-sftp:
     image: docker.lib.umd.edu/archelon-sftp:latest
     ports:
-      - 2200:22
+      - "2200:22"
     volumes:
       - archelon-import-export-data:/data
   archelon-db:
@@ -36,7 +36,7 @@ services:
     volumes:
       - "dbdata:/var/lib/postgresql/data"
     ports:
-      - 5434:5432
+      - "5434:5432"
 volumes:
   archelon-storage:
   archelon-import-export-data:

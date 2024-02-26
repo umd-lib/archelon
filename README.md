@@ -50,7 +50,7 @@ There are several ways to setup the umd-fcrepo system -- see
 [umd-lib/umd-fcrepo/README.md][umd-fcrepo]
 for information about setting up a local development environment for Archelon.
 
-### Archelon Setup
+### Archelon Setup (Currently not working, use the VSCode Dev Container Setup below instead)
 
 The following are the basic steps to run the Archelon Rails application.
 Archelon requires other components of the umd-fcrepo system to enable most
@@ -73,20 +73,68 @@ functionality.
     ```bash
     rails db:reset_with_sample_data
     ```
-5. Start the STOMP listener:
-    ```bash
-   rails stomp:listen
-   ```
-6. Start the Delayed Jobs worker:
-    ```bash
-   rails jobs:work
-    ```
-7. Run the web application:
-    ```bash
-    rails server
-    ```
+5. In three separate terminals:
+   1. Start the STOMP listener:
+       ```bash
+      rails stomp:listen
+      ```
+   2. Start the Delayed Jobs worker:
+       ```bash
+      rails jobs:work
+       ```
+   3. Run the web application:
+       ```bash
+       rails server
+       ```
 
-Archelon will be available at <http://localhost:3000/>
+Archelon will be available at <http://archelon-local:3000/>
+
+### Archelon Setup (VSCode Dev Container)
+Archelon requires other components of the umd-fcrepo system to enable most
+functionality.
+
+1. Checkout the repo, and open the codebase in VSCode:
+    ```bash
+    git clone git@github.com:umd-lib/archelon.git
+    cd archelon
+    code .
+2. When opening the codebase, there will be a notification to reopen the directory in a dev container, select "Reopen in Container"
+
+    ℹ️ **Note:** If there isn't a notification, you can also open the command palette (cmd+shift+p) and type “Dev Containers: Rebuild and Reopen in Container”
+
+    The dev container will take a moment to build the docker image, and install the javascript and ruby dependencies.
+
+2. Create a `.env` file from the `env_example` file, and adding these environment variables:
+    - LDAP_BIND_PASSWORD (Obtained from LastPass)
+    - FCREPO_AUTH_TOKEN (Obtained from generating a JWT token from the local fcrepo stack)
+    - PLASTRON_REST_BASE_URL=docker.for.mac.localhost:5000/
+
+3. Run yarn install
+    ```bash
+    yarn install
+    ```
+    <!-- https://umd-dit.atlassian.net/browse/LIBHYDRA-540 -->
+<!-- 4. *(Optional)* Load sample "Download URL" data:
+    ```bash
+    rails db:reset_with_sample_data
+    ``` -->
+4. Open three separate terminals in VSCode and run these respectively in each:
+   - Start the STOMP listener:
+       ```bash
+      rails stomp:listen
+      ```
+   - Start the Delayed Jobs worker:
+       ```bash
+      rails jobs:work
+       ```
+   - Run the web application:
+       ```bash
+       rails server
+       ```
+
+Archelon will be available at <http://archelon-local:3000/>
+
+**Note:** If a 403 Not Authorized Error occurs when visiting, visit the page in a private window.
 
 ## Logging
 
@@ -119,29 +167,51 @@ endpoint to "localhost", or nodes in the Kubernetes cluster.
 
 ## Docker
 
-Archelon comes with a [Dockerfile](Dockerfile) that can be used to build a
-docker image:
+Archelon uses the [boathook] gem to provide [Rake tasks](lib/tasks/docker.rake)
+for building and pushing Docker images, as described in the following Dockerfiles:
 
-```
-docker build -t docker.lib.umd.edu/archelon -f Dockerfile .
+|Dockerfile                        |Image Name                        |Application|
+|----------------------------------|----------------------------------|-----------|
+|[Dockerfile](Dockerfile)          |`docker.lib.umd.edu/archelon`     |main Rails application|
+|[Dockerfile.sftp](Dockerfile.sftp)|`docker.lib.umd.edu/archelon-sftp`|SFTP server for import/export|
+
+Usage:
+
+```bash
+# list the images that would be built, and the metadata for them
+rails docker:tags
+
+# builds the images
+rails docker:build
+
+# pushes to docker.lib.umd.edu hub
+rails docker:push
 ```
 
 See [umd-lib/umd-fcrepo/README.md][umd-fcrepo] for information about setting up
 a local development environment for Archelon using Docker.
 
-There are also two [Rake tasks](docs/RakeTasks.md#dockerbuild-dockerpush),
-`docker:build` and `docker:push`, for use when building images to share to the
-docker.lib.umd.edu hub.
-
 When running locally in Docker, the Archelon database can be accessed using:
 
-```
+```bash
 # Archelon database backing the Archelon Rails app
 psql -U archelon -h localhost -p 5434 archelon
 ```
 
-There is also a "Dockerfile.sftp" file, which sets up an SFTP server enabling
-files to be uploaded to Archelon for inclusion in import jobs.
+### Multi-Platform Docker Builds
+
+It is possible to build a multi-platform Docker image using the `docker buildx`
+command and targeting both the `linux/amd64` and `linux/arm64` platforms. As
+long as there is a `local` builder configured for buildx, the following will
+build and push a multi-platform image:
+
+```bash
+docker buildx build \
+    --builder local \
+    --platform linux/amd64,linux/arm64 \
+    --tag docker.lib.umd.edu/archelon:latest \
+    --push .
+```
 
 ## Rake Tasks
 
@@ -230,7 +300,6 @@ Archelon is configured to use the [Delayed::Job][delayed_job] queue adapter, via
 the [delayed_job_active_record][delayed_job_active_record] gem to store jobs
 in the database.
 
-
 ## Cron Jobs
 
 The [delayed_cron_job][delayed_cron_job] gem is used to schedule jobs to run on
@@ -263,7 +332,7 @@ after modifying the "cron_expression" for a CronJob (as long as
 An interactive demo displaying the React components provided by the application
 is available at:
 
-http://localhost:3000/react_components
+http://archelon-local:3000/react_components
 
 ### Documenting React Components
 
@@ -302,3 +371,4 @@ See the [LICENSE](LICENSE.md) file for license rights and limitations
 [stomp]: https://stomp.github.io/
 [umd-fcrepo]: https://github.com/umd-lib/umd-fcrepo
 [umd-fcrepo-docker]: https://github.com/umd-lib/umd-fcrepo-docker
+[boathook]: https://github.com/umd-lib/boathook

@@ -72,7 +72,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     end
 
     if valid_update && @import_job.save
-      start_validation
+      start_validation resume: true
       return redirect_to action: 'index', status: :see_other
     end
 
@@ -156,13 +156,16 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
       STOMP_CONFIG['destinations'][:jobs]
     end
 
-    def start_validation
-      SendStompMessageJob.perform_later jobs_destination, job_request(@import_job, validate_only: true)
+    def start_validation(resume: false)
+      SendStompMessageJob.perform_later jobs_destination, job_request(@import_job, validate_only: true, resume: resume)
       @import_job.validate_pending!
     end
 
     def start_import
-      SendStompMessageJob.perform_later jobs_destination, job_request(@import_job)
+      # must set resume to 'true' since there will already be a job directory that was created
+      # by the validation phase, and Plastron complains if you try to start a job when there is
+      # an existing directory for it
+      SendStompMessageJob.perform_later jobs_destination, job_request(@import_job, resume: true)
       @import_job.import_pending!
     end
 

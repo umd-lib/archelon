@@ -16,7 +16,7 @@ RUN apt-get update && \
 
 COPY ./Gemfile ./Gemfile.lock /opt/archelon/
 RUN gem install bundler:1.17.2
-RUN bundle install --deployment --without development test
+RUN bundle install --with development test --without production
 COPY . /opt/archelon
 
 RUN npm install --global yarn && \
@@ -32,9 +32,9 @@ ENV SCRIPT_NAME=
 # Similarly, the ARCHELON_DATABASE_ADAPTER variable is needed for the
 # "assets:precompile" Rake task to complete, but will have no effect
 # on the application when it is actually run.
-ENV SECRET_KEY_BASE=IGNORE_ME
-RUN ARCHELON_DATABASE_ADAPTER=postgresql RAILS_ENV=production \
-    bundle exec rails assets:precompile
+# ENV SECRET_KEY_BASE=IGNORE_ME
+# RUN ARCHELON_DATABASE_ADAPTER=postgresql RAILS_ENV=production \
+#     bundle exec rails assets:precompile
 
 EXPOSE 3000
 

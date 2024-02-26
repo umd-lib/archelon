@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/umd-lib/boathook
+  revision: 513db1964fe2ddd854d4c249dd5488549f079880
+  branch: main
+  specs:
+    boathook (1.0.0.pre.dev)
+      mattock (~> 0.5.2)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -91,7 +99,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.12.2)
-    concurrent-ruby (1.1.9)
+    concurrent-ruby (1.1.10)
     connection_pool (2.2.3)
     crass (1.0.6)
     delayed_cron_job (0.8.0)
@@ -123,15 +131,15 @@ GEM
       i18n (>= 0.7)
     faraday (1.0.1)
       multipart-post (>= 1.2, < 3)
-    ffi (1.12.2)
+    ffi (1.15.5)
     fugit (1.5.2)
       et-orbi (~> 1.1, >= 1.1.8)
       raabro (~> 1.4)
-    globalid (1.0.0)
+    globalid (1.0.1)
       activesupport (>= 5.0)
     hamster (3.0.0)
       concurrent-ruby (~> 1.0)
-    hashie (4.1.0)
+    hashie (5.0.0)
     htmlentities (4.3.4)
     http (2.2.2)
       addressable (~> 2.3)
@@ -142,7 +150,7 @@ GEM
       domain_name (~> 0.5)
     http-form_data (1.0.3)
     http_parser.rb (0.6.0)
-    i18n (1.10.0)
+    i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     jaro_winkler (1.5.4)
     jbuilder (2.10.0)
@@ -172,17 +180,21 @@ GEM
       kaminari-core (= 1.2.1)
     kaminari-core (1.2.1)
     libv8 (3.16.14.19)
+    libv8-node (16.10.0.0)
     link_header (0.0.8)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
       ruby_dep (~> 1.2)
-    loofah (2.15.0)
+    loofah (2.18.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     mail (2.7.1)
       mini_mime (>= 0.1.1)
     marcel (1.0.2)
+    mattock (0.5.2)
+      tilt (> 0)
+      valise (>= 0.9.1)
     mechanize (2.7.7)
       domain_name (~> 0.5, >= 0.5.1)
       http-cookie (~> 1.0)
@@ -199,7 +211,9 @@ GEM
     mime-types-data (3.2020.1104)
     mini_mime (1.1.2)
     mini_portile2 (2.8.0)
-    minitest (5.15.0)
+    mini_racer (0.6.3)
+      libv8-node (~> 16.10.0.0)
+    minitest (5.17.0)
     minitest-reporters (1.4.2)
       ansi
       builder
@@ -213,11 +227,11 @@ GEM
       connection_pool (~> 2.2)
     net-ldap (0.16.2)
     nio4r (2.5.8)
-    nokogiri (1.13.3)
+    nokogiri (1.13.9)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
     ntlm-http (0.1.1)
-    omniauth (1.9.1)
+    omniauth (1.9.2)
       hashie (>= 3.4.6)
       rack (>= 1.6.2, < 3)
     omniauth-cas (1.1.1)
@@ -231,11 +245,11 @@ GEM
     polyamorous (2.3.2)
       activerecord (>= 5.2.1)
     public_suffix (4.0.6)
-    puma (4.3.11)
+    puma (4.3.12)
       nio4r (~> 2.0)
     raabro (1.4.0)
     racc (1.6.0)
-    rack (2.2.3)
+    rack (2.2.6.4)
     rack-proxy (0.7.0)
       rack
     rack-test (1.1.0)
@@ -260,7 +274,7 @@ GEM
     rails-dom-testing (2.0.3)
       activesupport (>= 4.2.0)
       nokogiri (>= 1.6)
-    rails-html-sanitizer (1.4.2)
+    rails-html-sanitizer (1.4.3)
       loofah (~> 2.3)
     railties (5.2.6.3)
       actionpack (= 5.2.6.3)
@@ -377,7 +391,7 @@ GEM
       actionpack (>= 3.1)
       jquery-rails
       railties (>= 3.1)
-    tzinfo (1.2.9)
+    tzinfo (1.2.10)
       thread_safe (~> 0.1)
     uglifier (4.2.0)
       execjs (>= 0.3.0, < 3)
@@ -385,6 +399,7 @@ GEM
       unf_ext
     unf_ext (0.0.7.7)
     unicode-display_width (1.6.1)
+    valise (1.2.1)
     web-console (3.7.0)
       actionview (>= 5.0)
       activemodel (>= 5.0)
@@ -417,6 +432,7 @@ DEPENDENCIES
   action-cable-testing
   addressable (~> 2.8)
   blacklight (~> 6.0)
+  boathook!
   bootsnap (>= 1.1.0)
   byebug
   cancancan
@@ -434,6 +450,7 @@ DEPENDENCIES
   json-ld
   listen (>= 3.0.5, < 3.2)
   mechanize
+  mini_racer
   minitest-reporters
   net-ldap (~> 0.16.1)
   omniauth-cas (~> 1.1.1)

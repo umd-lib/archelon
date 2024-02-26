@@ -1,6 +1,6 @@
 default: &default
   local_authority_base_uri: http://vocab.lib.umd.edu/
-  publication_base_uri: http://localhost:3000/published_vocabularies/
+  publication_base_uri: http://archelon-local:3000/published_vocabularies/
   access_vocab_identifier: access
 
 development:
