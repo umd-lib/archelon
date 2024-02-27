@@ -1,4 +1,4 @@
-<% if @job.status == "Submission pending" %>
+<% if @job.publish_not_submitted? %>
   <h1> <%= @job.publish == true ? "Publishing Job #{@job.id}" : "Unpublishing Job #{@job.id}" %> </h1>
 <% else %>
   <h1> <%= @job.publish == true ? "Summary of Publishing Job #{@job.id}" : "Summary of Unpublishing Job #{@job.id}" %> </h1>
@@ -18,7 +18,7 @@
 <b> <%= "#{@hidden} items" %> </b> hidden in search
 <br>
 
-<% if @job.status == "Submission pending"%>
+<% if @job.publish_not_submitted? %>
   <label for="visibility">Make all items visible in search: </label>
   <input type="checkbox" id="visibility">
 <% end %>
@@ -95,7 +95,12 @@
   </table>
 </div>
 
-<% if @job.status == "Submission pending" %>
+<% if @job.publish_incomplete? or @job.publish_error? %>
+  <%= link_to "Resubmit Job", "/publish_job/submit/#{@job.id}", class:"btn btn-danger" %>
+  <%= link_to "Delete Job", "/publish_job/delete/#{@job.id}", class:"btn btn-danger", data: { confirm: 'Delete job?' } %>
+<% end %>
+
+<% if @job.publish_not_submitted? %>
   <%= link_to "Submit Job", "/publish_job/submit/#{@job.id}", class:"btn btn-danger" %>
   <%= link_to "Delete Job", "/publish_job/delete/#{@job.id}", class:"btn btn-danger", data: { confirm: 'Delete job?' } %>
 <% end %>

@@ -51,13 +51,13 @@ class PublishJobController < BookmarksController
 
   def new_publish_job
     solr_ids = current_user.bookmarks.map(&:document).map(&:id)
-    create_job(solr_ids, true, 'Submission pending')
+    create_job(solr_ids, true, 1)
     redirect_to '/publish_job'
   end
 
   def new_unpublish_job
     solr_ids = current_user.bookmarks.map(&:document).map(&:id)
-    create_job(solr_ids, false, 'Submission pending')
+    create_job(solr_ids, false, 1)
     redirect_to '/publish_job'
   end
 
@@ -67,16 +67,44 @@ class PublishJobController < BookmarksController
   end
 
   def submit
-    PublishJob.find(params[:id]).update(status: 'Job in progress')
+    PublishJob.find(params[:id]).update(state: 2)
     redirect_to '/publish_job'
+  end
+
+  # Generates status text display for the GUI
+  def status_text(publish_job)
+    return '' if publish_job.state.blank?
+
+    return I18n.t("activerecord.attributes.publish_job.status.#{publish_job.state}") unless publish_job.publish_in_progress?
+
+    I18n.t('activerecord.attributes.publish_job.status.publish_in_progress') + publish_job.progress_text
+  end
+
+   # POST /publish_job/1/status_update
+   def status_update
+    # Triggers import job notification to channel;
+    # it is important to use perform_now so that
+    # ActionCable receives timely updates
+    PublishJobStatusUpdatedJob.perform_now(@publish_job)
+    render plain: '', status: :no_content
   end
 
   private
 
-    def create_job(ids, publish, status)
+    def create_job(ids, publish, state)
       PublishJob.create(solr_ids: ids,
                         publish: publish,
                         cas_user: current_cas_user,
-                        status: status)
+                        state: state)
+    end
+
+    def start_publish
+      SendStompMessageJob.perform_later jobs_destination, job_request(@publish_job)
+      @publish_job.publish_pending!
+    end
+
+    def resume_publish
+      SendStompMessageJob.perform_later jobs_destination, job_request(@publish_job, resume: true)
+      @publish_job.publish_pending!
     end
 end

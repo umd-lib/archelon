@@ -89,6 +89,7 @@ Rails.application.routes.draw do # rubocop:disable Metrics/BlockLength
 
   get '/publish_job' => 'publish_job#index'
   get '/publish_job/:id' => 'publish_job#view'
+  post '/publish_job/:id/status_update' => 'publish_job#status_update'
   get '/publish_job/submit/:id' => 'publish_job#submit'
   get '/publish_job/delete/:id' => 'publish_job#destroy'
   get '/new_publish_job' => 'publish_job#new_publish_job'
