@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class PublishJobController < BookmarksController
+  before_action :set_publish_job, only: %i[update show edit start_publish status_update]
+
   FIELD_LISTS = %w[
     title
     component
@@ -68,6 +70,7 @@ class PublishJobController < BookmarksController
 
   def submit
     PublishJob.find(params[:id]).update(state: 2)
+    start_publish
     redirect_to '/publish_job'
   end
 
@@ -91,11 +94,23 @@ class PublishJobController < BookmarksController
 
   private
 
+    def set_publish_job
+      @publish_job = PublishJob.find(params[:id])
+    end
+
     def create_job(ids, publish, state)
       PublishJob.create(solr_ids: ids,
                         publish: publish,
                         cas_user: current_cas_user,
                         state: state)
+    end
+
+    def job_request(job, validate_only: false, resume: false)
+      PublishJobRequest.create(
+        publish_job: job,
+        job_id: publish_job_url(job),
+        resume: resume
+      )
     end
 
     def start_publish
