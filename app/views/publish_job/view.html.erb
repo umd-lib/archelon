@@ -18,10 +18,7 @@
 <b> <%= "#{@hidden} items" %> </b> hidden in search
 <br>
 
-<% if @job.publish_not_submitted? %>
-  <label for="visibility">Make all items visible in search: </label>
-  <input type="checkbox" id="visibility">
-<% end %>
+
 
 <br>
 
@@ -95,13 +92,18 @@
   </table>
 </div>
 
-<% if @job.publish_incomplete? or @job.publish_error? %>
-  <%= link_to "Resubmit Job", "/publish_job/submit/#{@job.id}", class:"btn btn-danger" %>
-  <%= link_to "Delete Job", "/publish_job/delete/#{@job.id}", class:"btn btn-danger", data: { confirm: 'Delete job?' } %>
+<% if @job.publish_not_submitted? %>
+  <%= form_tag "/publish_job/submit/#{@job.id}", :method => 'get' do %>
+    <%= label_tag(:visibility, 'Make all items visible in search:') %>
+    <%= check_box 'visibility', 'result', {}, 1, 0 %>
+    <br>
+    <%= submit_tag 'Submit Job', class:"btn btn-danger" %>
+    <%= link_to "Delete Job", "/publish_job/delete/#{@job.id}", class:"btn btn-danger", data: { confirm: 'Delete job?' } %>
+  <% end %>
 <% end %>
 
-<% if @job.publish_not_submitted? %>
-  <%= link_to "Submit Job", "/publish_job/submit/#{@job.id}", class:"btn btn-danger" %>
+<% if @job.publish_incomplete? or @job.publish_error? %>
+  <%= link_to "Resubmit Job", "/publish_job/submit/#{@job.id}", class:"btn btn-danger" %>
   <%= link_to "Delete Job", "/publish_job/delete/#{@job.id}", class:"btn btn-danger", data: { confirm: 'Delete job?' } %>
 <% end %>
 

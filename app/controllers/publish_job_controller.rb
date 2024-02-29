@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PublishJobController < BookmarksController
-  before_action :set_publish_job, only: %i[update show edit start_publish status_update]
+  before_action :set_publish_job, only: %i[submit start_publish status_update]
 
   FIELD_LISTS = %w[
     title
@@ -53,13 +53,13 @@ class PublishJobController < BookmarksController
 
   def new_publish_job
     solr_ids = current_user.bookmarks.map(&:document).map(&:id)
-    create_job(solr_ids, true, 1)
+    create_job(solr_ids, true, 1, false)
     redirect_to '/publish_job'
   end
 
   def new_unpublish_job
     solr_ids = current_user.bookmarks.map(&:document).map(&:id)
-    create_job(solr_ids, false, 1)
+    create_job(solr_ids, false, 1, false)
     redirect_to '/publish_job'
   end
 
@@ -69,7 +69,10 @@ class PublishJobController < BookmarksController
   end
 
   def submit
-    PublishJob.find(params[:id]).update(state: 2)
+    job = PublishJob.find(params[:id])
+    visibility = params[:visibility] != nil ? params[:visibility][:result] == 1 : job.visibility
+
+    job.update!(state: 2, visibility: visibility)
     start_publish
     redirect_to '/publish_job'
   end
@@ -98,19 +101,26 @@ class PublishJobController < BookmarksController
       @publish_job = PublishJob.find(params[:id])
     end
 
-    def create_job(ids, publish, state)
+    def create_job(ids, publish, state, visibility)
       PublishJob.create(solr_ids: ids,
                         publish: publish,
                         cas_user: current_cas_user,
-                        state: state)
+                        state: state,
+                        visibility: visibility,
+                        name: "#{current_cas_user.cas_directory_id}-#{Time.now.iso8601}"
+                        )
     end
 
-    def job_request(job, validate_only: false, resume: false)
+    def job_request(job, resume: false)
       PublishJobRequest.create(
         publish_job: job,
         job_id: publish_job_url(job),
         resume: resume
       )
+    end
+
+    def jobs_destination
+      STOMP_CONFIG['destinations'][:jobs]
     end
 
     def start_publish

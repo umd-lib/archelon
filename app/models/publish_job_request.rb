@@ -15,4 +15,12 @@ class PublishJobRequest < ApplicationRecord
   def body
     publish_job.solr_ids.join('\n')
   end
+
+  def submitted!
+    publish_job.publish_in_progress! if publish_job.publish_pending?
+  end
+
+  def error!
+    publish_job.publish_error! if publish_job.publish_pending?
+  end
 end
