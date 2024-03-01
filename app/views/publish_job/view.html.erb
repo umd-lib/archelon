@@ -18,8 +18,6 @@
 <b> <%= "#{@hidden} items" %> </b> hidden in search
 <br>
 
-
-
 <br>
 
 <div class="tablePublishJob">
@@ -82,8 +80,8 @@
           <% if doc._source.exclude? "is_published" or doc._source.exclude? "is_hidden" %>
             <td> Status Unknown </td>
           <% else %>
-            <% published = doc.source["is_published"] == "true" ? "Published" : "Unpublished" %>
-            <% hidden = doc.source["is_hidden"] == "true" ? "Hidden" : "Visible" %>
+            <% published = doc._source["is_published"] == "true" ? "Published" : "Unpublished" %>
+            <% hidden = doc._source["is_hidden"] == "true" ? "Hidden" : "Visible" %>
             <td><%= published + " and " + hidden %> </td>
           <% end %>
         </tr>
@@ -93,11 +91,11 @@
 </div>
 
 <% if @job.publish_not_submitted? %>
-  <%= form_tag "/publish_job/submit/#{@job.id}", :method => 'get' do %>
-    <%= label_tag(:visibility, 'Make all items visible in search:') %>
-    <%= check_box 'visibility', 'result', {}, 1, 0 %>
+  <%= form_with model: @job, url: "/publish_job/submit/#{@job.id}", local: true, :method => 'get' do |form| %>
+    <%= form.check_box :visibility %>
+    <%= form.label :visibility, 'Make all items visible in search:' %>
     <br>
-    <%= submit_tag 'Submit Job', class:"btn btn-danger" %>
+    <%= form.submit 'Submit Job', class:"btn btn-danger" %>
     <%= link_to "Delete Job", "/publish_job/delete/#{@job.id}", class:"btn btn-danger", data: { confirm: 'Delete job?' } %>
   <% end %>
 <% end %>

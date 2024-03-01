@@ -70,7 +70,7 @@ class PublishJobController < BookmarksController
 
   def submit
     job = PublishJob.find(params[:id])
-    visibility = params[:visibility] != nil ? params[:visibility][:result] == 1 : job.visibility
+    visibility = params[:publish_job] != nil ? params[:publish_job][:visibility] == "1" : job.visibility
 
     job.update!(state: 2, visibility: visibility)
     start_publish
