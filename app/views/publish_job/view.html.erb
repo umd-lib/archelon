@@ -90,10 +90,12 @@
   </table>
 </div>
 
+<br>
+
 <% if @job.publish_not_submitted? %>
   <%= form_with model: @job, url: "/publish_job/submit/#{@job.id}", local: true, :method => 'get' do |form| %>
-    <%= form.check_box :visibility %>
-    <%= form.label :visibility, 'Make all items visible in search:' %>
+    <%= form.check_box :force_hidden %>
+    <%= form.label :force_hidden, 'Make all items visible in search:' %>
     <br>
     <%= form.submit 'Submit Job', class:"btn btn-danger" %>
     <%= link_to "Delete Job", "/publish_job/delete/#{@job.id}", class:"btn btn-danger", data: { confirm: 'Delete job?' } %>

@@ -7,6 +7,7 @@ class PublishJobRequest < ApplicationRecord
       PlastronJobId: job_id,
       'PlastronArg-name': publish_job.name,
       'PlastronArg-on-behalf-of': publish_job.cas_user.cas_directory_id,
+      'PlastronArg-hidden': publish_job.force_hidden ? 'false' :' true'
     }.tap do |headers|
       headers['PlastronArg-resume'] = 'True' if resume
     end

@@ -70,9 +70,9 @@ class PublishJobController < BookmarksController
 
   def submit
     job = PublishJob.find(params[:id])
-    visibility = params[:publish_job] != nil ? params[:publish_job][:visibility] == "1" : job.visibility
+    force_hidden = params[:publish_job] != nil ? params[:publish_job][:force_hidden] == "1" : job.force_hidden
 
-    job.update!(state: 2, visibility: visibility)
+    job.update!(state: 2, force_hidden: force_hidden)
     start_publish
     redirect_to '/publish_job'
   end
@@ -101,12 +101,12 @@ class PublishJobController < BookmarksController
       @publish_job = PublishJob.find(params[:id])
     end
 
-    def create_job(ids, publish, state, visibility)
+    def create_job(ids, publish, state, force_hidden)
       PublishJob.create(solr_ids: ids,
                         publish: publish,
                         cas_user: current_cas_user,
                         state: state,
-                        visibility: visibility,
+                        force_hidden: force_hidden,
                         name: "#{current_cas_user.cas_directory_id}-#{Time.now.iso8601}"
                         )
     end

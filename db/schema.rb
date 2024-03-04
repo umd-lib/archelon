@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_02_28_192629) do
+ActiveRecord::Schema.define(version: 2024_03_04_183625) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -198,8 +198,8 @@ ActiveRecord::Schema.define(version: 2024_02_28_192629) do
     t.text "solr_ids", default: "--- []\n"
     t.integer "cas_user_id"
     t.integer "state"
-    t.boolean "visibility"
     t.string "name"
+    t.boolean "force_hidden"
     t.index ["cas_user_id"], name: "index_publish_jobs_on_cas_user_id"
   end
 
