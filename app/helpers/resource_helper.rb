@@ -49,7 +49,7 @@ module ResourceHelper
       if field[:terms].present?
         Hash[field[:terms].map { |term| [vocab.uri + term, term] }]
       else
-        vocab.to_hash
+        vocab.as_hash
       end
     else
       {}
