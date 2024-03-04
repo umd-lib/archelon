@@ -93,19 +93,16 @@
 <br>
 
 <% if @job.publish_not_submitted? %>
-  <%= form_with model: @job, url: "/publish_job/submit/#{@job.id}", local: true, :method => 'get' do |form| %>
+  <%= form_with model: @job, url: submit_publish_job_url(@job), local: true, method: :post do |form| %>
     <%= form.check_box :force_hidden %>
-    <%= form.label :force_hidden, 'Make all items visible in search:' %>
+    <%= form.label :force_hidden, 'Suppress these items in search results' %>
     <br>
-    <%= form.submit 'Submit Job', class:"btn btn-danger" %>
-    <%= link_to "Delete Job", "/publish_job/delete/#{@job.id}", class:"btn btn-danger", data: { confirm: 'Delete job?' } %>
+    <%= form.button "Submit Job", class:"btn btn-danger" %>
   <% end %>
 <% end %>
 
 <% if @job.publish_incomplete? or @job.publish_error? %>
-  <%= link_to "Resubmit Job", "/publish_job/submit/#{@job.id}", class:"btn btn-danger" %>
-  <%= link_to "Delete Job", "/publish_job/delete/#{@job.id}", class:"btn btn-danger", data: { confirm: 'Delete job?' } %>
+  <%= button_to "Resubmit Job", submit_publish_job_url(@job), class:"btn btn-danger" %>
 <% end %>
 
-<br>
-<br>
+<%= button_to "Delete Job", publish_job_url(@job), method: :delete, class:"btn btn-danger", data: { confirm: 'Delete job?' } %>
