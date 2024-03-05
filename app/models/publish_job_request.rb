@@ -1,13 +1,16 @@
+# frozen_string_literal: true
+
+# A STOMP message to control an publish job
 class PublishJobRequest < ApplicationRecord
   belongs_to :publish_job
 
-  def headers # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+  def headers
     {
       PlastronCommand: publish_job.publish ? 'publish' : 'unpublish',
       PlastronJobId: job_id,
       'PlastronArg-name': publish_job.name,
       'PlastronArg-on-behalf-of': publish_job.cas_user.cas_directory_id,
-      'PlastronArg-hidden': publish_job.force_hidden.to_s,
+      'PlastronArg-hidden': publish_job.force_hidden.to_s
     }.tap do |headers|
       headers['PlastronArg-resume'] = 'True' if resume
     end

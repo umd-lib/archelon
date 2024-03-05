@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class PublishJobsController < BookmarksController
+class PublishJobsController < BookmarksController # rubocop:disable  Metrics/ClassLength
   before_action :set_publish_job, only: %i[submit start_publish status_update]
 
   helper_method :status_text
@@ -73,9 +73,9 @@ class PublishJobsController < BookmarksController
     redirect_to publish_jobs_url, status: :see_other
   end
 
-  def submit
+  def submit # rubocop:disable Metrics/AbcSize
     job = PublishJob.find(params[:id])
-    force_hidden = params[:publish_job] != nil ? params[:publish_job][:force_hidden] == "1" : job.force_hidden
+    force_hidden = !params[:publish_job].nil? ? params[:publish_job][:force_hidden] == '1' : job.force_hidden
 
     job.update!(state: 2, force_hidden: force_hidden)
     start_publish
@@ -86,13 +86,13 @@ class PublishJobsController < BookmarksController
   def status_text(publish_job)
     return '' if publish_job.state.blank?
 
-    return I18n.t("activerecord.attributes.publish_job.status.#{publish_job.state}") unless publish_job.publish_in_progress?
+    return I18n.t("activerecord.attributes.publish_job.status.#{publish_job.state}") unless publish_job.publish_in_progress? # rubocop:disable Metrics/LineLength
 
     I18n.t('activerecord.attributes.publish_job.status.publish_in_progress') + publish_job.progress_text
   end
 
-   # POST /publish_job/1/status_update
-   def status_update
+  # POST /publish_job/1/status_update
+  def status_update
     # Triggers import job notification to channel;
     # it is important to use perform_now so that
     # ActionCable receives timely updates
@@ -112,8 +112,7 @@ class PublishJobsController < BookmarksController
                         cas_user: current_cas_user,
                         state: state,
                         force_hidden: force_hidden,
-                        name: "#{current_cas_user.cas_directory_id}-#{Time.now.iso8601}"
-                        )
+                        name: "#{current_cas_user.cas_directory_id}-#{Time.now.iso8601}")
     end
 
     def job_request(job, resume: false)

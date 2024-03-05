@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# PublishJobs Channel for Intercting with Action Cable
 class PublishJobsChannel < ApplicationCable::Channel
   def subscribed
     publish_job = PublishJob.find(params[:id])

@@ -29,14 +29,14 @@ class PublishJob < ApplicationRecord
     publish_in_progress: 3,
     publish_complete: 4,
     publish_incomplete: 5,
-    publish_error: 6,
+    publish_error: 6
   }
 
   IDLE_THRESHOLD = 30.seconds
 
   # after_update_commit { PublishJobStatusUpdatedJob.perform_now(self) }
 
-  def update_progress(message) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
+  def update_progress(message) # rubocop:disable Metrics/AbcSize
     return if message.body.blank?
 
     publish_in_progress! if publish_pending?
