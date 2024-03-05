@@ -3,6 +3,11 @@
 class PublishJobsController < BookmarksController
   before_action :set_publish_job, only: %i[submit start_publish status_update]
 
+  helper_method :status_text
+  skip_before_action :authenticate, only: %i[status_update]
+  skip_before_action :verify_authenticity_token, only: :status_update
+  skip_before_action :verify_user, only: :status_update
+
   FIELD_LISTS = %w[
     title
     component
@@ -65,7 +70,7 @@ class PublishJobsController < BookmarksController
 
   def destroy
     PublishJob.destroy(params[:id])
-    redirect_to publish_jobs_url
+    redirect_to publish_jobs_url, status: :see_other
   end
 
   def submit
@@ -74,7 +79,7 @@ class PublishJobsController < BookmarksController
 
     job.update!(state: 2, force_hidden: force_hidden)
     start_publish
-    redirect_to publish_jobs_url
+    redirect_to publish_jobs_url, status: :see_other
   end
 
   # Generates status text display for the GUI
