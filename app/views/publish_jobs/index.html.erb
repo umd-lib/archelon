@@ -17,23 +17,6 @@
       <td> <%= job.created_at %> </td>
       <td> <%= job.publish == true ? "Publish" : "Unpublish" %> </td>
       <%= render partial: 'publish_job_status', locals: { publish_job: job } %>
-      <!--
-      <% if job.publish_not_submitted? %>
-        <td> Job waiting on submission </td>
-      <% elsif job.publish_pending? %>
-        <td> Submission Pending  </td>
-      <% elsif job.publish_in_progress? %>
-        <td> In Progress </td>
-      <% elsif job.publish_complete? %>
-        <td> Complete  </td>
-      <% elsif job.publish_incomplete? %>
-        <td> Incomplete  </td>
-      <% elsif job.publish_error? %>
-        <td> Error  </td>
-      <% else %>
-        <td> Unknown  </td>
-      <% end %>
-      -->
     </tr>
     <% end %>
   </tbody>
