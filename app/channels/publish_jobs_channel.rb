@@ -1,4 +1,4 @@
-class PublishJobChannel < ApplicationCable::Channel
+class PublishJobsChannel < ApplicationCable::Channel
   def subscribed
     publish_job = PublishJob.find(params[:id])
     username = current_user.cas_directory_id

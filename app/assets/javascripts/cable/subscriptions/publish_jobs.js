@@ -2,7 +2,7 @@ $(document).ready(function() {
     // subscribe to all relevant publish jobs on this page
     document.querySelectorAll('.publish-job[data-subscribe="true"]').forEach(function(publishJobRow) {
       const {publishJobId} = publishJobRow.dataset;
-      App.cable.subscriptions.create({channel: 'PublishJobChannel', id: publishJobId}, {
+      App.cable.subscriptions.create({channel: 'PublishJobsChannel', id: publishJobId}, {
         connected: function() {
           console.log('Subscription confirmed for PublishJob ' + publishJobId);
           this.perform('publish_job_status_check', {jobId: publishJobId});
@@ -28,6 +28,6 @@ $(document).ready(function() {
           console.log('Disconnected from PublishJob ' + publishJobId);
         }
       });
-      console.log('Subscribed to PublishJobChannel, id: ' + publishJobId);
+      console.log('Subscribed to PublishJobsChannel, id: ' + publishJobId);
     });
   });
