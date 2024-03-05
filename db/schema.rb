@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_03_04_183625) do
+ActiveRecord::Schema.define(version: 2024_03_05_163249) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -200,6 +200,7 @@ ActiveRecord::Schema.define(version: 2024_03_04_183625) do
     t.integer "state"
     t.string "name"
     t.boolean "force_hidden"
+    t.integer "progress"
     t.index ["cas_user_id"], name: "index_publish_jobs_on_cas_user_id"
   end
 
