@@ -11,11 +11,13 @@
   </thead>
   <tbody>
     <% @jobs.each do |job| %>
-     <tr>
+    <tr class="publish-job" data-publish-job-id="<%= job.id %>" data-subscribe="<%= not job.publish_complete? %>">
       <td> <%= link_to job.id, publish_job_url(job) %></td>
       <td> <%= job.cas_user.cas_directory_id %> </td>
       <td> <%= job.created_at %> </td>
       <td> <%= job.publish == true ? "Publish" : "Unpublish" %> </td>
+      <%= render partial: 'publish_job_status', locals: { publish_job: job } %>
+      <!--
       <% if job.publish_not_submitted? %>
         <td> Job waiting on submission </td>
       <% elsif job.publish_pending? %>
@@ -31,6 +33,7 @@
       <% else %>
         <td> Unknown  </td>
       <% end %>
+      -->
     </tr>
     <% end %>
   </tbody>
