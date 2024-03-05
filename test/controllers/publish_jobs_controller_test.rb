@@ -10,7 +10,7 @@ module Blacklight::SearchHelper
 end
 
 # frozen_string_literal: true
-class PublishJobControllerTest < ActionController::TestCase
+class PublishJobsControllerTest < ActionController::TestCase
   setup do
     @cas_user = cas_users(:test_admin)
     mock_cas_login(@cas_user.cas_directory_id)
@@ -27,7 +27,7 @@ class PublishJobControllerTest < ActionController::TestCase
     publish_job.cas_user = @cas_user
     publish_job.solr_ids = %w[foobar testcase]
     publish_job.publish = true
-    publish_job.status = 'Submission pending'
+    publish_job.state = 1
     publish_job.save!
 
     assert @cas_user.user?, 'Test requires a non-admin user'
@@ -58,10 +58,10 @@ class PublishJobControllerTest < ActionController::TestCase
     publish_job.cas_user = @cas_user
     publish_job.solr_ids = %w[foobar testcase]
     publish_job.publish = true
-    publish_job.status = 'Submission pending'
+    publish_job.state = 1
     publish_job.save!
 
-    get :view, params: { id: PublishJob.first.id }
+    get :show, params: { id: PublishJob.first.id }
 
     job = assigns(:job)
     hidden = assigns(:hidden)
@@ -71,7 +71,7 @@ class PublishJobControllerTest < ActionController::TestCase
 
     assert_equal job.cas_user.cas_directory_id, @cas_user.cas_directory_id
     assert job.publish == true
-    assert_equal job.status, 'Submission pending'
+    assert_equal job.state, 'publish_not_submitted'
     assert_equal hidden, 0
     assert_equal published, 0
     assert_equal unpublished, 2

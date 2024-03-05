@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_02_19_201144) do
+ActiveRecord::Schema.define(version: 2024_03_05_163249) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -182,13 +182,25 @@ ActiveRecord::Schema.define(version: 2024_02_19_201144) do
     t.index ["cas_user_id"], name: "index_public_keys_on_cas_user_id"
   end
 
+  create_table "publish_job_requests", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "publish_job_id"
+    t.boolean "resume"
+    t.string "job_id"
+    t.index ["publish_job_id"], name: "index_publish_job_requests_on_publish_job_id"
+  end
+
   create_table "publish_jobs", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "publish"
     t.text "solr_ids", default: "--- []\n"
-    t.string "status"
     t.integer "cas_user_id"
+    t.integer "state"
+    t.string "name"
+    t.boolean "force_hidden"
+    t.integer "progress"
     t.index ["cas_user_id"], name: "index_publish_jobs_on_cas_user_id"
   end
 

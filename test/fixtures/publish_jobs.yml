@@ -2,7 +2,7 @@
 
 one:
   cas_user: one
-  status: "Submission pending"
+  state: 1
   solr_ids: ["another fake solr id", "Test solr Id"]
   publish: true
   updated_at: 2024-02-19 14:53:29
@@ -10,7 +10,7 @@ one:
 
 two:
   cas_user: two
-  status: "Submission pending"
+  state: 1
   solr_ids: ["another fake solr id", "Test solr Id"]
   publish: false
   updated_at: 2024-02-19 14:53:29
@@ -18,7 +18,7 @@ two:
 
 test_admin_publish_job:
   cas_user: test_admin
-  status: "Submission pending"
+  state: 1
   solr_ids: ["another fake solr id", "Test solr Id"]
   publish: true
   updated_at: 2024-02-19 14:53:29

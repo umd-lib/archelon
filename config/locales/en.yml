@@ -47,6 +47,19 @@ en:
   resource_update_timeout_error: 'Timeout error. Fedora has taken too long to respond. Please report this error and check back in a few minutes as your changes may have been saved.'
   activerecord:
     attributes:
+      publish_job:
+        status:
+          publish_not_submitted: Job waiting on submission
+          publish_pending: Submission Pending
+          publish_in_progress: In Progress
+          publish_complete: Complete
+          publish_incomplete: Incomplete
+          publish_error: Error
+          unpublish_complete: Complete
+          unpublish_incomplete: Incomplete
+          unpublish_error: Error
+
+
       datatype:
         identifier: Identifier
         vocabulary: Vocabulary
