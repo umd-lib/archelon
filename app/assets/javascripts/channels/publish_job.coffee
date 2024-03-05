@@ -1,4 +1,4 @@
-App.publish_job = App.cable.subscriptions.create "PublishJobChannel",
+App.publish_job = App.cable.subscriptions.create "PublishJobsChannel",
   connected: ->
     # Called when the subscription is ready for use on the server
 

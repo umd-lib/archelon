@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class PublishJobController < BookmarksController
+class PublishJobsController < BookmarksController
   before_action :set_publish_job, only: %i[submit start_publish status_update]
 
   FIELD_LISTS = %w[
@@ -35,7 +35,7 @@ class PublishJobController < BookmarksController
       end
   end
 
-  def view # rubocop:disable Metrics/AbcSize
+  def show # rubocop:disable Metrics/AbcSize
     id = params[:id]
     @job = PublishJob.find(id)
     @result_documents = @job.solr_ids.map { |solr_id| fetch(solr_id)[1] }
@@ -53,19 +53,19 @@ class PublishJobController < BookmarksController
 
   def new_publish_job
     solr_ids = current_user.bookmarks.map(&:document).map(&:id)
-    create_job(solr_ids, true, 1, false)
-    redirect_to '/publish_job'
+    job = create_job(solr_ids, true, 1, false)
+    redirect_to publish_job_url(job)
   end
 
   def new_unpublish_job
     solr_ids = current_user.bookmarks.map(&:document).map(&:id)
-    create_job(solr_ids, false, 1, false)
-    redirect_to '/publish_job'
+    job = create_job(solr_ids, false, 1, false)
+    redirect_to publish_job_url(job)
   end
 
   def destroy
     PublishJob.destroy(params[:id])
-    redirect_to '/publish_job'
+    redirect_to publish_jobs_url
   end
 
   def submit
@@ -74,7 +74,7 @@ class PublishJobController < BookmarksController
 
     job.update!(state: 2, force_hidden: force_hidden)
     start_publish
-    redirect_to '/publish_job'
+    redirect_to publish_jobs_url
   end
 
   # Generates status text display for the GUI

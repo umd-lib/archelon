@@ -87,13 +87,14 @@ Rails.application.routes.draw do # rubocop:disable Metrics/BlockLength
 
   resources :vocabularies, :types, :individuals, :datatypes
 
-  get '/publish_job' => 'publish_job#index'
-  get '/publish_job/:id' => 'publish_job#view'
-  post '/publish_job/:id/status_update' => 'publish_job#status_update'
-  get '/publish_job/submit/:id' => 'publish_job#submit'
-  get '/publish_job/delete/:id' => 'publish_job#destroy'
-  get '/new_publish_job' => 'publish_job#new_publish_job'
-  get '/new_unpublish_job' => 'publish_job#new_unpublish_job'
+  resources :publish_jobs, except: [:new] do
+    member do
+      post 'submit' => 'publish_jobs#submit'
+      post 'status_update' => 'publish_jobs#status_update'
+    end
+  end
+  get '/new_publish_job' => 'publish_jobs#new_publish_job'
+  get '/new_unpublish_job' => 'publish_jobs#new_unpublish_job'
 
   get '/ping' => 'ping#verify'
 
