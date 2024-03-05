@@ -101,7 +101,7 @@
   <% end %>
 <% end %>
 
-<% if @job.publish_incomplete? or @job.publish_error? %>
+<% if @job.publish_incomplete? or @job.publish_error? or  @job.unpublish_incomplete? or @job.unpublish_error? %>
   <%= button_to "Resubmit Job", submit_publish_job_url(@job), class:"btn btn-danger" %>
 <% end %>
 

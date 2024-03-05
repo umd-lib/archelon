@@ -29,7 +29,10 @@ class PublishJob < ApplicationRecord
     publish_in_progress: 3,
     publish_complete: 4,
     publish_incomplete: 5,
-    publish_error: 6
+    publish_error: 6,
+    unpublish_complete: 7,
+    unpublish_incomplete: 8,
+    unpublish_error: 9
   }
 
   IDLE_THRESHOLD = 30.seconds

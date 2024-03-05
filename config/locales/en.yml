@@ -49,12 +49,16 @@ en:
     attributes:
       publish_job:
         status:
-          publish_in_progress: In Progress
           publish_not_submitted: Job waiting on submission
           publish_pending: Submission Pending
-          publish_error: Error
-          publish_incomplete: Incomplete
+          publish_in_progress: In Progress
           publish_complete: Complete
+          publish_incomplete: Incomplete
+          publish_error: Error
+          unpublish_complete: Complete
+          unpublish_incomplete: Incomplete
+          unpublish_error: Error
+
 
       datatype:
         identifier: Identifier
