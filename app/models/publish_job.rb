@@ -49,7 +49,7 @@ class PublishJob < ApplicationRecord
 
     # Total could be nil for non-seekable files
     unless total_count.nil? || total_count.zero?
-      processed_count = count['created'] + count['updated'] + count['unchanged'] + count['errors']
+      processed_count = count['done'] + count['errors']
       self.progress = (processed_count.to_f / total_count * 100).round
     end
 
