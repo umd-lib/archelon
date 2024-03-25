@@ -87,6 +87,8 @@ class CatalogController < ApplicationController
     config.add_facet_field 'type', label: 'Type', limit: 10
     config.add_facet_field 'component_not_tokenized', label: 'Resource Type', limit: 10
     config.add_facet_field 'rdf_type', label: 'RDF Type', limit: 10
+    config.add_facet_field 'visibility', label: 'Visibility'
+    config.add_facet_field 'publication_status', label: 'Publication'
     # config.add_facet_field 'pub_date', label: 'Publication Year', single: true
     # config.add_facet_field 'subject_topic_facet', label: 'Topic', limit: 20, index_range: 'A'..'Z'
     # config.add_facet_field 'language_facet', label: 'Language', limit: true
@@ -129,9 +131,11 @@ class CatalogController < ApplicationController
     # The ordering of the field names is the order of the display.
     #
     # Note that as of implementation of in-browser editing of descriptive metadata,
-    # the only fields being displayed form Solr are those relating to structural,
+    # the only fields being displayed from Solr are those relating to structural,
     # administrative, and technical metadata.
     config.add_show_field 'pcdm_collection', label: 'Collection', helper_method: :collection_from_subquery
+    config.add_show_field 'publication_status', label: 'Publication Status'
+    config.add_show_field 'visibility', label: 'Visibility'
     config.add_show_field 'pcdm_member_of', label: 'Member Of', helper_method: :parent_from_subquery
     config.add_show_field 'pcdm_members', label: 'Members', helper_method: :members_from_subquery
     config.add_show_field 'pcdm_related_object_of', label: 'Related To', helper_method: :related_object_of_from_subquery
@@ -197,6 +201,7 @@ class CatalogController < ApplicationController
     @show_edit_metadata = CatalogController.show_edit_metadata(@document['component'])
     @id = params[:id]
     @resource = ResourceService.resource_with_model(@id)
+    @published = @resource[:items][@id]['@type'].include?('http://vocab.lib.umd.edu/access#Published')
   end
 
   # Returns true if the given component has editable metadata, false otherwise.
@@ -207,7 +212,8 @@ class CatalogController < ApplicationController
 
   private
 
-    def solr_connection_error
+    def solr_connection_error(err)
+      Rails.logger.error(err.message)
       flash[:error] = I18n.t(:solr_is_down)
       redirect_to(about_url)
     end

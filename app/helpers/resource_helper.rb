@@ -26,8 +26,8 @@ module ResourceHelper
         componentType: field[:type],
         values: get_field_values(fields, item, field[:uri])
       }.tap do |args|
+        args[:vocab] = get_vocab_hash(field) if field[:vocab].present?
         args[:maxValues] = 1 unless field[:repeatable]
-        args[:vocab] = Vocabulary[field[:vocab]] if field[:vocab].present?
 
         # special handling for LabeledThing fields
         if field[:type] == :LabeledThing
@@ -40,6 +40,19 @@ module ResourceHelper
         configure_access_level(args, item) if field[:name] == 'access'
       end
       [field[:label], component_type, component_args]
+    end
+  end
+
+  def get_vocab_hash(field)
+    vocab = Vocabulary.find_by(identifier: field[:vocab])
+    if vocab
+      if field[:terms].present?
+        Hash[field[:terms].map { |term| [vocab.uri + term, term] }]
+      else
+        vocab.as_hash
+      end
+    else
+      {}
     end
   end
 
@@ -58,7 +71,7 @@ module ResourceHelper
   end
 
   def configure_access_level(args, item)
-    args[:values] = item.fetch('@type', []).select { |uri| args[:vocab].key? uri }.map { |uri| { '@id' => uri } }
+    args[:values] = item.fetch('@type', []).select { |uri| args[:vocab].include? uri }.map { |uri| { '@id' => uri } }
     args[:predicateURI] = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'
   end
 end

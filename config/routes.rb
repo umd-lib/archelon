@@ -25,6 +25,8 @@ Rails.application.routes.draw do # rubocop:disable Metrics/BlockLength
   get '/edit/:id', controller: 'resource', action: 'edit', constraints: { id: /.*/ }, as: 'resource_edit'
   post '/edit/:id', controller: 'resource', action: 'update', constraints: { id: /.*/ }
 
+  post '/update/:id', controller: 'resource', action: 'update_state', constraints: { id: /.*/ }, as: 'update_resource'
+
   resources :bookmarks, constraints: { id: /.*/ } do
     concerns :exportable
 
@@ -83,10 +85,16 @@ Rails.application.routes.draw do # rubocop:disable Metrics/BlockLength
   get 'react_components' => 'react_components#react_components'
   post 'react_components' => 'react_components#react_components_submit'
 
-  resources :vocabularies
-  resources :types
-  resources :individuals
-  resources :datatypes
+  resources :vocabularies, :types, :individuals, :datatypes
+
+  resources :publish_jobs, except: [:new] do
+    member do
+      post 'submit' => 'publish_jobs#submit'
+      post 'status_update' => 'publish_jobs#status_update'
+    end
+  end
+  get '/new_publish_job' => 'publish_jobs#new_publish_job'
+  get '/new_unpublish_job' => 'publish_jobs#new_unpublish_job'
 
   get '/ping' => 'ping#verify'
 

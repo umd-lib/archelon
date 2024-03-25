@@ -11,8 +11,13 @@
       fields.each do |field|
         # special handling for the access field
         if field[:name] == 'access'
-          vocab = Vocabulary[field[:vocab]]
-          values = item.fetch('@type', []).select { |uri| vocab.key? uri }.map { |uri| { '@id' => uri } }
+          vocab = Vocabulary.find_by(identifier: field[:vocab])
+          if field.key? :terms
+            terms = field[:terms].map { |term| vocab.uri + term }
+          else
+            terms = vocab.terms.map { |term| term.uri }
+          end
+          values = item.fetch('@type', []).select { |uri| terms.include? uri }.map { |uri| { '@id' => uri } }
         else
           values = get_field_values(fields, item, field[:uri])
         end
