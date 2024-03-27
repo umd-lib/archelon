@@ -83,6 +83,7 @@ class CatalogController < ApplicationController
     # (note: It is case sensitive when searching values)
 
     config.add_facet_field 'collection_title_facet', label: 'Collection', limit: 10, collapse: false, sort: 'index'
+    config.add_facet_field 'presentation_set_label', label: 'Presentation Set', limit: 10, collapse: false, sort: 'index', if: :collection_facet_selected?
     config.add_facet_field 'author_not_tokenized', label: 'Author', limit: 10
     config.add_facet_field 'type', label: 'Type', limit: 10
     config.add_facet_field 'component_not_tokenized', label: 'Resource Type', limit: 10
@@ -220,5 +221,9 @@ class CatalogController < ApplicationController
 
     def make_current_query_accessible
       @current_query = params[:q]
+    end
+
+    def collection_facet_selected?
+      params[:f] && params[:f][:collection_title_facet]
     end
 end
