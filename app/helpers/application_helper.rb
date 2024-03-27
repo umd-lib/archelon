@@ -68,7 +68,7 @@ module ApplicationHelper # rubocop:disable Metrics/ModuleLength
     from_subquery 'annotation_source_info', args
   end
 
-  def rdf_type_list(args)
+  def value_list(args)
     args[:document][args[:field]]
   end
 
