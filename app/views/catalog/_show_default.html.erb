@@ -71,7 +71,7 @@
             <% end %>
           </ul>
         </dd>
-      <% elsif field_name == 'rdf_type' %>
+      <% elsif %w[presentation_set_label rdf_type].include?(field_name) %>
         <dd class="blacklight-<%= field_name.parameterize %>">
           <ul class="multivalued-field-value">
             <% doc_presenter.field_value(field_name).each do |v| %>
