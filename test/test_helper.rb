@@ -17,6 +17,7 @@ Minitest::Reporters.use! unless ENV['RM_INFO']
 # Require minitest Mock functionality
 require 'minitest/autorun'
 require 'rspec/mocks/minitest_integration'
+require 'webmock/minitest'
 
 # This is a workaround for https://github.com/kern/minitest-reporters/issues/230
 # This workaround can be removed once we upgrade to Rails v5.1.6
