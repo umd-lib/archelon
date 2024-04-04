@@ -2,9 +2,10 @@
 
 # Service class that sends JSON requests to an \HTTP endpoint.
 class SendJSONRequest
-  def initialize(url:, method: :get, content: nil)
+  def initialize(url:, method: :get, follow_redirects: false, content: nil)
     @url = url
     @method = method
+    @follow_redirects = follow_redirects
     @content = content || {}
   end
 
@@ -13,7 +14,11 @@ class SendJSONRequest
   def call # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     body = @content.to_json
     Rails.logger.info("Sending #{body} to #{@url} using #{@method.upcase}")
-    response = ::HTTP.headers(content_type: 'application/json').request(@method, @url, body: body)
+
+    http = ::HTTP.headers(content_type: 'application/json')
+    http = http.follow if @follow_redirects
+    response = http.request(@method, @url, body: body)
+
     Rails.logger.info(response.status)
     raise response.status.reason unless response.status.success?
 
