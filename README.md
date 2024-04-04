@@ -262,6 +262,10 @@ The batch export functionality relies on a running [Plastron] instance.
 
 See [BatchImport](docs/BatchImport.md).
 
+## Content Model Definitions
+
+See [ContentModelDefinitions](docs/ContentModelDefinitions.md).
+
 ## LDAP Override
 
 By default, Archelon determines the user type for a user ("admin", "user" or
