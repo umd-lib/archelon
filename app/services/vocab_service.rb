@@ -60,7 +60,15 @@ class VocabService
         return {} if json_rest_result.error_occurred?
 
         graph = json_rest_result.parsed_json['@graph']
-        Hash[graph.map { |g| parse_entry(g) }]
+
+        # @graph element exists for vocabularies with two or more elements
+        return Hash[graph.map { |g| parse_entry(g) }] if graph.present?
+
+        # Single term vocabularies don't have "@graph" element, but do have
+        # "@id" and (possibly) "@rdfs.label" elements, so we can just go
+        # straight to the "parse_entry" function, and then wrap the result
+        # in an array before converting into a hash
+        Hash[[parse_entry(json_rest_result.parsed_json)]]
       end
 
       # Filters a map of parsed options, removing any entry whose term does

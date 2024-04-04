@@ -7,6 +7,7 @@ class VocabServiceTest < ActiveSupport::TestCase
     item_content_model = CONTENT_MODELS[:Item]
     @rights_field = field_from_content_model(item_content_model, 'required', 'rights')
     @access_field = field_from_content_model(item_content_model, 'required', 'access')
+    @collection_field = field_from_content_model(item_content_model, 'recommended', 'archival_collection')
   end
 
   test 'vocab_hash returns empty hash when given nil or empty content model field' do
@@ -46,6 +47,19 @@ class VocabServiceTest < ActiveSupport::TestCase
 
     vocab_hash = VocabService.vocab_options_hash(@rights_field)
     assert_equal({}, vocab_hash)
+  end
+
+  test 'vocab_hash returns options list when given vocabulary with one term' do
+    # The JSON from vocabularies with only one term do not have the "@graph"
+    # element that is present when vocabularies have two or more terms.
+    json_fixture_file = 'sample_vocabularies/one_term_vocabulary.json'
+    stub_request(:get, 'http://vocab.lib.umd.edu/collection')
+      .to_return(status: 200, body: file_fixture(json_fixture_file).read, headers: {})
+
+    expected_hash = { 'http://vocab.lib.umd.edu/collection#0001-GDOC' => 'United States Government Posters' }
+
+    vocab_hash = VocabService.vocab_options_hash(@collection_field)
+    assert_equal(expected_hash, vocab_hash)
   end
 
   test 'vocab_hash returns options list when given value content model field' do
