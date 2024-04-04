@@ -44,16 +44,7 @@ module ResourceHelper
   end
 
   def get_vocab_hash(field)
-    vocab = Vocabulary.find_by(identifier: field[:vocab])
-    if vocab
-      if field[:terms].present?
-        Hash[field[:terms].map { |term| [vocab.uri + term, term] }]
-      else
-        vocab.as_hash
-      end
-    else
-      {}
-    end
+    VocabService.vocab_options_hash(field)
   end
 
   def get_labeled_thing_value(value, items)
