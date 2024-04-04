@@ -120,6 +120,13 @@ Item:
       type: :TypedLiteral
       datatype: http://vocab.lib.umd.edu/datatype#accessionNumber
 
+    - name: 'presentation_set'
+      uri: 'http://www.openarchives.org/ore/terms/isAggregatedBy'
+      label: 'Presentation Set'
+      type: :ControlledURIRef
+      vocab: 'set'
+      repeatable: true
+
 
 Letter:
   required:
@@ -208,6 +215,13 @@ Letter:
       uri: 'http://id.loc.gov/vocabulary/relators/aut'
       label: 'Author'
       type: :LabeledThing
+      repeatable: true
+
+    - name: 'presentation_set'
+      uri: 'http://www.openarchives.org/ore/terms/isAggregatedBy'
+      label: 'Presentation Set'
+      type: :ControlledURIRef
+      vocab: 'set'
       repeatable: true
 
 
@@ -317,6 +331,13 @@ Poster:
       label: 'Longitude'
       type: :TypedLiteral
 
+    - name: 'presentation_set'
+      uri: 'http://www.openarchives.org/ore/terms/isAggregatedBy'
+      label: 'Presentation Set'
+      type: :ControlledURIRef
+      vocab: 'set'
+      repeatable: true
+
 
 Issue:
   required:
@@ -352,7 +373,13 @@ Issue:
       type: :TypedLiteral
 
   recommended: []
-  optional: []
+  optional:
+    - name: 'presentation_set'
+      uri: 'http://www.openarchives.org/ore/terms/isAggregatedBy'
+      label: 'Presentation Set'
+      type: :ControlledURIRef
+      vocab: 'set'
+      repeatable: true
 
 
 LabeledThing:
