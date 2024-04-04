@@ -16,7 +16,7 @@ module PlastronServices
       # The other sender class must accept `method`, `url`, and `content`
       # parameters in the constructor, and have a `call` method that returns
       # a JsonRestResult object.
-      def call(sender: PlastronServices::HTTP::SendJSONRequest)
+      def call(sender: SendJSONRequest)
         sender.new(method: :post, url: inbox_url, content: @message).call
       end
 
