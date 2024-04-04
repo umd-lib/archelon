@@ -143,6 +143,7 @@ Letter:
       label: 'Access Level'
       type: :ControlledURIRef
       vocab: 'access'
+      terms: ['Public', 'Campus']
 
     - name: 'type'
       uri: 'http://www.europeana.eu/schemas/edm/hasType'
@@ -227,6 +228,7 @@ Poster:
       label: 'Access Level'
       type: :ControlledURIRef
       vocab: 'access'
+      terms: ['Public', 'Campus']
 
     - name: 'type'
       uri: 'http://www.europeana.eu/schemas/edm/hasType'
@@ -327,6 +329,7 @@ Issue:
       label: 'Access Level'
       type: :ControlledURIRef
       vocab: 'access'
+      terms: ['Public', 'Campus']
 
     - name: 'date'
       uri: 'http://purl.org/dc/elements/1.1/date'

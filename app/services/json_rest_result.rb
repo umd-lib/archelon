@@ -22,6 +22,7 @@ class JsonRestResult
     begin
       parsed_json = JSON.parse(json)
     rescue StandardError => e
+      Rails.logger.error("Error parsing JSON. e=#{e}")
       return JsonRestResult.new(error_message: e.to_s)
     end
     JsonRestResult.new(raw_json: json, parsed_json: parsed_json)
