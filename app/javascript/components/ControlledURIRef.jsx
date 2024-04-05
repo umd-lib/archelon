@@ -49,8 +49,9 @@ class ControlledURIRef extends React.Component {
     }
 
     // If uri is not in vocabulary, append it to the vocabulary so that it
-    // shows up in the dropdown
-    if (!isUriInVocabulary) {
+    // shows up in the dropdown. Do not add if the uri is the empty value,
+    // as a separate "empty" option is added by default.
+    if (!isUriInVocabulary && this.state.uri !== "") {
       props.vocab[this.state.uri] = this.state.uri;
     }
 
