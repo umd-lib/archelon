@@ -76,6 +76,11 @@ class ControlledURIRef extends React.Component {
     let statement = this.getStatement(this.state.uri);
     let valueIsUnchanged = (this.initialStatement === statement);
 
+    // valueIsUnset is for the case where there was an initial non-empty value
+    // and the user has chosen the empty value. This should disable the
+    // "insert" hidden field, so that a SPARQL INSERT statement is not generated
+    let valueIsUnset = (this.state.uri === "");
+
     let entries = Object.entries(this.props.vocab).map(([uri, label]) => ([uri, label]));
     const sortStringValues = (a, b) => (a[1] > b[1] && 1) || (a[1] === b[1] ? 0 : -1)
     entries.sort(sortStringValues); // Note: sort is "in-place"
@@ -83,7 +88,7 @@ class ControlledURIRef extends React.Component {
     return (
       <React.Fragment>
         <input type="hidden" name="delete[]" value={this.initialStatement} disabled={this.props.value.isNew || this.noStartingValue || valueIsUnchanged}/>
-        <input type="hidden" name="insert[]" value={statement} disabled={valueIsUnchanged}/>
+        <input type="hidden" name="insert[]" value={statement} disabled={valueIsUnchanged || valueIsUnset}/>
         <select name={this.props.name} value={this.state.uri} onChange={this.handleChange}>
           <option key="" value=""/>
           {entries.map(([uri, label]) => (
