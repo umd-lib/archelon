@@ -11,7 +11,6 @@ default: &default
   grouper_groups:
     Administrators: cn=Application_Roles:Libraries:Archelon:Archelon-Administrator,ou=grouper,ou=group,dc=umd,dc=edu
     Users: cn=Application_Roles:Libraries:Archelon:Archelon-User,ou=grouper,ou=group,dc=umd,dc=edu
-    VocabularyEditors: cn=Application_Roles:Libraries:Archelon:Archelon-VocabularyEditor,ou=grouper,ou=group,dc=umd,dc=edu
 
 development:
   <<: *default

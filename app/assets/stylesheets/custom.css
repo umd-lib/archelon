@@ -200,14 +200,6 @@ input {
     color: #4C4C4C;
 }
 
-.panel-vocabulary {
-  margin-top: 10px;
-}
-
-.panel-vocabulary .h2 {
-  margin: 5px;
-}
-
  /* Tooltip from https://www.w3schools.com/howto/howto_css_tooltip.asp */
  /* Renamed to "umd_tooltip" to avoid conflict with "tooltip" definitions in other CSS includes */
  /* Tooltip container */
