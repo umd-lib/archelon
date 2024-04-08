@@ -53,10 +53,19 @@
 
   <h3>Typical Usage</h3>
 
-  <div>This component presents dropdowns using the values defined in the
-    <%= link_to 'controlled vocabularies', vocabularies_url %>.</div>
+  <div>
+    This component presents dropdowns using the values defined in a
+    controlled vocabulary. The following is a sample list of controlled
+    vocabularies.
+  </div>
 
-  <% Vocab.all.each do |vocab| %>
+  <%
+    sample_vocabulary_ids = %w[
+       access collection datatype form model rightsStatement set
+     ]
+    sample_vocabularies = sample_vocabulary_ids.map { |id| Vocab.new(id) }
+    sample_vocabularies.each do |vocab|
+  %>
     <h4><%= vocab.identifier %></h4>
     <div class="form-group">
       <%=
@@ -157,7 +166,7 @@
 
   <h3>Repeatable ControlledURIRef</h3>
 
-  <% Vocab.all.each do |vocab| %>
+  <% sample_vocabularies.each do |vocab| %>
     <h4><%= vocab.identifier %> (repeated)</h4>
     <div class="form-group">
       <%= react_component(

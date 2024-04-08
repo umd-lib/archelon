@@ -13,14 +13,6 @@ class Vocab
     Vocab.new(identifier)
   end
 
-  def self.all
-    known_vocabulary_ids = %w[
-      access collection datatype form model rightsStatement set
-    ]
-
-    known_vocabulary_ids.map { |id| Vocab.new(id) }
-  end
-
   def self.[](identifier)
     VocabService.vocab_options_hash_by_identifier(identifier)
     # vocab = find_by(identifier: identifier)
