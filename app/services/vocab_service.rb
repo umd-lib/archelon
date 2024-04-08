@@ -13,14 +13,17 @@ class VocabService
 
     Rails.logger.info("vocab_identifier='#{vocab_identifier}', allowed_terms='#{allowed_terms}'")
 
-    url = generate_url(vocab_identifier)
+    all_options =  VocabService.vocab_options_hash_by_identifier(vocab_identifier)
 
-    json_rest_result = retrieve(url)
-
-    all_options = parse_options(json_rest_result)
     filtered_options = filter_options(all_options, allowed_terms)
     Rails.logger.debug { "filtered_options: #{filtered_options}" }
     filtered_options
+  end
+
+  def self.vocab_options_hash_by_identifier(identifier)
+    url = generate_url(identifier)
+    json_rest_result = retrieve(url)
+    parse_options(json_rest_result)
   end
 
   class << self
