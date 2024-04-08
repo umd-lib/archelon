@@ -37,7 +37,7 @@
       <% if ImportJob.access_vocab.nil? %>
         <i>Access vocabulary is not configured.</i>
       <% else %>
-        <%=  form.select :access, options_for_select(ImportJob.access_vocab.types.map {|type| [ type.identifier, type.uri ]}, selected: import_job.access)  %>
+        <%=  form.select :access, options_for_select(ImportJob.access_vocab.terms.map {|type| [ type.identifier, type.uri ]}, selected: import_job.access)  %>
       <% end %>
       This is the access level that will be applied to any newly created objects.
     </div>
