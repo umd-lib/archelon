@@ -63,7 +63,7 @@
     sample_vocabulary_ids = %w[
        access collection datatype form model rightsStatement set
      ]
-    sample_vocabularies = sample_vocabulary_ids.map { |id| Vocab.new(id) }
+    sample_vocabularies = sample_vocabulary_ids.map { |id| VocabService::Vocab.new(id) }
     sample_vocabularies.each do |vocab|
   %>
     <h4><%= vocab.identifier %></h4>
@@ -86,7 +86,7 @@
   <div>This example presents a dropdown where the provided value is not
        present in the controlled vocabulary list.</div>
 
-  <% vocab = Vocab.find_by(identifier:'access') %>
+  <% vocab = VocabService.find_by(identifier:'access') %>
   <h4><%= vocab.identifier %></h4>
   <div class="form-group">
     <%=

@@ -16,7 +16,7 @@ const { namedNode, defaultGraph } = DataFactory;
  *     :ControlledURIRef, {
  *       subjectURI: 'example',
  *       predicateURI: 'object_type',
- *       vocab: Vocab.find_by(identifier: 'object_type').as_hash,
+ *       vocab: VocabService.find_by(identifier: 'object_type').as_hash,
  *       value: {
  *         '@id' => 'http://example.com/foo#bar'
  *       }

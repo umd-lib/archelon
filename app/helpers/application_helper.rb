@@ -166,7 +166,7 @@ module ApplicationHelper # rubocop:disable Metrics/ModuleLength
           content_tag :span, display_node(label, field, obj)
         end
       elsif field[:vocab]
-        vocab = Vocab.find_by(identifier: field[:vocab])
+        vocab = VocabService.find_by(identifier: field[:vocab])
         # fall back to displaying the URI if the vocab isn't defined on this server
         return link_to uri, uri if vocab.nil?
 

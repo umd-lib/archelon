@@ -61,7 +61,7 @@ class ImportJob < ApplicationRecord
   IDLE_THRESHOLD = 30.seconds
 
   def self.access_vocab
-    @access_vocab ||= Vocab.find_by(identifier: VOCAB_CONFIG['access_vocab_identifier'])
+    @access_vocab ||= VocabService.find_by(identifier: VOCAB_CONFIG['access_vocab_identifier'])
   end
 
   # Rails 5.2 does not have attachment validation, so this is needed
