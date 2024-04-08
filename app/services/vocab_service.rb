@@ -13,7 +13,7 @@ class VocabService
 
     Rails.logger.info("vocab_identifier='#{vocab_identifier}', allowed_terms='#{allowed_terms}'")
 
-    all_options =  VocabService.vocab_options_hash_by_identifier(vocab_identifier)
+    all_options = VocabService.vocab_options_hash_by_identifier(vocab_identifier)
 
     filtered_options = filter_options(all_options, allowed_terms)
     Rails.logger.debug { "filtered_options: #{filtered_options}" }

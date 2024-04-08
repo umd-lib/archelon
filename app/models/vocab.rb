@@ -14,8 +14,8 @@ class Vocab
   end
 
   def self.all
-    known_vocabulary_ids = [
-      'access', 'collection', 'datatype', 'form', 'model', 'rightsStatement', 'set'
+    known_vocabulary_ids = %w[
+      access collection datatype form model rightsStatement set
     ]
 
     known_vocabulary_ids.map { |id| Vocab.new(id) }
