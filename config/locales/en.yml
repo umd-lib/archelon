@@ -60,10 +60,6 @@ en:
           unpublish_error: Error
 
 
-      datatype:
-        identifier: Identifier
-        vocabulary: Vocabulary
-        description: Description
       export_job:
         format: Metadata Format
         id: Job ID
@@ -108,22 +104,6 @@ en:
           import_incomplete: Import Incomplete
           error: Error
         timestamp: Timestamp
-      individual:
-        identifier: Identifier
-        label: Term
-        same_as: URI
-        source: Source
-        uri: Local URI
-        vocabulary: Vocabulary
-      type:
-        identifier: Identifier
-        uri: URI
-        vocabulary: Vocabulary
-      vocabulary:
-        description: Description
-        identifier: Identifier
-        uri: Local Authority URI
-        published_uri: Published URI
     errors:
       models:
         import_job:
@@ -133,13 +113,9 @@ en:
             metadata_file:
               required: 'is required'
     models:
-      datatype: Datatype
       download_url: Download URL
       export_job: Export Job
       import_job: Import Job
-      individual: Term
-      type: Class
-      vocabulary: Vocabulary
   mime_types:
     application/pdf: PDF (application/pdf)
     application/xml: XML (application/xml)
