@@ -87,9 +87,6 @@ FCREPO_CLIENT_KEY=
 # Base URI for the controlled vocabulary terms
 VOCAB_LOCAL_AUTHORITY_BASE_URI=http://vocab.lib.umd.edu/
 
-# Base URI for the location where the vocabularies are published
-VOCAB_PUBLICATION_BASE_URI=http://archelon-local:3000/published_vocabularies/
-
 # The maximum allowed binaries export download size, in bytes
 MAX_ALLOWED_BINARIES_DOWNLOAD_SIZE=53687091200
 
