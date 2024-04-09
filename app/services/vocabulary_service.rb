@@ -32,10 +32,11 @@ class VocabularyService
     Rails.logger.info("vocab_identifier='#{vocab_identifier}', allowed_terms='#{allowed_terms}'")
 
     vocab = VocabularyService.get_vocabulary(vocab_identifier)
-    all_options = parse_options(vocab.terms)
 
-    filtered_options = filter_options(all_options, allowed_terms)
+    filtered_terms = filter_terms(vocab.terms, allowed_terms)
+    filtered_options = parse_options(filtered_terms)
     Rails.logger.debug { "filtered_options: #{filtered_options}" }
+
     filtered_options
   end
 
@@ -93,15 +94,15 @@ class VocabularyService
         [parse_entry(json_rest_result.parsed_json)]
       end
 
-      # Filters a map of parsed options, removing any entry whose term does
-      # not match a term in the given list of allowed terms
-      def filter_options(options, allowed_terms)
+      # Filters a list of terms, only returning the terms whose "label"
+      # attribute matches an entry in the the given allowed terms list
+      def filter_terms(terms, allowed_terms)
         if allowed_terms.nil?
           Rails.logger.debug('Skipping filtering, as allowed_terms is nil')
-          return options
+          return terms
         end
 
-        options.select { |_k, v| allowed_terms.include?(v) }
+        terms.select { |term| allowed_terms.include?(term.label) }
       end
 
       # Parses a single term from the graph, returning a VocabularyTerm object
