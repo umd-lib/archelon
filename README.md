@@ -266,6 +266,11 @@ See [BatchImport](docs/BatchImport.md).
 
 See [ContentModelDefinitions](docs/ContentModelDefinitions.md).
 
+## Vocabulary
+
+For information about the controlled vocabularies used when editing metadata,
+see [Vocabulary](docs/Vocabulary.md).
+
 ## LDAP Override
 
 By default, Archelon determines the user type for a user ("admin", "user" or
