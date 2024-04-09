@@ -21,6 +21,12 @@ class Vocabulary
     terms.find { |term| term.identifier == id }
   end
 
+  # Returns true if the vocabulary has a non-empty list of terms, false
+  # otherwise.
+  def terms?
+    !terms.empty?
+  end
+
   # Returns the URI for this vocabulary
   def uri
     VOCAB_CONFIG['local_authority_base_uri'] + identifier + '#'

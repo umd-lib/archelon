@@ -168,7 +168,7 @@ module ApplicationHelper # rubocop:disable Metrics/ModuleLength
       elsif field[:vocab]
         vocab = VocabularyService.get_vocabulary(field[:vocab])
         # fall back to displaying the URI if the vocab isn't defined on this server
-        return link_to uri, uri if vocab.nil?
+        return link_to uri, uri unless vocab.terms?
 
         term = vocab.term(uri)
         # fall back to displaying the URI if can't find the term
