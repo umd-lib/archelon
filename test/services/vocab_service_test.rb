@@ -10,6 +10,25 @@ class VocabServiceTest < ActiveSupport::TestCase
     @collection_field = field_from_content_model(item_content_model, 'recommended', 'archival_collection')
   end
 
+  test 'get_vocabulary returns Vocab object with empty terms when vocabulary does not exists' do
+    stub_request(:get, 'http://vocab.lib.umd.edu/does-not-exist')
+      .to_return(status: 404)
+    vocab = VocabService.get_vocabulary('does-not-exist')
+    assert_not_nil vocab
+    assert_equal('does-not-exist', vocab.identifier)
+    assert vocab.terms.empty?
+  end
+
+  test 'get_vocabulary returns Vocab object with empty terms when a parsing error occurs' do
+    invalid_json = '{'
+    stub_request(:get, 'http://vocab.lib.umd.edu/invalid_json')
+      .to_return(status: 200, body: invalid_json, headers: {})
+    vocab = VocabService.get_vocabulary('invalid_json')
+    assert_not_nil vocab
+    assert_equal('invalid_json', vocab.identifier)
+    assert vocab.terms.empty?
+  end
+
   test 'vocab_hash returns empty hash when given nil or empty content model field' do
     assert_equal({}, VocabService.vocab_options_hash(nil))
     assert_equal({}, VocabService.vocab_options_hash({}))

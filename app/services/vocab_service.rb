@@ -3,32 +3,15 @@
 # Queries a Vocabulary server at VOCAB_CONFIG['local_authority_base_uri']
 # for vocabulary information
 class VocabService
-  # Data class encapsulating a single Vocabulary
-  class Vocab
-    attr_reader :identifier, :terms
-
-    def initialize(identifier)
-      @identifier = identifier
-      @terms = VocabService.vocab_by_identifier(identifier)
-      @options_hash = VocabService.parse_options(@terms)
-    end
-
-    def as_hash
-      @options_hash
-    end
-
-    def term(term_uri)
-      id = term_uri.delete_prefix(uri)
-      terms.find { |term| term.identifier == id }
-    end
-
-    def uri
-      VOCAB_CONFIG['local_authority_base_uri'] + identifier + '#'
-    end
-  end
-
-  def self.find_by(identifier:)
-    Vocab.new(identifier)
+  # Returns a Vocab object for the given identifier
+  # A Vocab object will always be returned, but will contain an empty
+  # "terms" field, if the vocabulary cannot be found, or an error occurs
+  # retrieving the vocabulary.
+  def self.get_vocabulary(identifier)
+    url = generate_url(identifier)
+    json_rest_result = retrieve(url)
+    terms = parse(json_rest_result)
+    Vocab.new(identifier, terms)
   end
 
   # Returns either an empty hash, or an options hash of terms indexed by their
@@ -41,24 +24,18 @@ class VocabService
 
     Rails.logger.info("vocab_identifier='#{vocab_identifier}', allowed_terms='#{allowed_terms}'")
 
-    vocab = Vocab.new(vocab_identifier)
-    all_options = vocab.as_hash
+    vocab = VocabService.get_vocabulary(vocab_identifier)
+    all_options = parse_options(vocab.terms)
 
     filtered_options = filter_options(all_options, allowed_terms)
     Rails.logger.debug { "filtered_options: #{filtered_options}" }
     filtered_options
   end
 
-  def self.vocab_by_identifier(identifier)
-    url = generate_url(identifier)
-    json_rest_result = retrieve(url)
-    parse(json_rest_result)
-  end
-
   # Parses the given terms, returning hash of term labels indexed by the term
   # identifier, suitable for use in an HTML <select> list
   def self.parse_options(terms)
-    Hash[terms.map { |r| [r.id, r.label] }]
+    Hash[terms.map { |r| [r.uri, r.label] }]
   end
 
   class << self
@@ -127,7 +104,7 @@ class VocabService
         label = graph_entry['rdfs:label'].nil? ? id.split('#').last : graph_entry['rdfs:label']
         identifier = id.split('#').last
         same_as = graph_entry.dig('owl:sameAs', '@id')
-        OpenStruct.new(id: id, uri: id, identifier: identifier, label: label, same_as: same_as)
+        VocabTerm.new(uri: id, identifier: identifier, label: label, same_as: same_as)
       end
   end
 end
