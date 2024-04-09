@@ -35,6 +35,9 @@ coverage
 /*.key
 
 # Ignore published vocabularies
+# While the "published_vocabularies" directory has been removed, leaving this
+# ignore specification in place to eliminate any possibility of the directory
+# contents being accidentally added to a Docker image.
 /public/published_vocabularies/*.json
 /public/published_vocabularies/*.ttl
 /public/published_vocabularies/*.nt
