@@ -15,7 +15,14 @@ class VocabularyService
   end
 
   # Returns either an empty hash, or an options hash of terms indexed by their
-  # Local URI
+  # Local URI for the given content model field.
+  #
+  # The returned hash will be filtered to contain only the terms listed in the
+  # "terms" field of the content model field (if present), otherwise all the
+  # terms in the vocabulary will be returned.
+  #
+  # The returned hash is suitable for use in the "vocab" field of the
+  # ControlledURIRef React component.
   def self.vocab_options_hash(content_model_field)
     return {} unless valid?(content_model_field)
 
@@ -32,8 +39,8 @@ class VocabularyService
     filtered_options
   end
 
-  # Parses the given terms, returning hash of term labels indexed by the term
-  # identifier, suitable for use in an HTML <select> list
+  # Parses the given terms, returning a Hash suitable for use in the "vocab"
+  # field of the ControlledURIRef React component.
   def self.parse_options(terms)
     Hash[terms.map { |r| [r.uri, r.label] }]
   end
@@ -69,6 +76,8 @@ class VocabularyService
         json_rest_result
       end
 
+      # Parses the JSON result from the network requestm returning either an
+      # empty array, or an array of VocabularyTerm objects.
       def parse(json_rest_result)
         return [] if json_rest_result.error_occurred?
 
@@ -95,10 +104,7 @@ class VocabularyService
         options.select { |_k, v| allowed_terms.include?(v) }
       end
 
-      # Parses a single term from the graph, returns a two-part array
-      # consisting of [@id, label]. If the graph entry does not contain
-      # an "rdfs:label" value, a label value is generated from the @id
-      # value.
+      # Parses a single term from the graph, returning a VocabularyTerm object
       def parse_entry(graph_entry)
         id = graph_entry['@id']
         label = graph_entry['rdfs:label'].nil? ? id.split('#').last : graph_entry['rdfs:label']
