@@ -3,30 +3,18 @@
 # Queries a Vocabulary server at VOCAB_CONFIG['local_authority_base_uri']
 # for vocabulary information
 class VocabService
+  # Data class encapsulating a single Vocabulary
   class Vocab
-    attr_accessor :identifier
+    attr_reader :identifier, :terms
 
     def initialize(identifier)
       @identifier = identifier
-      @options_hash = VocabService.vocab_options_hash_by_identifier(identifier)
+      @terms = VocabService.vocab_by_identifier(identifier)
+      @options_hash = VocabService.parse_options(@terms)
     end
-
-    # def self.[](identifier)
-    #   VocabService.vocab_options_hash_by_identifier(identifier)
-    #   # vocab = find_by(identifier: identifier)
-    #   # vocab.nil? ? {} : vocab.as_hash
-    # end
 
     def as_hash
       @options_hash
-      # Hash[terms.map do |term|
-      #   [term.uri, term.respond_to?(:label) ? term.label : term.identifier]
-      # end]
-    end
-
-    def terms
-      as_hash.map { |key, value| OpenStruct.new(uri: key, identifier: value, label: value) }
-      # individuals + types + datatypes
     end
 
     def term(term_uri)
@@ -37,14 +25,6 @@ class VocabService
     def uri
       VOCAB_CONFIG['local_authority_base_uri'] + identifier + '#'
     end
-
-    # def published_uri
-    #   VOCAB_CONFIG['publication_base_uri'] + identifier + '.json'
-    # end
-
-    # def term_count
-    #   terms.count
-    # end
   end
 
   def self.find_by(identifier:)
@@ -61,17 +41,24 @@ class VocabService
 
     Rails.logger.info("vocab_identifier='#{vocab_identifier}', allowed_terms='#{allowed_terms}'")
 
-    all_options = VocabService.vocab_options_hash_by_identifier(vocab_identifier)
+    vocab = Vocab.new(vocab_identifier)
+    all_options = vocab.as_hash
 
     filtered_options = filter_options(all_options, allowed_terms)
     Rails.logger.debug { "filtered_options: #{filtered_options}" }
     filtered_options
   end
 
-  def self.vocab_options_hash_by_identifier(identifier)
+  def self.vocab_by_identifier(identifier)
     url = generate_url(identifier)
     json_rest_result = retrieve(url)
-    parse_options(json_rest_result)
+    parse(json_rest_result)
+  end
+
+  # Parses the given terms, returning hash of term labels indexed by the term
+  # identifier, suitable for use in an HTML <select> list
+  def self.parse_options(terms)
+    Hash[terms.map { |r| [r.id, r.label] }]
   end
 
   class << self
@@ -105,21 +92,19 @@ class VocabService
         json_rest_result
       end
 
-      # Parses a JsonRestResult, returning either an empty Hash (if any errors
-      # have occurred), or an options hash of terms indexed by their Local URI
-      def parse_options(json_rest_result)
-        return {} if json_rest_result.error_occurred?
+      def parse(json_rest_result)
+        return [] if json_rest_result.error_occurred?
 
         graph = json_rest_result.parsed_json['@graph']
 
         # @graph element exists for vocabularies with two or more elements
-        return Hash[graph.map { |g| parse_entry(g) }] if graph.present?
+        return graph.map { |g| parse_entry(g) } if graph.present?
 
         # Single term vocabularies don't have "@graph" element, but do have
         # "@id" and (possibly) "@rdfs.label" elements, so we can just go
         # straight to the "parse_entry" function, and then wrap the result
         # in an array before converting into a hash
-        Hash[[parse_entry(json_rest_result.parsed_json)]]
+        [parse_entry(json_rest_result.parsed_json)]
       end
 
       # Filters a map of parsed options, removing any entry whose term does
@@ -140,7 +125,9 @@ class VocabService
       def parse_entry(graph_entry)
         id = graph_entry['@id']
         label = graph_entry['rdfs:label'].nil? ? id.split('#').last : graph_entry['rdfs:label']
-        [id, label]
+        identifier = id.split('#').last
+        same_as = graph_entry.dig('owl:sameAs', '@id')
+        OpenStruct.new(id: id, uri: id, identifier: identifier, label: label, same_as: same_as)
       end
   end
 end
