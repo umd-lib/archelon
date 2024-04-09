@@ -2,7 +2,7 @@
 
 # Queries a Vocabulary server at VOCAB_CONFIG['local_authority_base_uri']
 # for vocabulary information
-class VocabService
+class VocabularyService
   # Returns a Vocab object for the given identifier
   # A Vocab object will always be returned, but will contain an empty
   # "terms" field, if the vocabulary cannot be found, or an error occurs
@@ -11,7 +11,7 @@ class VocabService
     url = generate_url(identifier)
     json_rest_result = retrieve(url)
     terms = parse(json_rest_result)
-    Vocab.new(identifier, terms)
+    Vocabulary.new(identifier, terms)
   end
 
   # Returns either an empty hash, or an options hash of terms indexed by their
@@ -24,7 +24,7 @@ class VocabService
 
     Rails.logger.info("vocab_identifier='#{vocab_identifier}', allowed_terms='#{allowed_terms}'")
 
-    vocab = VocabService.get_vocabulary(vocab_identifier)
+    vocab = VocabularyService.get_vocabulary(vocab_identifier)
     all_options = parse_options(vocab.terms)
 
     filtered_options = filter_options(all_options, allowed_terms)
@@ -104,7 +104,7 @@ class VocabService
         label = graph_entry['rdfs:label'].nil? ? id.split('#').last : graph_entry['rdfs:label']
         identifier = id.split('#').last
         same_as = graph_entry.dig('owl:sameAs', '@id')
-        VocabTerm.new(uri: id, identifier: identifier, label: label, same_as: same_as)
+        VocabularyTerm.new(uri: id, identifier: identifier, label: label, same_as: same_as)
       end
   end
 end

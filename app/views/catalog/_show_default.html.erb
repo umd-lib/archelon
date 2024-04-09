@@ -11,7 +11,7 @@
       fields.each do |field|
         # special handling for the access field
         if field[:name] == 'access'
-          vocab = VocabService.get_vocabulary(field[:vocab])
+          vocab = VocabularyService.get_vocabulary(field[:vocab])
           if field.key? :terms
             terms = field[:terms].map { |term| vocab.uri + term }
           else

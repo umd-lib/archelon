@@ -2,7 +2,7 @@
 
 require 'test_helper'
 
-class VocabServiceTest < ActiveSupport::TestCase
+class VocabularyServiceTest < ActiveSupport::TestCase
   def setup
     item_content_model = CONTENT_MODELS[:Item]
     @rights_field = field_from_content_model(item_content_model, 'required', 'rights')
@@ -13,7 +13,7 @@ class VocabServiceTest < ActiveSupport::TestCase
   test 'get_vocabulary returns Vocab object with empty terms when vocabulary does not exists' do
     stub_request(:get, 'http://vocab.lib.umd.edu/does-not-exist')
       .to_return(status: 404)
-    vocab = VocabService.get_vocabulary('does-not-exist')
+    vocab = VocabularyService.get_vocabulary('does-not-exist')
     assert_not_nil vocab
     assert_equal('does-not-exist', vocab.identifier)
     assert vocab.terms.empty?
@@ -23,23 +23,23 @@ class VocabServiceTest < ActiveSupport::TestCase
     invalid_json = '{'
     stub_request(:get, 'http://vocab.lib.umd.edu/invalid_json')
       .to_return(status: 200, body: invalid_json, headers: {})
-    vocab = VocabService.get_vocabulary('invalid_json')
+    vocab = VocabularyService.get_vocabulary('invalid_json')
     assert_not_nil vocab
     assert_equal('invalid_json', vocab.identifier)
     assert vocab.terms.empty?
   end
 
   test 'vocab_hash returns empty hash when given nil or empty content model field' do
-    assert_equal({}, VocabService.vocab_options_hash(nil))
-    assert_equal({}, VocabService.vocab_options_hash({}))
-    assert_equal({}, VocabService.vocab_options_hash([]))
+    assert_equal({}, VocabularyService.vocab_options_hash(nil))
+    assert_equal({}, VocabularyService.vocab_options_hash({}))
+    assert_equal({}, VocabularyService.vocab_options_hash([]))
   end
 
   test 'vocab_hash returns empty hash on standard error' do
     stub_request(:get, 'http://vocab.lib.umd.edu/rightsStatement')
       .to_raise(StandardError)
 
-    vocab_hash = VocabService.vocab_options_hash(@rights_field)
+    vocab_hash = VocabularyService.vocab_options_hash(@rights_field)
     assert_equal({}, vocab_hash)
   end
 
@@ -47,7 +47,7 @@ class VocabServiceTest < ActiveSupport::TestCase
     stub_request(:get, 'http://vocab.lib.umd.edu/rightsStatement')
       .to_raise(HTTP::ConnectionError)
 
-    vocab_hash = VocabService.vocab_options_hash(@rights_field)
+    vocab_hash = VocabularyService.vocab_options_hash(@rights_field)
     assert_equal({}, vocab_hash)
   end
 
@@ -55,7 +55,7 @@ class VocabServiceTest < ActiveSupport::TestCase
     stub_request(:get, 'http://vocab.lib.umd.edu/rightsStatement')
       .to_timeout
 
-    vocab_hash = VocabService.vocab_options_hash(@rights_field)
+    vocab_hash = VocabularyService.vocab_options_hash(@rights_field)
     assert_equal({}, vocab_hash)
   end
 
@@ -64,7 +64,7 @@ class VocabServiceTest < ActiveSupport::TestCase
     stub_request(:get, 'http://vocab.lib.umd.edu/rightsStatement')
       .to_return(status: 200, body: invalid_json, headers: {})
 
-    vocab_hash = VocabService.vocab_options_hash(@rights_field)
+    vocab_hash = VocabularyService.vocab_options_hash(@rights_field)
     assert_equal({}, vocab_hash)
   end
 
@@ -77,7 +77,7 @@ class VocabServiceTest < ActiveSupport::TestCase
 
     expected_hash = { 'http://vocab.lib.umd.edu/collection#0001-GDOC' => 'United States Government Posters' }
 
-    vocab_hash = VocabService.vocab_options_hash(@collection_field)
+    vocab_hash = VocabularyService.vocab_options_hash(@collection_field)
     assert_equal(expected_hash, vocab_hash)
   end
 
@@ -97,7 +97,7 @@ class VocabServiceTest < ActiveSupport::TestCase
       'http://vocab.lib.umd.edu/rightsStatement#NKC' => 'No Known Copyright'
     }
 
-    vocab_hash = VocabService.vocab_options_hash(@rights_field)
+    vocab_hash = VocabularyService.vocab_options_hash(@rights_field)
     assert_equal(expected_hash, vocab_hash)
   end
 
@@ -111,7 +111,7 @@ class VocabServiceTest < ActiveSupport::TestCase
       'http://vocab.lib.umd.edu/access#Campus' => 'Campus'
     }
 
-    vocab_hash = VocabService.vocab_options_hash(@access_field)
+    vocab_hash = VocabularyService.vocab_options_hash(@access_field)
     assert_equal(expected_hash, vocab_hash)
   end
 

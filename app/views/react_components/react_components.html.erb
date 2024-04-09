@@ -63,7 +63,7 @@
     sample_vocabulary_ids = %w[
        access collection datatype form model rightsStatement set
      ]
-    sample_vocabularies = sample_vocabulary_ids.map { |id| VocabService.get_vocabulary(id) }
+    sample_vocabularies = sample_vocabulary_ids.map { |id| VocabularyService.get_vocabulary(id) }
     sample_vocabularies.each do |vocab|
   %>
     <h4><%= vocab.identifier %></h4>
@@ -73,7 +73,7 @@
           "ControlledURIRef", {
           subjectURI: 'controlled_value',
           predicateURI: vocab.identifier,
-          vocab: VocabService.parse_options(vocab.terms),
+          vocab: VocabularyService.parse_options(vocab.terms),
           value: { '@id': vocab.terms[0].uri }
         }
         )
@@ -86,7 +86,7 @@
   <div>This example presents a dropdown where the provided value is not
        present in the controlled vocabulary list.</div>
 
-  <% vocab = VocabService.get_vocabulary('access') %>
+  <% vocab = VocabularyService.get_vocabulary('access') %>
   <h4><%= vocab.identifier %></h4>
   <div class="form-group">
     <%=
@@ -94,7 +94,7 @@
         "ControlledURIRef", {
         subjectURI: 'controlled_value',
         predicateURI: vocab.identifier,
-        vocab: VocabService.parse_options(vocab.terms),
+        vocab: VocabularyService.parse_options(vocab.terms),
         value: { '@id': 'not-in-vocabulary' }
       }
       )
@@ -175,7 +175,7 @@
               componentType: :ControlledURIRef,
               subjectURI: 'repeated_controlled_value',
               predicateURI: vocab.identifier,
-              vocab: VocabService.parse_options(vocab.terms),
+              vocab: VocabularyService.parse_options(vocab.terms),
               values: [
                 { '@id': vocab.terms[0].uri }
               ],

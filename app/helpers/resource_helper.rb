@@ -44,7 +44,7 @@ module ResourceHelper
   end
 
   def get_vocab_hash(field)
-    VocabService.vocab_options_hash(field)
+    VocabularyService.vocab_options_hash(field)
   end
 
   def get_labeled_thing_value(value, items)
