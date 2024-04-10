@@ -53,10 +53,19 @@
 
   <h3>Typical Usage</h3>
 
-  <div>This component presents dropdowns using the values defined in the
-    <%= link_to 'controlled vocabularies', vocabularies_url %>.</div>
+  <div>
+    This component presents dropdowns using the values defined in a
+    controlled vocabulary. The following is a sample list of controlled
+    vocabularies.
+  </div>
 
-  <% Vocabulary.all.each do |vocab| %>
+  <%
+    sample_vocabulary_ids = %w[
+       access collection datatype form model rightsStatement set
+     ]
+    sample_vocabularies = sample_vocabulary_ids.map { |id| VocabularyService.get_vocabulary(id) }
+    sample_vocabularies.each do |vocab|
+  %>
     <h4><%= vocab.identifier %></h4>
     <div class="form-group">
       <%=
@@ -64,7 +73,7 @@
           "ControlledURIRef", {
           subjectURI: 'controlled_value',
           predicateURI: vocab.identifier,
-          vocab: vocab.as_hash,
+          vocab: VocabularyService.parse_options(vocab.terms),
           value: { '@id': vocab.terms[0].uri }
         }
         )
@@ -77,7 +86,7 @@
   <div>This example presents a dropdown where the provided value is not
        present in the controlled vocabulary list.</div>
 
-  <% vocab = Vocabulary.find_by(identifier:'access') %>
+  <% vocab = VocabularyService.get_vocabulary('access') %>
   <h4><%= vocab.identifier %></h4>
   <div class="form-group">
     <%=
@@ -85,7 +94,7 @@
         "ControlledURIRef", {
         subjectURI: 'controlled_value',
         predicateURI: vocab.identifier,
-        vocab: vocab.as_hash,
+        vocab: VocabularyService.parse_options(vocab.terms),
         value: { '@id': 'not-in-vocabulary' }
       }
       )
@@ -157,7 +166,7 @@
 
   <h3>Repeatable ControlledURIRef</h3>
 
-  <% Vocabulary.all.each do |vocab| %>
+  <% sample_vocabularies.each do |vocab| %>
     <h4><%= vocab.identifier %> (repeated)</h4>
     <div class="form-group">
       <%= react_component(
@@ -166,7 +175,7 @@
               componentType: :ControlledURIRef,
               subjectURI: 'repeated_controlled_value',
               predicateURI: vocab.identifier,
-              vocab: vocab.as_hash,
+              vocab: VocabularyService.parse_options(vocab.terms),
               values: [
                 { '@id': vocab.terms[0].uri }
               ],

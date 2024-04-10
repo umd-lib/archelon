@@ -108,28 +108,3 @@ rails user:add_public_key_file[jsmith,/home/jsmith/.ssh/id_rsa.pub]
 ```
 
 Source: [add_public_key.rake](../lib/tasks/add_public_key.rake)
-
-## vocab:import
-
-Load of vocabulary terms from a CSV file:
-
-```bash
-rails vocab:import[filename.csv,vocabulary]
-```
-
-where `filename.csv` is the path to a CSV file containing the vocabulary terms
-to be imported, and `vocabulary` is the string name of the vocabulary to add
-those terms to. This vocabulary will be created if it doesn't already exist.
-
-The CSV file must have the following three columns:
-
-* label
-* identifier
-* uri
-
-Other columns are ignored.
-
-The import task currently only supports creating Individuals (a.k.a. Terms),
-and not Types (a.k.a. Classes).
-
-Source: [vocab.rake](../lib/tasks/vocab.rake)

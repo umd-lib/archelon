@@ -2,9 +2,27 @@
 
 # Queries a Vocabulary server at VOCAB_CONFIG['local_authority_base_uri']
 # for vocabulary information
-class VocabService
+class VocabularyService
+  # Returns a Vocab object for the given identifier
+  # A Vocab object will always be returned, but will contain an empty
+  # "terms" field, if the vocabulary cannot be found, or an error occurs
+  # retrieving the vocabulary.
+  def self.get_vocabulary(identifier)
+    url = generate_url(identifier)
+    json_rest_result = retrieve(url)
+    terms = parse(json_rest_result)
+    Vocabulary.new(identifier, terms)
+  end
+
   # Returns either an empty hash, or an options hash of terms indexed by their
-  # Local URI
+  # Local URI for the given content model field.
+  #
+  # The returned hash will be filtered to contain only the terms listed in the
+  # "terms" field of the content model field (if present), otherwise all the
+  # terms in the vocabulary will be returned.
+  #
+  # The returned hash is suitable for use in the "vocab" field of the
+  # ControlledURIRef React component.
   def self.vocab_options_hash(content_model_field)
     return {} unless valid?(content_model_field)
 
@@ -13,14 +31,19 @@ class VocabService
 
     Rails.logger.info("vocab_identifier='#{vocab_identifier}', allowed_terms='#{allowed_terms}'")
 
-    url = generate_url(vocab_identifier)
+    vocab = VocabularyService.get_vocabulary(vocab_identifier)
 
-    json_rest_result = retrieve(url)
-
-    all_options = parse_options(json_rest_result)
-    filtered_options = filter_options(all_options, allowed_terms)
+    filtered_terms = filter_terms(vocab.terms, allowed_terms)
+    filtered_options = parse_options(filtered_terms)
     Rails.logger.debug { "filtered_options: #{filtered_options}" }
+
     filtered_options
+  end
+
+  # Parses the given terms, returning a Hash suitable for use in the "vocab"
+  # field of the ControlledURIRef React component.
+  def self.parse_options(terms)
+    Hash[terms.map { |r| [r.uri, r.label] }]
   end
 
   class << self
@@ -54,42 +77,41 @@ class VocabService
         json_rest_result
       end
 
-      # Parses a JsonRestResult, returning either an empty Hash (if any errors
-      # have occurred), or an options hash of terms indexed by their Local URI
-      def parse_options(json_rest_result)
-        return {} if json_rest_result.error_occurred?
+      # Parses the JSON result from the network requestm returning either an
+      # empty array, or an array of VocabularyTerm objects.
+      def parse(json_rest_result)
+        return [] if json_rest_result.error_occurred?
 
         graph = json_rest_result.parsed_json['@graph']
 
         # @graph element exists for vocabularies with two or more elements
-        return Hash[graph.map { |g| parse_entry(g) }] if graph.present?
+        return graph.map { |g| parse_entry(g) } if graph.present?
 
         # Single term vocabularies don't have "@graph" element, but do have
         # "@id" and (possibly) "@rdfs.label" elements, so we can just go
         # straight to the "parse_entry" function, and then wrap the result
         # in an array before converting into a hash
-        Hash[[parse_entry(json_rest_result.parsed_json)]]
+        [parse_entry(json_rest_result.parsed_json)]
       end
 
-      # Filters a map of parsed options, removing any entry whose term does
-      # not match a term in the given list of allowed terms
-      def filter_options(options, allowed_terms)
+      # Filters a list of terms, only returning the terms whose "label"
+      # attribute matches an entry in the the given allowed terms list
+      def filter_terms(terms, allowed_terms)
         if allowed_terms.nil?
           Rails.logger.debug('Skipping filtering, as allowed_terms is nil')
-          return options
+          return terms
         end
 
-        options.select { |_k, v| allowed_terms.include?(v) }
+        terms.select { |term| allowed_terms.include?(term.label) }
       end
 
-      # Parses a single term from the graph, returns a two-part array
-      # consisting of [@id, label]. If the graph entry does not contain
-      # an "rdfs:label" value, a label value is generated from the @id
-      # value.
+      # Parses a single term from the graph, returning a VocabularyTerm object
       def parse_entry(graph_entry)
         id = graph_entry['@id']
         label = graph_entry['rdfs:label'].nil? ? id.split('#').last : graph_entry['rdfs:label']
-        [id, label]
+        identifier = id.split('#').last
+        same_as = graph_entry.dig('owl:sameAs', '@id')
+        VocabularyTerm.new(uri: id, identifier: identifier, label: label, same_as: same_as)
       end
   end
 end

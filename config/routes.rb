@@ -85,8 +85,6 @@ Rails.application.routes.draw do # rubocop:disable Metrics/BlockLength
   get 'react_components' => 'react_components#react_components'
   post 'react_components' => 'react_components#react_components_submit'
 
-  resources :vocabularies, :types, :individuals, :datatypes
-
   resources :publish_jobs, except: [:new] do
     member do
       post 'submit' => 'publish_jobs#submit'
