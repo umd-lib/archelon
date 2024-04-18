@@ -10,11 +10,4 @@ class StaticPagesController < ApplicationController
   rescue SocketError => e
     solr_connection_error(e)
   end
-
-  private
-
-    def solr_connection_error(err)
-      Rails.logger.error(err.message)
-      flash[:error] = I18n.t(:solr_is_down)
-    end
 end
