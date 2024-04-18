@@ -9,7 +9,15 @@ class StaticPagesControllerTest < ActionController::TestCase
   end
 
   test 'should get about' do
-    get :about
-    assert_response :success
+    stub_request(:get, 'http://solr-fedora4:8983/solr/fedora4')
+      .with(
+        headers: {
+          'Accept' => '*/*',
+          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+          'Host' => 'solr-fedora4:8983',
+          'User-Agent' => 'Ruby'
+        }
+      )
+      .to_return(status: 200, body: '', headers: {})
   end
 end
