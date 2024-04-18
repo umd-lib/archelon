@@ -214,6 +214,7 @@ class CatalogController < ApplicationController
   end
 
   private
+
     def goto_about_page(err)
       solr_connection_error(err)
       redirect_to(about_url)
