@@ -1,16 +1,18 @@
 # frozen_string_literal: true
 
 module ResourceHelper
-  # generate a lookup hash of (predicate, datatype) => fieldname
-  def uri_to_fieldname(fields)
-    Hash[fields.map { |field| [[field[:uri], field[:datatype]], field[:name]] }]
-  end
+  # # generate a lookup hash of (predicate, datatype) => fieldname
+  # def uri_to_fieldname(fields)
+  #   Hash[fields.map { |field| [[field[:uri], field[:datatype]], field[:name]] }]
+  # end
 
-  def get_field_values(fields, item, predicate_uri)
+  def get_field_values(item, field)
     # for fields with a particular datatype, check the value type as well as the predicate URI
-    (item[predicate_uri] || []).select do |value|
-      uri_to_fieldname(fields).include?([predicate_uri, value['@type']])
-    end
+    field_predicate_uri = field[:uri]
+    item_values_for_predicate = item[field_predicate_uri] || []
+
+    field_data_type = field[:datatype]
+    item_values_for_predicate.select { |value| value['@type'] == field_data_type }
   end
 
   def define_react_components(fields, items, uri) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
@@ -24,7 +26,7 @@ module ResourceHelper
         # ... and key them by their predicate
         predicateURI: field[:uri],
         componentType: field[:type],
-        values: get_field_values(fields, item, field[:uri])
+        values: get_field_values(item, field)
       }.tap do |args|
         args[:vocab] = get_vocab_hash(field) if field[:vocab].present?
         args[:maxValues] = 1 unless field[:repeatable]

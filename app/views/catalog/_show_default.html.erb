@@ -19,7 +19,7 @@
           end
           values = item.fetch('@type', []).select { |uri| terms.include? uri }.map { |uri| { '@id' => uri } }
         else
-          values = get_field_values(fields, item, field[:uri])
+          values = get_field_values(item, field)
         end
       %>
       <% unless values.empty? %>
