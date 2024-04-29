@@ -114,6 +114,11 @@ class UMDLibEnvironmentBannerHelperTest < ActiveSupport::TestCase
     Rails.env = 'test'
     ENV.clear
 
+    # The 'MT_KWARGS_HACK' env is set in test_helper.rb for ruby 2.7
+    # compatibility, so we need to add it back after clearing the ENV for this
+    # test
+    ENV['MT_KWARGS_HACK'] = '1'
+
     UMDLibEnvironmentBannerHelper.reset
   end
 end
