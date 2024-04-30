@@ -80,8 +80,8 @@
           <% if doc._source.exclude? "is_published" or doc._source.exclude? "is_hidden" %>
             <td> Status Unknown </td>
           <% else %>
-            <% published = doc._source["is_published"] == "true" ? "Published" : "Unpublished" %>
-            <% hidden = doc._source["is_hidden"] == "true" ? "Hidden" : "Visible" %>
+            <% published = doc._source["is_published"] ? "Published" : "Unpublished" %>
+            <% hidden = doc._source["is_hidden"] ? "Hidden" : "Visible" %>
             <td><%= published + " and " + hidden %> </td>
           <% end %>
         </tr>
