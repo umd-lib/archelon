@@ -7,6 +7,8 @@ class ApplicationHelperTest < ActionView::TestCase
   include ResourceHelper
 
   def setup # rubocop:disable Metrics/MethodLength
+    ENV['HANDLE_HTTP_PROXY_BASE'] = 'https://hdl.handle.net/'
+
     @item_content_model = CONTENT_MODELS[:Item]
 
     @sample_items = {
@@ -57,40 +59,40 @@ class ApplicationHelperTest < ActionView::TestCase
 
     @sample_item_id = 'http://fcrepo-local:8080/fcrepo/rest/dc/2021/2/37/3b/87/72/373b8772-881b-4f1f-91e2-8b6b4d04b643'
     @sample_item = @sample_items[@sample_item_id]
+
+    @fields = {
+      object_type: { name: 'object_type', uri: 'http://purl.org/dc/terms/type', label: 'Object Type', type: :ControlledURIRef },
+      identifier: { name: 'identifier', uri: 'http://purl.org/dc/terms/identifier', label: 'Identifier', type: :TypedLiteral, repeatable: true },
+      rights: { name: 'rights', uri: 'http://purl.org/dc/terms/rights', label: 'Rights Statement', type: :ControlledURIRef, vocab: 'rightsStatement' },
+      title: { name: 'title', uri: 'http://purl.org/dc/terms/title', label: 'Title', type: :PlainLiteral, repeatable: true },
+      access: { name: 'access', label: 'Access Level', type: :ControlledURIRef, vocab: 'access', terms: ['Public', 'Campus'] }, # rubocop:disable Style/WordArray
+      format: { name: 'format', uri: 'http://www.europeana.eu/schemas/edm/hasType', label: 'Format', type: :ControlledURIRef, vocab: 'form', repeatable: true },
+      creator: { name: 'creator', uri: 'http://purl.org/dc/terms/creator', label: 'Creator', type: :LabeledThing, repeatable: true },
+      location: { name: 'location', uri: 'http://purl.org/dc/terms/spatial', label: 'Location', type: :LabeledThing, repeatable: true },
+      handle: { name: 'handle', uri: 'http://purl.org/dc/terms/identifier', label: 'Handle', type: :TypedLiteral, datatype: 'http://vocab.lib.umd.edu/datatype#handle' }
+    }
   end
 
-  test 'display_node' do # rubocop:disable Metrics/BlockLength
-    object_type_field = { name: 'object_type', uri: 'http://purl.org/dc/terms/type', label: 'Object Type', type: :ControlledURIRef }
-    identifier_field = { name: 'identifier', uri: 'http://purl.org/dc/terms/identifier', label: 'Identifier', type: :TypedLiteral, repeatable: true }
-    rights_field = { name: 'rights', uri: 'http://purl.org/dc/terms/rights', label: 'Rights Statement', type: :ControlledURIRef, vocab: 'rightsStatement' }
-    title_field = { name: 'title', uri: 'http://purl.org/dc/terms/title', label: 'Title', type: :PlainLiteral, repeatable: true }
-    access_field = { name: 'access', label: 'Access Level', type: :ControlledURIRef, vocab: 'access', terms: ['Public', 'Campus'] } # rubocop:disable Style/WordArray
-
-    format_field = { name: 'format', uri: 'http://www.europeana.eu/schemas/edm/hasType', label: 'Format', type: :ControlledURIRef, vocab: 'form', repeatable: true }
-
-    creator_field = { name: 'creator', uri: 'http://purl.org/dc/terms/creator', label: 'Creator', type: :LabeledThing, repeatable: true }
-    location_field = { name: 'location', uri: 'http://purl.org/dc/terms/spatial', label: 'Location', type: :LabeledThing, repeatable: true }
-    handle_field = { name: 'handle', uri: 'http://purl.org/dc/terms/identifier', label: 'Handle', type: :TypedLiteral, datatype: 'http://vocab.lib.umd.edu/datatype#handle' }
-
+  test 'display_node' do
     expected = [
-      # object_type_field - :ControlledURIRef, no vocabulary
-      [object_type_field, '<a href="http://purl.org/dc/dcmitype/Image">http://purl.org/dc/dcmitype/Image</a>'],
-      # identifier_field - :TypedLiteral
-      [identifier_field, '<span>univarch-028986-0001</span>'],
-      # rights_field - :ControlledURIRef, "rightsStatement" vocabulary, "same as" entry
-      [rights_field, '<span>In Copyright - Non-Commercial Use Permitted</span> → <a href="http://rightsstatements.org/vocab/InC-NC/1.0/">http://rightsstatements.org/vocab/InC-NC/1.0/</a>'],
-      # title_field - :PlainLiteral
-      [title_field, '<span>Sample Title</span>'],
-      # access_field - :ControlledURIRef, "access" vocabulary, defined terms
-      [access_field, '<span>Campus</span>'],
-      # format_field - :ControlledURIRef, "form" vocabulary
-      [format_field, '<span>Photographs</span> → <a href="http://id.loc.gov/authorities/genreForms/gf2017027249">http://id.loc.gov/authorities/genreForms/gf2017027249</a>'],
-      # creator_field - :LabeledThing
-      [creator_field, '<span><span>Sample Creator</span></span>'],
-      # location_field - :LabeledThing, "same as" entry
-      [location_field, '<span>Sample Location</span> <span class="badge badge-light" style="background: #ddd; color: #333">en</span> → <a href="http://sws.geonames.org/5000306">http://sws.geonames.org/5000306</a>'],
-      # handle_field - :TypedLiteral, "datatype" entry
-      [handle_field, '<span>hdl:1903.1/1</span> <a class="badge badge-light" style="background: #ddd; color: #333" href="http://vocab.lib.umd.edu/datatype#handle">http://vocab.lib.umd.edu/datatype#handle</a>']
+      # object_type - :ControlledURIRef, no vocabulary
+      [@fields[:object_type], '<a href="http://purl.org/dc/dcmitype/Image">http://purl.org/dc/dcmitype/Image</a>'],
+      # identifier - :TypedLiteral
+      [@fields[:identifier], '<span>univarch-028986-0001</span>'],
+      # rights - :ControlledURIRef, "rightsStatement" vocabulary, "same as" entry
+      [@fields[:rights], '<span>In Copyright - Non-Commercial Use Permitted</span> → <a href="http://rightsstatements.org/vocab/InC-NC/1.0/">http://rightsstatements.org/vocab/InC-NC/1.0/</a>'],
+      # title - :PlainLiteral
+      [@fields[:title], '<span>Sample Title</span>'],
+      # access - :ControlledURIRef, "access" vocabulary, defined terms
+      [@fields[:access], '<span>Campus</span>'],
+      # format - :ControlledURIRef, "form" vocabulary
+      [@fields[:format], '<span>Photographs</span> → <a href="http://id.loc.gov/authorities/genreForms/gf2017027249">http://id.loc.gov/authorities/genreForms/gf2017027249</a>'],
+      # creator - :LabeledThing
+      [@fields[:creator], '<span><span>Sample Creator</span></span>'],
+      # location - :LabeledThing, "same as" entry
+      [@fields[:location], '<span>Sample Location</span> <span class="badge badge-light" style="background: #ddd; color: #333">en</span> → <a href="http://sws.geonames.org/5000306">http://sws.geonames.org/5000306</a>'],
+      # handle - :TypedLiteral, "datatype" entry
+      [@fields[:handle], '<span>1903.1/1</span> - <a href="https://hdl.handle.net/1903.1/1">https://hdl.handle.net/1903.1/1</a>']
     ]
 
     expected.each do |expect|
@@ -102,6 +104,26 @@ class ApplicationHelperTest < ActionView::TestCase
       node = item_values.first
       assert_equal expected_value, display_node(node, field, @sample_items), "Unexpected value returned for '#{field[:name]}' field"
     end
+  end
+
+  test 'display_handle when HANDLE_HTTP_PROXY_BASE is empty' do
+    item_values = get_item_values(@fields[:handle], @sample_item)
+    node = item_values.first
+    ENV['HANDLE_HTTP_PROXY_BASE'] = ''
+
+    content = display_handle(node)
+    expected = '<span>1903.1/1</span>'
+    assert_equal expected, content
+  end
+
+  test 'display_handle when HANDLE_HTTP_PROXY_BASE is populated' do
+    item_values = get_item_values(@fields[:handle], @sample_item)
+    node = item_values.first
+    ENV['HANDLE_HTTP_PROXY_BASE'] = 'https://hdl.handle.net/'
+
+    content = display_handle(node)
+    expected = '<span>1903.1/1</span> - <a href="https://hdl.handle.net/1903.1/1">https://hdl.handle.net/1903.1/1</a>'
+    assert_equal expected, content
   end
 
   # Helper methods
