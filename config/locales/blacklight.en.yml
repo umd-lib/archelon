@@ -47,3 +47,7 @@ en:
         title: 'Limit to'
       filters:
         none: 'Browse'
+      zero_results:
+        use_fewer_keywords: 'Use fewer keywords to start, then refine your search using the links on the left.'
+        identifier_search: 'When searching for pids or other identifiers, wrap them in quotes (eg: "umd:123", "hdl:1903.1/456", etc).'
+        use_quotes_correctly: 'Use quotes for identifier search as described above or for phrase search (search term(s) enclosed in quotes and does not contain any space will be processed as a identifier search.).'
