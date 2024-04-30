@@ -3,10 +3,9 @@
 require 'test_helper'
 
 class ResourcerHelperTest < ActiveSupport::TestCase
-  def setup # rubocop:disable Metrics/MethodLength
-    @object = Object.new
-    @object.extend(ResourceHelper)
+  include ResourceHelper
 
+  def setup # rubocop:disable Metrics/MethodLength
     @item = {
       'http://fedora.info/definitions/v4/repository#created' => [{ '@value' => '2024-04-26T13:10:24.331Z', '@type' => 'http://www.w3.org/2001/XMLSchema#dateTime' }],
       'http://purl.org/dc/terms/rights' => [{ '@id' => 'http://vocab.lib.umd.edu/rightsStatement#InC-NC' }],
@@ -42,15 +41,15 @@ class ResourcerHelperTest < ActiveSupport::TestCase
     accession_field = { name: 'accession_number', uri: 'http://purl.org/dc/terms/identifier', label: 'Accession Number', type: :TypedLiteral, datatype: 'http://vocab.lib.umd.edu/datatype#accessionNumber' }
     handle_field = { name: 'handle', uri: 'http://purl.org/dc/terms/identifier', label: 'Handle', type: :TypedLiteral, datatype: 'http://vocab.lib.umd.edu/datatype#handle' }
 
-    identifier_result = @object.get_field_values(@item, identifier_field)
+    identifier_result = get_field_values(@item, identifier_field)
     expected = [{ '@value' => 'univarch-028986-0001' }]
     assert_equal expected, identifier_result
 
-    accession_result = @object.get_field_values(@item, accession_field)
+    accession_result = get_field_values(@item, accession_field)
     expected = [{ '@value' => '2008-51', '@type' => 'http://vocab.lib.umd.edu/datatype#accessionNumber' }]
     assert_equal expected, accession_result
 
-    handle_result = @object.get_field_values(@item, handle_field)
+    handle_result = get_field_values(@item, handle_field)
     expected = [{ '@value' => 'hdl:1903.1/1', '@type' => 'http://vocab.lib.umd.edu/datatype#handle' }]
     assert_equal expected, handle_result
   end
