@@ -35,6 +35,11 @@ class ActiveSupport::TestCase
   # Default user for testing has Admin privileges
   DEFAULT_TEST_USER = 'test_admin'
 
+  # Fix MiniTest stub errors Enable kwargs support to allow minitest to work
+  # with ruby 2.7:
+  #  https://github.com/minitest/minitest/blob/master/History.rdoc#5161--2022-06-20-
+  ENV['MT_KWARGS_HACK'] = '1'
+
   OmniAuth.config.test_mode = true
   OmniAuth.config.mock_auth[:cas] = {
     provider: 'cas',
