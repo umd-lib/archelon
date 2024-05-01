@@ -120,6 +120,12 @@ Item:
       type: :TypedLiteral
       datatype: http://vocab.lib.umd.edu/datatype#accessionNumber
 
+    - name: 'handle'
+      uri: 'http://purl.org/dc/terms/identifier'
+      label: 'Handle'
+      type: :TypedLiteral
+      datatype: http://vocab.lib.umd.edu/datatype#handle
+
     - name: 'presentation_set'
       uri: 'http://www.openarchives.org/ore/terms/isAggregatedBy'
       label: 'Presentation Set'
