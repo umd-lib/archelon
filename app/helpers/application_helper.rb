@@ -187,6 +187,10 @@ module ApplicationHelper # rubocop:disable Metrics/ModuleLength
     end
   end
 
+  def max_bookmarks_selection_limit
+    1000
+  end
+
   # Display formatting for the "handle" field
   def display_handle(node)
     handle_value = node['@value'].delete_prefix('hdl:')

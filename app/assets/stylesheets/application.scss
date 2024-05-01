@@ -156,3 +156,28 @@ footer {
 .tab-content {
   margin-bottom: 15px;
 }
+
+// Styling for select box on the item detail page
+.item-select-view .checkbox {
+  min-height: 0 !important;
+}
+
+.item-select-view input {
+  margin-top: 4px !important;
+  margin-left: -15px !important;
+  transform: scale(1.5);
+}
+
+.item-select-view .btn-primary:hover {
+  border-color: #c91010 !important;
+  cursor: inherit !important;
+}
+
+.item-select-view .btn-primary:active {
+  background-image: linear-gradient(#ec1515, #c91010 60%, #b60e0e);
+  border-color: #c91010 !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+  cursor: inherit !important;
+  text-decoration: none;
+}
