@@ -147,6 +147,8 @@ module ApplicationHelper # rubocop:disable Metrics/ModuleLength
   end
 
   def display_node(node, field, items) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/MethodLength, Metrics/LineLength
+    return display_handle(node) if field[:datatype] == 'http://vocab.lib.umd.edu/datatype#handle'
+
     if node.key? '@value'
       content = content_tag :span, node['@value']
       content << ' ' << language_badge(node) if node.key? '@language'
@@ -187,5 +189,20 @@ module ApplicationHelper # rubocop:disable Metrics/ModuleLength
 
   def max_bookmarks_selection_limit
     1000
+  end
+  
+  # Display formatting for the "handle" field
+  def display_handle(node)
+    handle_value = node['@value'].delete_prefix('hdl:')
+
+    content = content_tag :span, handle_value
+
+    if ENV['HANDLE_HTTP_PROXY_BASE'].present?
+      handle_server_base_url = ENV['HANDLE_HTTP_PROXY_BASE']
+      handle_url = URI.join(handle_server_base_url, handle_value).to_s
+      content << ' - ' << link_to(handle_url, handle_url) << ''
+    end
+
+    content
   end
 end
