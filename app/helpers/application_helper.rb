@@ -184,4 +184,8 @@ module ApplicationHelper # rubocop:disable Metrics/ModuleLength
       node
     end
   end
+
+  def max_bookmarks_selection_limit
+    1000
+  end
 end

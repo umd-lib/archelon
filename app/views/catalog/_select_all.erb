@@ -15,7 +15,7 @@
         <% 
           total_results = @response["response"]["numFound"]
             selected_count = current_user.bookmarks.count
-            max_selction = 1000
+            max_selction = max_bookmarks_selection_limit
           per_page = search_state.params_for_search[:per_page]
           page = search_state.params_for_search[:page]
           bookmark_params = { result_count: total_results, page: page, per_page: per_page }
