@@ -33,10 +33,17 @@ namespace :stomp do # rubocop:disable Metrics/BlockLength
       message = PlastronMessage.new(stomp_msg)
       puts "Updating job progress for #{message.job_id}"
 
-      # Wrapping in "with_connection" in case connection has timed out
-      ActiveRecord::Base.connection_pool.with_connection do
-        message.find_job.update_progress(message)
-        notify_archelon(message, type: :progress)
+      begin
+        # Wrapping in "with_connection" in case connection has timed out
+        ActiveRecord::Base.connection_pool.with_connection do
+          message.find_job.update_progress(message)
+          listener.send_ack(message)
+          notify_archelon(message, type: :progress)
+        end
+      rescue StandardError => e
+        puts "An error occurred processing stomp_msg: #{stomp_msg}"
+        listener.send_nack(message)
+        puts e, e.backtrace
       end
     end
 
