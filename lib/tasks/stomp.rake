@@ -37,12 +37,10 @@ namespace :stomp do # rubocop:disable Metrics/BlockLength
         # Wrapping in "with_connection" in case connection has timed out
         ActiveRecord::Base.connection_pool.with_connection do
           message.find_job.update_progress(message)
-          listener.send_ack(message)
           notify_archelon(message, type: :progress)
         end
       rescue StandardError => e
         puts "An error occurred processing stomp_msg: #{stomp_msg}"
-        listener.send_nack(message)
         puts e, e.backtrace
       end
     end
