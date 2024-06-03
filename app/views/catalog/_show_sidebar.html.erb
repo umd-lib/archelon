@@ -80,3 +80,17 @@
     </div>
   </div>
 <% end %>
+
+<% if ExportJob.exportable? @document %>
+  <% 
+    selected_count = current_user.bookmarks.count
+    max_selction = max_bookmarks_selection_limit
+  %>
+  <div id="item-select-view" class="item-select-view" data-current-selection-count="<%= selected_count %>" data-max-selection-count="<%= max_selction %>">
+    <div class="btn btn-primary">
+      <div style="float:left; padding-right: 5px;">Select Item</div>
+      <%= render partial: 'select_box', locals: { document: @document } %>
+    </div>
+  </div>
+<% end %>
+

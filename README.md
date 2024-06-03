@@ -107,7 +107,6 @@ functionality.
 2. Create a `.env` file from the `env_example` file, and adding these environment variables:
     - LDAP_BIND_PASSWORD (Obtained from LastPass)
     - FCREPO_AUTH_TOKEN (Obtained from generating a JWT token from the local fcrepo stack)
-    - PLASTRON_REST_BASE_URL=docker.for.mac.localhost:5000/
 
 3. Run yarn install
     ```bash
@@ -261,6 +260,15 @@ The batch export functionality relies on a running [Plastron] instance.
 ## Batch Import
 
 See [BatchImport](docs/BatchImport.md).
+
+## Content Model Definitions
+
+See [ContentModelDefinitions](docs/ContentModelDefinitions.md).
+
+## Vocabulary
+
+For information about the controlled vocabularies used when editing metadata,
+see [Vocabulary](docs/Vocabulary.md).
 
 ## LDAP Override
 

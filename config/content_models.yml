@@ -120,6 +120,19 @@ Item:
       type: :TypedLiteral
       datatype: http://vocab.lib.umd.edu/datatype#accessionNumber
 
+    - name: 'handle'
+      uri: 'http://purl.org/dc/terms/identifier'
+      label: 'Handle'
+      type: :TypedLiteral
+      datatype: http://vocab.lib.umd.edu/datatype#handle
+
+    - name: 'presentation_set'
+      uri: 'http://www.openarchives.org/ore/terms/isAggregatedBy'
+      label: 'Presentation Set'
+      type: :ControlledURIRef
+      vocab: 'set'
+      repeatable: true
+
 
 Letter:
   required:
@@ -143,6 +156,7 @@ Letter:
       label: 'Access Level'
       type: :ControlledURIRef
       vocab: 'access'
+      terms: ['Public', 'Campus']
 
     - name: 'type'
       uri: 'http://www.europeana.eu/schemas/edm/hasType'
@@ -209,6 +223,13 @@ Letter:
       type: :LabeledThing
       repeatable: true
 
+    - name: 'presentation_set'
+      uri: 'http://www.openarchives.org/ore/terms/isAggregatedBy'
+      label: 'Presentation Set'
+      type: :ControlledURIRef
+      vocab: 'set'
+      repeatable: true
+
 
 Poster:
   required:
@@ -227,6 +248,7 @@ Poster:
       label: 'Access Level'
       type: :ControlledURIRef
       vocab: 'access'
+      terms: ['Public', 'Campus']
 
     - name: 'type'
       uri: 'http://www.europeana.eu/schemas/edm/hasType'
@@ -315,6 +337,13 @@ Poster:
       label: 'Longitude'
       type: :TypedLiteral
 
+    - name: 'presentation_set'
+      uri: 'http://www.openarchives.org/ore/terms/isAggregatedBy'
+      label: 'Presentation Set'
+      type: :ControlledURIRef
+      vocab: 'set'
+      repeatable: true
+
 
 Issue:
   required:
@@ -327,6 +356,7 @@ Issue:
       label: 'Access Level'
       type: :ControlledURIRef
       vocab: 'access'
+      terms: ['Public', 'Campus']
 
     - name: 'date'
       uri: 'http://purl.org/dc/elements/1.1/date'
@@ -349,7 +379,13 @@ Issue:
       type: :TypedLiteral
 
   recommended: []
-  optional: []
+  optional:
+    - name: 'presentation_set'
+      uri: 'http://www.openarchives.org/ore/terms/isAggregatedBy'
+      label: 'Presentation Set'
+      type: :ControlledURIRef
+      vocab: 'set'
+      repeatable: true
 
 
 LabeledThing:

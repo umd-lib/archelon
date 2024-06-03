@@ -119,6 +119,8 @@ group :test do
   gem 'rspec'
   gem 'rspec-mocks', '~> 3.8.1'
 
+  gem 'webmock', '~> 3.23.0'
+
   # Note: The "action-cable-testing" gem can be removed when migrating to
   # Rails 6, as the gem is already included as part of Rails 6.
   gem 'action-cable-testing'

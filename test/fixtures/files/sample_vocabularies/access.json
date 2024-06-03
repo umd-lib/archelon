@@ -1,0 +1,25 @@
+{
+  "@context": {
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "dc": "http://purl.org/dc/elements/1.1/"
+  },
+  "@graph": [
+    {
+      "@id": "http://vocab.lib.umd.edu/access#Public",
+      "@type": "rdfs:Class"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/access#Published",
+      "@type": "rdfs:Class"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/access#Campus",
+      "@type": "rdfs:Class"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/access#Hidden",
+      "@type": "rdfs:Class"
+    }
+  ]
+}

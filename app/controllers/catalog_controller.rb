@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-class CatalogController < ApplicationController
+class CatalogController < ApplicationController # rubocop:disable Metrics/ClassLength
   include Blacklight::Catalog
-  before_action :make_current_query_accessible, only: %i[show index] # rubocop:disable Rails/LexicallyScopedActionFilter
+  before_action :make_current_query_accessible, only: %i[show index]
 
-  rescue_from Blacklight::Exceptions::ECONNREFUSED, with: :solr_connection_error
-  rescue_from Blacklight::Exceptions::InvalidRequest, with: :solr_connection_error
+  rescue_from Blacklight::Exceptions::ECONNREFUSED, with: :goto_about_page
+  rescue_from Blacklight::Exceptions::InvalidRequest, with: :goto_about_page
 
   configure_blacklight do |config| # rubocop:disable Metrics/BlockLength
     ## Class for sending and receiving requests from a search index
@@ -83,6 +83,8 @@ class CatalogController < ApplicationController
     # (note: It is case sensitive when searching values)
 
     config.add_facet_field 'collection_title_facet', label: 'Collection', limit: 10, collapse: false, sort: 'index'
+    config.add_facet_field 'presentation_set_label', label: 'Presentation Set', limit: 10, collapse: false,
+                                                     sort: 'index', if: :collection_facet_selected?
     config.add_facet_field 'author_not_tokenized', label: 'Author', limit: 10
     config.add_facet_field 'type', label: 'Type', limit: 10
     config.add_facet_field 'component_not_tokenized', label: 'Resource Type', limit: 10
@@ -136,6 +138,7 @@ class CatalogController < ApplicationController
     config.add_show_field 'pcdm_collection', label: 'Collection', helper_method: :collection_from_subquery
     config.add_show_field 'publication_status', label: 'Publication Status'
     config.add_show_field 'visibility', label: 'Visibility'
+    config.add_show_field 'presentation_set_label', label: 'Presentation Set', helper_method: :value_list
     config.add_show_field 'pcdm_member_of', label: 'Member Of', helper_method: :parent_from_subquery
     config.add_show_field 'pcdm_members', label: 'Members', helper_method: :members_from_subquery
     config.add_show_field 'pcdm_related_object_of', label: 'Related To', helper_method: :related_object_of_from_subquery
@@ -151,7 +154,7 @@ class CatalogController < ApplicationController
     config.add_show_field 'created_by', label: 'Created By'
     config.add_show_field 'created', label: 'Created'
     config.add_show_field 'last_modified', label: 'Last Modified'
-    config.add_show_field 'rdf_type', label: 'RDF Type', helper_method: :rdf_type_list
+    config.add_show_field 'rdf_type', label: 'RDF Type', helper_method: :value_list
 
     # "fielded" search configuration. Used by pulldown among other places.
     # For supported keys in hash, see rdoc for Blacklight::SearchFields
@@ -196,6 +199,18 @@ class CatalogController < ApplicationController
     config.autocomplete_path = 'suggest'
   end
 
+  # get search results from the solr index
+  def index
+    fix_query_param
+    # Use 'search' for regular searches, and 'identifier_search' for identifier searches.
+    is_identifier_search = identifier_search?(params[:q])
+    blacklight_config[:solr_path] = is_identifier_search ? 'identifier_search' : 'search'
+    super
+    return unless is_identifier_search && @response.response['numFound'] == 1
+
+    redirect_to action: 'show', id: @document_list[0].id
+  end
+
   def show
     super
     @show_edit_metadata = CatalogController.show_edit_metadata(@document['component'])
@@ -212,13 +227,32 @@ class CatalogController < ApplicationController
 
   private
 
-    def solr_connection_error(err)
-      Rails.logger.error(err.message)
-      flash[:error] = I18n.t(:solr_is_down)
+    def goto_about_page(err)
+      solr_connection_error(err)
       redirect_to(about_url)
     end
 
     def make_current_query_accessible
       @current_query = params[:q]
+    end
+
+    def collection_facet_selected?
+      params[:f] && params[:f][:collection_title_facet]
+    end
+
+    # Solr does not escape ':' character when using single quotes. Replace
+    # single quotes with double quotes to ensure ':" characters in identifiers
+    # are not misidentified. For instance, a pid query in single quote, such as
+    # 'umd:123', will cause solr to look for a solr field with name "umd"
+    # leading to a 400 response.
+    def fix_query_param
+      params[:q] = params[:q] ? params[:q].tr("'", '"') : ''
+    end
+
+    def identifier_search?(query)
+      # Check if this is a identifier search
+      #  1. the query is enclosed in quotation marks.
+      #  2. And, it does not have blank spaces
+      query.present? && query.start_with?('"') && query.end_with?('"') && !query.include?(' ')
     end
 end

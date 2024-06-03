@@ -15,8 +15,6 @@ class Ability
       # Users can only download export jobs they own
       cannot :download, ExportJob
       can :download, ExportJob, cas_user_id: user.id
-
-      can :manage, [Vocabulary, Individual, Type, Datatype] if user.in_group? :VocabularyEditors
     end
   end
 end

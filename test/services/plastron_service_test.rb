@@ -9,12 +9,12 @@ class PlastronServiceTest < ActiveSupport::TestCase
   end
 
   test 'retrieve_import_job_info returns ImportJobInfo with error on exception' do
-    raises_exception = ->(_unused) { raise StandardError, 'An error occurred' }
-    HTTP.stub :get, raises_exception do
-      import_job_info = PlastronService.retrieve_import_job_info(@import_job_id)
-      assert import_job_info.error_occurred?
-      assert_equal('An error occurred', import_job_info.error_message)
-    end
+    stub_request(:any, "http://localhost:5000/jobs/#{CGI.escape(@import_job_id)}")
+      .to_raise(StandardError.new('An error occurred'))
+
+    import_job_info = PlastronService.retrieve_import_job_info(@import_job_id)
+    assert import_job_info.error_occurred?
+    assert_equal('An error occurred', import_job_info.error_message)
   end
 
   test 'retrieve_import_job_info returns ImportJobInfo with error if PLASTRON_REST_BASE_URL not set' do
@@ -26,35 +26,13 @@ class PlastronServiceTest < ActiveSupport::TestCase
 
   test 'retrieve_import_job_info returns ImportJobInfo with parsed JSON on success' do
     json_fixture_file = 'services/import_job/plastron_job_detail_response.json'
-    stub_network(file_fixture(json_fixture_file).read) do
-      import_job_info = PlastronService.retrieve_import_job_info(@import_job_id)
-      assert_not import_job_info.error_occurred?
+    stub_request(:get, "http://localhost:5000/jobs/#{CGI.escape(@import_job_id)}")
+      .to_return(status: 200, body: file_fixture(json_fixture_file).read, headers: {})
 
-      assert_equal(2, import_job_info.completed.count)
-      assert_equal(4, import_job_info.total)
-    end
+    import_job_info = PlastronService.retrieve_import_job_info(@import_job_id)
+    assert_not import_job_info.error_occurred?
+
+    assert_equal(2, import_job_info.completed.count)
+    assert_equal(4, import_job_info.total)
   end
-
-  private
-
-    # Stubs the HTTP.get call, so that it won't actually make a network
-    # call. Returns an HTTP:Response with a body of an empty String.
-    #
-    # Usage:
-    #
-    # stub_network do
-    #   <Code that calls "get">
-    # end
-    def stub_network(body = '')
-      stub_response = HTTP::Response.new(
-        version: 'HTTP/1.1',
-        uri: URI('https://example.com').to_s,
-        status: '200',
-        body: body
-      )
-
-      HTTP.stub :get, stub_response do
-        yield
-      end
-    end
 end

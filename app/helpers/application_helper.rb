@@ -68,7 +68,7 @@ module ApplicationHelper # rubocop:disable Metrics/ModuleLength
     from_subquery 'annotation_source_info', args
   end
 
-  def rdf_type_list(args)
+  def value_list(args)
     args[:document][args[:field]]
   end
 
@@ -147,6 +147,8 @@ module ApplicationHelper # rubocop:disable Metrics/ModuleLength
   end
 
   def display_node(node, field, items) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/MethodLength, Metrics/LineLength
+    return display_handle(node) if field[:datatype] == 'http://vocab.lib.umd.edu/datatype#handle'
+
     if node.key? '@value'
       content = content_tag :span, node['@value']
       content << ' ' << language_badge(node) if node.key? '@language'
@@ -166,9 +168,9 @@ module ApplicationHelper # rubocop:disable Metrics/ModuleLength
           content_tag :span, display_node(label, field, obj)
         end
       elsif field[:vocab]
-        vocab = Vocabulary.find_by(identifier: field[:vocab])
+        vocab = VocabularyService.get_vocabulary(field[:vocab])
         # fall back to displaying the URI if the vocab isn't defined on this server
-        return link_to uri, uri if vocab.nil?
+        return link_to uri, uri unless vocab.terms?
 
         term = vocab.term(uri)
         # fall back to displaying the URI if can't find the term
@@ -183,5 +185,24 @@ module ApplicationHelper # rubocop:disable Metrics/ModuleLength
     else
       node
     end
+  end
+
+  def max_bookmarks_selection_limit
+    1000
+  end
+
+  # Display formatting for the "handle" field
+  def display_handle(node)
+    handle_value = node['@value'].delete_prefix('hdl:')
+
+    content = content_tag :span, handle_value
+
+    if ENV['HANDLE_HTTP_PROXY_BASE'].present?
+      handle_server_base_url = ENV['HANDLE_HTTP_PROXY_BASE']
+      handle_url = URI.join(handle_server_base_url, handle_value).to_s
+      content << ' - ' << link_to(handle_url, handle_url) << ''
+    end
+
+    content
   end
 end

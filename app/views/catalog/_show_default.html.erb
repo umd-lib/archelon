@@ -11,7 +11,7 @@
       fields.each do |field|
         # special handling for the access field
         if field[:name] == 'access'
-          vocab = Vocabulary.find_by(identifier: field[:vocab])
+          vocab = VocabularyService.get_vocabulary(field[:vocab])
           if field.key? :terms
             terms = field[:terms].map { |term| vocab.uri + term }
           else
@@ -19,7 +19,7 @@
           end
           values = item.fetch('@type', []).select { |uri| terms.include? uri }.map { |uri| { '@id' => uri } }
         else
-          values = get_field_values(fields, item, field[:uri])
+          values = get_field_values(item, field)
         end
       %>
       <% unless values.empty? %>
@@ -57,10 +57,28 @@
               </strong>
             <% end %>
             <ul class="multivalued-field-value">
-              <% subset.sort{|a,b| a['display_title'] <=> b['display_title']}.each do |v| %>
+              <% sorted_subset = subset.sort{|a,b| a['display_title'] <=> b['display_title']}
+                 # Split the sorted subset into "inital" and "more" lists,
+                 # to limit the number of items that are initally displayed.
+                 #
+                 # Hard-coding the limit, because setting up a configuration
+                 # setting for a single instance seems excessive
+                 item_limit = 8
+                 initial_list = sorted_subset.take(item_limit)
+                 more_list = sorted_subset.drop(item_limit)
+              %>
+              <% initial_list.each do |v| %>
                 <li><%= link_to v['display_title'], solr_document_path(v['id']) %></li>
               <% end %>
-            </ul>
+              <% unless more_list.empty? %>
+                <details>
+                  <summary style="display: list-item">More</summary>
+                  <% more_list.each do |v| %>
+                    <li><%= link_to v['display_title'], solr_document_path(v['id']) %></li>
+                  <% end %>
+                </details>
+              <% end %>
+         </ul>
           <% end %>
         </dd>
       <% elsif %w[pcdm_files pcdm_related_objects pcdm_related_object_of pcdm_member_of pcdm_file_of pcdm_collection annotation_source].include?(field_name) %>
@@ -71,7 +89,7 @@
             <% end %>
           </ul>
         </dd>
-      <% elsif field_name == 'rdf_type' %>
+      <% elsif %w[presentation_set_label rdf_type].include?(field_name) %>
         <dd class="blacklight-<%= field_name.parameterize %>">
           <ul class="multivalued-field-value">
             <% doc_presenter.field_value(field_name).each do |v| %>

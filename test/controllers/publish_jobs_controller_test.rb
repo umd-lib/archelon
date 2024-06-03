@@ -2,13 +2,6 @@
 
 require 'test_helper'
 
-# Monkey Patching the fetch method to return SolrDocuments
-module Blacklight::SearchHelper
-  def fetch(*)
-    [nil, SolrDocument.new]
-  end
-end
-
 # frozen_string_literal: true
 class PublishJobsControllerTest < ActionController::TestCase
   setup do
@@ -61,20 +54,22 @@ class PublishJobsControllerTest < ActionController::TestCase
     publish_job.state = 1
     publish_job.save!
 
-    get :show, params: { id: PublishJob.first.id }
+    @controller.stub :fetch, [nil, SolrDocument.new] do
+      get :show, params: { id: PublishJob.first.id }
 
-    job = assigns(:job)
-    hidden = assigns(:hidden)
-    published = assigns(:published)
-    unpublished = assigns(:unpublished)
-    result_documents = assigns(:result_documents)
+      job = assigns(:job)
+      hidden = assigns(:hidden)
+      published = assigns(:published)
+      unpublished = assigns(:unpublished)
+      result_documents = assigns(:result_documents)
 
-    assert_equal job.cas_user.cas_directory_id, @cas_user.cas_directory_id
-    assert job.publish == true
-    assert_equal job.state, 'publish_not_submitted'
-    assert_equal hidden, 0
-    assert_equal published, 0
-    assert_equal unpublished, 2
-    assert_equal result_documents.length, 2
+      assert_equal job.cas_user.cas_directory_id, @cas_user.cas_directory_id
+      assert job.publish == true
+      assert_equal job.state, 'publish_not_submitted'
+      assert_equal hidden, 0
+      assert_equal published, 0
+      assert_equal unpublished, 2
+      assert_equal result_documents.length, 2
+    end
   end
 end

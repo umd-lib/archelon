@@ -4,15 +4,17 @@
     <% if @show_edit_metadata %>
       &nbsp;
       <a href="<%= resource_edit_url(id: @document.id) %>" class="btn btn-default">Edit Metadata</a>
-    <% end %>
 
-    <%= form_with url: update_resource_url(@document.id), method: :post, data: {remote: false}, class: 'publish-controls' do |form| %>
-      <% if @published %>
-        <%= form.submit "Unpublish", name: 'command', class: 'btn btn-primary' %>
-      <% else %>
-        <%= form.submit "Publish", name: 'command', class: 'btn btn-primary' %>
+      <%= form_with url: update_resource_url(@document.id), method: :post, data: {remote: false}, class: 'publish-controls' do |form| %>
+        <% if @published %>
+          <%= form.submit "Unpublish", name: 'command', class: 'btn btn-primary' %>
+        <% else %>
+          <%= form.submit "Publish", name: 'command', class: 'btn btn-primary' %>
+        <% end %>
       <% end %>
     <% end %>
+
+
 
   </div>
   <div class="image-viewer intrinsic-container ratio-4x3">
