@@ -14,7 +14,7 @@
 
   <div class="row">
     <%= f.submit class: 'btn btn-success' %>
-    <%= link_to 'Cancel', (@download_url.new_record? ? download_urls_path : download_url_path(@download_url)), class: 'btn btn-danger' %>
+    <%= link_to 'Cancel', (@download_url.new_record? ? solr_document_url(@download_url.url) : download_url_path(@download_url)), class: 'btn btn-danger' %>
   </div>
 <% end %>
 
