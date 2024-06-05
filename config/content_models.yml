@@ -109,6 +109,11 @@ Item:
       type: :LabeledThing
       repeatable: true
 
+    - name: 'copyright_notice'
+      uri: 'http://schema.org/copyrightNotice'
+      label: 'Copyright Notice'
+      type: :PlainLiteral
+
     - name: 'bibliographic_citation'
       uri: 'http://purl.org/dc/terms/bibliographicCitation'
       label: 'Collection Information'
@@ -222,6 +227,11 @@ Letter:
       label: 'Author'
       type: :LabeledThing
       repeatable: true
+
+    - name: 'copyright_notice'
+      uri: 'http://schema.org/copyrightNotice'
+      label: 'Copyright Notice'
+      type: :PlainLiteral
 
     - name: 'presentation_set'
       uri: 'http://www.openarchives.org/ore/terms/isAggregatedBy'
@@ -337,6 +347,11 @@ Poster:
       label: 'Longitude'
       type: :TypedLiteral
 
+    - name: 'copyright_notice'
+      uri: 'http://schema.org/copyrightNotice'
+      label: 'Copyright Notice'
+      type: :PlainLiteral
+
     - name: 'presentation_set'
       uri: 'http://www.openarchives.org/ore/terms/isAggregatedBy'
       label: 'Presentation Set'
@@ -380,6 +395,11 @@ Issue:
 
   recommended: []
   optional:
+    - name: 'copyright_notice'
+      uri: 'http://schema.org/copyrightNotice'
+      label: 'Copyright Notice'
+      type: :PlainLiteral
+
     - name: 'presentation_set'
       uri: 'http://www.openarchives.org/ore/terms/isAggregatedBy'
       label: 'Presentation Set'
