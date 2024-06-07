@@ -21,6 +21,7 @@
 #                     STOMP client not being connected
 class PublishJob < ApplicationRecord
   belongs_to :cas_user
+  has_many :publish_job_request, dependent: :destroy
   serialize :solr_ids, Array
 
   enum state: {
