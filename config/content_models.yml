@@ -110,7 +110,7 @@ Item:
       repeatable: true
 
     - name: 'copyright_notice'
-      uri: 'http://schema.org/copyrightNotice'
+      uri: 'https://schema.org/copyrightNotice'
       label: 'Copyright Notice'
       type: :PlainLiteral
 
@@ -229,7 +229,7 @@ Letter:
       repeatable: true
 
     - name: 'copyright_notice'
-      uri: 'http://schema.org/copyrightNotice'
+      uri: 'https://schema.org/copyrightNotice'
       label: 'Copyright Notice'
       type: :PlainLiteral
 
@@ -348,7 +348,7 @@ Poster:
       type: :TypedLiteral
 
     - name: 'copyright_notice'
-      uri: 'http://schema.org/copyrightNotice'
+      uri: 'https://schema.org/copyrightNotice'
       label: 'Copyright Notice'
       type: :PlainLiteral
 
@@ -396,7 +396,7 @@ Issue:
   recommended: []
   optional:
     - name: 'copyright_notice'
-      uri: 'http://schema.org/copyrightNotice'
+      uri: 'https://schema.org/copyrightNotice'
       label: 'Copyright Notice'
       type: :PlainLiteral
 
