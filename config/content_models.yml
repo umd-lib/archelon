@@ -109,6 +109,12 @@ Item:
       type: :LabeledThing
       repeatable: true
 
+    - name: 'terms_of_use'
+      uri: 'http://purl.org/dc/terms/license'
+      label: 'Terms of Use'
+      type: :ControlledURIRef
+      vocab: 'termsOfUse'
+
     - name: 'copyright_notice'
       uri: 'https://schema.org/copyrightNotice'
       label: 'Copyright Notice'
@@ -227,6 +233,12 @@ Letter:
       label: 'Author'
       type: :LabeledThing
       repeatable: true
+
+    - name: 'terms_of_use'
+      uri: 'http://purl.org/dc/terms/license'
+      label: 'Terms of Use'
+      type: :ControlledURIRef
+      vocab: 'termsOfUse'
 
     - name: 'copyright_notice'
       uri: 'https://schema.org/copyrightNotice'
@@ -347,6 +359,12 @@ Poster:
       label: 'Longitude'
       type: :TypedLiteral
 
+    - name: 'terms_of_use'
+      uri: 'http://purl.org/dc/terms/license'
+      label: 'Terms of Use'
+      type: :ControlledURIRef
+      vocab: 'termsOfUse'
+
     - name: 'copyright_notice'
       uri: 'https://schema.org/copyrightNotice'
       label: 'Copyright Notice'
@@ -395,6 +413,12 @@ Issue:
 
   recommended: []
   optional:
+    - name: 'terms_of_use'
+      uri: 'http://purl.org/dc/terms/license'
+      label: 'Terms of Use'
+      type: :ControlledURIRef
+      vocab: 'termsOfUse'
+
     - name: 'copyright_notice'
       uri: 'https://schema.org/copyrightNotice'
       label: 'Copyright Notice'
