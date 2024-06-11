@@ -23,7 +23,7 @@ class VocabularyService
   #
   # The returned hash is suitable for use in the "vocab" field of the
   # ControlledURIRef React component.
-  def self.vocab_options_hash(content_model_field)
+  def self.vocab_options_hash(content_model_field) # rubocop:disable Metrics/AbcSize
     return {} unless valid?(content_model_field)
 
     vocab_identifier = content_model_field[:vocab]
@@ -34,6 +34,11 @@ class VocabularyService
     vocab = VocabularyService.get_vocabulary(vocab_identifier)
 
     filtered_terms = filter_terms(vocab.terms, allowed_terms)
+
+    # Remove any term exactly matching the vocabulary URI, which is just
+    # a label for the vocabulary itself
+    filtered_terms = filtered_terms.delete_if { |v| v.uri == vocab.uri }
+
     filtered_options = parse_options(filtered_terms)
     Rails.logger.debug { "filtered_options: #{filtered_options}" }
 
