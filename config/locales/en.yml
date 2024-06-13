@@ -79,7 +79,7 @@ en:
           true: 'Yes'
           false: 'No'
         cas_user: User
-        collection: Collection
+        collection: Administrative Set
         id: Job ID
         metadata_file: Metadata File
         model: Content Model
