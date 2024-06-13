@@ -24,12 +24,6 @@ Item:
       type: :PlainLiteral
       repeatable: true
 
-    - name: 'access'
-      label: 'Access Level'
-      type: :ControlledURIRef
-      vocab: 'access'
-      terms: ['Public', 'Campus']
-
   recommended:
     - name: 'format'
       uri: 'http://www.europeana.eu/schemas/edm/hasType'
@@ -163,12 +157,6 @@ Letter:
       label: 'Title'
       type: :PlainLiteral
 
-    - name: 'access'
-      label: 'Access Level'
-      type: :ControlledURIRef
-      vocab: 'access'
-      terms: ['Public', 'Campus']
-
     - name: 'type'
       uri: 'http://www.europeana.eu/schemas/edm/hasType'
       label: 'Resource Type'
@@ -271,12 +259,6 @@ Poster:
       label: 'Title'
       type: :PlainLiteral
       repeatable: true
-
-    - name: 'access'
-      label: 'Access Level'
-      type: :ControlledURIRef
-      vocab: 'access'
-      terms: ['Public', 'Campus']
 
     - name: 'type'
       uri: 'http://www.europeana.eu/schemas/edm/hasType'
@@ -396,12 +378,6 @@ Issue:
       uri: 'http://purl.org/dc/terms/title'
       label: 'Title'
       type: :PlainLiteral
-
-    - name: 'access'
-      label: 'Access Level'
-      type: :ControlledURIRef
-      vocab: 'access'
-      terms: ['Public', 'Campus']
 
     - name: 'date'
       uri: 'http://purl.org/dc/elements/1.1/date'
