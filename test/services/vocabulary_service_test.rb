@@ -6,7 +6,6 @@ class VocabularyServiceTest < ActiveSupport::TestCase
   def setup
     item_content_model = CONTENT_MODELS[:Item]
     @rights_field = field_from_content_model(item_content_model, 'required', 'rights')
-    @access_field = field_from_content_model(item_content_model, 'required', 'access')
     @collection_field = field_from_content_model(item_content_model, 'recommended', 'archival_collection')
   end
 
@@ -102,6 +101,15 @@ class VocabularyServiceTest < ActiveSupport::TestCase
   end
 
   test 'vocab_options_hash returns options list with only allowed terms when terms are provided' do
+    # Sample access field, with allowed terms limited to "Public" and "Campus"
+    access_field = {
+      name: 'access',
+      label: 'Access Level',
+      type: :ControlledURIRef,
+      vocab: 'access',
+      terms: %w[Public Campus]
+    }
+
     json_fixture_file = 'sample_vocabularies/access.json'
     stub_request(:get, 'http://vocab.lib.umd.edu/access')
       .to_return(status: 200, body: file_fixture(json_fixture_file).read, headers: {})
@@ -111,7 +119,7 @@ class VocabularyServiceTest < ActiveSupport::TestCase
       'http://vocab.lib.umd.edu/access#Campus' => 'Campus'
     }
 
-    vocab_options_hash = VocabularyService.vocab_options_hash(@access_field)
+    vocab_options_hash = VocabularyService.vocab_options_hash(access_field)
     assert_equal(expected_hash, vocab_options_hash)
   end
 
