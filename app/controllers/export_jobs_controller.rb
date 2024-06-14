@@ -19,10 +19,25 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
       end
   end
 
+  def show
+    id = params[:id]
+    @job = ExportJob.find(id)
+    @cas_user = CasUser.find(@job.cas_user_id)
+  end
+
   def new
     @job = ExportJob.new(params.key?(:export_job) ? export_job_params : default_job_params)
     export_uris = bookmarks.map(&:document_id)
     @mime_types = MimeTypes.mime_types(export_uris)
+  end
+
+  def destroy
+    job = ExportJob.find(params[:id])
+
+    File.delete(job.path) if File.exist? job.path
+
+    ExportJob.destroy(params[:id])
+    redirect_to export_jobs_path, status: :see_other
   end
 
   def review # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
