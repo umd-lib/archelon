@@ -137,6 +137,7 @@ Item:
       type: :ControlledURIRef
       vocab: 'set'
       repeatable: true
+      edit_only: true
 
 
 Letter:
