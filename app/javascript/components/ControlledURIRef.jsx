@@ -75,6 +75,12 @@ class ControlledURIRef extends React.Component {
     );
   };
 
+  componentWillUnmount() {
+    if (this.props.notifyContainer && !this.props.value.isNew) {
+      this.props.notifyContainer(this.initialStatement)
+    }
+  }
+
   render () {
     let statement = this.getStatement(this.state.uri);
     let valueIsUnchanged = (this.initialStatement === statement);
