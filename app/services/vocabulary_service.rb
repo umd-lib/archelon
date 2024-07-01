@@ -10,7 +10,7 @@ class VocabularyService
   def self.get_vocabulary(identifier)
     url = generate_url(identifier)
     json_rest_result = retrieve(url)
-    terms = parse(json_rest_result)
+    terms = parse(identifier, json_rest_result)
     Vocabulary.new(identifier, terms)
   end
 
@@ -34,6 +34,7 @@ class VocabularyService
     vocab = VocabularyService.get_vocabulary(vocab_identifier)
 
     filtered_terms = filter_terms(vocab.terms, allowed_terms)
+
     filtered_options = parse_options(filtered_terms)
     Rails.logger.debug { "filtered_options: #{filtered_options}" }
 
@@ -77,15 +78,15 @@ class VocabularyService
         json_rest_result
       end
 
-      # Parses the JSON result from the network requestm returning either an
+      # Parses the JSON result from the network request, returning either an
       # empty array, or an array of VocabularyTerm objects.
-      def parse(json_rest_result)
+      def parse(identifier, json_rest_result)
         return [] if json_rest_result.error_occurred?
 
         graph = json_rest_result.parsed_json['@graph']
 
         # @graph element exists for vocabularies with two or more elements
-        return graph.map { |g| parse_entry(g) } if graph.present?
+        return parse_graph(identifier, graph) if graph.present?
 
         # Single term vocabularies don't have "@graph" element, but do have
         # "@id" and (possibly) "@rdfs.label" elements, so we can just go
@@ -103,6 +104,18 @@ class VocabularyService
         end
 
         terms.select { |term| allowed_terms.include?(term.label) }
+      end
+
+      # Parses a vocabulary graph, returning an array of VocabularyTerm objects.
+      def parse_graph(identifier, graph)
+        entries = graph.map { |g| parse_entry(g) }
+
+        # Assume that the vocab URI is the same as the URL
+        vocab_uri = generate_url(identifier)
+
+        # Filter out any term with a uri exactly matching the vocabulary URI,
+        # as it is just a label for the vocabulary itself, not an actual term.
+        entries.reject { |v| v.uri == vocab_uri }
       end
 
       # Parses a single term from the graph, returning a VocabularyTerm object

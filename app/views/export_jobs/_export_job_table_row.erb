@@ -2,7 +2,7 @@
     format_label = ExportJob::FORMATS[export_job.format] || export_job.format
   %>
 <tr class="export-job" data-export-job-id="<%= export_job.id %>" data-subscribe="<%= not export_job.export_complete? %>">
-  <td><%= export_job.id %></td>
+  <td><%= link_to export_job.id, export_job_url(export_job) %></td>
   <td><%= export_job.name %></td>
   <td><%= export_job.cas_user&.name%></td>
   <td><%= export_job.timestamp %></td>

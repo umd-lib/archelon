@@ -82,9 +82,9 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # :index_range can be an array or range of prefixes that will be used to create the navigation
     # (note: It is case sensitive when searching values)
 
-    config.add_facet_field 'collection_title_facet', label: 'Collection', limit: 10, collapse: false, sort: 'index'
     config.add_facet_field 'presentation_set_label', label: 'Presentation Set', limit: 10, collapse: false,
-                                                     sort: 'index', if: :collection_facet_selected?
+                                                     sort: 'index'
+    config.add_facet_field 'collection_title_facet', label: 'Administrative Set', limit: 10, sort: 'index'
     config.add_facet_field 'author_not_tokenized', label: 'Author', limit: 10
     config.add_facet_field 'type', label: 'Type', limit: 10
     config.add_facet_field 'component_not_tokenized', label: 'Resource Type', limit: 10

@@ -24,12 +24,6 @@ Item:
       type: :PlainLiteral
       repeatable: true
 
-    - name: 'access'
-      label: 'Access Level'
-      type: :ControlledURIRef
-      vocab: 'access'
-      terms: ['Public', 'Campus']
-
   recommended:
     - name: 'format'
       uri: 'http://www.europeana.eu/schemas/edm/hasType'
@@ -109,6 +103,17 @@ Item:
       type: :LabeledThing
       repeatable: true
 
+    - name: 'terms_of_use'
+      uri: 'http://purl.org/dc/terms/license'
+      label: 'Terms of Use'
+      type: :ControlledURIRef
+      vocab: 'termsOfUse'
+
+    - name: 'copyright_notice'
+      uri: 'https://schema.org/copyrightNotice'
+      label: 'Copyright Notice'
+      type: :PlainLiteral
+
     - name: 'bibliographic_citation'
       uri: 'http://purl.org/dc/terms/bibliographicCitation'
       label: 'Collection Information'
@@ -132,6 +137,7 @@ Item:
       type: :ControlledURIRef
       vocab: 'set'
       repeatable: true
+      edit_only: true
 
 
 Letter:
@@ -151,12 +157,6 @@ Letter:
       uri: 'http://purl.org/dc/terms/title'
       label: 'Title'
       type: :PlainLiteral
-
-    - name: 'access'
-      label: 'Access Level'
-      type: :ControlledURIRef
-      vocab: 'access'
-      terms: ['Public', 'Campus']
 
     - name: 'type'
       uri: 'http://www.europeana.eu/schemas/edm/hasType'
@@ -223,6 +223,23 @@ Letter:
       type: :LabeledThing
       repeatable: true
 
+    - name: 'terms_of_use'
+      uri: 'http://purl.org/dc/terms/license'
+      label: 'Terms of Use'
+      type: :ControlledURIRef
+      vocab: 'termsOfUse'
+
+    - name: 'copyright_notice'
+      uri: 'https://schema.org/copyrightNotice'
+      label: 'Copyright Notice'
+      type: :PlainLiteral
+
+    - name: 'handle'
+      uri: 'http://purl.org/dc/terms/identifier'
+      label: 'Handle'
+      type: :TypedLiteral
+      datatype: http://vocab.lib.umd.edu/datatype#handle
+
     - name: 'presentation_set'
       uri: 'http://www.openarchives.org/ore/terms/isAggregatedBy'
       label: 'Presentation Set'
@@ -243,12 +260,6 @@ Poster:
       label: 'Title'
       type: :PlainLiteral
       repeatable: true
-
-    - name: 'access'
-      label: 'Access Level'
-      type: :ControlledURIRef
-      vocab: 'access'
-      terms: ['Public', 'Campus']
 
     - name: 'type'
       uri: 'http://www.europeana.eu/schemas/edm/hasType'
@@ -337,6 +348,23 @@ Poster:
       label: 'Longitude'
       type: :TypedLiteral
 
+    - name: 'terms_of_use'
+      uri: 'http://purl.org/dc/terms/license'
+      label: 'Terms of Use'
+      type: :ControlledURIRef
+      vocab: 'termsOfUse'
+
+    - name: 'copyright_notice'
+      uri: 'https://schema.org/copyrightNotice'
+      label: 'Copyright Notice'
+      type: :PlainLiteral
+
+    - name: 'handle'
+      uri: 'http://purl.org/dc/terms/identifier'
+      label: 'Handle'
+      type: :TypedLiteral
+      datatype: http://vocab.lib.umd.edu/datatype#handle
+
     - name: 'presentation_set'
       uri: 'http://www.openarchives.org/ore/terms/isAggregatedBy'
       label: 'Presentation Set'
@@ -351,12 +379,6 @@ Issue:
       uri: 'http://purl.org/dc/terms/title'
       label: 'Title'
       type: :PlainLiteral
-
-    - name: 'access'
-      label: 'Access Level'
-      type: :ControlledURIRef
-      vocab: 'access'
-      terms: ['Public', 'Campus']
 
     - name: 'date'
       uri: 'http://purl.org/dc/elements/1.1/date'
@@ -380,6 +402,23 @@ Issue:
 
   recommended: []
   optional:
+    - name: 'terms_of_use'
+      uri: 'http://purl.org/dc/terms/license'
+      label: 'Terms of Use'
+      type: :ControlledURIRef
+      vocab: 'termsOfUse'
+
+    - name: 'copyright_notice'
+      uri: 'https://schema.org/copyrightNotice'
+      label: 'Copyright Notice'
+      type: :PlainLiteral
+
+    - name: 'handle'
+      uri: 'http://purl.org/dc/terms/identifier'
+      label: 'Handle'
+      type: :TypedLiteral
+      datatype: http://vocab.lib.umd.edu/datatype#handle
+
     - name: 'presentation_set'
       uri: 'http://www.openarchives.org/ore/terms/isAggregatedBy'
       label: 'Presentation Set'

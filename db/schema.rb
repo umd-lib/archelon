@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_03_05_163249) do
+ActiveRecord::Schema.define(version: 2024_06_27_182231) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -59,14 +59,6 @@ ActiveRecord::Schema.define(version: 2024_03_05_163249) do
     t.integer "group_id"
     t.index ["cas_user_id"], name: "index_cas_users_groups_on_cas_user_id"
     t.index ["group_id"], name: "index_cas_users_groups_on_group_id"
-  end
-
-  create_table "datatypes", force: :cascade do |t|
-    t.string "identifier"
-    t.integer "vocabulary_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["vocabulary_id"], name: "index_datatypes_on_vocabulary_id"
   end
 
   create_table "delayed_jobs", force: :cascade do |t|
@@ -164,16 +156,6 @@ ActiveRecord::Schema.define(version: 2024_03_05_163249) do
     t.index ["cas_user_id"], name: "index_import_jobs_on_cas_user_id"
   end
 
-  create_table "individuals", force: :cascade do |t|
-    t.string "identifier"
-    t.string "label"
-    t.string "same_as"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "vocabulary_id"
-    t.index ["vocabulary_id"], name: "index_individuals_on_vocabulary_id"
-  end
-
   create_table "public_keys", force: :cascade do |t|
     t.string "key"
     t.integer "cas_user_id"
@@ -211,21 +193,6 @@ ActiveRecord::Schema.define(version: 2024_03_05_163249) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_searches_on_user_id"
-  end
-
-  create_table "types", force: :cascade do |t|
-    t.string "identifier"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "vocabulary_id"
-    t.index ["vocabulary_id"], name: "index_types_on_vocabulary_id"
-  end
-
-  create_table "vocabularies", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "identifier"
-    t.string "description"
   end
 
 end

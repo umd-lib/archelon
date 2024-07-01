@@ -20,7 +20,7 @@
     <div class="panel-body">
       <ul class="nav">
         <% pages.first(8).each do |v| %>
-          <li><%= link_to "Page #{v['page_number']}", solr_document_path(v['id']) %></li>
+          <li><%= link_to v['display_title'], solr_document_path(v['id']) %></li>
         <% end %>
         <% if pages.length > 8 %>
           <li><a href="#pages" data-toggle="modal">more »</a></li>
@@ -82,7 +82,7 @@
 <% end %>
 
 <% if ExportJob.exportable? @document %>
-  <% 
+  <%
     selected_count = current_user.bookmarks.count
     max_selction = max_bookmarks_selection_limit
   %>

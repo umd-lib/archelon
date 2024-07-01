@@ -63,3 +63,5 @@ A field definition may also have the following optional attributes:
   that are displayed in the GUI. Terms in the array (specified by the "label"
   attribute) will be displayed. If this attribute is not provided, all terms
   from the vocabulary are displayed.
+* `edit_only` - Set as `edit_only: true` to indicate that the field should
+  only be displayed in the metadata edit form, not on the item detail page.
