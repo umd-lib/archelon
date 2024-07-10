@@ -1,14 +1,14 @@
-# Files in the config/locales directory are used for internationalization
-# and are automatically loaded by Rails. If you want to use locales other
-# than English, add the necessary files in this directory.
+# Files in the config/locales directory are used for internationalization and
+# are automatically loaded by Rails. If you want to use locales other than
+# English, add the necessary files in this directory.
 #
 # To use the locales, use `I18n.t`:
 #
-#     I18n.t 'hello'
+#     I18n.t "hello"
 #
 # In views, this is aliased to just `t`:
 #
-#     <%= t('hello') %>
+#     <%= t("hello") %>
 #
 # To use a different locale, set it with `I18n.locale`:
 #
@@ -16,114 +16,16 @@
 #
 # This would use the information in config/locales/es.yml.
 #
-# The following keys must be escaped otherwise they will not be retrieved by
-# the default I18n backend:
+# To learn more about the API, please read the Rails Internationalization guide
+# at https://guides.rubyonrails.org/i18n.html.
 #
-# true, false, on, off, yes, no
+# Be aware that YAML interprets the following case-insensitive strings as
+# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
+# must be quoted to be interpreted as strings. For example:
 #
-# Instead, surround them with single quotes.
-#
-# en:
-#   'true': 'foo'
-#
-# To learn more, please read the Rails Internationalization guide
-# available at http://guides.rubyonrails.org/i18n.html.
+#     en:
+#       "yes": yup
+#       enabled: "ON"
 
 en:
-  hello: 'Hello world'
-  solr_is_down: 'Unable to connect to Solr index. Search functionality is unavailable at this time.'
-  active_mq_is_down: 'Unable to connect to ActiveMQ. Import/export functionality is unavailable at this time.'
-  needs_selected_items: 'To create a export job, you must select items first.'
-  already_selected: 'All exportable items from this search are already selected.'
-  items_selected: 'Added %{selected_count} exportable %{items} from this search to your selected items list.'
-  max_limit: 'Maximum overall selection limit is %{limit}.'
-  selected_items_changed: 'Selected items has changed. Please review.'
-  import_already_performed: 'Import has completed. Cannot reimport or validate'
-  cannot_import_invalid_file: 'Cannot import a file with validation errors.'
-  export_job_no_mime_types_selected: 'Please select at least one MIME type when exporting binaries'
-  resource_update_successful: 'Update successful'
-  resource_update_failed: 'Update failed'
-  resource_update_no_change: 'Please make a change before submitting.'
-  resource_update_timeout_error: 'Timeout error. Fedora has taken too long to respond. Please report this error and check back in a few minutes as your changes may have been saved.'
-  activerecord:
-    attributes:
-      publish_job:
-        status:
-          publish_not_submitted: Job waiting on submission
-          publish_pending: Submission Pending
-          publish_in_progress: In Progress
-          publish_complete: Complete
-          publish_incomplete: Incomplete
-          publish_error: Error
-          unpublish_complete: Complete
-          unpublish_incomplete: Incomplete
-          unpublish_error: Error
-
-
-      export_job:
-        format: Metadata Format
-        id: Job ID
-        name: Job Name
-        status:
-          label: Status
-          pending: Export Pending
-          in_progress: In Progress
-          export_complete: Done
-          partial_export: Done (Partial Export)
-          export_error: Error
-          export_starting: Export Starting
-      import_job:
-        access: Access
-        binaries:
-          label: 'Includes Binaries'
-          true: 'Yes'
-          false: 'No'
-        cas_user: User
-        collection: Administrative Set
-        id: Job ID
-        metadata_file: Metadata File
-        model: Content Model
-        name: Job Name
-        remote_server: Remote server
-        stage:
-          import: Import
-          validate: Validation
-        status:
-          label: Status
-          validate_pending: Validation Pending
-          validate_in_progress: Validating...
-          validate_success: Validation Successful
-          validate_failed: Validation Failed
-          validate_error: System Error during Validation
-          import_success: Import Successful
-          import_failed: Import Failed
-          import_error: System Error during Import
-          import_pending: Import Pending
-          import_in_progress: In Progress
-          import_complete: Import Complete
-          import_incomplete: Import Incomplete
-          error: Error
-        timestamp: Timestamp
-    errors:
-      models:
-        import_job:
-          attributes:
-            base:
-              multiple_include_binaries_options: When including binaries, choose either an uploaded binary file or remote server, not both.
-            metadata_file:
-              required: 'is required'
-    models:
-      download_url: Download URL
-      export_job: Export Job
-      import_job: Import Job
-  mime_types:
-    application/pdf: PDF (application/pdf)
-    application/xml: XML (application/xml)
-    application/zip: Zip (application/zip)
-    image/jpeg: JPEG (image/jpeg)
-    image/jp2: JPEG 2000 (image/jp2)
-    image/tiff: TIFF (image/tiff)
-    text/csv: CSV (text/csv)
-    text/plain: Text (text/plain)
-    text/turtle: Turtle (text/turtle)
-    text/xml: XML (text/xml)
+  hello: "Hello world"

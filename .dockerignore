@@ -1,10 +1,18 @@
+# See https://docs.docker.com/engine/reference/builder/#dockerignore-file for more about ignoring files.
+
+# Ignore git directory.
+/.git/
+
 # Ignore bundler config.
 /.bundle
 
-# Ignore the default SQLite database.
-/db/*.sqlite3
-/db/*.sqlite3-journal
-/db/seeds/vagrant.rb
+# Ignore all environment files (except templates).
+/.env*
+!/.env*.erb
+
+# Ignore all default key files.
+/config/master.key
+/config/credentials/*.key
 
 # Ignore all logfiles and tempfiles.
 /log/*
@@ -12,50 +20,18 @@
 !/log/.keep
 !/tmp/.keep
 
-# Ignore uploaded files in development
+# Ignore pidfiles, but keep the directory.
+/tmp/pids/*
+!/tmp/pids/.keep
+
+# Ignore storage (uploaded files in development and any SQLite databases).
 /storage/*
 !/storage/.keep
+/tmp/storage/*
+!/tmp/storage/.keep
 
+# Ignore assets.
+/node_modules/
+/app/assets/builds/*
+!/app/assets/builds/.keep
 /public/assets
-.byebug_history
-
-# Ignore environment specific files
-.env
-.env.local
-.env.development
-
-# Ignore minitest-ci reports
-test/reports
-
-# Ignore simplecov output
-coverage
-
-# Ignore any SSL pem/key files in root
-/*.pem
-/*.key
-
-# Ignore published vocabularies
-# While the "published_vocabularies" directory has been removed, leaving this
-# ignore specification in place to eliminate any possibility of the directory
-# contents being accidentally added to a Docker image.
-/public/published_vocabularies/*.json
-/public/published_vocabularies/*.ttl
-/public/published_vocabularies/*.nt
-
-# Ignore the imports and exports
-/imports/*.zip
-/exports/*.zip
-
-# Ignore webpack, yarn, and node
-/public/packs
-/public/packs-test
-/node_modules
-/yarn-error.log
-yarn-debug.log*
-.yarn-integrity
-
-# React Styleguidist
-styleguide/
-
-# Docker configuration file
-docker-archelon.env

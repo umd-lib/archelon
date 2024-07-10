@@ -1,21 +1,25 @@
 {
-  "name": "archelon",
+  "name": "app",
   "private": true,
   "dependencies": {
-    "@babel/preset-react": "^7.10.1",
-    "@rails/webpacker": "5.4.0",
-    "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
-    "n3": "^1.5.0",
-    "prop-types": "^15.7.2",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react_ujs": "^2.6.1",
-    "uuid": "^8.2.0",
-    "webpack": "^4.46.0",
-    "webpack-cli": "^3.3.12"
+    "@popperjs/core": "^2.11.8",
+    "autoprefixer": "^10.4.19",
+    "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
+    "esbuild": "^0.23.0",
+    "nodemon": "^3.1.4",
+    "postcss": "^8.4.39",
+    "postcss-cli": "^11.0.0",
+    "sass": "^1.77.7"
   },
-  "devDependencies": {
-    "react-styleguidist": ">=11.0.8 <=11.1.6",
-    "webpack-dev-server": "^3.11.2"
-  }
+  "scripts": {
+    "build": "esbuild app/javascript/*.* --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets",
+    "build:css:compile": "sass ./app/assets/stylesheets/application.bootstrap.scss:./app/assets/builds/application.css --no-source-map --load-path=node_modules",
+    "build:css:prefix": "postcss ./app/assets/builds/application.css --use=autoprefixer --output=./app/assets/builds/application.css",
+    "build:css": "yarn build:css:compile && yarn build:css:prefix",
+    "watch:css": "nodemon --watch ./app/assets/stylesheets/ --ext scss --exec \"yarn build:css\""
+  },
+  "browserslist": [
+    "defaults"
+  ]
 }
