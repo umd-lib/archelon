@@ -2,8 +2,10 @@
   "name": "app",
   "private": true,
   "dependencies": {
+    "@github/auto-complete-element": "^3.6.2",
     "@popperjs/core": "^2.11.8",
     "autoprefixer": "^10.4.19",
+    "blacklight-frontend": "^8.3.0",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "esbuild": "^0.23.0",
