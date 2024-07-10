@@ -196,12 +196,12 @@ class CatalogController < ApplicationController
     # config.add_show_field 'lc_callnum_ssim', label: 'Call number'
     # config.add_show_field 'isbn_ssim', label: 'ISBN'
 
-    # UMD TODO config.add_show_field 'pcdm_collection', label: 'Collection', helper_method: :collection_from_subquery
+    config.add_show_field 'pcdm_collection', label: 'Collection', helper_method: :collection_from_subquery
     config.add_show_field 'publication_status', label: 'Publication Status'
     config.add_show_field 'visibility', label: 'Visibility'
-    # UMD TODO config.add_show_field 'presentation_set_label', label: 'Presentation Set', helper_method: :value_list
-    # UMD TODO config.add_show_field 'pcdm_member_of', label: 'Member Of', helper_method: :parent_from_subquery
-    # UMD TODO config.add_show_field 'pcdm_members', label: 'Members', helper_method: :members_from_subquery
+    config.add_show_field 'presentation_set_label', label: 'Presentation Set', helper_method: :value_list
+    config.add_show_field 'pcdm_member_of', label: 'Member Of', helper_method: :parent_from_subquery
+    config.add_show_field 'pcdm_members', label: 'Members', helper_method: :members_from_subquery
     config.add_show_field 'pcdm_related_object_of', label: 'Related To', helper_method: :related_object_of_from_subquery
     config.add_show_field 'pcdm_related_objects', label: 'Related Objects', helper_method: :related_objects_from_subquery
     config.add_show_field 'pcdm_file_of', label: 'File Of', helper_method: :file_parent_from_subquery
@@ -213,7 +213,7 @@ class CatalogController < ApplicationController
     config.add_show_field 'created_by', label: 'Created By'
     config.add_show_field 'created', label: 'Created'
     config.add_show_field 'last_modified', label: 'Last Modified'
-    # UMD TODO config.add_show_field 'rdf_type', label: 'RDF Type', helper_method: :value_list
+    config.add_show_field 'rdf_type', label: 'RDF Type', helper_method: :value_list
     # End UMD Customization
 
     # "fielded" search configuration. Used by pulldown among other places.
