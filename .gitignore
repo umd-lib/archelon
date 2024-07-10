@@ -7,9 +7,11 @@
 # Ignore bundler config.
 /.bundle
 
-# Ignore all environment files (except templates).
-/.env*
-!/.env*.erb
+# UMD Customization
+# Ignore environment specific files
+.env
+.env.local
+# End UMD Customization
 
 # Ignore all logfiles and tempfiles.
 /log/*

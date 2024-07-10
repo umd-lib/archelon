@@ -38,9 +38,17 @@ gem "bootsnap", require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
+# UMD Customization
 # Blacklight gem
 gem 'blacklight', "~> 8.3.0"
+
+# RSolr Gem
 gem 'rsolr'
+
+# dotenv - For storing production configuration parameters
+gem 'dotenv', "~> 3.1.2"
+# End UMD Customization
+
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
