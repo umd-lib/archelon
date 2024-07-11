@@ -62,6 +62,10 @@ gem 'net-ldap', '~> 0.16.1'
 gem 'faker', '~> 3.4.1'
 # End UMD Blacklight 8 Fix
 
+# UMD Blacklight 8 Fix
+gem 'net-http', '~> 0.4.1'
+# End UMD Blacklight 8 Fix
+
 # End UMD Customization
 
 

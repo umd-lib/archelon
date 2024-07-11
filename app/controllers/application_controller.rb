@@ -16,6 +16,11 @@ class ApplicationController < ActionController::Base
   layout :determine_layout if respond_to? :layout
 
   # UMD Customization
+  def solr_connection_error(err)
+    Rails.logger.error(err.message)
+    flash[:error] = I18n.t(:solr_is_down)
+  end
+
   # Causes a "404 - Not Found" error page to be displayed.
   def not_found
     render file: Rails.root.join('public', '404.html'), status: :not_found, layout: false

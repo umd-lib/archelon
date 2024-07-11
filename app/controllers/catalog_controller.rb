@@ -5,6 +5,11 @@ class CatalogController < ApplicationController
 
   include Blacklight::Catalog
 
+  # UMD Customization
+  rescue_from Blacklight::Exceptions::ECONNREFUSED, with: :goto_about_page
+  rescue_from Blacklight::Exceptions::InvalidRequest, with: :goto_about_page
+  # End UMD Customization
+
   # If you'd like to handle errors returned by Solr in a certain way,
   # you can use Rails rescue_from with a method you define in this controller,
   # uncomment:
@@ -301,4 +306,13 @@ class CatalogController < ApplicationController
     # default 'mySuggester', uncomment and provide it below
     # config.autocomplete_suggester = 'mySuggester'
   end
+  private
+
+    def goto_about_page(err)
+      solr_connection_error(err)
+      redirect_to(about_url)
+    end
+
+
+  # End UMD Customization
 end
