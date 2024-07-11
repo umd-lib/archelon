@@ -57,6 +57,11 @@ gem 'cancancan'
 # LDAP
 gem 'net-ldap', '~> 0.16.1'
 
+# Used by Rake tasks to generate sample data
+# UMD Blacklight 8 Fix
+gem 'faker', '~> 3.4.1'
+# End UMD Blacklight 8 Fix
+
 # End UMD Customization
 
 
@@ -80,4 +85,15 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
+
+  # UMD Customization
+  gem 'rails-controller-testing'
+
+  gem 'rspec'
+  # UMD Blacklight 8 Fix
+  gem 'rspec-mocks', '~> 3.13.1'
+  # End UMD Blacklight 8 Fix
+
+  gem 'webmock', '~> 3.23.0'
+  # End UMD Customization
 end
