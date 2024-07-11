@@ -23,7 +23,9 @@ class SessionsController < ApplicationController
   def destroy
     CasAuthentication.sign_out(session, cookies)
     cas_logout_url = "#{CAS_URL}/logout"
-    redirect_to cas_logout_url
+    # UMD Blacklight 8 Fix
+    redirect_to cas_logout_url, allow_other_host: true
+    # End UMD Blacklight 8 Fix
   end
 
   def login_as # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/LineLength
