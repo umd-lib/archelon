@@ -47,6 +47,16 @@ gem 'rsolr'
 
 # dotenv - For storing production configuration parameters
 gem 'dotenv', "~> 3.1.2"
+
+# CAS Authentication
+gem 'omniauth-cas', '~> 1.1.1'
+
+# Authorization
+gem 'cancancan'
+
+# LDAP
+gem 'net-ldap', '~> 0.16.1'
+
 # End UMD Customization
 
 

@@ -28,4 +28,16 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+
+  # UMD Customization
+  resources :cas_users
+  get '/cas_users/:id/history' => 'cas_users#show_history'
+
+  get 'login', to: redirect('/auth/cas'), as: 'login'
+  get 'admin/user/login_as/:user_id', to: 'sessions#login_as', as: 'admin_user_login_as'
+  get 'logout', to: 'sessions#destroy', as: 'logout'
+  get 'auth/:provider/callback', to: 'sessions#create'
+  get 'auth/failure', to: redirect('/')
+  # End UMD Customization
+
 end
