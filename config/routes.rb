@@ -32,6 +32,7 @@ Rails.application.routes.draw do
   # UMD Customization
   resources :cas_users
   get '/cas_users/:id/history' => 'cas_users#show_history'
+  get 'public_keys' => 'public_keys#index'
 
   get 'login', to: redirect('/auth/cas'), as: 'login'
   get 'admin/user/login_as/:user_id', to: 'sessions#login_as', as: 'admin_user_login_as'

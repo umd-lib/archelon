@@ -20,7 +20,6 @@ class CasUsersControllerTest < ActionController::TestCase
   end
 
   test 'should destroy cas_user' do
-    skip("TOFIX: Missing model class PublicKey for the CasUser#public_keys association")
     assert_difference('CasUser.count', -1) do
       delete :destroy, params: { id: @cas_user }
     end
