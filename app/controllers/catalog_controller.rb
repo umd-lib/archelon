@@ -6,6 +6,8 @@ class CatalogController < ApplicationController
   include Blacklight::Catalog
 
   # UMD Customization
+  before_action :make_current_query_accessible, only: %i[show index]
+
   rescue_from Blacklight::Exceptions::ECONNREFUSED, with: :goto_about_page
   rescue_from Blacklight::Exceptions::InvalidRequest, with: :goto_about_page
   # End UMD Customization
@@ -39,6 +41,7 @@ class CatalogController < ApplicationController
     config.default_solr_params = {
       rows: 10,
       # UMD Customization
+      # The fq parameter is conditionally overriden in app/models/search_builder.rb
       fq: ['is_pcdm:true']
       # End UMD Customization
     }
@@ -53,8 +56,11 @@ class CatalogController < ApplicationController
     # items to show per page, each number in the array represent another option to choose from.
     #config.per_page = [10,20,50,100]
 
-    # solr field configuration for search results/index views
     # UMD Customization
+    # # Remove default right-side rendering of blacklight bookmark select checkbox
+    # config.index.document_actions.delete(:bookmark)
+
+    # solr field configuration for search results/index views
     config.index.title_field = 'display_title'
     # End UMD Customization
     # config.index.display_type_field = 'format'
@@ -70,19 +76,19 @@ class CatalogController < ApplicationController
     # config.index.search_header_component = MyApp::SearchHeaderComponent
     # config.index.document_actions.delete(:bookmark)
 
-    config.add_results_document_tool(:bookmark, component: Blacklight::Document::BookmarkComponent, if: :render_bookmarks_control?)
+    # config.add_results_document_tool(:bookmark, component: Blacklight::Document::BookmarkComponent, if: :render_bookmarks_control?)
 
     config.add_results_collection_tool(:sort_widget)
     config.add_results_collection_tool(:per_page_widget)
-    config.add_results_collection_tool(:view_type_group)
+    # config.add_results_collection_tool(:view_type_group)
 
-    config.add_show_tools_partial(:bookmark, component: Blacklight::Document::BookmarkComponent, if: :render_bookmarks_control?)
-    config.add_show_tools_partial(:email, callback: :email_action, validator: :validate_email_params)
-    config.add_show_tools_partial(:sms, if: :render_sms_action?, callback: :sms_action, validator: :validate_sms_params)
-    config.add_show_tools_partial(:citation)
+    # config.add_show_tools_partial(:bookmark, component: Blacklight::Document::BookmarkComponent, if: :render_bookmarks_control?)
+    # config.add_show_tools_partial(:email, callback: :email_action, validator: :validate_email_params)
+    # config.add_show_tools_partial(:sms, if: :render_sms_action?, callback: :sms_action, validator: :validate_sms_params)
+    # config.add_show_tools_partial(:citation)
 
-    config.add_nav_action(:bookmark, partial: 'blacklight/nav/bookmark', if: :render_bookmarks_control?)
-    config.add_nav_action(:search_history, partial: 'blacklight/nav/search_history')
+    # config.add_nav_action(:bookmark, partial: 'blacklight/nav/bookmark', if: :render_bookmarks_control?)
+    # config.add_nav_action(:search_history, partial: 'blacklight/nav/search_history')
 
     # solr field configuration for document/show views
     # UMD Customization
@@ -306,6 +312,35 @@ class CatalogController < ApplicationController
     # default 'mySuggester', uncomment and provide it below
     # config.autocomplete_suggester = 'mySuggester'
   end
+
+  # UMD Customization
+
+  # get search results from the solr index
+  def index
+    fix_query_param
+    # Use 'search' for regular searches, and 'identifier_search' for identifier searches.
+    is_identifier_search = identifier_search?(params[:q])
+    blacklight_config[:solr_path] = is_identifier_search ? 'identifier_search' : 'search'
+    super
+    return unless is_identifier_search && @response.response['numFound'] == 1
+
+    redirect_to action: 'show', id: @document_list[0].id
+  end
+
+  def show
+    super
+    @show_edit_metadata = CatalogController.show_edit_metadata(@document['component'])
+    @id = params[:id]
+    @resource = ResourceService.resource_with_model(@id)
+    @published = @resource[:items][@id]['@type'].include?('http://vocab.lib.umd.edu/access#Published')
+  end
+
+  # Returns true if the given component has editable metadata, false otherwise.
+  def self.show_edit_metadata(component)
+    uneditable_types = %w[Page Article]
+    !uneditable_types.include?(component)
+  end
+
   private
 
     def goto_about_page(err)
@@ -313,6 +348,29 @@ class CatalogController < ApplicationController
       redirect_to(about_url)
     end
 
+    def make_current_query_accessible
+      @current_query = params[:q]
+    end
+
+    def collection_facet_selected?
+      params[:f] && params[:f][:collection_title_facet]
+    end
+
+    # Solr does not escape ':' character when using single quotes. Replace
+    # single quotes with double quotes to ensure ':" characters in identifiers
+    # are not misidentified. For instance, a pid query in single quote, such as
+    # 'umd:123', will cause solr to look for a solr field with name "umd"
+    # leading to a 400 response.
+    def fix_query_param
+      params[:q] = params[:q] ? params[:q].tr("'", '"') : ''
+    end
+
+    def identifier_search?(query)
+      # Check if this is a identifier search
+      #  1. the query is enclosed in quotation marks.
+      #  2. And, it does not have blank spaces
+      query.present? && query.start_with?('"') && query.end_with?('"') && !query.include?(' ')
+    end
 
   # End UMD Customization
 end
