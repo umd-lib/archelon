@@ -70,6 +70,8 @@ gem 'json-ld', '~> 3.3.1'
 
 gem 'http', '~> 5.2.0'
 
+gem 'react-rails', '~>3.2.1'
+
 # End UMD Customization
 
 
