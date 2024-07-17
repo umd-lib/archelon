@@ -7,6 +7,9 @@ import githubAutoCompleteElement from "@github/auto-complete-element";
 // From https://stackoverflow.com/a/70925500
 import './add_jquery'
 
+// rails-ujs
+import './add_rails_ujs'
+
 // Load in React components
 import components from "./components/**/*.jsx"
 
