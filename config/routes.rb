@@ -42,6 +42,9 @@ Rails.application.routes.draw do
   get 'logout', to: 'sessions#destroy', as: 'logout'
   get 'auth/:provider/callback', to: 'sessions#create'
   get 'auth/failure', to: redirect('/')
+
+  get 'react_components' => 'react_components#react_components'
+  post 'react_components' => 'react_components#react_components_submit'
   # End UMD Customization
 
 end
