@@ -93,6 +93,30 @@ module ActiveSupport
         mock_cas_login(DEFAULT_TEST_USER)
       end
     end
+
+    # Replaces Stomp::Connection with a stub.
+    def mock_stomp_connection(error: :none) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+      connection_double = double('stomp_connection')
+      allow(connection_double).to receive(:disconnect)
+
+      if error == :none
+        allow(connection_double).to receive(:publish)
+      elsif error == :transient
+        # raise an error on the first two calls to publish, to simulate a
+        # short-term, transient network failure
+        call_count = 0
+        allow(connection_double).to receive(:publish) do
+          call_count += 1
+          call_count < 3 ? raise(RuntimeError) : true
+        end
+      elsif error == :permanent
+        # always fail to publish, to simulate a completely dead connection
+        allow(connection_double).to receive(:publish).and_raise(RuntimeError)
+      end
+
+      stub_const('Stomp::Connection', double(new: connection_double))
+    end
+
     # End UMD Customization
   end
 end
