@@ -30,3 +30,5 @@
 en:
   hello: "Hello world"
   solr_is_down: 'Unable to connect to Solr index. Search functionality is unavailable at this time.'
+  resource_update_successful: 'Update successful'
+  resource_update_timeout_error: 'Timeout error. Fedora has taken too long to respond. Please report this error and check back in a few minutes as your changes may have been saved.'

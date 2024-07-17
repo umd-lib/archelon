@@ -45,6 +45,12 @@ Rails.application.routes.draw do
 
   get 'react_components' => 'react_components#react_components'
   post 'react_components' => 'react_components#react_components_submit'
+
+  # Metadata Edit endpoints
+  get '/edit/:id', controller: 'resource', action: 'edit', constraints: { id: /.*/ }, as: 'resource_edit'
+  post '/edit/:id', controller: 'resource', action: 'update', constraints: { id: /.*/ }
+  post '/update/:id', controller: 'resource', action: 'update_state', constraints: { id: /.*/ }, as: 'update_resource'
+
   # End UMD Customization
 
 end
