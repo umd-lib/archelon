@@ -3,7 +3,7 @@
 
 <h1><%= @page_title %></h1>
 
-<%= form_with(id: 'resource_edit_form') do %>
+<%= form_with(id: 'resource_edit_form', local: false) do %>
   <%
     content_model = @resource[:content_model]
     items = @resource[:items]

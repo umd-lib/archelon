@@ -10,6 +10,8 @@ import './add_jquery'
 // rails-ujs
 import './add_rails_ujs'
 
+import './resource'
+
 // Load in React components
 import components from "./components/**/*.jsx"
 
