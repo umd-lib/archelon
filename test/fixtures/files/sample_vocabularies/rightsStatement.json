@@ -1,0 +1,78 @@
+{
+  "@context": {
+    "dc": "http://purl.org/dc/elements/1.1/",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "vann": "http://purl.org/vocab/vann/"
+  },
+  "@graph": [
+    {
+      "@id": "http://vocab.lib.umd.edu/rightsStatement#NKC",
+      "dc:identifier": "NKC",
+      "owl:sameAs": {
+        "@id": "http://rightsstatements.org/vocab/NKC/1.0/"
+      },
+      "rdfs:label": "No Known Copyright"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/rightsStatement#CNE",
+      "dc:identifier": "CNE",
+      "owl:sameAs": {
+        "@id": "http://rightsstatements.org/vocab/CNE/1.0/"
+      },
+      "rdfs:label": "Copyright Not Evaluated"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/rightsStatement#InC-RUU",
+      "dc:identifier": "InC-RUU",
+      "owl:sameAs": {
+        "@id": "http://rightsstatements.org/vocab/InC-RUU/1.0/"
+      },
+      "rdfs:label": "In Copyright - Rights-Holder(s) Unlocatable or Unidentifiable"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/rightsStatement#",
+      "rdfs:label": "Rights Statement"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/rightsStatement#InC-NC",
+      "dc:identifier": "InC-NC",
+      "owl:sameAs": {
+        "@id": "http://rightsstatements.org/vocab/InC-NC/1.0/"
+      },
+      "rdfs:label": "In Copyright - Non-Commercial Use Permitted"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/rightsStatement#InC",
+      "dc:identifier": "InC",
+      "owl:sameAs": {
+        "@id": "http://rightsstatements.org/vocab/InC/1.0/"
+      },
+      "rdfs:label": "In Copyright"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/rightsStatement#NoC-US",
+      "dc:identifier": "NoC-US",
+      "owl:sameAs": {
+        "@id": "http://rightsstatements.org/vocab/NoC-US/1.0/"
+      },
+      "rdfs:label": "No Copyright - United States"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/rightsStatement#InC-EDU",
+      "dc:identifier": "InC-EDU",
+      "owl:sameAs": {
+        "@id": "http://rightsstatements.org/vocab/InC-EDU/1.0/"
+      },
+      "rdfs:label": "In Copyright - Educational Use Permitted"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/rightsStatement#UND",
+      "dc:identifier": "UND",
+      "owl:sameAs": {
+        "@id": "http://rightsstatements.org/vocab/UND/1.0/"
+      },
+      "rdfs:label": "Copyright Undetermined"
+    }
+  ]
+}
