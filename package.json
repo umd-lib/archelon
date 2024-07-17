@@ -10,6 +10,7 @@
     "bootstrap-icons": "^1.11.3",
     "esbuild": "^0.23.0",
     "esbuild-plugin-import-glob": "^0.1.1",
+    "jquery": "3.5.1",
     "n3": "^1.17.4",
     "nodemon": "^3.1.4",
     "postcss": "^8.4.39",

@@ -3,6 +3,10 @@ import * as bootstrap from "bootstrap"
 import Blacklight from "blacklight-frontend";
 import githubAutoCompleteElement from "@github/auto-complete-element";
 
+// JQuery
+// From https://stackoverflow.com/a/70925500
+import './add_jquery'
+
 // Load in React components
 import components from "./components/**/*.jsx"
 
