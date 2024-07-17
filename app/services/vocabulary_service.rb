@@ -67,7 +67,7 @@ class VocabularyService
       def retrieve(url)
         Rails.logger.info("Retrieving vocabulary: url='#{url}'")
 
-        send_json_request = SendJSONRequest.new(url: url, follow_redirects: true)
+        send_json_request = SendJsonRequest.new(url: url, follow_redirects: true)
         json_rest_result = send_json_request.call
 
         Rails.logger.debug do
