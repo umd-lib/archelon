@@ -5,21 +5,26 @@
 #   gem "sqlite3"
 #
 default: &default
-  adapter: sqlite3
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  timeout: 5000
+  adapter: <%= ENV["ARCHELON_DATABASE_ADAPTER"] %>
+  encoding: <%= ENV["ARCHELON_DATABASE_ENCODING"] %>
+  database: <%= ENV["ARCHELON_DATABASE_NAME"] %>
+  username: <%= ENV["ARCHELON_DATABASE_USERNAME"] %>
+  password: <%= ENV["ARCHELON_DATABASE_PASSWORD"] %>
+  host: <%= ENV["ARCHELON_DATABASE_HOST"] %>
+  port: <%= ENV["ARCHELON_DATABASE_PORT"] %>
+  pool: <%= ENV["ARCHELON_DATABASE_POOL"] %>
 
 development:
   <<: *default
-  database: storage/development.sqlite3
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
-  <<: *default
+  adapter: sqlite3
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  timeout: 5000
   database: storage/test.sqlite3
 
 production:
   <<: *default
-  database: storage/production.sqlite3

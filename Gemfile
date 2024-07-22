@@ -75,6 +75,8 @@ gem 'react-rails', '~>3.2.1'
 gem 'stomp'
 gem 'faraday', '~> 1.0'
 
+gem 'pg'
+
 # End UMD Customization
 
 
