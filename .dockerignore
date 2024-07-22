@@ -35,3 +35,31 @@
 /app/assets/builds/*
 !/app/assets/builds/.keep
 /public/assets
+
+# UMD Customization
+
+# Ignore the default SQLite database.
+/db/*.sqlite3
+/db/*.sqlite3-journal
+
+.byebug_history
+
+# Ignore minitest-ci reports
+test/reports
+
+# Ignore simplecov output
+coverage
+
+# Ignore any SSL pem/key files in root
+/*.pem
+/*.key
+
+# Ignore published vocabularies
+# While the "published_vocabularies" directory has been removed, leaving this
+# ignore specification in place to eliminate any possibility of the directory
+# contents being accidentally added to a Docker image.
+/public/published_vocabularies/*.json
+/public/published_vocabularies/*.ttl
+/public/published_vocabularies/*.nt
+
+# End UMD Customization
