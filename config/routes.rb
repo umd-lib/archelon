@@ -51,6 +51,7 @@ Rails.application.routes.draw do
   post '/edit/:id', controller: 'resource', action: 'update', constraints: { id: /.*/ }
   post '/update/:id', controller: 'resource', action: 'update_state', constraints: { id: /.*/ }, as: 'update_resource'
 
+  get '/ping' => 'ping#verify'
   # End UMD Customization
 
 end
