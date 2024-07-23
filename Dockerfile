@@ -63,7 +63,13 @@ COPY . .
 RUN bundle exec bootsnap precompile app/ lib/
 
 # Precompiling assets for production without requiring secret RAILS_MASTER_KEY
-RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
+# UMD Customization
+#
+# The ARCHELON_DATABASE_ADAPTER variable is needed for the
+# "assets:precompile" Rake task to complete, but will have no effect
+# on the application when it is actually run.
+RUN SECRET_KEY_BASE_DUMMY=1 ARCHELON_DATABASE_ADAPTER=postgresql ./bin/rails assets:precompile
+# End UMD Customization
 
 
 # Final stage for app image

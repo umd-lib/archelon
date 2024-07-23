@@ -76,4 +76,7 @@ Rails.application.configure do
   config.hosts = [
     "archelon-local"
   ]
+
+  config.active_job.queue_adapter = :delayed_job
+  # End UMD Customization
 end

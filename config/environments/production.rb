@@ -65,7 +65,9 @@ Rails.application.configure do
   # config.cache_store = :mem_cache_store
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
-  # config.active_job.queue_adapter = :resque
+  # UMD Customization
+  config.active_job.queue_adapter = :delayed_job
+  # End UMD Customization
   # config.active_job.queue_name_prefix = "archelon_production"
 
   config.action_mailer.perform_caching = false
