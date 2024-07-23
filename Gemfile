@@ -77,6 +77,8 @@ gem 'faraday', '~> 1.0'
 
 gem 'pg'
 
+gem 'delayed_job_active_record', '~> 4.1'
+
 # End UMD Customization
 
 
