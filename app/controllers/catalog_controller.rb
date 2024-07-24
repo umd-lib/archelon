@@ -103,7 +103,9 @@ class CatalogController < ApplicationController
     # These components can be configured
     # config.show.document_component = MyApp::DocumentComponent
     # config.show.sidebar_component = MyApp::SidebarComponent
-    # config.show.embed_component = MyApp::EmbedComponent
+    # UMD Customization
+    config.show.embed_component = Archelon::FcrepoResourceComponent
+    # End UMD Customization
 
     # solr fields that will be treated as facets by the blacklight application
     #   The ordering of the field names is the order of the display
