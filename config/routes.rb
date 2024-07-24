@@ -30,8 +30,8 @@ Rails.application.routes.draw do
   # root "posts#index"
 
   # UMD Customization
-  get 'static_pages/about'
   get 'about' => 'static_pages#about'
+  get 'help' => 'static_pages#help'
 
   resources :cas_users
   get '/cas_users/:id/history' => 'cas_users#show_history'
