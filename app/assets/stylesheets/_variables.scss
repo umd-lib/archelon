@@ -1,1 +1,4 @@
+// Override $logo-image to use "url" (instead of the Sprocket-based "image_url
+// asset helper specified by Blacklight, which is not usable when using
+// Propshaft. See https://stackoverflow.com/a/76429854)
 $logo-image: url('blacklight/logo.png');
