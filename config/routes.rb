@@ -52,6 +52,18 @@ Rails.application.routes.draw do
   post '/update/:id', controller: 'resource', action: 'update_state', constraints: { id: /.*/ }, as: 'update_resource'
 
   get '/ping' => 'ping#verify'
+
+  # Export Jobs
+  resources :export_jobs do
+    collection do
+      get 'review'
+      get ':id/file', to: 'export_jobs#download', as: 'download'
+      get ':id/binaries', to: 'export_jobs#download_binaries', as: 'download_binaries'
+    end
+    member do
+      post 'status_update', to: 'export_jobs#status_update', as: 'status_update'
+    end
+  end
   # End UMD Customization
 
 end
