@@ -1,0 +1,26 @@
+<h1> Export Job: <%= @job.name %> </h1>
+
+<h3> Job Info </h2>
+<hr>
+
+<p> Job ID: <%= @job.id %> </p>
+<p> Status: <%= @job.status_text %> </p>
+<p> # of Records: <%=   @job.item_count %> </p>
+<p> # of Binaries: <%= @job.binaries_count == nil ? "n/a" : @job.binaries_count %> </p>
+<p> Size of Binaries: <%= @job.binaries_size == nil ? "n/a" : number_to_human_size(@job.binaries_size) %> </p>
+<p> User: <%= @cas_user.name %>
+
+<hr>
+
+<%= link_to "Back", export_jobs_path, class: "btn btn-danger"%>
+<%= button_to "Delete Job", export_job_url(@job), method: :delete, class:"btn btn-danger", data: { confirm: 'Delete job?' } %>
+
+<style>
+  .button_to {
+    display: inline;
+  }
+
+  .button_to div {
+    display: inline;
+  }
+</style>
