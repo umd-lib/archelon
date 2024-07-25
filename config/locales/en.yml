@@ -32,3 +32,31 @@ en:
   solr_is_down: 'Unable to connect to Solr index. Search functionality is unavailable at this time.'
   resource_update_successful: 'Update successful'
   resource_update_timeout_error: 'Timeout error. Fedora has taken too long to respond. Please report this error and check back in a few minutes as your changes may have been saved.'
+
+  activerecord:
+    attributes:
+      export_job:
+        format: Metadata Format
+        id: Job ID
+        name: Job Name
+        status:
+          label: Status
+          pending: Export Pending
+          in_progress: In Progress
+          export_complete: Done
+          partial_export: Done (Partial Export)
+          export_error: Error
+          export_starting: Export Starting
+    models:
+      export_job: Export Job
+  mime_types:
+    application/pdf: PDF (application/pdf)
+    application/xml: XML (application/xml)
+    application/zip: Zip (application/zip)
+    image/jpeg: JPEG (image/jpeg)
+    image/jp2: JPEG 2000 (image/jp2)
+    image/tiff: TIFF (image/tiff)
+    text/csv: CSV (text/csv)
+    text/plain: Text (text/plain)
+    text/turtle: Turtle (text/turtle)
+    text/xml: XML (text/xml)
