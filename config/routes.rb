@@ -13,7 +13,7 @@ Rails.application.routes.draw do
     concerns :exportable
   end
 
-  resources :bookmarks do
+  resources :bookmarks, constraints: { id: /.*/ } do
     concerns :exportable
 
     collection do
