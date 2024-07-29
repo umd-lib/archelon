@@ -64,6 +64,18 @@ Rails.application.routes.draw do
       post 'status_update', to: 'export_jobs#status_update', as: 'status_update'
     end
   end
+
+  # Download URLs
+  resources :download_urls, only: %i[index show]
+  get '/download_urls/generate/:document_url', controller: 'download_urls',
+      action: 'generate_download_url', as: 'generate_download_url', constraints: { document_url: /.*/ }
+  post '/download_urls/create', controller: 'download_urls',
+       action: 'create_download_url', as: 'create_download_url'
+  get '/download_urls/show/:token', controller: 'download_urls',
+      action: 'show_download_url', as: 'show_download_url'
+  put '/download_urls/disable/:token', controller: 'download_urls',
+      action: 'disable', as: 'disable_download_url'
+
   # End UMD Customization
 
 end
