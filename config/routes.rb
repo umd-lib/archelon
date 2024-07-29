@@ -76,6 +76,10 @@ Rails.application.routes.draw do
   put '/download_urls/disable/:token', controller: 'download_urls',
       action: 'disable', as: 'disable_download_url'
 
+  get '/retrieve/:token', controller: 'retrieve', action: 'retrieve',
+      as: 'retrieve'
+  get '/retrieve/do/:token', controller: 'retrieve', action: 'do_retrieve',
+      as: 'do_retrieve'
   # End UMD Customization
 
 end
