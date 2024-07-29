@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module PlastronServices
-  module HTTP
+  module Http
     # Command to unpublish an item
     class UnpublishItem < PublicationCommand
       def activity_type

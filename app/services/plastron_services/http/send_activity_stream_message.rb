@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module PlastronServices
-  module HTTP
+  module Http
     # Service class to send a single ActivityStream message to the inbox endpoint
     # of the Plastron HTTP server. The base URL of the endpoint is configured via
     # the `PLASTRON_REST_BASE_URL` environment variable. The inbox endpoint is
@@ -16,7 +16,7 @@ module PlastronServices
       # The other sender class must accept `method`, `url`, and `content`
       # parameters in the constructor, and have a `call` method that returns
       # a JsonRestResult object.
-      def call(sender: SendJSONRequest)
+      def call(sender: SendJsonRequest)
         sender.new(method: :post, url: inbox_url, content: @message).call
       end
 

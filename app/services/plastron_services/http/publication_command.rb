@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module PlastronServices
-  module HTTP
+  module Http
     # Base class for publication actions. Subclasses must implement
     # the #activity_type method to return the URI of their specific
     # activity type.
@@ -33,7 +33,7 @@ module PlastronServices
       # service class as the sender, but this can be changed by setting
       # the `sender` parameter to a different service class that implements
       # a `call` method.
-      def call(sender: PlastronServices::HTTP::SendActivityStreamMessage)
+      def call(sender: PlastronServices::Http::SendActivityStreamMessage)
         # sender is parameterized for easy testing
         sender.new(message).call
       end
