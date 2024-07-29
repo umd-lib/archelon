@@ -82,6 +82,9 @@ gem 'delayed_job_active_record', '~> 4.1'
 # Table sorting
 gem 'ransack'
 
+# Pagination
+gem 'will_paginate', '~> 4.0'
+
 # End UMD Customization
 
 
