@@ -54,11 +54,11 @@ class ResourceController < ApplicationController
     def update_command
       case params[:command]
       when 'Publish'
-        PlastronServices::HTTP::PublishItem
+        PlastronServices::Http::PublishItem
       when 'Publish Hidden'
-        PlastronServices::HTTP::PublishHiddenItem
+        PlastronServices::Http::PublishHiddenItem
       when 'Unpublish'
-        PlastronServices::HTTP::UnpublishItem
+        PlastronServices::Http::UnpublishItem
       else
         raise "Unknown command #{params[:command]}"
       end
