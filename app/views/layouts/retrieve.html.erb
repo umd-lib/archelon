@@ -1,0 +1,43 @@
+<%# Specialized layout for the RetrieveController. Largely taken from
+    umd_lib_style/app/views/layouts/_umd_lib.html.erb, v0.2.0, with
+    modifications for use with Blacklight. %>
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= yield(:app_name) %></title>
+  <%= stylesheet_link_tag    'application', media: 'all' %>
+  <%= javascript_include_tag 'application' %>
+  <%= csrf_meta_tags %>
+</head>
+<body role="document">
+  <nav class="navbar navbar-inverse navbar-static-top">
+    <%# UMD TOFIX Restore environment banner %>
+    <%# umd_lib_environment_banner %>
+    <%# End UMD TOFIX %>
+
+    <div class="container">
+      <div class="navbar-header">
+        <div class="logo">
+          <a href="http://www.lib.umd.edu/"><%= image_tag 'blacklight/logo.png', alt: 'UMD Libraries' %></a>
+          <span class="navbar-brand-um">
+            <div class="nolink"><%= yield(:app_name) %></div>
+          </span>
+        </div>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <%= yield :navbar %>
+      </div>
+    </div>
+    <%= yield :navbar_banner %>
+  </nav>
+
+  <div class="<%= content_for?(:container_class) ? yield(:container_class) : "container"  %>">
+    <% if notice %>
+      <div class="alert alert-success" role="alert"><%= notice %></div>
+    <% end %>
+
+    <%= yield %>
+  </div>
+
+</body>
+</html>
