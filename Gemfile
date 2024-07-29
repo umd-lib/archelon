@@ -79,6 +79,9 @@ gem 'pg'
 
 gem 'delayed_job_active_record', '~> 4.1'
 
+# Table sorting
+gem 'ransack'
+
 # End UMD Customization
 
 
