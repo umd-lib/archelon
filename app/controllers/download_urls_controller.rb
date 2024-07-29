@@ -2,7 +2,9 @@
 
 class DownloadUrlsController < ApplicationController
   load_and_authorize_resource
-  include Blacklight::SearchHelper
+  # UMD Blacklight 8 Fix
+  include Blacklight::Searchable
+  # End UMD Blacklight 8 Fix
 
   # GET /download_urls
   # GET /download_urls.json
@@ -81,8 +83,9 @@ class DownloadUrlsController < ApplicationController
       title = solr_document[:display_title]
       pcdm_file_of = solr_document[:pcdm_file_of]
       if pcdm_file_of
-        file_of_result = fetch(pcdm_file_of)
-        file_of_document = file_of_result[1]
+        # UMD Blacklight 8 Fix
+        file_of_document = search_service.fetch(pcdm_file_of)
+        # End UMD Blacklight 8 Fix
         file_of_title = file_of_document[:display_title]
         title += " - #{file_of_title}"
       end
@@ -94,8 +97,9 @@ class DownloadUrlsController < ApplicationController
     #
     # The Fedora document URL of the Solr document to retrieve.
     def find_solr_document(document_url)
-      results = fetch([document_url])
-      solr_documents = results[1]
+      # UMD Blacklight 8 Fix
+      solr_documents = search_service.fetch([document_url])
+      # End UMD Blacklight 8 Fix
       return solr_documents.first if solr_documents.any?
 
       nil
