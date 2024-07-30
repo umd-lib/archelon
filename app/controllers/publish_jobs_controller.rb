@@ -29,7 +29,9 @@ class PublishJobsController < BookmarksController # rubocop:disable  Metrics/Cla
     }
   end
 
-  add_show_tools_partial(:export, path: :new_export_job_url, modal: false)
+  # UMD Blacklight 8 Fix
+  blacklight_config.add_show_tools_partial(:export, path: :new_export_job_url, modal: false)
+  # End UMD Blacklight 8 Fix
 
   def index
     @jobs =
@@ -43,7 +45,8 @@ class PublishJobsController < BookmarksController # rubocop:disable  Metrics/Cla
   def show # rubocop:disable Metrics/AbcSize
     id = params[:id]
     @job = PublishJob.find(id)
-    @result_documents = @job.solr_ids.map { |solr_id| fetch(solr_id)[1] }
+    # UMD Blacklight 8 Fix
+    @result_documents = @job.solr_ids.map { |solr_id| search_service.fetch(solr_id) }
 
     @hidden = @result_documents.sum do |doc|
       doc._source.include?('is_hidden') && doc._source['is_hidden'] == true ? 1 : 0
@@ -52,6 +55,7 @@ class PublishJobsController < BookmarksController # rubocop:disable  Metrics/Cla
     @published = @result_documents.sum do |doc|
       doc._source.include?('is_published') && doc._source['is_published'] == true ? 1 : 0
     end
+    # End UMD Blacklight 8 Fix
 
     @unpublished = @result_documents.length - @published
   end
@@ -100,6 +104,15 @@ class PublishJobsController < BookmarksController # rubocop:disable  Metrics/Cla
     render plain: '', status: :no_content
   end
 
+  # Blacklight 8 Fix
+  # Making this method public, because otherwise Rails 7.1 displays and
+  # "Unknown action" error when using the controller.
+  def start_publish
+    SendStompMessageJob.perform_later jobs_destination, job_request(@publish_job)
+    @publish_job.publish_pending!
+  end
+  # End Blacklight 8 Fix
+
   private
 
     def set_publish_job
@@ -125,11 +138,6 @@ class PublishJobsController < BookmarksController # rubocop:disable  Metrics/Cla
 
     def jobs_destination
       STOMP_CONFIG['destinations'][:jobs]
-    end
-
-    def start_publish
-      SendStompMessageJob.perform_later jobs_destination, job_request(@publish_job)
-      @publish_job.publish_pending!
     end
 
     def resume_publish
