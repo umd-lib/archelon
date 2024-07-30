@@ -54,22 +54,21 @@ class PublishJobsControllerTest < ActionController::TestCase
     publish_job.state = 1
     publish_job.save!
 
-    @controller.stub :fetch, [nil, SolrDocument.new] do
-      get :show, params: { id: PublishJob.first.id }
+    Blacklight::SearchService.any_instance.stub(:fetch).and_return(SolrDocument.new)
+    get :show, params: { id: PublishJob.first.id }
 
-      job = assigns(:job)
-      hidden = assigns(:hidden)
-      published = assigns(:published)
-      unpublished = assigns(:unpublished)
-      result_documents = assigns(:result_documents)
+    job = assigns(:job)
+    hidden = assigns(:hidden)
+    published = assigns(:published)
+    unpublished = assigns(:unpublished)
+    result_documents = assigns(:result_documents)
 
-      assert_equal job.cas_user.cas_directory_id, @cas_user.cas_directory_id
-      assert job.publish == true
-      assert_equal job.state, 'publish_not_submitted'
-      assert_equal hidden, 0
-      assert_equal published, 0
-      assert_equal unpublished, 2
-      assert_equal result_documents.length, 2
-    end
+    assert_equal job.cas_user.cas_directory_id, @cas_user.cas_directory_id
+    assert job.publish == true
+    assert_equal job.state, 'publish_not_submitted'
+    assert_equal hidden, 0
+    assert_equal published, 0
+    assert_equal unpublished, 2
+    assert_equal result_documents.length, 2
   end
 end
