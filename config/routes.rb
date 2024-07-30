@@ -80,6 +80,17 @@ Rails.application.routes.draw do
       as: 'retrieve'
   get '/retrieve/do/:token', controller: 'retrieve', action: 'do_retrieve',
       as: 'do_retrieve'
+
+  # Publish Jobs
+  resources :publish_jobs, except: [:new] do
+    member do
+      post 'submit' => 'publish_jobs#submit'
+      post 'status_update' => 'publish_jobs#status_update'
+    end
+  end
+  get '/new_publish_job' => 'publish_jobs#new_publish_job'
+  get '/new_unpublish_job' => 'publish_jobs#new_unpublish_job'
+
   # End UMD Customization
 
 end
