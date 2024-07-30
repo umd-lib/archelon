@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_27_182231) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_30_175020) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -27,9 +27,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_27_182231) do
     t.string "content_type"
     t.text "metadata"
     t.bigint "byte_size", null: false
-    t.string "checksum", null: false
+    t.string "checksum"
     t.datetime "created_at", precision: nil, null: false
+    t.string "service_name", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.integer "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
   create_table "bookmarks", force: :cascade do |t|
@@ -195,6 +202,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_27_182231) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "export_job_requests", "export_jobs"
   add_foreign_key "export_jobs", "cas_users"
   add_foreign_key "import_job_requests", "import_jobs"
