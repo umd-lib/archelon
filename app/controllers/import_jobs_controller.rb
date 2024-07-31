@@ -113,15 +113,37 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     render plain: '', status: :no_content
   end
 
+  # UMD Blacklight 8 Fix
+  def set_import_job
+    @import_job = ImportJob.find(params[:id])
+  end
+
+  def start_validation(resume: false)
+    SendStompMessageJob.perform_later jobs_destination, job_request(@import_job, validate_only: true, resume: resume)
+    @import_job.validate_pending!
+  end
+
+  def start_import
+    # must set resume to 'true' since there will already be a job directory that was created
+    # by the validation phase, and Plastron complains if you try to start a job when there is
+    # an existing directory for it
+    SendStompMessageJob.perform_later jobs_destination, job_request(@import_job, resume: true)
+    @import_job.import_pending!
+  end
+
+  def resume_import
+    SendStompMessageJob.perform_later jobs_destination, job_request(@import_job, resume: true)
+    @import_job.import_pending!
+  end
+
+  # End UMD Blacklight 8 Fix
+
   private
 
     def cancel_workflow?
       redirect_to controller: :import_jobs, action: :index if params[:commit] == 'Cancel'
     end
 
-    def set_import_job
-      @import_job = ImportJob.find(params[:id])
-    end
 
     # Returns an array of arrays, the first element being the collection title,
     # the second element the URI of the collection.
@@ -154,24 +176,6 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
 
     def jobs_destination
       STOMP_CONFIG['destinations'][:jobs]
-    end
-
-    def start_validation(resume: false)
-      SendStompMessageJob.perform_later jobs_destination, job_request(@import_job, validate_only: true, resume: resume)
-      @import_job.validate_pending!
-    end
-
-    def start_import
-      # must set resume to 'true' since there will already be a job directory that was created
-      # by the validation phase, and Plastron complains if you try to start a job when there is
-      # an existing directory for it
-      SendStompMessageJob.perform_later jobs_destination, job_request(@import_job, resume: true)
-      @import_job.import_pending!
-    end
-
-    def resume_import
-      SendStompMessageJob.perform_later jobs_destination, job_request(@import_job, resume: true)
-      @import_job.import_pending!
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
