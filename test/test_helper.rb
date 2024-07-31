@@ -123,6 +123,15 @@ end
 
 # UMD Customization
 
+# Stub response for RepositoryCollections Solr requests from fixture file
+def stub_repository_collections_solr_response(fixture_filename)
+  file = file_fixture(fixture_filename).read
+  data_hash = JSON.parse(file)
+
+  response = Blacklight::Solr::Response.new(data_hash, nil)
+  Blacklight::Solr::Repository.any_instance.stub(:search).and_return(response)
+end
+
 # Allows a constant defined in config/initializers to be be overridden for
 # a single test, and then restored
 def with_constant(constant_name, value)
