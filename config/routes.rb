@@ -65,6 +65,16 @@ Rails.application.routes.draw do
     end
   end
 
+  # Import Jobs
+  resources :import_jobs do
+    collection do
+      post ':id/import', to: 'import_jobs#import', as: 'perform_import'
+    end
+    member do
+      post 'status_update', to: 'import_jobs#status_update', as: 'status_update'
+    end
+  end
+
   # Download URLs
   resources :download_urls, only: %i[index show]
   get '/download_urls/generate/:document_url', controller: 'download_urls',
