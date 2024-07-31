@@ -1,0 +1,55 @@
+<p id="notice"><%= notice %></p>
+
+<h1><%= t('activerecord.models.import_job').pluralize %></h1>
+
+<%= link_to "New #{t('activerecord.models.import_job')}", new_import_job_path, class: 'btn btn-success' %>
+
+<% if @import_jobs.count > 0 %>
+  <div class="row">
+    <div class="btn-toolbar">
+      <div class="col-md-6">
+          <div class="btn-group"><%= will_paginate @download_urls, renderer: BootstrapPagination::Rails %></div>
+      </div>
+    </div>
+  </div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th><%= t('activerecord.attributes.import_job.id') %></th>
+        <th><%= t('activerecord.attributes.import_job.name') %></th>
+        <th><%= t('activerecord.attributes.import_job.cas_user') %></th>
+        <th><%= t('activerecord.attributes.import_job.timestamp') %></th>
+        <th><%= t('activerecord.attributes.import_job.metadata_file') %></th>
+        <th><%= t('activerecord.attributes.import_job.binaries.label') %></th>
+        <th># of Records</th>
+        <th># of Binaries</th>
+        <th><%= t('activerecord.attributes.import_job.model') %></th>
+        <th><%= t('activerecord.attributes.import_job.status.label') %></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @import_jobs.each do |job| %>
+        <tr class="import-job" data-import-job-id="<%= job.id %>" data-subscribe="<%= not job.import_complete? %>">
+          <td><%= link_to job.id, import_job_path(job) %></td>
+          <td><%= job.name %></td>
+          <td><%= job.cas_user&.name%></td>
+          <td><%= job.timestamp %></td>
+          <td><%= job.metadata_file.filename if job.metadata_file.attached? %></td>
+          <td><%= job.binaries? ? t('activerecord.attributes.import_job.binaries.true') : t('activerecord.attributes.import_job.binaries.false') %></td>
+          <td class="item-count"><%= job.item_count %></td>
+          <td class="binaries-count"><%= job.binaries_count if job.binaries? %></td>
+          <td><%= job.model %></td>
+          <%= render partial: 'import_job_status', locals: { import_job: job } %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%= will_paginate @import_jobs, renderer: BootstrapPagination::Rails %>
+  <br>
+<% else %>
+  <p data-channel="import_jobs">No Import jobs found</p>
+<% end %>
+
