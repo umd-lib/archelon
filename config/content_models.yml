@@ -108,6 +108,7 @@ Item:
       label: 'Terms of Use'
       type: :ControlledURIRef
       vocab: 'termsOfUse'
+      edit_only: true
 
     - name: 'copyright_notice'
       uri: 'https://schema.org/copyrightNotice'
@@ -228,6 +229,7 @@ Letter:
       label: 'Terms of Use'
       type: :ControlledURIRef
       vocab: 'termsOfUse'
+      edit_only: true
 
     - name: 'copyright_notice'
       uri: 'https://schema.org/copyrightNotice'
@@ -353,6 +355,7 @@ Poster:
       label: 'Terms of Use'
       type: :ControlledURIRef
       vocab: 'termsOfUse'
+      edit_only: true
 
     - name: 'copyright_notice'
       uri: 'https://schema.org/copyrightNotice'
@@ -407,6 +410,7 @@ Issue:
       label: 'Terms of Use'
       type: :ControlledURIRef
       vocab: 'termsOfUse'
+      edit_only: true
 
     - name: 'copyright_notice'
       uri: 'https://schema.org/copyrightNotice'
