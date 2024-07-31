@@ -30,6 +30,8 @@
 en:
   hello: "Hello world"
   solr_is_down: 'Unable to connect to Solr index. Search functionality is unavailable at this time.'
+  import_already_performed: 'Import has completed. Cannot reimport or validate'
+  cannot_import_invalid_file: 'Cannot import a file with validation errors.'
   resource_update_successful: 'Update successful'
   resource_update_timeout_error: 'Timeout error. Fedora has taken too long to respond. Please report this error and check back in a few minutes as your changes may have been saved.'
 
@@ -60,8 +62,49 @@ en:
           partial_export: Done (Partial Export)
           export_error: Error
           export_starting: Export Starting
+      import_job:
+        access: Access
+        binaries:
+          label: 'Includes Binaries'
+          true: 'Yes'
+          false: 'No'
+        cas_user: User
+        collection: Administrative Set
+        id: Job ID
+        metadata_file: Metadata File
+        model: Content Model
+        name: Job Name
+        remote_server: Remote server
+        stage:
+          import: Import
+          validate: Validation
+        status:
+          label: Status
+          validate_pending: Validation Pending
+          validate_in_progress: Validating...
+          validate_success: Validation Successful
+          validate_failed: Validation Failed
+          validate_error: System Error during Validation
+          import_success: Import Successful
+          import_failed: Import Failed
+          import_error: System Error during Import
+          import_pending: Import Pending
+          import_in_progress: In Progress
+          import_complete: Import Complete
+          import_incomplete: Import Incomplete
+          error: Error
+        timestamp: Timestamp
+    errors:
+      models:
+        import_job:
+          attributes:
+            base:
+              multiple_include_binaries_options: When including binaries, choose either an uploaded binary file or remote server, not both.
+            metadata_file:
+              required: 'is required'
     models:
       export_job: Export Job
+      import_job: Import Job
   mime_types:
     application/pdf: PDF (application/pdf)
     application/xml: XML (application/xml)
