@@ -104,14 +104,14 @@ class PublishJobsController < BookmarksController # rubocop:disable  Metrics/Cla
     render plain: '', status: :no_content
   end
 
-  # Blacklight 8 Fix
+  # UMD Blacklight 8 Fix
   # Making this method public, because otherwise Rails 7.1 displays and
   # "Unknown action" error when using the controller.
   def start_publish
     SendStompMessageJob.perform_later jobs_destination, job_request(@publish_job)
     @publish_job.publish_pending!
   end
-  # End Blacklight 8 Fix
+  # End UMD Blacklight 8 Fix
 
   private
 
