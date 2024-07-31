@@ -10,6 +10,25 @@
 
   <!-- UMD Customization -->
   <li>
+    <%# UMD Bootstrap 5 Change %>
+    <div class="dropdown">
+      <button type="button" class="btn btn-secondary dropdown-toggle" id="manageNavButton" data-bs-toggle="dropdown" aria-expanded="false">
+        Manage <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="manageNavButton">
+        <% if current_cas_user.admin? %>
+          <li><%= link_to 'Users', controller: 'cas_users', action: 'index' %></li>
+        <% end %>
+        <li><%#= link_to 'Collections Summary', controller: 'collection', action: 'index' %></li>
+        <li><%= link_to 'Publication Jobs', { controller: 'publish_jobs' }, action: 'index' %></li>
+        <li><%= link_to 'Download URLs', controller: 'download_urls', action: 'index' %></li>
+        <li><%= link_to 'Export Queue', controller: 'export_jobs', action: 'index' %></li>
+        <li><%= link_to 'Import Jobs', controller: 'import_jobs', action: 'index' %></li>
+      </ul>
+    </div>
+    <%# End UMD Bootstrap 5 Change %>
+  </li>
+  <li>
     <%= link_to current_cas_user.name, '/cas_users/' + current_cas_user.id.to_s, { class: "nav-link" } %>
   </li>
   <li>
