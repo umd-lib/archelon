@@ -1,8 +1,23 @@
 ENV["RAILS_ENV"] ||= "test"
+
+# UMD Customization
+require 'simplecov'
+require 'simplecov-rcov'
+SimpleCov.formatters = [
+  SimpleCov::Formatter::HTMLFormatter,
+  SimpleCov::Formatter::RcovFormatter
+]
+SimpleCov.start
+# End UMD Customization
+
 require_relative "../config/environment"
 require "rails/test_help"
 
 # UMD Customization
+require 'minitest/reporters'
+# only use if we are not running inside the JetBrains RubyMine IDE
+Minitest::Reporters.use! unless ENV['RM_INFO']
+
 # Require minitest Mock functionality
 require 'minitest/autorun'
 require 'rspec/mocks/minitest_integration'
