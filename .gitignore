@@ -45,4 +45,10 @@
 # Ignore the imports and exports
 /imports/*.zip
 /exports/*.zip
+
+# Ignore minitest-ci reports
+test/reports
+
+# Ignore simplecov output
+coverage
 # End UMD Customization
