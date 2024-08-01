@@ -111,6 +111,11 @@ group :test do
   gem "selenium-webdriver"
 
   # UMD Customization
+  gem 'minitest-reporters'
+
+  gem 'simplecov', require: false
+  gem 'simplecov-rcov', require: false
+
   gem 'rails-controller-testing'
 
   gem 'rspec'
