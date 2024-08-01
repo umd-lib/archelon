@@ -93,9 +93,15 @@ COPY --from=build /opt/archelon /opt/archelon
 # End UMD Customization
 
 # Run and own only the runtime files as a non-root user for security
-RUN useradd rails --create-home --shell /bin/bash && \
-    chown -R rails:rails db log storage tmp
-USER rails:rails
+# Set UID and GID to 2200 to match "plastron" user in "Dockerfile.sftp"
+# which also needs to write to the directories in the container.
+ARG USERNAME=rails
+ARG UID=2200
+ARG GID=2200
+RUN groupadd -g $GID -o $USERNAME
+RUN useradd $USERNAME -u $UID -g $GID --create-home --shell /bin/bash && \
+    chown -R $USERNAME:$USERNAME db log storage tmp
+USER $USERNAME:$USERNAME
 
 # Entrypoint prepares the database.
 # UMD Customization
