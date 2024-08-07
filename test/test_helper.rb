@@ -129,7 +129,26 @@ module ActiveSupport
         allow(connection_double).to receive(:publish).and_raise(RuntimeError)
       end
 
-      stub_const('Stomp::Connection', double(new: connection_double))
+      rspec_stub_const(
+        'Stomp::Connection', double(new: connection_double)
+      )
+    end
+
+    # Explicit call to the RSpec "stub_const" method.
+    # This is needed because the "ActiveSupport::Testing::ConstantStubbing"
+    # module also includes a "stub_const" method.
+    #
+    # Using the method makes it explicit which method is being called.
+    def rspec_stub_const(constant_name, value, options={})
+      # Using the "Class.new.extend(RSpec::Mocks::ExampleMethods)"
+      # to ensure that the "stub_const" method from the module is called,
+      # instead of the "stub_const" method from the
+      # "ActiveSupport::Testing::ConstantStubbing" module.
+      # Not sure if this is really the best way to
+      # do this -- taken from https://stackoverflow.com/a/1411061
+      Class.new.extend(RSpec::Mocks::ExampleMethods).stub_const(
+        constant_name, value, options
+      )
     end
 
     # End UMD Customization
