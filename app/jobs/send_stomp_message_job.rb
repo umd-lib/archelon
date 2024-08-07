@@ -5,10 +5,12 @@ class SendStompMessageJob < ApplicationJob
   attr_reader :request
 
   queue_as :default
-  retry_on(MessagingError, wait: :exponentially_longer, attempts: STOMP_CONFIG[:max_retry_attempts]) do |job, _error|
+  # UMD Blacklight 8 Fix
+  retry_on(MessagingError, wait: :polynomially_longer, attempts: STOMP_CONFIG[:max_retry_attempts]) do |job, _error|
     # all retry attempts have failed; message publication failed
     job.request.error!
   end
+  # End UMD Blacklight 8 Fix
 
   def perform(destination, request)
     @request ||= request
