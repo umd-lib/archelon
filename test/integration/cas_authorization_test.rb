@@ -9,9 +9,11 @@ class CasAuthorizationTest < ActionDispatch::IntegrationTest
   # Stubs an empty Solr response, for use when actually retrieving a
   # web page in the test.
   def stub_solr_response
+    # UMD Blacklight 8 Fix
     solr_response = double(Blacklight::Solr::Response)
     expect(solr_response).to receive(:aggregations).at_least(:once).and_return({})
-    expect_any_instance_of(CatalogController).to receive(:search_results).and_return([solr_response, []])
+    expect_any_instance_of(Blacklight::SearchService).to receive(:search_results).and_return(solr_response)
+     # End UMD Blacklight 8 Fix
   end
 
   # LDAP call will return the given CAS user ldap_attrs map
@@ -20,7 +22,6 @@ class CasAuthorizationTest < ActionDispatch::IntegrationTest
   end
 
   test 'existing cas_user can access application' do
-    skip("TOFIX: Making unexpected web call")
     stub_solr_response
     # Using mock_cas_login_for_integration_tests, because this is an
     # existing test fixtures user
@@ -32,7 +33,6 @@ class CasAuthorizationTest < ActionDispatch::IntegrationTest
   end
 
   test 'new cas_user with User Grouper group can access application' do
-    skip("TOFIX: Making unexpected web call")
     stub_solr_response
     stub_ldap_response(name: 'New CAS User', groups: [GROUPER_GROUPS['Users']])
 
@@ -52,7 +52,6 @@ class CasAuthorizationTest < ActionDispatch::IntegrationTest
   end
 
   test 'new cas_user can with Admin Grouper group can access application' do
-    skip("TOFIX: Making unexpected web call")
     stub_solr_response
     stub_ldap_response(name: 'New Admin CAS User', groups: [GROUPER_GROUPS['Administrators']])
 
