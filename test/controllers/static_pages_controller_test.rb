@@ -9,16 +9,7 @@ class StaticPagesControllerTest < ActionController::TestCase
   end
 
   test 'should get about' do
-    skip("TOFIX: Making unexpected web call")
     stub_request(:get, 'http://localhost:8983/solr/fedora4')
-      .with(
-        headers: {
-          'Accept' => '*/*',
-          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-          'Host' => 'solr-fedora4:8983',
-          'User-Agent' => 'Ruby'
-        }
-      )
       .to_return(status: 200, body: '', headers: {})
     get :about
     assert_response :success
