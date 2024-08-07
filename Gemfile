@@ -86,6 +86,9 @@ gem 'ransack'
 gem 'will_paginate', '~> 4.0'
 gem 'will_paginate-bootstrap'
 
+# Cron jobs
+gem 'delayed_cron_job', '~> 0.8'
+
 # End UMD Customization
 
 
