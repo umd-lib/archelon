@@ -323,7 +323,10 @@ class CatalogController < ApplicationController
     super
     return unless is_identifier_search && @response.response['numFound'] == 1
 
-    redirect_to action: 'show', id: @document_list[0].id
+    # UMD Blacklight 8 Fix
+    @document_list = @response.response['docs']
+    redirect_to action: 'show', id: @document_list[0]['id']
+    # End UMD Blacklight 8 Fix
   end
 
   def show
