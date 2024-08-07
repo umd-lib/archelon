@@ -66,7 +66,6 @@ class ImportJobsControllerTest < ActionController::TestCase
   end
 
   test 'should create import_job' do
-    skip("TOFIX: stub_const not working in Rails 7.1/Ruby 3.2")
     mock_stomp_connection
 
     name = "#{@cas_user.cas_directory_id}-#{Time.now.iso8601}"
