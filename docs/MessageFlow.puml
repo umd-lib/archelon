@@ -1,0 +1,58 @@
+@startuml
+<style>
+Title {
+    Margin 30
+    FontSize 30
+}
+</style>
+title
+    Archelon ↔ Plastron
+    Asynchonous Job Information Flow
+end title
+
+component "Archelon Server" as Archelon {
+    component ImportJobsForm
+    component ImportJobsController {
+        rectangle import << Method >>
+        rectangle status_update << Method >>
+    }
+    component ImportJobsChannel
+}
+component "DelayedJob Worker" as DelayedJob << Rake Task >> {
+    rectangle SendStompMessageJob << ActiveJob >>
+    rectangle ImportJobStatusUpdatedJob << ActiveJob >>
+}
+component ActiveMQ {
+    queue "/queue/plastron.jobs" as Jobs
+    queue "/topic/plastron.job.progress" as JobProgress << Topic >>
+    queue "/queue/plastron.job.status" as JobStatus
+}
+component "Plastron Daemon" as Plastron {
+    rectangle CommandListener
+    rectangle MessageProcessor
+    rectangle AsynchronousResponseHandler
+}
+component "STOMP Listener" << Rake Task >> {
+    rectangle StompListener
+}
+
+ImportJobsForm ..> import : job id
+import ..> SendStompMessageJob : job request
+SendStompMessageJob ..> Jobs : STOMP message
+Jobs ..> CommandListener : command message
+JobProgress <.. MessageProcessor : progress message
+JobStatus <.. AsynchronousResponseHandler : status message
+
+CommandListener .> MessageProcessor : command
+MessageProcessor .> AsynchronousResponseHandler : processing result
+
+StompListener <.. JobProgress : STOMP message
+StompListener <.. JobStatus : STOMP message
+
+status_update <.. StompListener : job id
+ImportJobStatusUpdatedJob <.. status_update : job
+
+ImportJobsChannel <.. ImportJobStatusUpdatedJob : job status
+ImportJobsForm <.. ImportJobsChannel : job status
+
+@enduml
