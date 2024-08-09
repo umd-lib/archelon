@@ -1,0 +1,36 @@
+<% content_for :page_title, "User Profile: #{@cas_user.cas_directory_id}" %>
+
+<h1><%= content_for :page_title %></h1>
+
+<div>
+  <strong>Directory ID:</strong>
+  <%= @cas_user.cas_directory_id %>
+</div>
+
+<div>
+  <strong>Name:</strong>
+  <%= @cas_user.name %>
+</div>
+
+<div>
+  <strong>Groups:</strong>
+  <ul>
+    <% @cas_user.groups.each do |group| %>
+      <li><%= group.name %></li>
+    <% end %>
+  </ul>
+</div>
+
+<% if current_cas_user.admin? %>
+  <div>
+    <strong>Type:</strong>
+    <%= @cas_user.user_type %>
+  </div>
+<% end %>
+
+<div class="actions">
+  <% if current_cas_user.admin? %>
+    <%= link_to 'List Users', cas_users_path, class: 'btn btn-default' %>
+  <% end %>
+  <%= link_to 'User History', { controller: 'cas_users', action: 'show_history' }, class: 'btn btn-success' %>
+</div>

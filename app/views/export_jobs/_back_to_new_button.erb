@@ -1,0 +1,10 @@
+    <%= link_to "Back", url_for(action: :new, params:
+      {
+        export_job: {
+          name: export_job.name,
+          format: export_job.format,
+          export_binaries: export_job.export_binaries,
+          mime_types: export_job.mime_types
+        }
+      }
+    ), class: 'btn btn-danger' %>

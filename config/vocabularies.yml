@@ -1,0 +1,13 @@
+default: &default
+  local_authority_base_uri: http://vocab.lib.umd.edu/
+  access_vocab_identifier: access
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+
+production:
+  <<: *default
+  local_authority_base_uri: <%= ENV['VOCAB_LOCAL_AUTHORITY_BASE_URI'] %>

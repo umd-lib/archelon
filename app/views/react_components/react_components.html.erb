@@ -1,0 +1,211 @@
+<h1>React Components</h1>
+
+<p>This page provides demonstrations of the React components available in Archelon.</p>
+
+<%= form_with(local: true) do %>
+
+  <h2>LabeledThing</h2>
+
+  <div>This component is a composite of a PlainLiteral and a URIRef.</div>
+
+  <div class="form-group">
+    <%= react_component(:LabeledThing, {
+      subjectURI: 'labeled_thing',
+      predicateURI: 'title',
+      value: { value: { '@id': 'http://example.com/baz' },
+              label: { '@value': 'Baz' },
+              sameAs: { '@id': 'http://example.com/id/baz' }
+             }
+    } ) %>
+  </div>
+
+  <h2>PlainLiteral</h2>
+
+  <div class="form-group">
+    <%= react_component(
+          "PlainLiteral", {
+          subjectURI: 'plain_literal',
+          predicateURI: 'title',
+          value: {
+            '@value': "Lorem ipsum",
+            '@language': "en"
+          }
+        }) %>
+  </div>
+
+  <h2>TypedLiteral</h2>
+
+  <div>Hover the mouse over the textbox to display a tooltip with the datatype.</div>
+
+  <div class="form-group">
+    <%= react_component(
+          "TypedLiteral", {
+          subjectURI: 'typed_literal',
+          predicateURI: 'title',
+          value: {
+            '@value': "2020-06-23",
+            '@type': "http://id.loc.gov/datatypes/edtf"
+          }
+        }) %>
+  </div>
+
+  <h2>ControlledURIRef</h2>
+
+  <h3>Typical Usage</h3>
+
+  <div>
+    This component presents dropdowns using the values defined in a
+    controlled vocabulary. The following is a sample list of controlled
+    vocabularies.
+  </div>
+
+  <%
+    sample_vocabulary_ids = %w[
+       access collection datatype form model rightsStatement set
+     ]
+    sample_vocabularies = sample_vocabulary_ids.map { |id| VocabularyService.get_vocabulary(id) }
+    sample_vocabularies.each do |vocab|
+  %>
+    <h4><%= vocab.identifier %></h4>
+    <div class="form-group">
+      <%=
+        react_component(
+          "ControlledURIRef", {
+          subjectURI: 'controlled_value',
+          predicateURI: vocab.identifier,
+          vocab: VocabularyService.parse_options(vocab.terms),
+          value: { '@id': vocab.terms[0].uri }
+        }
+        )
+      %>
+    </div>
+  <% end %>
+
+  <h3>Value not in vocabulary</h3>
+
+  <div>This example presents a dropdown where the provided value is not
+       present in the controlled vocabulary list.</div>
+
+  <% vocab = VocabularyService.get_vocabulary('access') %>
+  <h4><%= vocab.identifier %></h4>
+  <div class="form-group">
+    <%=
+      react_component(
+        "ControlledURIRef", {
+        subjectURI: 'controlled_value',
+        predicateURI: vocab.identifier,
+        vocab: VocabularyService.parse_options(vocab.terms),
+        value: { '@id': 'not-in-vocabulary' }
+      }
+      )
+    %>
+  </div>
+
+  <h2>URIRef</h2>
+
+  <div>This component presents as a simple textbox</div>
+
+  <div class="form-group">
+    <%= react_component(:URIRef, { subjectURI: 'uri_ref', predicateURI: 'title', value: { "@id": "http://example.com/vocab#bar"} }) %>
+  </div>
+
+  <h2>Repeatable</h2>
+
+  <h3>Repeatable LabeledThing</h3>
+
+  <div class="form-group">
+    <%= react_component(
+      :Repeatable,
+      {
+        componentType: :LabeledThing,
+        subjectURI: "repeatable_labeled_thing",
+        predicateURI: 'repeatableLabeledThingPredicate',
+      }
+    )%>
+  </div>
+
+  <h3>Repeatable PlainLiteral</h3>
+
+  <div>The following example is limited to 5 entries:</div>
+
+  <div class="form-group">
+    <%= react_component(
+          :Repeatable,
+          {
+            maxValues: 5,
+            componentType: :PlainLiteral,
+            subjectURI: "repeatable_plain_literal",
+            predicateURI: 'title',
+            values: [
+              {'@value': 'First Line', '@language': 'en'},
+              {'@value': '二行目', '@language': 'ja'},
+              {'@value': 'Third Line', '@language': 'en'}]
+          }
+        ) %>
+  </div>
+
+  <h3>Repeatable TypedLiteral</h3>
+
+  <div>The following example has unlimited entries:</div>
+
+  <div class="form-group">
+    <%= react_component(
+          :Repeatable,
+          {
+            componentType: :TypedLiteral,
+            subjectURI: "repeatable_typed_literal",
+            predicateURI: 'title',
+            defaultValue: { '@value': '', '@type': 'http://id.loc.gov/datatypes/edtf' },
+            values: [
+              {'@value': '2020-06-23', '@type': 'http://id.loc.gov/datatypes/edtf'},
+              {'@value': '1856-03-06', '@type': 'http://www.w3.org/2001/XMLSchema#date'}
+            ]
+          }
+        ) %>
+  </div>
+
+  <h3>Repeatable ControlledURIRef</h3>
+
+  <% sample_vocabularies.each do |vocab| %>
+    <h4><%= vocab.identifier %> (repeated)</h4>
+    <div class="form-group">
+      <%= react_component(
+            :Repeatable,
+            {
+              componentType: :ControlledURIRef,
+              subjectURI: 'repeated_controlled_value',
+              predicateURI: vocab.identifier,
+              vocab: VocabularyService.parse_options(vocab.terms),
+              values: [
+                { '@id': vocab.terms[0].uri }
+              ],
+              defaultValue: { '@id': '' }
+            }
+          )
+      %>
+    </div>
+  <% end %>
+
+  <h3>Repeatable URIRef</h3>
+
+   <div class="form-group">
+      <%= react_component(
+            :Repeatable,
+            {
+              componentType: :URIRef,
+              subjectURI: 'repeatable_uri_ref',
+              predicateURI: 'title',
+              values: [
+                { '@id': "http://example.com/vocab#bar" }
+              ],
+              defaultValue: { '@id': ''}
+            }
+          )
+      %>
+    </div>
+
+  <div class="form-group">
+    <input type="submit" name="submit" value="Submit" class="btn btn-primary form-control" />
+  </div>
+<% end %>
+

@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  format: MyString
+  cas_user: one
+  timestamp: 2019-08-12 15:45:29
+  name: MyString
+  item_count: 1
+  state: pending
+
+two:
+  format: MyString
+  cas_user: two
+  timestamp: 2019-08-12 15:45:29
+  name: MyString
+  item_count: 1
+  state: pending

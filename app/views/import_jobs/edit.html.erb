@@ -1,0 +1,13 @@
+<h1>Resubmit <%= t('activerecord.models.import_job') %></h1>
+
+<%= render "import_job_panel", import_job: @import_job %>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Resubmit</h3>
+  </div>
+  <div class="panel-body">
+    <%= render 'form', import_job: @import_job %>
+  </div>
+</div>
+

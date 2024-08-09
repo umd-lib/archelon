@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+id_one:
+  cas_user: key_user1
+  key: <%= File.read('test/data/id_one.pub') %>
+
+id_two:
+  cas_user: key_user2
+  key: <%= File.read('test/data/id_two.pub') %>

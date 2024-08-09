@@ -1,0 +1,63 @@
+<h1>Download URLs</h1>
+
+
+<div class="row">
+  <div class="btn-toolbar">
+    <div class="col-md-6">
+        <div class="btn-group"><%= will_paginate @download_urls, renderer: BootstrapPagination::Rails %></div>
+    </div>
+    <div class="col-md-6">
+      <%= search_form_for @rq, class: "form-inline pull-right" do |f| %>
+        <div class="form-group">
+        <%= f.check_box("enabled_eq", id: 'rq_enabled', class: "form-control checkbox") %>
+        <%= f.label( 'enabled', 'Enabled Only' ) %>
+        </div>
+
+        <div class="form-group">
+        <%= f.label( 'creator_eq', 'Creator:' ) %>
+        <%= f.collection_select(:creator_eq, @creators, :creator, :creator, { include_blank: '<All>' }, class: "form-control") %>
+        </div>
+
+        <div class="form-group">
+          <button type="submit" class="btn btn-default">Apply Filter</button>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Creator</th>
+      <th><%= sort_link(@rq, :created_at, 'Created') %></th>
+      <th>Expires</th>
+      <th>Accessed</th>
+      <th>Enabled</th>
+      <th colspan="2"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @download_urls.each do |download_url| %>
+      <tr>
+        <td><%= download_url.title %></td>
+        <td><%= download_url.creator %></td>
+        <td><%= download_url.created_at %></td>
+        <td><%= download_url.expires_at %></td>
+        <td><%= download_url.accessed_at %></td>
+        <td><%= download_url.enabled %></td>
+        <td><%= link_to 'Show', download_url %></td>
+        <td>
+          <% if download_url.enabled? %>
+            <%= link_to 'Disable', disable_download_url_path(token: download_url.token),
+                            method: :put, data: { confirm: 'Are you sure?' } %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= will_paginate @download_urls, renderer: BootstrapPagination::Rails %>

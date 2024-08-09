@@ -1,0 +1,452 @@
+{
+  "@context": {
+    "dc": "http://purl.org/dc/elements/1.1/",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "vann": "http://purl.org/vocab/vann/"
+  },
+  "@graph": [
+    {
+      "@id": "http://vocab.lib.umd.edu/form#drawings",
+      "dc:identifier": "drawings",
+      "owl:sameAs": {
+        "@id": "http://id.loc.gov/authorities/genreForms/gf2017027231"
+      },
+      "rdfs:label": "Drawings"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#diaries",
+      "dc:identifier": "diaries",
+      "owl:sameAs": {
+        "@id": "http://id.loc.gov/authorities/genreForms/gf2014026085"
+      },
+      "rdfs:label": "Diaries"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#poetry",
+      "dc:identifier": "poetry",
+      "owl:sameAs": {
+        "@id": "http://id.loc.gov/authorities/genreForms/gf2014026481"
+      },
+      "rdfs:label": "Poetry"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#broadsides_notices",
+      "dc:identifier": "broadsides_notices",
+      "owl:sameAs": {
+        "@id": "http://vocab.getty.edu/page/aat/300026739"
+      },
+      "rdfs:label": "Broadsides (notices)"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#rosters",
+      "dc:identifier": "rosters",
+      "owl:sameAs": {
+        "@id": "http://vocab.getty.edu/page/aat/300027178"
+      },
+      "rdfs:label": "Rosters"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#conference_papers",
+      "dc:identifier": "conference_papers",
+      "owl:sameAs": {
+        "@id": "http://id.loc.gov/authorities/genreForms/gf2014026068"
+      },
+      "rdfs:label": "Conference papers and proceedings"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#essays",
+      "dc:identifier": "essays",
+      "owl:sameAs": {
+        "@id": "http://id.loc.gov/authorities/genreForms/gf2014026094"
+      },
+      "rdfs:label": "Essays"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#personal_correspondence",
+      "dc:identifier": "personal_correspondence",
+      "owl:sameAs": {
+        "@id": "http://id.loc.gov/authorities/genreForms/gf2014026141"
+      },
+      "rdfs:label": "Personal correspondence"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#property_records",
+      "dc:identifier": "property_records",
+      "owl:sameAs": {
+        "@id": "http://vocab.getty.edu/page/aat/300027243"
+      },
+      "rdfs:label": "Property records"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#architectural_drawings",
+      "dc:identifier": "architectural_drawings",
+      "owl:sameAs": {
+        "@id": "http://vocab.getty.edu/page/aat/300034787"
+      },
+      "rdfs:label": "Architectural drawings (visual works)"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#art",
+      "dc:identifier": "art",
+      "owl:sameAs": {
+        "@id": "http://id.loc.gov/authorities/genreForms/gf2017027218"
+      },
+      "rdfs:label": "Art"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#scores",
+      "dc:identifier": "scores",
+      "owl:sameAs": {
+        "@id": "http://id.loc.gov/authorities/genreForms/gf2014027077"
+      },
+      "rdfs:label": "Scores"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#records",
+      "dc:identifier": "records",
+      "owl:sameAs": {
+        "@id": "http://id.loc.gov/authorities/genreForms/gf2014026163"
+      },
+      "rdfs:label": "Records (documents)"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#paintings",
+      "dc:identifier": "paintings",
+      "owl:sameAs": {
+        "@id": "http://vocab.getty.edu/page/aat/300033618"
+      },
+      "rdfs:label": "Paintings (visual works)"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#spoken_word",
+      "dc:identifier": "spoken_word",
+      "owl:sameAs": {
+        "@id": "http://id.loc.gov/authorities/genreForms/gf2014026552"
+      },
+      "rdfs:label": "Spoken word poetry"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#exhibition_catalogs",
+      "dc:identifier": "exhibition_catalogs",
+      "owl:sameAs": {
+        "@id": "http://id.loc.gov/authorities/genreForms/gf2014026098"
+      },
+      "rdfs:label": "Exhibition catalogs"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#invitations",
+      "dc:identifier": "invitations",
+      "owl:sameAs": {
+        "@id": "http://vocab.getty.edu/page/aat/300027083"
+      },
+      "rdfs:label": "Invitations"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#newspaper_clippings",
+      "dc:identifier": "newspaper_clippings",
+      "owl:sameAs": {
+        "@id": "http://vocab.getty.edu/page/aat/300429554"
+      },
+      "rdfs:label": "Newspaper clippings"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#greeting_cards",
+      "dc:identifier": "greeting_cards",
+      "owl:sameAs": {
+        "@id": "http://vocab.getty.edu/page/aat/300026778"
+      },
+      "rdfs:label": "Greeting cards"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#newsletters",
+      "dc:identifier": "newsletters",
+      "owl:sameAs": {
+        "@id": "http://id.loc.gov/authorities/genreForms/gf2014026131"
+      },
+      "rdfs:label": "Newsletters"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#newspapers",
+      "dc:identifier": "newspapers",
+      "owl:sameAs": {
+        "@id": "http://id.loc.gov/authorities/genreForms/gf2014026132"
+      },
+      "rdfs:label": "Newspapers"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#manuscripts",
+      "dc:identifier": "manuscripts",
+      "owl:sameAs": {
+        "@id": "http://vocab.getty.edu/page/aat/300028569"
+      },
+      "rdfs:label": "Manuscripts (documents)"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#catalogs",
+      "dc:identifier": "catalogs",
+      "owl:sameAs": {
+        "@id": "http://id.loc.gov/authorities/genreForms/gf2014026057"
+      },
+      "rdfs:label": "Catalogs"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#research_notes",
+      "dc:identifier": "research_notes",
+      "owl:sameAs": {
+        "@id": "http://vocab.getty.edu/page/aat/300265639"
+      },
+      "rdfs:label": "Research notes"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#maps",
+      "dc:identifier": "maps",
+      "owl:sameAs": {
+        "@id": "http://id.loc.gov/authorities/genreForms/gf2011026387"
+      },
+      "rdfs:label": "Maps"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#programs",
+      "dc:identifier": "programs",
+      "owl:sameAs": {
+        "@id": "http://id.loc.gov/authorities/genreForms/gf2014026156"
+      },
+      "rdfs:label": "Programs (publications)"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#postcards",
+      "dc:identifier": "postcards",
+      "owl:sameAs": {
+        "@id": "http://id.loc.gov/authorities/genreForms/gf2014026151"
+      },
+      "rdfs:label": "Postcards"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#manuscripts_publication",
+      "dc:identifier": "manuscripts_publication",
+      "owl:sameAs": {
+        "@id": "http://vocab.getty.edu/page/aat/300028579"
+      },
+      "rdfs:label": "Manuscripts for publication"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#books",
+      "dc:identifier": "books",
+      "owl:sameAs": {
+        "@id": "http://vocab.getty.edu/page/aat/300028051"
+      },
+      "rdfs:label": "Books"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#negatives",
+      "dc:identifier": "negatives",
+      "owl:sameAs": {
+        "@id": "http://id.loc.gov/authorities/genreForms/gf2019026026"
+      },
+      "rdfs:label": "Negatives (photographs)"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#ephemera",
+      "dc:identifier": "ephemera",
+      "owl:sameAs": {
+        "@id": "http://id.loc.gov/authorities/genreForms/gf2014026093"
+      },
+      "rdfs:label": "Ephemera"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#reports",
+      "dc:identifier": "reports",
+      "owl:sameAs": {
+        "@id": "http://vocab.getty.edu/page/aat/300027267"
+      },
+      "rdfs:label": "Reports"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#pool_reports",
+      "dc:identifier": "pool_reports",
+      "rdfs:label": "Pool reports"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#drama",
+      "dc:identifier": "drama",
+      "owl:sameAs": {
+        "@id": "http://id.loc.gov/authorities/genreForms/gf2014026297"
+      },
+      "rdfs:label": "Drama"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#prints",
+      "dc:identifier": "prints",
+      "owl:sameAs": {
+        "@id": "http://vocab.getty.edu/page/aat/300041273"
+      },
+      "rdfs:label": "Prints (visual works)"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#pamphlets",
+      "dc:identifier": "pamphlets",
+      "owl:sameAs": {
+        "@id": "http://vocab.getty.edu/page/aat/300220572"
+      },
+      "rdfs:label": "Pamphlets"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#business_correspondence",
+      "dc:identifier": "business_correspondence",
+      "owl:sameAs": {
+        "@id": "http://id.loc.gov/authorities/genreForms/gf2014026054"
+      },
+      "rdfs:label": "Business correspondence"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#posters",
+      "dc:identifier": "posters",
+      "owl:sameAs": {
+        "@id": "http://id.loc.gov/authorities/genreForms/gf2014026152"
+      },
+      "rdfs:label": "Posters"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#transcripts",
+      "dc:identifier": "transcripts",
+      "owl:sameAs": {
+        "@id": "http://vocab.getty.edu/page/aat/300027388"
+      },
+      "rdfs:label": "Transcripts"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#sculpture",
+      "dc:identifier": "sculpture",
+      "owl:sameAs": {
+        "@id": "http://vocab.getty.edu/page/aat/300047090"
+      },
+      "rdfs:label": "Sculpture (visual works)"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#illustrated_works",
+      "dc:identifier": "illustrated_works",
+      "owl:sameAs": {
+        "@id": "http://id.loc.gov/authorities/genreForms/gf2014026111"
+      },
+      "rdfs:label": "Illustrated works"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#photographs",
+      "dc:identifier": "photographs",
+      "owl:sameAs": {
+        "@id": "http://id.loc.gov/authorities/genreForms/gf2017027249"
+      },
+      "rdfs:label": "Photographs"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#fliers_ephemera",
+      "dc:identifier": "fliers_ephemera",
+      "owl:sameAs": {
+        "@id": "http://id.loc.gov/authorities/genreForms/gf2017026133"
+      },
+      "rdfs:label": "Fliers (ephemera)"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#sheet_music",
+      "dc:identifier": "sheet_music",
+      "owl:sameAs": {
+        "@id": "http://vocab.getty.edu/page/aat/300026430"
+      },
+      "rdfs:label": "Sheet music"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#fanzines",
+      "dc:identifier": "fanzines",
+      "owl:sameAs": {
+        "@id": "http://vocab.getty.edu/page/aat/300252980"
+      },
+      "rdfs:label": "Fanzines"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#periodicals",
+      "dc:identifier": "periodicals",
+      "owl:sameAs": {
+        "@id": "http://id.loc.gov/authorities/genreForms/gf2014026139"
+      },
+      "rdfs:label": "Periodicals"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#slides_photographs",
+      "dc:identifier": "slides_photographs",
+      "owl:sameAs": {
+        "@id": "http://vocab.getty.edu/page/aat/300128371"
+      },
+      "rdfs:label": "Slides (photographs)"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#chapbooks",
+      "dc:identifier": "chapbooks",
+      "owl:sameAs": {
+        "@id": "http://vocab.getty.edu/page/aat/300152367"
+      },
+      "rdfs:label": "Chapbooks"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#certificates",
+      "dc:identifier": "certificates",
+      "owl:sameAs": {
+        "@id": "http://vocab.getty.edu/page/aat/300026841"
+      },
+      "rdfs:label": "Certificates"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#yearbooks",
+      "dc:identifier": "yearbooks",
+      "owl:sameAs": {
+        "@id": "http://id.loc.gov/authorities/genreForms/gf2014026172"
+      },
+      "rdfs:label": "School yearbooks"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#",
+      "rdfs:label": "Genres/Forms",
+      "vann:preferredNamespacePrefix": "umdform"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#photograph_albums",
+      "dc:identifier": "photograph_albums",
+      "owl:sameAs": {
+        "@id": "http://vocab.getty.edu/page/aat/300026695"
+      },
+      "rdfs:label": "Photograph albums"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#speeches",
+      "dc:identifier": "speeches",
+      "owl:sameAs": {
+        "@id": "http://id.loc.gov/authorities/genreForms/gf2011026363"
+      },
+      "rdfs:label": "Speeches"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#press_releases",
+      "dc:identifier": "press_releases",
+      "owl:sameAs": {
+        "@id": "http://id.loc.gov/authorities/genreForms/gf2014026153"
+      },
+      "rdfs:label": "Press releases"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#scrapbooks",
+      "dc:identifier": "scrapbooks",
+      "owl:sameAs": {
+        "@id": "http://id.loc.gov/authorities/genreForms/gf2014026173"
+      },
+      "rdfs:label": "Scrapbooks"
+    },
+    {
+      "@id": "http://vocab.lib.umd.edu/form#nonfiction_films",
+      "dc:identifier": "nonfiction_films",
+      "owl:sameAs": {
+        "@id": "http://id.loc.gov/authorities/genreForms/gf2011026423"
+      },
+      "rdfs:label": "Nonfiction films"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+# Dockerfile for the generating the Archelon SFTP Docker image
+#
+# To build:
+#
+# docker build -t docker.lib.umd.edu/archelon-sftp:<VERSION> -f Dockerfile.sftp .
+#
+# where <VERSION> is the Docker image version to create.
+FROM panubo/sshd:1.3.0
+
+# Install curl, as it is needed by the "get-plastron-authorized-keys.sh" script
+RUN apk add curl
+
+ENV SSH_USERS=plastron:2200:2200
+ENV SFTP_MODE=true
+ENV SFTP_CHROOT=/data
+
+COPY docker_config/archelon-sftp/get-plastron-authorized-keys.sh /etc/archelon/get-plastron-authorized-keys.sh
+COPY docker_config/archelon-sftp/init-archelon-sftp.sh /etc/entrypoint.d/init-archelon-sftp.sh
+
+RUN chmod 755 /etc/archelon/get-plastron-authorized-keys.sh && \
+    chmod 755 /etc/entrypoint.d/init-archelon-sftp.sh

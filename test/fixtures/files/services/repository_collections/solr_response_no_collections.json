@@ -1,0 +1,12 @@
+{
+  "responseHeader":{
+    "status":0,
+    "QTime":5,
+    "params":{
+      "q":"*:*",
+      "indent":"on",
+      "fq":"component:Collection",
+      "wt":"json",
+      "_":"1587138706293"}},
+  "response":{"numFound":0,"start":0,"docs":[]
+  }}

@@ -1,0 +1,17 @@
+<h1>Export Job Options</h1>
+<%= form_for(@job) do |f| %>
+  <%= f.hidden_field :name, value: @job.name %>
+  <%= f.hidden_field :format, value: @job.format %>
+  <%= f.hidden_field :item_count, value: @job.item_count %>
+  <%= f.hidden_field :export_binaries, value: @job.export_binaries %>
+  <%= f.hidden_field :binaries_size, value: @job.binaries_size %>
+  <%= f.hidden_field :binaries_count, value: @job.binaries_count %>
+  <%= f.hidden_field :mime_types, value: @job.mime_types %>
+
+  <%= render 'summary', export_job: @job %>
+  <div>
+    <%= render 'back_to_new_button', export_job: @job %>
+    <%= f.submit "Cancel", class: 'btn btn-danger' %>
+    <%= f.submit "Submit Job", class: 'btn btn-primary' %>
+  </div>
+<% end %>

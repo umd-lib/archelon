@@ -1,0 +1,44 @@
+@startuml
+<style>
+Title {
+    Margin 20
+    FontSize 20
+}
+</style>
+hide empty description
+title
+    Archelon
+    Import Job State Transitions
+end title
+
+[*] --> validate_pending : start_validation
+
+validate_pending --> validate_in_progress : [message received by STOMP queue]
+
+validate_pending --> validate_error :[STOMP communication error]
+
+validate_in_progress --> validate_success : [no invalid fields]
+
+validate_in_progress --> validate_failed : [invalid fields]
+
+validate_failed --> validate_pending : [user resubmits metadata]
+
+validate_in_progress --> validate_error : [Plastron error]
+
+validate_success --> import_pending : start_import
+
+import_pending --> import_in_progress : [message received by STOMP queue]
+
+import_pending --> import_error : [STOMP communication error]
+
+import_in_progress --> import_incomplete
+
+import_in_progress --> import_error : [Plastron error]
+
+import_in_progress --> import_complete
+
+import_complete --> [*]
+
+import_incomplete --> import_pending : resume_import
+
+@enduml

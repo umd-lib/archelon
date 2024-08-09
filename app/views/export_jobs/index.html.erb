@@ -1,0 +1,26 @@
+<h1>Export Queue</h1>
+
+<% if @jobs.count > 0 %>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Job ID</th>
+        <th>Job Name</th>
+        <th>User</th>
+        <th>Timestamp</th>
+        <th># of Records</th>
+        <th># of Binaries</th>
+        <th>Size of Binaries</th>
+        <th>Metadata Format</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+    <% @jobs.each do |job| %>
+      <%= render partial: 'export_job_table_row', locals: { export_job: job } %>
+    <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No Export jobs found</p>
+<% end %>
