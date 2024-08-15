@@ -25,3 +25,5 @@ const ReactRailsUJS = require("react_ujs")
 ReactRailsUJS.getConstructor = (name) => {
   return componentsContext[name]
 }
+
+import "./channels"
