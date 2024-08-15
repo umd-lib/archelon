@@ -14,6 +14,7 @@ class PublishJobsChannel < ApplicationCable::Channel
     publish_job = PublishJob.find(job_id)
     return if publish_job.nil?
 
+    Rails.logger.debug("Performing PublishJobStatusUpdatedJob PublishJob #{job_id}")
     PublishJobStatusUpdatedJob.perform_now(publish_job)
   end
 
