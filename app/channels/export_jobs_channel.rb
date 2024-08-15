@@ -21,6 +21,7 @@ class ExportJobsChannel < ApplicationCable::Channel
     export_job = ExportJob.find(job_id)
     return if export_job.nil?
 
+    Rails.logger.debug("Performing ExportJobStatusUpdatedJob ExportJob #{job_id}")
     ExportJobStatusUpdatedJob.perform_now(export_job)
   end
 
