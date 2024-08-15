@@ -178,6 +178,9 @@ the GUI.
 
 See [ActionCable](docs/ActionCable.md) for more information.
 
+**Note:** In the local development environment, dynamic updates to *not* work
+in Firefox, but do work in Chrome and Safari.
+
 ## ActiveJob and Delayed::Job
 
 Archelon is configured to use the [Delayed::Job][delayed_job] queue adapter, via
