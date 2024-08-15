@@ -2,7 +2,7 @@
   <%= link_to status_text(import_job), import_job_path(import_job), class: "import_job_status_#{import_job.state}" %>
   <% if import_job.stalled? %>(may be stalled)<% end %>
   <% if import_job.validate_success? %>
-    <%= form_with model: import_job, method: :post, url: perform_import_import_jobs_path(import_job) do |form| %>
+    <%= form_with model: import_job, method: :post, local: false, url: perform_import_import_jobs_path(import_job) do |form| %>
       <%= form.submit 'Import', class: 'btn-xs btn-success' %>
     <% end %>
   <% elsif import_job.validate_failed? or import_job.validate_error? %>
