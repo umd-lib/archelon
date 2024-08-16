@@ -171,6 +171,44 @@ this application is vulnerable to CVE-2015-9284, due to its use of the
 As configured, this application uses CAS for authentication. As the application
 does not use OAuth it is not vulnerable to CVE-2015-9284.
 
+## CAS Bypass to allow "localhost"
+
+In the local development environment, the Rails Action Cable functionality does
+not work in Firefox by default because the "archelon-local" hostname is used,
+instead of "localhost".
+
+To enable use of "localhost", the CAS login must be bypassed. To do this:
+
+1) Edit the "config/environments/development.rb" file and add "localhost" to
+   the list of "config.hosts", i.e.:
+
+   ```
+     config.hosts = [
+       "archelon-local",
+       "localhost"
+     ]
+   ```
+
+2) Run the application, setting the "ARCHELON_AUTH" environment variable
+   to "developer", i.e:
+
+   ```
+   $ ARCHELON_AUTH=developer bin/dev
+   ```
+
+3) In a web browser go to
+
+    <http://localhost:3000/>
+
+    Instead of a CAS login, a simple form with a "Uid" field will be displayed.
+    Enter the username of any user in LDAP, to be logged in as that user.
+
+This functionality uses the OmniAuth "[developer][omniauth_developer]" strategy,
+and is only available in the local development environment
+(`ENV["RAILS_ENV"] == "development"`) and when the `ARCHELON_AUTH` environment
+variable is set to "developer" (see the `use_developer_login` method in
+[app/helpers/cas_helper.rb](app/helpers/cas_helper.rb)).
+
 ## Action Cable
 
 The Rails "Action Cable" functionality is used to provide dynamic updates to
@@ -230,6 +268,7 @@ See the [LICENSE](LICENSE.md) file for license rights and limitations
 [delayed_job]: https://github.com/collectiveidea/delayed_job
 [delayed_job_active_record]: https://github.com/collectiveidea/delayed_job_active_record
 [fedora]: https://duraspace.org/fedora/
+[omniauth_developer]: https://github.com/omniauth/omniauth/blob/v1.9.2/lib/omniauth/strategies/developer.rb
 [plastron]: https://github.com/umd-lib/plastron
 [Solr]: https://github.com/umd-lib/umd-fcrepo-solr
 [stomp]: https://stomp.github.io/

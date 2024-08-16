@@ -2,6 +2,7 @@
 
 class SessionsController < ApplicationController
   skip_before_action :authenticate
+  skip_before_action :verify_authenticity_token, only: [:create] if CasHelper.use_developer_login
 
   def create # rubocop:disable Metrics/AbcSize
     @user = CasUser.find_or_create_from_auth_hash(request.env['omniauth.auth'])
