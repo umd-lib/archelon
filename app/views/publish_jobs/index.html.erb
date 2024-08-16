@@ -1,0 +1,23 @@
+<h1>Publication Jobs</h1>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Created By</th>
+      <th>Created At</th>
+      <th>Type</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @jobs.each do |job| %>
+    <tr class="publish-job" data-publish-job-id="<%= job.id %>" data-subscribe="<%= not job.publish_complete? %>">
+      <td> <%= link_to job.id, publish_job_url(job) %></td>
+      <td> <%= job.cas_user.cas_directory_id %> </td>
+      <td> <%= job.created_at %> </td>
+      <td> <%= job.publish == true ? "Publish" : "Unpublish" %> </td>
+      <%= render partial: 'publish_job_status', locals: { publish_job: job } %>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

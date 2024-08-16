@@ -1,0 +1,24 @@
+# config/ldap.yml
+# LDAP server and grouper groups configuration settings
+default: &default
+  host: <%= ENV['LDAP_HOST'] %>
+  port: <%= ENV['LDAP_PORT'] %>
+  bind_dn: <%= ENV['LDAP_BIND_DN'] %>
+  bind_password: <%= ENV['LDAP_BIND_PASSWORD'] %>
+  base: ou=people,dc=umd,dc=edu
+  name_attr: umdisplayname
+  groups_attr: memberOf
+  grouper_groups:
+    Administrators: cn=Application_Roles:Libraries:Archelon:Archelon-Administrator,ou=grouper,ou=group,dc=umd,dc=edu
+    Users: cn=Application_Roles:Libraries:Archelon:Archelon-User,ou=grouper,ou=group,dc=umd,dc=edu
+
+development:
+  <<: *default
+  # If set, skip LDAP search, and use LDAP_OVERRIDE as the user type
+  ldap_override: <%= ENV['LDAP_OVERRIDE'] %>
+
+test:
+  <<: *default
+
+production:
+  <<: *default

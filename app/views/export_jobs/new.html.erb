@@ -1,0 +1,48 @@
+<h1>Export Job Options</h1>
+<%= form_for(@job, url: { action: :review }, method: :get) do |f| %>
+  <div>
+    <div class="form-group">
+      <div>
+        <%= f.label :format %>
+      </div>
+      <div class="p-3 ml-5">
+        <% ExportJob::FORMATS.each do |type, label| %>
+          <div>
+          <%= f.radio_button :format, type, class: "form-check-input" %>
+          <%= f.label :format, label, value: type, class: "form-check-label font-weight-normal" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <div class="form-group">
+      <div>
+        <%= f.label :name, class: "col-form-label-lg" %>
+      </div>
+      <div class="p-3 ml-5">
+        <%= f.text_field :name, size: 40, class: "form-control" %>
+      </div>
+    </div>
+    <div class="form-group">
+      <div>
+        <%= label_tag nil, "Include Binaries?", class: "col-form-label-lg" %>
+      </div>
+      <div>
+        <% if @mime_types.empty? %>
+          <p>No binaries available for the selected items</p>
+        <% else %>
+          <p>Select any of the following to include binaries in the export:</p>
+          <% @mime_types.each do |mime_type| %>
+            <% selected = @job.selected_mime_types.include?(mime_type) ? true : false %>
+            <%= check_box_tag('export_job[mime_types][]', mime_type, selected, id: "export_job_#{mime_type}", style: "margin-left: 20px") %>
+            <label for="export_job_<%= mime_type %>"><%= t("mime_types.#{mime_type}") %></label>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= f.submit "Back", disabled: true, class: 'btn btn-danger form-control' %>
+      <%= f.submit "Cancel", class: 'btn btn-danger form-control' %>
+      <%= f.submit "Next", class: 'btn btn-primary form-control' %>
+    </div>
+  </div>
+<% end %>

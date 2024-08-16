@@ -1,0 +1,21 @@
+<h1>Generate Download URL</h1>
+
+<%= form_for(@download_url, url: create_download_url_path(document_url: @download_url.url)) do |f| %>
+  <%= render partial: "shared/error_messages", locals: {object: @download_url} %>
+
+  <%= f.label :url, 'Fedora URL' %>
+  <p class="form-control-static"><%= @download_url.url %></p>
+
+  <%= f.label :title %>
+  <p class="form-control-static" id="download_url_title_input"><%= @download_url.title %></p>
+
+  <%= f.label :notes, 'Notes*' %>
+  <%= f.text_area :notes, id: 'download_url_notes_input', class: 'form-control' %>
+
+  <div class="row">
+    <%= f.submit class: 'btn btn-success' %>
+    <%= link_to 'Cancel', (@download_url.new_record? ? solr_document_url(@download_url.url) : download_url_path(@download_url)), class: 'btn btn-danger' %>
+  </div>
+<% end %>
+
+

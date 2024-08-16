@@ -1,0 +1,8 @@
+<% provide :app_name, 'File Retrieval' %>
+<h2>File Download Expired</h1>
+
+<p>Our records indicate that this URL expired on
+   <%= @download_url.expires_at.strftime("%m/%d/%Y") %> at
+   <%= @download_url.expires_at.strftime("%l:%M %P %Z") %>.
+
+<p>If you feel this is in error, please contact the person who gave you the URL.</p>

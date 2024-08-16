@@ -1,0 +1,111 @@
+<% if @job.publish_not_submitted? %>
+  <h1> <%= @job.publish == true ? "Publishing Job #{@job.id}" : "Unpublishing Job #{@job.id}" %> </h1>
+<% else %>
+  <h1> <%= @job.publish == true ? "Summary of Publishing Job #{@job.id}" : "Summary of Unpublishing Job #{@job.id}" %> </h1>
+<% end %>
+
+<b>
+  <font color='red'>
+    <%= "#{@result_documents.length} items currently selected for #{@job.publish == true ? "publishing" : "unpublishing"}" %>
+  </font>
+</b>
+
+<br>
+<b> <%= "#{@published} items" %> </b> currently published
+<br>
+<b> <%= "#{@unpublished} items" %> </b> currently unpublished
+<br>
+<b> <%= "#{@hidden} items" %> </b> hidden in search
+<br>
+
+<br>
+
+<div class="tablePublishJob">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Resource Type</th>
+        <th>Access Level</th>
+        <th>Member Of</th>
+        <th>Collection Information</th>
+        <th>Handle Identifier</th>
+        <th>Current Status</th>
+        <th colspan="2"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @result_documents.each do |doc| %>
+        <tr>
+          <% if doc._source.exclude? "title" %>
+            <td>"Title" not found</td>
+          <% else %>
+            <td><%= doc._source["title"][0] %> </td>
+          <% end %>
+
+          <% if doc._source.exclude? "component" %>
+            <td>"Resource Type" not found</td>
+          <% else %>
+            <td><%= doc._source["component"] %> </td>
+          <% end %>
+
+          <% if doc._source.exclude? "rdf_type" %>
+            <td>rdf_type not found</td>
+          <% elsif doc._source["rdf_type"].include? "umd_access:public" %>
+            <td>Public</td>
+          <% elsif doc._source["rdf_type"].include? "umd_access:campus" %>
+            <td>Campus</td>
+          <% else %>
+            <td>None</td>
+          <% end %>
+
+          <% if doc._source.exclude? "collection_title_facet" %>
+            <td>"Member Of" not found</td>
+          <% else %>
+            <td><%= doc._source["collection_title_facet"][0] %> </td>
+          <% end %>
+
+          <% if doc._source.exclude? "citation" %>
+            <td>"Collection Information" not found</td>
+          <% else %>
+            <td><%= doc._source["citation"][0] %> </td>
+          <% end %>
+
+          <% if doc._source.exclude? "handle" %>
+            <td> "Handle" not found </td>
+          <% else %>
+            <td><%= doc._source["handle"] %> </td>
+          <% end %>
+
+          <% if doc._source.exclude? "is_published" or doc._source.exclude? "is_hidden" %>
+            <td> Status Unknown </td>
+          <% else %>
+            <% published = doc._source["is_published"] ? "Published" : "Unpublished" %>
+            <% hidden = doc._source["is_hidden"] ? "Hidden" : "Visible" %>
+            <td><%= published + " and " + hidden %> </td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<br>
+
+<% if @job.publish_not_submitted? %>
+  <%= form_with model: @job, url: submit_publish_job_url(@job), local: true, method: :post do |form| %>
+    <%= form.check_box :force_hidden %>
+    <%= form.label :force_hidden, 'Suppress these items in search results' %>
+    <br>
+    <%= form.button "Submit Job", class:"btn btn-danger" %>
+  <% end %>
+<% end %>
+
+<% if @job.publish_incomplete? or @job.publish_error? or  @job.unpublish_incomplete? or @job.unpublish_error? %>
+  <%= button_to "Resubmit Job", submit_publish_job_url(@job), class:"btn btn-danger" %>
+<% end %>
+
+<br>
+<%= button_to "Delete Job", publish_job_url(@job), method: :delete, class:"btn btn-danger", data: { confirm: 'Delete job?' } %>
+
+<br>

@@ -1,0 +1,131 @@
+source "https://rubygems.org"
+
+ruby "3.2.4"
+
+# Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
+gem "rails", "~> 7.1.3", ">= 7.1.3.4"
+
+# The modern asset pipeline for Rails [https://github.com/rails/propshaft]
+gem "propshaft"
+
+# Use sqlite3 as the database for Active Record
+gem "sqlite3", "~> 1.4"
+
+# Use the Puma web server [https://github.com/puma/puma]
+gem "puma", ">= 5.0"
+
+# Bundle and transpile JavaScript [https://github.com/rails/jsbundling-rails]
+gem "jsbundling-rails"
+
+# Bundle and process CSS [https://github.com/rails/cssbundling-rails]
+gem "cssbundling-rails"
+
+# Use Redis adapter to run Action Cable in production
+# gem "redis", ">= 4.0.1"
+
+# Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
+# gem "kredis"
+
+# Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
+# gem "bcrypt", "~> 3.1.7"
+
+# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+gem "tzinfo-data", platforms: %i[ windows jruby ]
+
+# Reduces boot times through caching; required in config/boot.rb
+gem "bootsnap", require: false
+
+# Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
+# gem "image_processing", "~> 1.2"
+
+# UMD Customization
+# Blacklight gem
+gem 'blacklight', "~> 8.3.0"
+
+# RSolr Gem
+gem 'rsolr'
+
+# dotenv - For storing production configuration parameters
+gem 'dotenv', "~> 3.1.2"
+
+# CAS Authentication
+gem 'omniauth-cas', '~> 1.1.1'
+
+# Authorization
+gem 'cancancan'
+
+# LDAP
+gem 'net-ldap', '~> 0.16.1'
+
+# Used by Rake tasks to generate sample data
+# UMD Blacklight 8 Fix
+gem 'faker', '~> 3.4.1'
+# End UMD Blacklight 8 Fix
+
+# UMD Blacklight 8 Fix
+gem 'net-http', '~> 0.4.1'
+# End UMD Blacklight 8 Fix
+
+gem 'json-ld', '~> 3.3.1'
+
+gem 'http', '~> 5.2.0'
+
+gem 'react-rails', '~>3.2.1'
+
+gem 'stomp'
+gem 'faraday', '~> 1.0'
+
+gem 'pg'
+
+gem 'delayed_job_active_record', '~> 4.1'
+
+# Table sorting
+gem 'ransack'
+
+# Pagination
+gem 'will_paginate', '~> 4.0'
+gem 'will_paginate-bootstrap'
+
+# Cron jobs
+gem 'delayed_cron_job', '~> 0.8'
+
+# End UMD Customization
+
+
+group :development, :test do
+  # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
+  gem "debug", platforms: %i[ mri windows ]
+end
+
+group :development do
+  # Use console on exceptions pages [https://github.com/rails/web-console]
+  gem "web-console"
+
+  # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
+  # gem "rack-mini-profiler"
+
+  # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
+  # gem "spring"
+end
+
+group :test do
+  # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
+  gem "capybara"
+  gem "selenium-webdriver"
+
+  # UMD Customization
+  gem 'minitest-reporters'
+
+  gem 'simplecov', require: false
+  gem 'simplecov-rcov', require: false
+
+  gem 'rails-controller-testing'
+
+  gem 'rspec'
+  # UMD Blacklight 8 Fix
+  gem 'rspec-mocks', '~> 3.13.1'
+  # End UMD Blacklight 8 Fix
+
+  gem 'webmock', '~> 3.23.0'
+  # End UMD Customization
+end
