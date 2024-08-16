@@ -22,6 +22,11 @@ module CasHelper
     session[:cas_user]
   end
 
+  # Returns true if "developer" login bypass should be used
+  def self.use_developer_login
+    ENV["RAILS_ENV"] == "development" && ENV["ARCHELON_AUTH"] == 'developer'
+  end
+
   private
 
     # Returns true if entry is authorized, false otherwise.

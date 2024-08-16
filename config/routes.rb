@@ -37,10 +37,12 @@ Rails.application.routes.draw do
   get '/cas_users/:id/history' => 'cas_users#show_history'
   get 'public_keys' => 'public_keys#index'
 
-  get 'login', to: redirect('/auth/cas'), as: 'login'
+  get 'login', to: redirect('/auth/cas'), as: 'login' unless CasHelper.use_developer_login
+  get 'login', to: redirect('/auth/developer'), as: 'login' if CasHelper.use_developer_login
   get 'admin/user/login_as/:user_id', to: 'sessions#login_as', as: 'admin_user_login_as'
   get 'logout', to: 'sessions#destroy', as: 'logout'
   get 'auth/:provider/callback', to: 'sessions#create'
+  post 'auth/:provider/callback', to: 'sessions#create'
   get 'auth/failure', to: redirect('/')
 
   get 'react_components' => 'react_components#react_components'
