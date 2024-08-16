@@ -7,10 +7,12 @@ class PingController < ApplicationController
   skip_before_action :authenticate
 
   def verify
-    # attempt to acquire a database connection
-    if ActiveRecord::Base.connection_pool.with_connection(&:active?)
+    # Check database connection
+    begin
+      ActiveRecord::Base.connection.execute('SELECT 1')
       render plain: 'Application is OK'
-    else
+    rescue ActiveRecord::ConnectionNotEstablished => e
+      Rails.logger.warn "Database connection failed: #{e.message}"
       render plain: 'Cannot connect to database!', status: :service_unavailable
     end
   end
