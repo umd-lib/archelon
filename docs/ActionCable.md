@@ -10,20 +10,21 @@ See <https://guides.rubyonrails.org/v7.1/action_cable_overview.html> for
 an overview on Action Cable in Rails 7.1.
 
 ----
-**Note: Action Cable, Local Development Environment and Firefox**
+**Note:** Action Cable, Local Development Environment and Firefox
 
-Action Cable does not work correctly with Firefox in the local development
-environment, so dynamic status updates WILL NOT occur (it is necessary to
-refresh the browser page periodically to see the status updates).
+Action Cable may not work reliably with Firefox in the local development
+environment, so dynamic status updates MAY NOT occur (in which case
+it is necessary to refresh the browser page periodically to see the status
+updates).
 
-Dynamic status updates DO work in the local development environment when using
-Chrome or Safari.
+Dynamic status updates DO appear to work reliably in the local development
+environment when using Chrome or Safari.
 
 It is unclear why this is the case, but is possibly related to the use of
 "archelon-local", instead of "localhost" as the hostname in the local
 development environment, as a typical error seen in the browser console is:
 
-```
+```text
 Firefox can’t establish a connection to the server at ws://archelon-local:3000/cable.
 ```
 
