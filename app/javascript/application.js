@@ -12,6 +12,8 @@ import './add_rails_ujs'
 
 import './resource'
 
+import "./channels"
+
 // Load in React components
 import components from "./components/**/*.jsx"
 
@@ -25,5 +27,3 @@ const ReactRailsUJS = require("react_ujs")
 ReactRailsUJS.getConstructor = (name) => {
   return componentsContext[name]
 }
-
-import "./channels"
