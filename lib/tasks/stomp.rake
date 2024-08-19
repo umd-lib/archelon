@@ -13,7 +13,7 @@ namespace :stomp do # rubocop:disable Metrics/BlockLength
 
     listener.subscribe(:job_status, 'client-individual') do |stomp_msg|
       message = PlastronMessage.new(stomp_msg)
-      puts "Updating job status for #{message.job_id}"
+      puts "Updating job status for #{message.job_id}, message headers='#{message.headers}', message body='#{message.body}'"
 
       begin
         # Wrapping in "with_connection" in case connection has timed out
@@ -33,7 +33,7 @@ namespace :stomp do # rubocop:disable Metrics/BlockLength
       message = PlastronMessage.new(stomp_msg)
       # ignore synchronous job progress messages
       unless message.job_id.start_with? 'SYNCHRONOUS'
-        puts "Updating job progress for #{message.job_id}"
+        puts "Updating job progress for #{message.job_id}, message headers='#{message.headers}', message body='#{message.body}''"
 
         begin
           # Wrapping in "with_connection" in case connection has timed out

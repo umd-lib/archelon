@@ -22,6 +22,7 @@ class ImportJobsChannel < ApplicationCable::Channel
     import_job = ImportJob.find(job_id)
     return if import_job.nil?
 
+    Rails.logger.debug("Performing ImportJobStatusUpdatedJob ImportJob #{job_id}")
     ImportJobStatusUpdatedJob.perform_now(import_job)
   end
 

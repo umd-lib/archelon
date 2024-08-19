@@ -88,6 +88,24 @@ the following files to fail:
 * test/controllers/cas_users_controller_test.rb
 * test/jobs/delete_old_exports_job_test.rb
 
+### JavaScript assets moved to app/javascript
+
+In Rails 6, JavaScript assets moved from "app/assets/javascripts" to
+"app/javascript".
+
+### esbuild and JavaScript
+
+The "esbuild" tool does not automatically pick up JavaScript files in the
+"app/javascript" directory. Instead, it uses "app/javascript/application.js"
+as the "entry point" file, incorporating all the files that it imports (and,
+transitively, all the files they import). This means that when adding a
+JavaScript file, it may be necessary to add an "import" statement in the
+"app/javascript/application.js" for the added file to be "reachable"
+for the build tool.
+
+To check whether "esbuild" can reach the file, examine the compiled JavaScript
+in the "app/assets/builds" directory.
+
 ### Blacklight::SearchHelper replaced by Blacklight::Searchable
 
 The “Blacklight::SearchHelper”
@@ -128,9 +146,9 @@ using the “older argument” style, a literal hash is required around the
 
 ### Form “data-remote: true”/”local:false”
 
-* https://stackoverflow.com/a/75410391
-* https://stackoverflow.com/a/45305004
-* https://github.com/rails/rails/issues/49499
+* <https://stackoverflow.com/a/75410391>
+* <https://stackoverflow.com/a/45305004>
+* <https://github.com/rails/rails/issues/49499>
 
 For forms expecting an AJAX response, add `local: false`, to the ERB tag. This
 causes the `data-remote:true` attribute to be added to the form. For example in
@@ -246,8 +264,6 @@ of the method.
 
 The database for tests is now in “storage/” instead of “db/”.
 
-
-
 ### foreman and dotenv
 
 Rails 7.1 uses the “foreman” gem to run the asset pipeline watchers and the
@@ -294,7 +310,7 @@ Needed to pin the “sass” package in “package.json” to v1.77.6, because i
 v1.77.7 a large number of deprecation warnings coming from Bootstrap were
 being printed to the console:
 
-```
+```text
 3:11:14 css.1  | DEPRECATION WARNING: Sass's behavior for declarations that appear after nested
 13:11:14 css.1  | rules will be changing to match the behavior specified by CSS in an upcoming
 13:11:14 css.1  | version. To keep the existing behavior, move the declaration above the nested

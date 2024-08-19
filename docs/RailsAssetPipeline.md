@@ -5,6 +5,31 @@
 This document attempts to provide background and useful information to
 developers about the Rails asset pipeline in use by Archelon.
 
+## TL;DR
+
+### JavaScript
+
+JavaScript assets should be placed in the "app/javascript" directory.
+
+The "esbuild" tool is used to convert JavaScript assets into browser-usable
+files. JavaScript files are found by the tool using the
+"app/javascript/application.js" file as an "entry point". All JavaScript to
+be included in the build must be "reachable" via this file, either by direct
+import, or transitively by being imported by a file that is imported.
+
+This means that when adding a JavaScript file, it may be necessary to add an
+"import" for it in the "app/javascript/application.js" file, if it is not
+otherwise reachable.
+
+If uncertain whether "esbuild" is reaching a file, check the compiled
+JavaScript in the "app/assets/builds" directory.
+
+### CSS
+
+CSS handling is largely the same as in previous versions, with the
+"app/assets/stylesheets/application.scss" file acting as the entry point for
+CSS processing.
+
 ## Background
 
 The Rails-recommended default for the asset pipeline has changed significantly
