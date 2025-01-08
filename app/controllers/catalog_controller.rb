@@ -84,9 +84,6 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     config.add_facet_field 'presentation_set__facet', label: 'Presentation Set', limit: 10, collapse: false,
                                                      sort: 'index'
     config.add_facet_field 'admin_set__facet', label: 'Administrative Set', limit: 10, sort: 'index'
-    # config.add_facet_field 'author_not_tokenized', label: 'Author', limit: 10
-    # config.add_facet_field 'type', label: 'Type', limit: 10
-
     config.add_facet_field 'resource_type__facet', label: 'Resource Type', limit: 10
     config.add_facet_field 'rdf_type__facet', label: 'RDF Type', limit: 10
     config.add_facet_field 'visibility__facet', label: 'Visibility'
@@ -119,11 +116,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
       document[:rdf_type].include?('oa:Annotation')
     }
 
-    # config.add_index_field 'component', label: 'Resource Type'
-    # config.add_index_field 'author', label: 'Author'
-    # rubocop:disable Metrics/LineLength
-    # config.add_index_field 'extracted_text', label: 'OCR', highlight: true, helper_method: :format_extracted_text, solr_params: { 'hl.fragsize' => 500 }
-    # rubocop:enable Metrics/LineLength
+    config.add_index_field 'resource_type__facet', label: 'Resource Type'
     config.add_index_field 'item__created_by__txt', label: 'Created By'
     config.add_index_field 'item__created__dt', label: 'Created'
     config.add_index_field 'item__last_modified__dt', label: 'Last Modified'
@@ -138,23 +131,11 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # the only fields being displayed from Solr are those relating to structural,
     # administrative, and technical metadata.
 
-    # config.add_show_field 'terms_of_use_text', label: 'Terms of Use'
-    # config.add_show_field 'pcdm_collection', label: 'Collection', helper_method: :collection_from_subquery
     config.add_show_field 'publication_status__facet', label: 'Publication Status'
     config.add_show_field 'visibility__facet', label: 'Visibility'
     config.add_show_field 'presentation_set__facet', label: 'Presentation Set', helper_method: :value_list
     config.add_show_field 'item__member_of__uri', label: 'Member Of', helper_method: :parent_from_subquery
     config.add_show_field 'item__has_member__uris', label: 'Members', helper_method: :members_from_subquery
-    # config.add_show_field 'pcdm_related_object_of', label: 'Related To', helper_method: :related_object_of_from_subquery
-    # rubocop:disable Metrics/LineLength
-    # config.add_show_field 'pcdm_related_objects', label: 'Related Objects', helper_method: :related_objects_from_subquery
-    # rubocop:enable Metrics/LineLength
-    # config.add_show_field 'pcdm_file_of', label: 'File Of', helper_method: :file_parent_from_subquery
-    # config.add_show_field 'pcdm_files', label: 'Files', helper_method: :files_from_subquery
-    # config.add_show_field 'annotation_source', label: 'Pages', helper_method: :annotation_source_from_subquery
-    # config.add_show_field 'size', label: 'Size'
-    # config.add_show_field 'mime_type', label: 'Mime Type'
-    # config.add_show_field 'digest', label: 'Digest'
     config.add_show_field 'item__created_by__txt', label: 'Created By'
     config.add_show_field 'item__created__dt', label: 'Created'
     config.add_show_field 'item__last_modified__dt', label: 'Last Modified'
