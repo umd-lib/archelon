@@ -28,7 +28,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     }
 
     # solr path which will be added to solr base url before the other solr params.
-    config.solr_path = 'search'
+    config.solr_path = 'select'
     config.document_solr_path = 'document'
 
     # items to show per page, each number in the array represent another option to choose from.
@@ -190,7 +190,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     fix_query_param
     # Use 'search' for regular searches, and 'identifier_search' for identifier searches.
     is_identifier_search = identifier_search?(params[:q])
-    blacklight_config[:solr_path] = is_identifier_search ? 'identifier_search' : 'search'
+    blacklight_config[:solr_path] = is_identifier_search ? 'identifier_search' : 'select'
     super
     return unless is_identifier_search && @response.response['numFound'] == 1
 
