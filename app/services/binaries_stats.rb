@@ -5,16 +5,12 @@ class BinariesStats < SolrQueryService
   QUERY = {
     q: '*:*',
     rows: '10000',
-    'files.q': '{!terms f=pcdm_file_of v=$row.pcdm_members}',
     indent: 'on',
-    fl: 'id,pcdm_members,files:[subquery]',
-    'files.fl': 'id,size',
-    'files.rows': '10000'
+    fl: 'id,file__size__int,item__has_member,page__has_file,[child]',
   }.freeze
 
   def self.query(uris, mime_types)
     fq = QUERY.merge 'fq': match_any('id', uris)
-    fq = fq.merge 'files.fq': match_any('mime_type', mime_types) if mime_types
     fq
   end
 
@@ -24,12 +20,16 @@ class BinariesStats < SolrQueryService
   end
 
   def self.process_solr_response(solr_response)
-    solr_docs = solr_response['response']['docs']
+    docs = solr_response.dig('response','docs')
 
-    binary_sizes = solr_docs.map do |doc|
-      doc['files']['docs'].map { |f| f['size'].to_i }.sum
+    binary_sizes = docs.map do |doc|
+      file = doc.dig('item__has_member','page__has_file')
+      file.map { |f| f['file__size__int'].to_i }.sum
     end
-    binary_counts = solr_docs.map { |doc| doc['files']['numFound'] }
+
+    binary_counts = docs.map do |doc|
+      file = doc.dig('item__has_member','page__has_file')
+      file.length()
 
     {
       count: binary_counts.sum,

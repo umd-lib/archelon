@@ -6,12 +6,9 @@ class MimeTypes < SolrQueryService
     q: '*:*',
     indent: 'on',
     rows: '1000',
-    fl: 'id,pcdm_members,files:[subquery]',
-    'files.q': '{!terms f=pcdm_file_of v=$row.pcdm_members}',
-    'files.fl': 'mime_type',
-    'files.rows': '1000',
+    fl: 'id,file__mime_type__id,item__has_member,page__has_file,[child]',
     'facet': 'on',
-    'facet.field': 'mime_type'
+    'facet.field': 'file__mime_type__id'
   }.freeze
 
   # Queries Solr and returns an array of Strings representing the MIME types
@@ -25,24 +22,23 @@ class MimeTypes < SolrQueryService
     QUERY.merge 'fq': match_any('id', uris)
   end
 
-  # Processes the Solr response, returning an array of Strings
+  # Returns an array of Strings
   def self.process_solr_response(solr_response) # rubocop:disable Metrics/MethodLength
-    # This method is a bit of a kludge, because it's not clear how to get the
-    # facet list directly from a Solr query. This brute-force method iterates
-    # through all the files in the response, generating a set of all the
-    # "mime_type" fields encountered, and then converts it to an array.
-    docs = solr_response.dig('response', 'docs')
+  # With the new Solr Index we can facet for mime_types
+  # We'll get a key like this in the response:
+  #
+  # "facet_counts":{
+  #   "facet_queries":{ },
+  #   "facet_fields":{
+  #     "file__mime_type__id":["image/tiff",0,"text/xml",0]
+  #   },
+  #   "facet_ranges":{ },
+  #   "facet_intervals":{ },
+  #   "facet_heatmaps":{ }
+  # }
 
-    mime_set = Set[]
-    docs.each do |doc|
-      file_docs = doc.dig('files', 'docs')
-      file_docs.each do |file_doc|
-        mime_type = file_doc['mime_type']
-        mime_set << mime_type
-      end
-    end
-
-    mime_types = mime_set.sort.to_a
-    mime_types
+  # We can just return the strings from the list to get all the unique mime_types found
+    mime_facet_fields = solr_response.dig('response', 'facet_counts', 'facet_fields', 'file__mime_type__id')
+    mime_facet_fields.select { |val| val.is_a ? String }.sort.to_a
   end
 end
