@@ -15,7 +15,7 @@ module UrlHelper
       field = field_or_opts
     end
 
-    if doc[:rdf_type].include?('oa:Annotation')
+    if doc[:rdf_type__facet].include?('oa:Annotation')
       link_to_annotation_pages(doc)
     else
       field ||= document_show_link_field(doc)
