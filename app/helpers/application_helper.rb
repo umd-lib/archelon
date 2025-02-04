@@ -12,8 +12,8 @@ module ApplicationHelper # rubocop:disable Metrics/ModuleLength
   ALLOWED_MIME_TYPE = 'image/tiff'
 
   def mirador_displayable?(document)
-    rdf_types = document._source[:rdf_type]
-    component = document._source[:component]
+    rdf_types = document._source[:rdf_type__facet]
+    component = document._source[:content_model_name__str]
     return true if rdf_types.include?(PCDM_OBJECT) && (component != 'Article')
 
     false
@@ -32,8 +32,13 @@ module ApplicationHelper # rubocop:disable Metrics/ModuleLength
     IIIF_BASE_URL
   end
 
-  def from_subquery(subquery_field, args)
-    args[:document][args[:field]] = args[:document][subquery_field]['docs']
+  def agent_label(args)
+    args[:document][args[:field]][0][:agent__label__txt]
+  end
+
+  def from_subquery(subquery_field, args, list=false)
+    args[:document][args[:field]] = args[:document][subquery_field][0] unless list == false
+    args[:document][args[:field]] = args[:document][subquery_field]
   end
 
   def collection_from_subquery(args)
@@ -41,11 +46,11 @@ module ApplicationHelper # rubocop:disable Metrics/ModuleLength
   end
 
   def parent_from_subquery(args)
-    from_subquery 'pcdm_member_of_info', args
+    from_subquery 'item__member_of__uri', args
   end
 
   def members_from_subquery(args)
-    from_subquery 'pcdm_members_info', args
+    from_subquery 'item__has_member__uris', args, true
   end
 
   def file_parent_from_subquery(args)
@@ -82,7 +87,7 @@ module ApplicationHelper # rubocop:disable Metrics/ModuleLength
 
   def view_in_fedora_link(document)
     url = document[:id]
-    url += '/fcr:metadata' if document[:rdf_type].include? 'fedora:Binary'
+    url += '/fcr:metadata' if document[:rdf_type__facet].include? 'fedora:Binary'
     link_to 'View in Fedora', url, target: '_blank', rel: 'noopener'
   end
 

@@ -1,44 +1,5 @@
 <%= render "mirador/show", document: document %>
 
-<dl class="dl-horizontal dl-invert" id="metadata">
-  <%
-    items = @resource[:items]
-    item = items[@id]
-  %>
-  <% %i(required recommended optional).each do |level| %>
-    <%
-      fields = @resource[:content_model][level]
-      fields.each do |field|
-        # Skip display of any fields that are "edit_only"
-        next if field[:edit_only]
-
-        # special handling for the access field
-        if field[:name] == 'access'
-          vocab = VocabularyService.get_vocabulary(field[:vocab])
-          if field.key? :terms
-            terms = field[:terms].map { |term| vocab.uri + term }
-          else
-            terms = vocab.terms.map { |term| term.uri }
-          end
-          values = item.fetch('@type', []).select { |uri| terms.include? uri }.map { |uri| { '@id' => uri } }
-        else
-          values = get_field_values(item, field)
-        end
-      %>
-      <% unless values.empty? %>
-        <dt title="<%= field[:uri] %>"><%= field[:label] %>:</dt>
-        <dd>
-          <ul class="descriptive-metadata-values">
-            <%  values.each do |node|  %>
-              <li class="descriptive-metadata-value"><%=  display_node(node, field, items)  %></li>
-            <% end %>
-          </ul>
-        </dd>
-      <% end %>
-    <% end %>
-  <% end %>
-</dl>
-
 <% doc_presenter = show_presenter(document) %>
 <%# default partial to display solr document fields in catalog show view -%>
 <dl class="dl-horizontal dl-invert">

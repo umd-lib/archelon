@@ -1,5 +1,5 @@
-<% doc_presenter = show_presenter(@document) %>
-<% if @document[:rdf_type].include? 'fedora:Binary' %>
+# <% doc_presenter = show_presenter(@document) %>
+<% if @document[:rdf_type__facet].include? 'fedora:Binary' %>
   <div class="panel panel-default">
     <div class="panel-heading">Download or Generate Link</div>
     <div class="panel-body">
@@ -11,16 +11,15 @@
   </div>
 <% end %>
 
-<% pages = doc_presenter.field_value('pcdm_members')
-  .select{|member| member['component'] == 'Page'}
-  .sort{|a,b| a['page_number'] <=> b['page_number'] } %>
+<!-- Pages is going to be a tuple -->
+<% pages = @document[:page_label__sequence].zip(@document[:page_uri__sequence]) %>
 <% unless pages.empty? %>
   <div class="panel panel-default">
     <div class="panel-heading">Select Page for More Options</div>
     <div class="panel-body">
       <ul class="nav">
-        <% pages.first(8).each do |v| %>
-          <li><%= link_to v['display_title'], solr_document_path(v['id']) %></li>
+        <% pages.first(8).each do |page| %>
+          <li><%= link_to page[0], solr_document_path(page[1]) %></li>
         <% end %>
         <% if pages.length > 8 %>
           <li><a href="#pages" data-toggle="modal">more »</a></li>
@@ -38,8 +37,8 @@
           </div>
           <div class="modal-body">
             <ul class="nav">
-              <% pages.each do |v| %>
-                <li><%= link_to "Page #{v['page_number']}", solr_document_path(v['id']) %></li>
+              <% pages.each do |page| %>
+                <li><%= link_to page[0], solr_document_path(page[1]) %></li>
               <% end %>
             </ul>
           </div>
@@ -49,14 +48,14 @@
   <% end %>
 <% end %>
 
-<% files = doc_presenter.field_value('pcdm_files') %>
+<% files = @document['item__has_member'].map { |page| page['page__has_file'].map { |file| file } }[0] %>
 <% unless files.empty? %>
   <div class="panel panel-default">
     <div class="panel-heading">Select File for Download Options</div>
     <div class="panel-body">
       <ul class="nav">
-        <% files.each do |v| %>
-          <li><%= link_to(v['display_title'].present? ? v['display_title'] : v['id'], solr_document_path(v['id'])) %></li>
+        <% files.each do |file| %>
+          <li><%= link_to(file['file__filename__txt'].present? ? file['file__filename__txt'] : file['id'], solr_document_path(file['id'])) %></li>
         <% end %>
       </ul>
     </div>

@@ -23,7 +23,7 @@ class PublishJobsController < BookmarksController # rubocop:disable  Metrics/Cla
   configure_blacklight do |config|
     config.add_facet_fields_to_solr_request = false
     config.fetch_many_document_params = {
-      qt: 'document',
+      qt: 'select',
       fl: FIELD_LISTS.join(','),
       facet: false
     }

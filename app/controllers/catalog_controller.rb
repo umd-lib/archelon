@@ -28,8 +28,8 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     }
 
     # solr path which will be added to solr base url before the other solr params.
-    config.solr_path = 'select'
-    config.document_solr_path = 'document'
+    config.solr_path = 'search'
+    config.document_solr_path = 'select'
 
     # items to show per page, each number in the array represent another option to choose from.
     # config.per_page = [10,20,50,100]
@@ -37,13 +37,13 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     ## Default parameters to send on single-document requests to Solr. These settings are the Blackligt defaults (see
     ## SearchHelper#solr_doc_params) or parameters included in the Blacklight-jetty document requestHandler.
     #
-    # config.default_document_solr_params = {
-    #  qt: 'document',
-    #  ## These are hard-coded in the blacklight 'document' requestHandler
-    #  # fl: '*',
-    #  # rows: 1,
-    #  # q: '{!term f=id v=$id}'
-    # }
+    config.default_document_solr_params = {
+     qt: 'select',
+     ## These are hard-coded in the blacklight 'document' requestHandler
+     fl: '*,[child]',
+     rows: 1,
+     q: '{!term f=id v=$id}'
+    }
 
     # Remove default right-side rendering of blacklight bookmark select checkbox
     config.index.document_actions.delete(:bookmark)
@@ -84,6 +84,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     config.add_facet_field 'presentation_set__facet', label: 'Presentation Set', limit: 10, collapse: false,
                                                      sort: 'index'
     config.add_facet_field 'admin_set__facet', label: 'Administrative Set', limit: 10, sort: 'index'
+    config.add_facet_field 'creator__facet', label: 'Author', limit: 10
     config.add_facet_field 'resource_type__facet', label: 'Resource Type', limit: 10
     config.add_facet_field 'rdf_type__facet', label: 'RDF Type', limit: 10
     config.add_facet_field 'visibility__facet', label: 'Visibility'
@@ -113,7 +114,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     #   The ordering of the field names is the order of the display
     config.add_index_field 'id', label: 'Annotation', helper_method: :link_to_document_view, if:
     lambda { |_context, _field, document|
-      document[:rdf_type].include?('oa:Annotation')
+      document[:rdf_type__facet].include?('oa:Annotation')
     }
 
     config.add_index_field 'resource_type__facet', label: 'Resource Type'
@@ -131,11 +132,30 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # the only fields being displayed from Solr are those relating to structural,
     # administrative, and technical metadata.
 
+    config.add_show_field 'item__object_type__uri', label: 'Object Type'
+    config.add_show_field 'item__identifier__ids', label: 'Identifier', helper_method: :value_list
+    config.add_show_field 'item__rights__same_as__uris', label: 'Rights Statement', helper_method: :value_list
+    config.add_show_field 'item__title__txt', label: 'Title'
+    config.add_show_field 'item__format__label__txt', label: 'Format'
+    config.add_show_field 'item__format__same_as__uris', label: 'Format URIs'
+    config.add_show_field 'item__archival_collection__label_txt', label: 'Archival Collection'
+    config.add_show_field 'item__date__dt', label: 'Date'
+    config.add_show_field 'item__description__txt', label: 'Description'
+    config.add_show_field 'creator__facet', label: 'Creator', helper_method: :value_list
+    config.add_show_field 'publisher__facet', label: 'Publisher', helper_method: :value_list
+    config.add_show_field 'subject__facet', label: 'Subject', helper_method: :value_list
+    config.add_show_field 'item__rights_holder', label: 'Rights Holder', helper_method: :agent_label
+    config.add_show_field 'item__bibliographic_citation__txt', label: 'Collection Information'
+    config.add_show_field 'item__accession_number__id', label: 'Accession ID'
+    config.add_show_field 'item__archival_collection__uri', label: 'Accession URI'
+
+    config.add_show_field 'item__archival_collection__same_as__uris', label: 'Archival Collection URI'
     config.add_show_field 'publication_status__facet', label: 'Publication Status'
     config.add_show_field 'visibility__facet', label: 'Visibility'
     config.add_show_field 'presentation_set__facet', label: 'Presentation Set', helper_method: :value_list
     config.add_show_field 'item__member_of__uri', label: 'Member Of', helper_method: :parent_from_subquery
     config.add_show_field 'item__has_member__uris', label: 'Members', helper_method: :members_from_subquery
+    config.add_show_field 'item__has_file__uris', label: 'Files', helper_method: :files_from_subquery
     config.add_show_field 'item__created_by__txt', label: 'Created By'
     config.add_show_field 'item__created__dt', label: 'Created'
     config.add_show_field 'item__last_modified__dt', label: 'Last Modified'
@@ -190,7 +210,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     fix_query_param
     # Use 'search' for regular searches, and 'identifier_search' for identifier searches.
     is_identifier_search = identifier_search?(params[:q])
-    blacklight_config[:solr_path] = is_identifier_search ? 'identifier_search' : 'select'
+    blacklight_config[:solr_path] = is_identifier_search ? 'identifier_search' : 'search'
     super
     return unless is_identifier_search && @response.response['numFound'] == 1
 
@@ -198,8 +218,9 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
   end
 
   def show
+    # byebug
     super
-    @show_edit_metadata = CatalogController.show_edit_metadata(@document['component'])
+    @show_edit_metadata = CatalogController.show_edit_metadata(@document['content_model_name__str'])
     @id = params[:id]
     @resource = ResourceService.resource_with_model(@id)
     @published = @resource[:items][@id]['@type'].include?('http://vocab.lib.umd.edu/access#Published')
