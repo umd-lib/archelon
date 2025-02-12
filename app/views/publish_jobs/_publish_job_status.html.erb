@@ -4,6 +4,6 @@
   <% if publish_job.publish_complete? %>
     (Job Succeeded)
   <% elsif publish_job.publish_incomplete? or publish_job.publish_error? %>
-    <%= link_to 'View Job', publish_job_url(publish_job), class: 'btn-xs btn-danger' %>
+    <%= link_to 'View Job', publish_job_path(publish_job), class: 'btn-xs btn-danger' %>
   <% end %>
 </td>

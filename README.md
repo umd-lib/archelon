@@ -216,6 +216,10 @@ the GUI.
 
 See [ActionCable](docs/ActionCable.md) for more information.
 
+**Note:** In the local development environment, dynamic status updates (for
+Export Jobs, Import Jobs, and Publish Jobs) *may not* work in reliably in
+Firefox, but do appear to work consistently in Chrome and Safari.
+
 ## ActiveJob and Delayed::Job
 
 Archelon is configured to use the [Delayed::Job][delayed_job] queue adapter, via

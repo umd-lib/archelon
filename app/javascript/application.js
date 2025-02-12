@@ -12,6 +12,8 @@ import './add_rails_ujs'
 
 import './resource'
 
+import "./channels"
+
 // Load in React components
 import components from "./components/**/*.jsx"
 
