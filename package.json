@@ -3,6 +3,7 @@
   "private": true,
   "dependencies": {
     "@github/auto-complete-element": "^3.6.2",
+    "@hotwired/turbo-rails": "^8.0.12",
     "@popperjs/core": "^2.11.8",
     "@rails/actioncable": "^7.2.0",
     "@rails/ujs": "^7.1.3-4",
