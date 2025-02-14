@@ -1,3 +1,49 @@
 en:
   blacklight:
-    application_name: 'Archelon'
+    application_name: Archelon
+
+    header_links:
+      bookmarks: Selected Items
+
+    bookmarks:
+      page_title: Selected Items - Archelon
+      title: Selected Items
+      no_bookmarks: You have not selected any items
+      addall:
+        button: Select all on page
+      addallresults:
+        button: Select all search results
+      add:
+        button: Select
+        success:
+          one: Successfully selected item.
+          other: Successfully selected items.
+        failure:  Sorry, there was a problem saving the selected items.
+      remove:
+        button: Unselect
+        success: Successfully removed selected item.
+        failure: Sorry, there was a problem removing the selected items.
+        action_confirm: Remove the selected items?
+      clear:
+        action_title: Clear selected items
+        action_confirm: Clear your selected items?
+        success: Cleared your selected items.
+        failure: Sorry, there was a problem clearing your selected items.
+      need_login: Please log in to manage and view your selected items.
+      list_title: Your Selected Items
+      delete: Remove
+
+    back_to_bookmarks: Back to Selected Items
+
+    search:
+      title: "%{constraints} - %{application_name} Search"
+      bookmarks:
+        present: Selected
+        absent: Select
+        inprogress: Saving...
+      facets:
+        title: Limit your search
+      facets-workflow:
+        title: Limit to
+      filters:
+        none: Browse
