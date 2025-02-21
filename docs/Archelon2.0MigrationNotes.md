@@ -80,6 +80,13 @@ the past, the Rails 7.1 application was created without "Turbo" functionality.
 Turbo functionality may need to be re-enabled, if we find Blacklight
 functionality that truly relies on it.
 
+#### LIBFCREPO-1522
+
+The turbo-prefetch behavior has been disabled, as it was triggering bookmarks to be
+selected on hovering the select buttons, which affected the javascript for determining
+if a bookmark was selected or not. There didn't seem to be any degredations by
+disabling it
+
 ### SQLite now honors foreign key constraints
 
 As of Rails 6, SQLite now honors foreign key constraints, which causes tests in
