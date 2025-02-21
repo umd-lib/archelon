@@ -9,9 +9,9 @@ en:
       page_title: Selected Items - Archelon
       title: Selected Items
       no_bookmarks: You have not selected any items
-      addall:
+      add_page_results:
         button: Select all on page
-      addallresults:
+      add_all_results:
         button: Select all search results
       add:
         button: Select
