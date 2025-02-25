@@ -18,6 +18,7 @@ Rails.application.routes.draw do
 
     collection do
       delete 'clear'
+      get 'select_results'
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
