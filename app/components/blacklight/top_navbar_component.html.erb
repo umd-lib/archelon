@@ -1,12 +1,12 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark topbar" role="navigation">
   <div class="<%= container_classes %>">
     <!-- UMD Customization -->
-    <div class="logo">
-      <a href="http://www.lib.umd.edu/"><%= image_tag 'blacklight/logo.png', alt: 'UMD Libraries' %></a>
-      <span class="navbar-brand-um">
-        <%= link_to application_name, root_path %>
-      </span>
-    </div>
+      <a href="http://www.lib.umd.edu/" style="text-align: center">
+        <%= image_tag 'blacklight/logo.png', alt: 'UMD Libraries' %>
+      </a>
+      <%= link_to application_name, root_path,
+        :class => 'umd-title'
+      %>
     <!-- End UMD Customization -->
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-bs-toggle="collapse" data-target="#user-util-collapse" data-bs-target="#user-util-collapse" aria-controls="user-util-collapse" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
