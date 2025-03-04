@@ -1,0 +1,22 @@
+// Override $logo-image to use "url" (instead of the Sprocket-based "image_url
+// asset helper specified by Blacklight, which is not usable when using
+// Propshaft. See https://stackoverflow.com/a/76429854)
+$logo-image: url('blacklight/logo.png');
+
+$umd-red: #e21833;
+$white: #fff;
+
+// Color of the Navbar
+$dark: $umd-red;
+
+// Color of text in Navbar
+$navbar-dark-color: $white;
+
+// Color of hyperlinks
+$link-color: $umd-red;
+
+// Search button in Archelon
+$primary: $umd-red;
+
+// Import job button
+$success: $umd-red;
