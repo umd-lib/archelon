@@ -1,11 +1,11 @@
-@import "variables";
-@import 'application.bootstrap';
-@import 'custom';
 
-// Mirador Viewer settings
-.image-viewer {
-  margin-top: 1em;
-  margin-bottom: 1em;
+
+.umd-title {
+  color: #fff;
+  font-size: 2em;
+  text-align: center;
+  padding-left: 40px;
+  text-decoration: none;
 }
 
 // based on https://benmarshall.me/responsive-iframes/
