@@ -3,10 +3,10 @@
 
 <%# UMD Customization %>
 <% if @document[:rdf_type].include? 'fedora:Binary' %>
-  <div class="panel panel-default">
-    <div class="panel-heading">Download or Generate Link</div>
-    <div class="panel-body">
-      <ul class="nav">
+  <div class="card">
+    <div class="card-header">Download or Generate Link</div>
+    <div class="card-body">
+      <ul>
         <li><%= link_to 'Download', @document.id, target: '_blank' %></li>
         <li><%= generate_download_url_link(@document) %></li>
       </ul>
