@@ -1,0 +1,15 @@
+<% if ENV.has_key? "ENVIRONMENT"
+    background = ENV.has_key?('ENVIRONMENT_BANNER_BACKGROUND') ? ENV['ENVIRONMENT_BANNER_BACKGROUND'] : ''
+    foreground = ENV.has_key?('ENVIRONMENT_BANNER_FOREGROUND') ? ENV['ENVIRONMENT_BANNER_FOREGROUND'] : ''
+
+    if background.empty? || foreground.empty?
+        raise "ENVIRONMENT set but not ENVIRONMENT_BANNER_BACKGROUND or ENVIRONMENT_BANNER_FOREGROUND"
+    end
+
+    div_template = 'class=environment-banner style=background-color:%{background_color};color:%{foreground_color}'
+    div_string = format(div_template, background_color: background, foreground_color: foreground)
+%>
+    <div <%= div_string %> >
+        <%= ENV["ENVIRONMENT"] %>
+    </div>
+<% end %>
