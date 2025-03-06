@@ -181,4 +181,16 @@ def with_constant(constant_name, value)
   end
 end
 
+# mock the environment during testing
+# https://stackoverflow.com/a/76036999
+def mock_env(partial_env_hash)
+  old = ENV.to_hash
+  ENV.update partial_env_hash
+  begin
+    yield
+  ensure
+    ENV.replace old
+  end
+end
+
 # End UMD Customization

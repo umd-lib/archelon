@@ -1,6 +1,6 @@
 <h1>Generate Download URL</h1>
 
-<%= form_for(@download_url, url: create_download_url_path(document_url: @download_url.url)) do |f| %>
+<%= form_for(@download_url, url: download_urls_path(document_url: @download_url.url), data: { turbo: false }) do |f| %>
   <%= render partial: "shared/error_messages", locals: {object: @download_url} %>
 
   <%= f.label :url, 'Fedora URL' %>

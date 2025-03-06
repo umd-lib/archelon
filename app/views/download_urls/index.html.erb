@@ -45,8 +45,7 @@
         <td><%= link_to 'Show', download_url, class: 'btn btn-primary' %></td>
         <td>
           <% if download_url.enabled? %>
-            <%= link_to 'Disable', disable_download_url_path(token: download_url.token),
-                            method: :put, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+            <%= button_to 'Disable', download_url, method: :put, params: { state: 'disable' }, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
           <% end %>
         </td>
       </tr>
