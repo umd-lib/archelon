@@ -2,6 +2,8 @@ class ApplicationController < ActionController::Base
   # UMD Customization
   include CasHelper
 
+  add_flash_types :error
+
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
 
   rescue_from CanCan::AccessDenied do
@@ -28,6 +30,10 @@ class ApplicationController < ActionController::Base
 
   def forbidden
     render file: Rails.root.join('public', '403.html'), status: :forbidden, layout: false
+  end
+
+  def bad_request
+    render file: Rails.root.join('public', '500.html'), status: :bad_request, layout: false
   end
 
   def impersonating?
