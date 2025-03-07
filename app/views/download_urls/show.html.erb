@@ -1,62 +1,81 @@
-<%= render partial: "retrieve_url", locals: {object: @download_url} %>
+<div class="card">
+  <div class="card-header">
+    <strong id="retrieve_url">
+      <%= @download_url.retrieve_url %>
+    </strong>
+  </div>
 
-<p>
-    <strong>Token:</strong>
-    <%= @download_url.token %>
-</p>
+  <div class="card-body">
+    <p>
+      <strong>Token:</strong>
+      <%= @download_url.token %>
+    </p>
 
-<p>
-    <strong>Fedora URL:</strong>
-    <%= @download_url.url %>
-</p>
+    <p>
+      <strong>Fedora URL:</strong>
+      <%= @download_url.url %>
+    </p>
 
-<p>
-    <strong>Title:</strong>
-    <%= @download_url.title %>
-</p>
+    <p>
+      <strong>Title:</strong>
+      <%= @download_url.title %>
+    </p>
 
-<p>
-    <strong>Notes:</strong>
-    <%= @download_url.notes %>
-</p>
+    <p>
+      <strong>Notes:</strong>
+      <%= @download_url.notes %>
+    </p>
 
-<p>
-    <strong>Mime type:</strong>
-    <%= @download_url.mime_type %>
-</p>
+    <p>
+      <strong>Mime type:</strong>
+      <%= @download_url.mime_type %>
+    </p>
 
-<p>
-    <strong>Creator:</strong>
-    <%= @download_url.creator %>
-</p>
+    <p>
+      <strong>Creator:</strong>
+      <%= @download_url.creator %>
+    </p>
 
-<p>
-    <strong>Enabled:</strong>
-    <%= @download_url.enabled %>
-</p>
+    <p>
+      <strong>Enabled:</strong>
+      <%= @download_url.enabled %>
+    </p>
 
-<p>
-    <strong>Request ip:</strong>
-    <%= @download_url.request_ip %>
-</p>
+    <p>
+      <strong>Request ip:</strong>
+      <%= @download_url.request_ip %>
+    </p>
 
-<p>
-    <strong>Request user agent:</strong>
-    <%= @download_url.request_user_agent %>
-</p>
+    <p>
+      <strong>Request user agent:</strong>
+      <%= @download_url.request_user_agent %>
+    </p>
 
-<p>
-    <strong>Accessed at:</strong>
-    <%= @download_url.accessed_at %>
-</p>
+    <p>
+      <strong>Accessed at:</strong>
+      <%= @download_url.accessed_at %>
+    </p>
 
-<p>
-    <strong>Download completed at:</strong>
-    <%= @download_url.download_completed_at %>
-</p>
+    <p>
+      <strong>Download completed at:</strong>
+      <%= @download_url.download_completed_at %>
+    </p>
+  </div>
+</div>
 
-<% if @download_url.enabled? %>
-  <%= button_to 'Disable', @download_url, method: :put, params: { state: 'disable' }, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger', form: { style: 'display:inline' } %>
-<% end %>
+<div style="margin-top: 10px;">
+  <% if @download_url.enabled? %>
+    <%=
+        button_to 'Disable', @download_url,
+          method: :put,
+          params: { state: 'disable' },
+          data: { confirm: 'Are you sure?' },
+          class: 'btn btn-danger',
+          form: { style: 'display:inline' }
+    %>
+  <% end %>
 
-<%= link_to 'List Download URLs', download_urls_path, class: 'btn btn-primary' %>
+  <%= link_to 'List Download URLs', download_urls_path, class: 'btn btn-primary' %>
+
+  <%= render partial: "retrieve_url" %>
+</div>
