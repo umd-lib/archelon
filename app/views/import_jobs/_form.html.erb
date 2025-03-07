@@ -1,15 +1,5 @@
-<%= form_with(model: import_job, local: true) do |form| %>
-  <% if import_job.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(import_job.errors.count, "error") %> prohibited this job from being saved:</h2>
-
-      <ul>
-        <% import_job.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+<%= form_with(model: import_job, data: {turbo: false}) do |form| %>
+  <%= render partial: "shared/error_messages", locals: {object: import_job} %>
 
   <div class="form-group">
     <div>
