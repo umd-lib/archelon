@@ -2,9 +2,6 @@
 $(document).ready(function() {
 
   const errorDiv = document.querySelector("#error_explanation");
-  if (errorDiv) {
-    errorDiv.innerHTML = "";
-  }
 
   const resourceFormSubmit = document.querySelector("#resource_form_submit");
 
