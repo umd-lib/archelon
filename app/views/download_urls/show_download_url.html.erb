@@ -1,9 +1,20 @@
-<h1>Download URL</h1>
+<div class="card">
+  <div class="card-header">
+    <strong id="retrieve_url">
+      <%= @download_url.retrieve_url %>
+    </strong>
+  </div>
 
-<p>Please provide the following URL to your patron:</p>
+  <div class="card-body">
+    <p> Please provide the above URL to your patron </p>
+    <p>
+        This URL will only work once, and will automatically expire on
+        <%= @download_url.expires_at.strftime("%m/%d/%Y") %>
+    </p>
+  </div>
+</div>
 
-<%= render partial: "retrieve_url", locals: {object: @download_url} %>
-
-<p>This URL will only work once, and will automatically expire on <%= @download_url.expires_at.strftime("%m/%d/%Y") %>.</p>
-
-<%= link_to 'Back', download_urls_path, class: "btn btn-primary" %>
+<div style="margin-top: 10px;">
+    <%= link_to 'Back', download_urls_path, class: "btn btn-primary" %>
+    <%= render partial: "retrieve_url" %>
+</div>

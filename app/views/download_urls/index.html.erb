@@ -1,37 +1,18 @@
 <h1>Download URLs</h1>
 
-
-<div class="row">
-  <div class="btn-toolbar">
-    <div class="col-md-6">
-        <div class="btn-group"><%= will_paginate @download_urls, renderer: BootstrapPagination::Rails %></div>
-    </div>
-    <div class="col-md-6">
-      <%= search_form_for @rq, class: "form-inline pull-right" do |f| %>
-        <%= f.label('creator_eq', 'Creator:') %>
-        <%= f.collection_select(:creator_eq, @creators, :creator, :creator, { include_blank: '<All>' }) %>
-
-        <%= f.check_box("enabled_eq", id: 'rq_enabled', class: "", include_hidden: false) %>
-        <%= f.label('enabled_eq', 'Enabled Only') %>
-
-        <button type="submit" class="btn btn-primary">Apply Filter</button>
-      <% end %>
-    </div>
-  </div>
-</div>
-
-<table class="table">
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>Creator</th>
-      <th><%= sort_link(@rq, :created_at, 'Created') %></th>
-      <th>Expires</th>
-      <th>Accessed</th>
-      <th>Enabled</th>
-      <th colspan="2"></th>
-    </tr>
-  </thead>
+<div class="umd-table">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Creator</th>
+        <th><%= sort_link(@rq, :created_at, 'Created') %></th>
+        <th>Expires</th>
+        <th>Accessed</th>
+        <th>Enabled</th>
+        <th colspan="2"></th>
+      </tr>
+    </thead>
 
   <tbody>
     <% @download_urls.each do |download_url| %>
@@ -45,7 +26,13 @@
         <td><%= link_to 'Show', download_url, class: 'btn btn-primary' %></td>
         <td>
           <% if download_url.enabled? %>
-            <%= button_to 'Disable', download_url, method: :put, params: { state: 'disable' }, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+            <%=
+              button_to 'Disable', download_url,
+                method: :put,
+                params: { state: 'disable' },
+                data: { confirm: 'Are you sure?' },
+                class: 'btn btn-danger'
+            %>
           <% end %>
         </td>
       </tr>
@@ -53,4 +40,20 @@
   </tbody>
 </table>
 
-<%= will_paginate @download_urls, renderer: BootstrapPagination::Rails %>
+<%= search_form_for @rq, class: "form-inline pull-right" do |f| %>
+
+  <div style="margin-top: 10px;">
+    <%= f.label('creator_eq', 'Creator:') %>
+    <%= f.collection_select(:creator_eq, @creators, :creator, :creator, { include_blank: '<All>' }) %>
+
+    <%= f.label('enabled_eq', 'Enabled Only:') %>
+    <%= f.check_box("enabled_eq", id: 'rq_enabled', class: "", include_hidden: false) %>
+  </div>
+
+
+  <div style="margin-top: 10px;">
+    <button type="submit" class="btn btn-secondary">
+      Apply Filter
+    </button>
+  </div>
+<% end %>
