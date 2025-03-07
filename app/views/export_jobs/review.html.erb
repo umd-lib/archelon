@@ -1,17 +1,70 @@
-<h1>Export Job Options</h1>
+<h1>Export Job </h1>
 <%= form_for(@job) do |f| %>
-  <%= f.hidden_field :name, value: @job.name %>
-  <%= f.hidden_field :format, value: @job.format %>
-  <%= f.hidden_field :item_count, value: @job.item_count %>
-  <%= f.hidden_field :export_binaries, value: @job.export_binaries %>
-  <%= f.hidden_field :binaries_size, value: @job.binaries_size %>
-  <%= f.hidden_field :binaries_count, value: @job.binaries_count %>
-  <%= f.hidden_field :mime_types, value: @job.mime_types %>
+  <div class="card">
+    <div class="card-header">
+      <strong> Review </strong>
+    </div>
 
-  <%= render 'summary', export_job: @job %>
-  <div>
+    <div class="card-body">
+      <%= f.hidden_field :name, value: @job.name %>
+      <%= f.hidden_field :format, value: @job.format %>
+      <%= f.hidden_field :item_count, value: @job.item_count %>
+      <%= f.hidden_field :export_binaries, value: @job.export_binaries %>
+      <%= f.hidden_field :binaries_size, value: @job.binaries_size %>
+      <%= f.hidden_field :binaries_count, value: @job.binaries_count %>
+      <%= f.hidden_field :mime_types, value: @job.mime_types %>
+
+      <p>
+        <strong> Export Format: </strong>
+
+        <%= @job.format %>
+      </p>
+
+      <p>
+        <strong> Job Name: </strong>
+
+        <%= @job.name %>
+      </p>
+
+      <p>
+        <strong> Number of Records: </strong>
+
+        <%= @job.item_count %>
+      </p>
+
+      <p>
+        <strong>Export Binaries?</strong>
+
+        <%= @job.export_binaries ? 'Yes' : 'No' %>
+      </p>
+
+      <% if @job.export_binaries %>
+        <p>
+          <strong>Binary File Types:</strong>
+
+          <% mime_types_array = @job.selected_mime_types.map { |mt| I18n.t("mime_types.#{mt}") } %>
+          <%= mime_types_array.join(", ") %>
+        </p>
+
+        <p>
+          <strong>Number of Binaries:</strong>
+
+          <%= @job.binaries_count %>
+        </p>
+
+        <p>
+          <strong>Estimated Total Size of Binaries:</strong>
+
+          <%= number_to_human_size @job.binaries_size %>
+        </p>
+      <% end %>
+    </div>
+  </div>
+
+  <div style="padding-top: 10px;">
     <%= render 'back_to_new_button', export_job: @job %>
     <%= f.submit "Cancel", class: 'btn btn-danger' %>
     <%= f.submit "Submit Job", class: 'btn btn-success' %>
   </div>
+
 <% end %>

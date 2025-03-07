@@ -1,19 +1,47 @@
-<h1> Export Job: <%= @job.name %> </h1>
+<h1> Export Job </h1>
 
-<h3> Job Info </h2>
-<hr>
+<div class="card">
+  <div class="card-header">
+    <strong> Job Info: <%= @job.name %> </strong>
+  </div>
 
-<p> Job ID: <%= @job.id %> </p>
-<p> Status: <%= @job.status_text %> </p>
-<p> # of Records: <%=   @job.item_count %> </p>
-<p> # of Binaries: <%= @job.binaries_count == nil ? "n/a" : @job.binaries_count %> </p>
-<p> Size of Binaries: <%= @job.binaries_size == nil ? "n/a" : number_to_human_size(@job.binaries_size) %> </p>
-<p> User: <%= @cas_user.name %>
+  <div class="card-body">
+    <p>
+      <strong> Job ID: </strong>
+      <%= @job.id %>
+    </p>
 
-<hr>
+    <p>
+      <strong> Status: </strong>
+      <%= @job.status_text %>
+    </p>
 
-<%= link_to "Back", export_jobs_path, class: "btn btn-danger"%>
-<%= button_to "Delete Job", export_job_url(@job), method: :delete, class:"btn btn-danger", data: { confirm: 'Delete job?' } %>
+    <p>
+      <strong># of Records: </strong>
+      <%=   @job.item_count %>
+    </p>
+
+    <p>
+      <strong> # of Binaries: </strong>
+      <%= @job.binaries_count == nil ? "n/a" : @job.binaries_count %>
+    </p>
+
+    <p>
+      <strong> Size of Binaries: </strong>
+      <%= @job.binaries_size == nil ? "n/a" : number_to_human_size(@job.binaries_size) %>
+    </p>
+
+    <p>
+      <strong> User: </strong>
+      <%= @cas_user.name %>
+    </p>
+  </div>
+</div>
+
+<div style="padding-top: 10px;">
+  <%= link_to "Back", export_jobs_path, class: "btn btn-primary"%>
+  <%= button_to "Delete Job", export_job_url(@job), method: :delete, class:"btn btn-danger", data: { confirm: 'Delete job?' } %>
+</div>
 
 <style>
   .button_to {
