@@ -8,7 +8,7 @@
     <div class="card-body">
       <ul>
         <li><%= link_to 'Download', @document.id, target: '_blank' %></li>
-        <li><%= generate_download_url_link(@document) %></li>
+        <li><%= link_to 'Generate Download URL', new_download_url_path(document_url: @document.id) %></li>
       </ul>
     </div>
   </div>

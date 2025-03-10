@@ -20,8 +20,7 @@ class DownloadUrlsController < ApplicationController
   def show
   end
 
-  # GET /download_urls/generate/:document_url
-  def generate_download_url
+  def new
     solr_document = find_solr_document(params['document_url'])
     not_found && return unless solr_document
     @download_url = DownloadUrl.new
@@ -29,51 +28,34 @@ class DownloadUrlsController < ApplicationController
     @download_url.title = create_default_title(solr_document)
   end
 
-  # POST /download_urls/create/:document_url
-  def create_download_url # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+  def create
     solr_document = find_solr_document(params['document_url'])
     not_found && return unless solr_document
 
-    @download_url = DownloadUrl.new(download_url_params)
-    @download_url.url = solr_document[:id]
-    @download_url.mime_type = solr_document[:mime_type]
-    @download_url.creator = real_user.cas_directory_id
-    @download_url.enabled = true
-    @download_url.expires_at = 7.days.from_now
-    # Title is not a form parameter, so we have to re-create it in order
-    # for it to saved to the model
-    @download_url.title = create_default_title(solr_document)
-
+    @download_url = create_download_url(solr_document)
     respond_to do |format|
       if @download_url.save
-        format.html do
-          redirect_to show_download_url_path(token: @download_url.token),
-                      notice: 'Download URL was successfully created.'
-        end
+        format.html { redirect_to @download_url, notice: 'Download URL was successfully created.' }
       else
-        format.html { render :generate_download_url }
+        format.html { render :new }
       end
     end
   end
 
-  # GET /download_urls/show/:token
-  def show_download_url
-    token = params[:token]
-    @download_url = DownloadUrl.find_by(token: token)
-  end
-
-  # PUT /download_urls/disable/:token
-  def disable
-    token = params[:token]
-    notice_msg = nil
-    @download_url = DownloadUrl.find_by(token: token)
-    if @download_url&.enabled?
-      @download_url.enabled = false
-      @download_url.save!
-      notice_msg = 'Download URL was disabled'
+  def update
+    @download_url = DownloadUrl.find(params[:id])
+    if params[:state] == 'disable'
+      if @download_url&.enabled?
+        @download_url.enabled = false
+        @download_url.save!
+        redirect_back fallback_location: download_urls_url, notice: "Download URL token \"#{@download_url.token}\" was disabled"
+      end
+    else
+      # this shouldn't happen in the normal course of navigating through the site
+      Rails.logger.error "Unknown state requested: #{params[:state]}"
+        redirect_back fallback_location: download_urls_url, error: 'Bad request error'
     end
 
-    redirect_back fallback_location: download_urls_url, notice: notice_msg
   end
 
   private
@@ -112,6 +94,19 @@ class DownloadUrlsController < ApplicationController
         :url, :title, :notes, :mime_type, :enabled, :request_ip,
         :request_user_agent, :accessed_at, :download_completed_at
       )
+    end
+
+    def create_download_url(solr_document)
+      @download_url = DownloadUrl.new(download_url_params)
+      @download_url.url = solr_document[:id]
+      @download_url.mime_type = solr_document[:mime_type]
+      @download_url.creator = real_user.cas_directory_id
+      @download_url.enabled = true
+      @download_url.expires_at = 7.days.from_now
+      # Title is not a form parameter, so we have to re-create it in order
+      # for it to saved to the model
+      @download_url.title = create_default_title(solr_document)
+      @download_url
     end
 
     # Removes "enabled_eq" if it is 0.
