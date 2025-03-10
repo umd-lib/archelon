@@ -14,31 +14,32 @@
       </tr>
     </thead>
 
-  <tbody>
-    <% @download_urls.each do |download_url| %>
-      <tr>
-        <td><%= download_url.title %></td>
-        <td><%= download_url.creator %></td>
-        <td><%= download_url.created_at %></td>
-        <td><%= download_url.expires_at %></td>
-        <td><%= download_url.accessed_at %></td>
-        <td><%= download_url.enabled %></td>
-        <td><%= link_to 'Show', download_url, class: 'btn btn-primary' %></td>
-        <td>
-          <% if download_url.enabled? %>
-            <%=
-              button_to 'Disable', download_url,
-                method: :put,
-                params: { state: 'disable' },
-                data: { confirm: 'Are you sure?' },
-                class: 'btn btn-danger'
-            %>
-          <% end %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+    <tbody>
+      <% @download_urls.each do |download_url| %>
+        <tr>
+          <td><%= download_url.title %></td>
+          <td><%= download_url.creator %></td>
+          <td><%= download_url.created_at %></td>
+          <td><%= download_url.expires_at %></td>
+          <td><%= download_url.accessed_at %></td>
+          <td><%= download_url.enabled %></td>
+          <td><%= link_to 'Show', download_url, class: 'btn btn-primary' %></td>
+          <td>
+            <% if download_url.enabled? %>
+              <%=
+                button_to 'Disable', download_url,
+                  method: :put,
+                  params: { state: 'disable' },
+                  data: { confirm: 'Are you sure?' },
+                  class: 'btn btn-danger'
+              %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
 
 <%= search_form_for @rq, class: "form-inline pull-right" do |f| %>
 
