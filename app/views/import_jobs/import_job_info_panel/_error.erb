@@ -1,8 +1,6 @@
-<div class="panel panel-danger">
-  <div class="panel-heading">
-    <h3 class="panel-title">Error Retrieving Import Job Info</h3>
+<div class="card text-white bg-danger mb-3" style="padding-top: 10px;">
+    <div class="card-header"> Error Retrieving Import Job Info </div>
+    <div class="card-body">
+       <p> <%= import_job_info.error_message %> <p>
+    </div>
   </div>
-  <div class="panel-body">
-    <%= import_job_info.error_message %>
-  </div>
-</div>
