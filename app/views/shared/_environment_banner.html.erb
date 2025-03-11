@@ -1,4 +1,4 @@
-<% if ENV.has_key? "ENVIRONMENT"
+<% if ENV.has_key? "ENVIRONMENT_BANNER"
     background = ENV.has_key?('ENVIRONMENT_BANNER_BACKGROUND') ? ENV['ENVIRONMENT_BANNER_BACKGROUND'] : ''
     foreground = ENV.has_key?('ENVIRONMENT_BANNER_FOREGROUND') ? ENV['ENVIRONMENT_BANNER_FOREGROUND'] : ''
 
@@ -10,6 +10,6 @@
     div_string = format(div_template, background_color: background, foreground_color: foreground)
 %>
     <div <%= div_string %> >
-        <%= ENV["ENVIRONMENT"] %>
+        <%= ENV["ENVIRONMENT_BANNER"] %>
     </div>
 <% end %>
