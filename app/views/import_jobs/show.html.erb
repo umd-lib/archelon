@@ -1,35 +1,50 @@
 <p id="notice"><%= notice %></p>
 
-<h1><%= t('activerecord.models.import_job') %>: <%= @import_job.name %></h1>
+<h1> Import Job </h1>
 
 <%= render "import_job_panel", import_job: @import_job %>
 
 <% if @import_job.validate_failed? || @import_job.validate_error? || @import_job.validate_success? %>
   <% if @import_job.validate_failed? %>
-    <div class="panel panel-danger">
-      <div class="panel-heading">
-        <h3 class="panel-title">Validation Errors</h3>
+    <div class="card text-white bg-danger mb-3" style="padding-top: 10px;">
+      <div class="card-header">
+        <strong> Validation Errors </strong>
       </div>
-      <div class="panel-body">
-        <p><strong>To continue this import job, please edit your metadata file to correct the
-          validation errors listed below. Then, resubmit this import job to re-upload
-          the metadata file.</strong></p>
+
+      <div class="card-body">
+        <p class="card-text">
+          <strong>
+            To continue this import job, please edit your metadata file to correct the
+            validation errors listed below. Then, resubmit this import job to re-upload
+            the metadata file.
+          </strong>
+        </p>
       </div>
     </div>
   <% end %>
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h3 class="panel-title">Validation Report</h3>
+
+  <div class="card" style="padding-top: 10px;">
+    <div class="card-header">
+      <strong> Validation Report </strong>
     </div>
-    <div class="panel-body">
+
+    <div class="card-body">
       <%= render "import_jobs/import_job_info_panel/invalid", import_job_info: @import_job_info %>
     </div>
   </div>
+
 <% else %>
   <%= render "import_job_info_panel", import_job_info: @import_job_info %>
 <% end %>
 
-<%= link_to 'Back', import_jobs_path, class: 'btn btn-danger' %>
-<% if @import_job.validate_failed? %>
-  <%= link_to 'Resubmit', edit_import_job_path(@import_job), class: 'btn btn-success' %>
-<% end %>
+<div style="padding-top: 10px;">
+  <%= link_to 'Back', import_jobs_path, class: 'btn btn-primary' %>
+
+  <% if @import_job.validate_failed? %>
+    <%= link_to 'Resubmit', edit_import_job_path(@import_job), class: 'btn btn-primary' %>
+  <% end %>
+
+  <% if !@import_job_info.failed.empty? %>
+    <%= button_to "Retry #{import_job_info.failed.count} Item(s)", perform_import_import_jobs_path(@import_job), class: 'btn btn-primary' %>
+  <% end%>
+</div>
