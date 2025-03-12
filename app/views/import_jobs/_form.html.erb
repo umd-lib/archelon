@@ -1,107 +1,100 @@
 <%= form_with(model: import_job, data: {turbo: false}) do |form| %>
   <%= render partial: "shared/error_messages", locals: {object: import_job} %>
 
-  <div>
-    <%= form.label :name, class: "col-form-label-lg" %>
-  </div>
-
-  <div class="p-3 ml-5">
-    <%= form.text_field :name, size: 40, class: "form-control" %>
-  </div>
-
-  <div>
-    <%= form.label :model, class: "col-form-label-lg" %>
-  </div>
-
-  <div class="p-3 ml-5">
-    <%= form.select :model, options_for_select(%w(Item Issue Letter Poster), selected: import_job.model) %>
-  </div>
-
-  <div>
-    <%= form.label :access, class: "col-form-label-lg" %>
-  </div>
-
-  <div class="p-3 ml-5">
-    <% if ImportJob.access_vocab.terms? %>
-      <%=
-          form.select :access,
-                      options_for_select(
-                        ImportJob.access_vocab.terms.map {
-                          |type| [ type.identifier, type.uri ]
-                        },
-                        selected: import_job.access
-                      )
-        %>
-
-    <% else %>
-      <i> Access vocabulary is not configured. </i>
-    <% end %>
-
-    This is the access level that will be applied to any newly created objects.
-  </div>
-
-  <div>
-    <%= form.label :collection, class: "col-form-label-lg" %>
-  </div>
-
-  <div class="p-3 ml-5">
-    <%=
-        form.select :collection,
-                    options_for_select(
-                      @collections_options_array,
-                      selected: import_job.collection
-                    ),
-                    prompt: true
-    %>
-  </div>
-
-  <div>
-    <%= form.label :metadata_file, 'Metadata File to Upload (CSV)', class: "col-form-label-lg" %>
-  </div>
-
-  <div class="p-3 ml-5">
-    <% if import_job.metadata_file.attachment.present? %>
-      <div class="current-file"><strong>Current file:</strong> <%= import_job.metadata_file.filename %></div>
-    <% end %>
-
-    <%= form.file_field :metadata_file, class: "form-control" %>
-  </div>
-
-  <div>
-    <%= form.label :binaries_zip_filename, 'Binaries', class: "col-form-label-lg" %>
-  </div>
-
-  <div class="p-3 ml-5">
-    <div class="card">
-      <div class="card-header">
-        <strong>
-          Select the zip file containing the binaries for this import job
-        </strong>
+  <div class="card">
+    <div class="card-header">
+      <strong> Options </strong>
+    </div>
+    <div class="card-body">
+      <div>
+        <strong> <%= form.label :name %>: </strong>
+        <%= form.text_field :name, size: 40, class: "form-control" %>
       </div>
 
-      <div class="card-body">
-        <% current_filename = import_job.binaries_location&.gsub(IMPORT_CONFIG[:binaries_base_location], '') %>
+      <div style="padding-top: 10px;">
+        <strong> <%= form.label :model %>: </strong>
+        <%= form.select :model, options_for_select(%w(Item Issue Letter Poster), selected: import_job.model) %>
+      </div>
 
-        <ul style="list-style-type: none">
-          <li>
-            <label>
-              <%= form.radio_button :binaries_zip_filename, '' %> No binaries
-            </label>
-          </li>
+      <div style="padding-top: 10px;">
+        <strong> <%= form.label :access %>: </strong>
 
-          <% @binaries_files&.each do |filename| %>
+        <% if ImportJob.access_vocab.terms? %>
+          <%=
+              form.select :access,
+                          options_for_select(
+                            ImportJob.access_vocab.terms.map {
+                              |type| [ type.identifier, type.uri ]
+                            },
+                            selected: import_job.access
+                          )
+            %>
+
+        <% else %>
+          <i> Access vocabulary is not configured. </i>
+        <% end %>
+
+        This is the access level that will be applied to any newly created objects.
+      </div>
+
+      <div style="padding-top: 10px;">
+        <strong> <%= form.label :collection %>: </strong>
+        <%=
+            form.select :collection,
+                        options_for_select(
+                          @collections_options_array,
+                          selected: import_job.collection
+                        ),
+                        prompt: true
+        %>
+      </div>
+
+      <div style="padding-top: 10px;">
+        <strong> <%= form.label :metadata_file, 'Metadata File to Upload (CSV)' %>: </strong>
+
+        <% if import_job.metadata_file.attachment.present? %>
+          <div class="current-file">
+            <strong> Current file: </strong>
+            <%= import_job.metadata_file.filename %>
+          </div>
+        <% end %>
+
+        <%= form.file_field :metadata_file, class: "form-control" %>
+      </div>
+
+      <div style="padding-top: 10px;">
+        <strong>
+          <%= form.label :binaries_zip_filename, 'Binaries' %>:
+
+          Select the zip file containing the binaries for this import job
+        </strong>
+
+        <div>
+
+
+          <% current_filename = import_job.binaries_location&.gsub(IMPORT_CONFIG[:binaries_base_location], '') %>
+
+          <ul style="list-style-type: none">
             <li>
-              <%= form.radio_button :binaries_zip_filename, filename, checked: current_filename == filename %>
-              <%= form.label :binaries_zip_filename, filename %>
-              (<%= number_to_human_size File.size(File.join(IMPORT_CONFIG[:binaries_dir], filename)) %>)
+              <label>
+                <%= form.radio_button :binaries_zip_filename, '' %> No binaries
+              </label>
             </li>
-          <% end %>
-        </ul>
+
+            <% @binaries_files&.each do |filename| %>
+              <li>
+                <%= form.radio_button :binaries_zip_filename, filename, checked: current_filename == filename %>
+                <%= form.label :binaries_zip_filename, filename %>
+                (<%= number_to_human_size File.size(File.join(IMPORT_CONFIG[:binaries_dir], filename)) %>)
+              </li>
+            <% end %>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
 
-  <div>
+  <div style="padding-top: 10px;">
     <%= form.submit "Cancel", class: 'btn btn-danger' %>
     <%= form.submit "Next", class: 'btn btn-primary' %>
   </div>

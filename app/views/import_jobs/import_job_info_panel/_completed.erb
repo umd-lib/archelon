@@ -1,29 +1,32 @@
-<strong>Completed Items (<%= import_job_info.completed.count %>)</strong>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>#</th>
-      <th>ID</th>
-      <th>Timestamp</th>
-      <th>Title</th>
-      <th>URL</th>
-      <th>Status</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% import_job_info.completed.each_with_index do |item, index| %>
-      <tr class="item-<%= item['status'] || 'unknown'%>">
-        <td><%= (index+1) %></td>
-        <td><%= item['id'] %></td>
-        <td><%= item['timestamp'] %></td>
-        <td><%= item['title'] %></td>
-        <td>
-          <a href="<%= item['catalog_uri'] %>">
-            <%= item['uri'] %>
-          </a>
-        </td>
-        <td class="item-status"><%= (item['status'] || 'unknown').capitalize %></td>
+<% if !import_job_info.completed.empty? %>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>ID</th>
+        <th>Timestamp</th>
+        <th>Title</th>
+        <th>URL</th>
+        <th>Status</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% import_job_info.completed.each_with_index do |item, index| %>
+        <tr class="item-<%= item['status'] || 'unknown'%>">
+          <td><%= (index+1) %></td>
+          <td><%= item['id'] %></td>
+          <td><%= item['timestamp'] %></td>
+          <td><%= item['title'] %></td>
+          <td>
+            <a href="<%= item['catalog_uri'] %>">
+              <%= item['uri'] %>
+            </a>
+          </td>
+          <td class="item-status"><%= (item['status'] || 'unknown').capitalize %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p> There are no completed items for this import job. </p>
+<% end %>
