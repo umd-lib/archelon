@@ -1,36 +1,14 @@
-
-
-.umd-title {
-  color: #fff;
-  font-size: 2em;
-  text-align: center;
-  padding-left: 40px;
-  text-decoration: none;
+.table {
+  @extend .table-striped;
 }
 
-.umd-table {
-  overflow: auto;
-  border-collapse: collapse;
-  width: 100%;
-  height: 500px;
-}
-
-.umd-table thead th {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-
-.umd-table th td {
-  padding: 8px 16px;
-}
-
-.umd-table th {
-  background:#eee;
-}
-
-@import "mirador_viewer";
 @import "bootstrap_overrides";
+@import "mirador_viewer";
+@import "dropdown_menu";
+@import "item_status";
+@import "umd_classes";
+@import "job_states";
+
 @import 'bootstrap/scss/bootstrap';
 @import 'bootstrap-icons/font/bootstrap-icons';
 @import "blacklight-frontend/app/assets/stylesheets/blacklight/blacklight";
