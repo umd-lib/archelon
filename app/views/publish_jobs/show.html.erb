@@ -20,8 +20,8 @@
 
 <br>
 
-<div class="tablePublishJob">
-  <table class="table table-striped">
+<div class="umd-table">
+  <table class="table">
     <thead>
       <tr>
         <th>Title</th>
@@ -90,22 +90,33 @@
   </table>
 </div>
 
-<br>
-
 <% if @job.publish_not_submitted? %>
   <%= form_with model: @job, url: submit_publish_job_url(@job), local: true, method: :post do |form| %>
     <%= form.check_box :force_hidden %>
     <%= form.label :force_hidden, 'Suppress these items in search results' %>
-    <br>
-    <%= form.button "Submit Job", class:"btn btn-danger" %>
+    <div style="padding-top: 10px;">
+      <%= form.button "Submit Job", class:"btn btn-success" %>
+    </div>
   <% end %>
+
+  <div style="padding-top: 10px;">
+    <%= button_to "Delete Job", publish_job_url(@job), method: :delete, class:"btn btn-danger", data: { confirm: 'Delete job?' } %>
+  </div>
 <% end %>
 
 <% if @job.publish_incomplete? or @job.publish_error? or  @job.unpublish_incomplete? or @job.unpublish_error? %>
-  <%= button_to "Resubmit Job", submit_publish_job_url(@job), class:"btn btn-danger" %>
+  <div style="padding-top: 10px;">
+    <%= button_to "Delete Job", publish_job_url(@job), method: :delete, class:"btn btn-danger", data: { confirm: 'Delete job?' } %>
+    <%= button_to "Resubmit Job", submit_publish_job_url(@job), class:"btn btn-success" %>
+  </div>
 <% end %>
 
-<br>
-<%= button_to "Delete Job", publish_job_url(@job), method: :delete, class:"btn btn-danger", data: { confirm: 'Delete job?' } %>
+<style>
+  .button_to {
+    display: inline;
+  }
 
-<br>
+  .button_to div {
+    display: inline;
+  }
+</style>
