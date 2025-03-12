@@ -83,10 +83,6 @@ gem 'delayed_job_active_record', '~> 4.1'
 # Table sorting
 gem 'ransack'
 
-# Pagination
-gem 'will_paginate', '~> 4.0'
-gem 'will_paginate-bootstrap'
-
 # Cron jobs
 gem 'delayed_cron_job', '~> 0.8'
 
