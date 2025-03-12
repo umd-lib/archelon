@@ -1,0 +1,25 @@
+/* Active job states */
+.publish_job_status_publish_in_progress, .publish_job_status_publish_pending,
+.export_job_status_pending, .export_job_status_in_progress,
+.import_job_status_validate_starting, .import_job_status_import_starting,
+.import_job_status_validate_pending, .import_job_status_import_pending,
+.import_job_status_validate_in_progress, .import_job_status_import_in_progress {
+  color: #000000;
+  font-weight: bold;
+}
+
+/* Error job states */
+.publish_job_status_publish_error,
+.export_job_status_export_error, .export_job_status_partial_export,
+.import_job_status_validate_error, .import_job_status_validate_failed,
+.import_job_status_import_error, .import_job_status_import_incomplete {
+  color: #d83935;
+}
+
+/* Success job states */
+.publish_job_status_publish_complete,
+.export_job_status_export_complete,
+.import_job_status_validate_success, .import_job_status_import_complete
+{
+  color: #03ab3a;
+}
