@@ -64,7 +64,8 @@ footer {
   border-top: $footer-border-height solid #999;
   color: #555;
   padding: $footer-padding-height 0;
-  position: absolute;
+  position: fixed;
+  z-index: 100;
   bottom: 0;
   width: 100%;
   height: $footer-content-height + (2 * $footer-padding-height);
