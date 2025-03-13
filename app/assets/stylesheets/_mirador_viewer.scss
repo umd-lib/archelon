@@ -26,6 +26,11 @@ padding-bottom: 75%;
 padding-bottom: 100%;
 }
 
+$footer-content-height: 25px;
+$footer-padding-height: 10px;
+$footer-border-height: 1px;
+$footer-height: $footer-content-height + (2 * $footer-padding-height);
+
 .intrinsic-container iframe {
 position: absolute;
 top:0;
