@@ -102,12 +102,16 @@
   <div style="padding-top: 10px;">
     <%= button_to "Delete Job", publish_job_url(@job), method: :delete, class:"btn btn-danger", data: { confirm: 'Delete job?' } %>
   </div>
-<% end %>
 
-<% if @job.publish_incomplete? or @job.publish_error? or  @job.unpublish_incomplete? or @job.unpublish_error? %>
+<% elsif @job.publish_incomplete? or @job.publish_error? or  @job.unpublish_incomplete? or @job.unpublish_error? %>
   <div style="padding-top: 10px;">
     <%= button_to "Delete Job", publish_job_url(@job), method: :delete, class:"btn btn-danger", data: { confirm: 'Delete job?' } %>
     <%= button_to "Resubmit Job", submit_publish_job_url(@job), class:"btn btn-success" %>
+  </div>
+
+<% else %>
+  <div style="padding-top: 10px;">
+    <%= button_to "Delete Job", publish_job_url(@job), method: :delete, class:"btn btn-danger", data: { confirm: 'Delete job?' } %>
   </div>
 <% end %>
 
