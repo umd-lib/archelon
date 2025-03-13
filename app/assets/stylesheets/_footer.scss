@@ -1,0 +1,35 @@
+
+// footer configuration
+html {
+    height: 100%;
+  }
+body {
+    height: 100%;
+    margin: 0;
+}
+
+#viewport {
+    min-height: 100%;
+    position: relative;
+    padding-bottom: $footer-height;
+}
+
+footer {
+    background-color: #f5f5f5;
+    border-top: $footer-border-height solid #999;
+    color: #555;
+    padding: $footer-padding-height 0;
+    position: fixed;
+    z-index: 100;
+    bottom: 0;
+    width: 100%;
+    height: $footer-content-height + (2 * $footer-padding-height);
+
+    a:link, a:visited {
+        color: #035e8c;
+    }
+}
+
+#common-links {
+    text-align: right;
+}
