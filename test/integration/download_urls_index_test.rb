@@ -28,7 +28,7 @@ class DownloadUrlsIndexTest < ActionDispatch::IntegrationTest
         page = response.body
 
         last_result_index = 0
-        results = DownloadUrl.ransack(rq_param).result.paginate(page: 1)
+        results = DownloadUrl.ransack(rq_param).result
         results.each do |entry|
           entry_path = download_url_path(entry)
           entry_index = page.index(entry_path)
