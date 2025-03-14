@@ -8,10 +8,10 @@ body {
     margin: 0;
 }
 
-#viewport {
+#main-container {
     min-height: 100%;
     position: relative;
-    padding-bottom: $footer-height;
+    padding-bottom: $footer-content-height + (2 * $footer-padding-height) !important;
 }
 
 footer {
