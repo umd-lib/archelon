@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
-class PublishJobsController < BookmarksController # rubocop:disable  Metrics/ClassLength
+class PublishJobsController < ApplicationController
+  include Blacklight::Bookmarks
+  include Blacklight::Searchable
+
   before_action :set_publish_job, only: %i[submit start_publish status_update]
 
   helper_method :status_text

@@ -13,9 +13,9 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
   def index
     @import_jobs =
       if current_cas_user.admin?
-        ImportJob.all.order('timestamp DESC').paginate(page: params[:page])
+        ImportJob.all.order('timestamp DESC')
       else
-        ImportJob.where(cas_user: current_cas_user).order('timestamp DESC').paginate(page: params[:page])
+        ImportJob.where(cas_user: current_cas_user).order('timestamp DESC')
       end
   end
 

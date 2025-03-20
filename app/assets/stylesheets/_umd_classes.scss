@@ -1,0 +1,32 @@
+.umd-title {
+  color: #fff;
+  font-size: 2em;
+  text-align: center;
+  padding-left: 40px;
+  text-decoration: none;
+}
+
+.umd-table {
+  overflow: auto;
+  border-collapse: collapse;
+  width: 100%;
+  height: 500px;
+}
+
+.umd-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.umd-table th td {
+  padding: 8px 16px;
+}
+
+.umd-table th {
+  background:#eee;
+}
+
+.publish-controls {
+  display: inline;
+}

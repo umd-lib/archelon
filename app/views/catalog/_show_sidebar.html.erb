@@ -19,18 +19,16 @@
   .select{|member| member['component'] == 'Page'}
   .sort{|a,b| a['page_number'] <=> b['page_number'] } %>
 <% unless pages.empty? %>
-  <div class="panel panel-default">
-    <div class="panel-heading">Select Page for More Options</div>
-    <div class="panel-body">
-      <ul class="nav">
-        <% pages.first(8).each do |v| %>
-          <li><%= link_to v['display_title'], solr_document_path(v['id']) %></li>
-        <% end %>
-        <% if pages.length > 8 %>
-          <li><a href="#pages" data-toggle="modal">more »</a></li>
-        <% end %>
-      </ul>
-    </div>
+  <div class="card">
+    <div class="card-header">Select Page for More Options</div>
+    <ul class="nav">
+      <% pages.first(8).each do |v| %>
+        <li><%= link_to v['display_title'], solr_document_path(v['id']) %></li>
+      <% end %>
+      <% if pages.length > 8 %>
+        <li><a href="#pages" data-toggle="modal">more »</a></li>
+      <% end %>
+    </ul>
   </div>
   <% if pages.length > 8 %>
     <div class="modal" id="pages" role="dialog">
@@ -55,15 +53,13 @@
 
 <% files = presenter.field_value(presenter.configuration.show_fields['pcdm_files']) %>
 <% unless files.empty? %>
-  <div class="panel panel-default">
-    <div class="panel-heading">Select File for Download Options</div>
-    <div class="panel-body">
-      <ul class="nav">
-        <% files.each do |v| %>
-          <li><%= link_to(v['display_title'].present? ? v['display_title'] : v['id'], solr_document_path(v['id'])) %></li>
-        <% end %>
-      </ul>
-    </div>
+  <div class="card">
+    <div class="card-header">Select File for Download Options</div>
+    <ul class="nav">
+      <% files.each do |v| %>
+        <li><%= link_to(v['display_title'].present? ? v['display_title'] : v['id'], solr_document_path(v['id'])) %></li>
+      <% end %>
+    </ul>
   </div>
 <% end %>
 <%# End UMD Customization %>
