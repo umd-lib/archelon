@@ -31,6 +31,6 @@ module CasHelper
 
     # Returns true if entry is authorized, false otherwise.
     def allow_access
-      !current_cas_user.nil? && !current_cas_user.unauthorized?
+      !current_cas_user.nil? && !current_cas_user.unauthorized? && current_cas_user.active?
     end
 end

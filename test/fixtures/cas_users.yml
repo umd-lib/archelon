@@ -59,3 +59,8 @@ key_user2:
   cas_directory_id: key_user2
   name: Key User (id_two)
   user_type: user
+
+jobless_user:
+  cas_directory_id: jobless_user
+  name: User (No jobs)
+  user_type: user
