@@ -331,10 +331,13 @@ class CatalogController < ApplicationController
 
   def show
     super
-    @show_edit_metadata = CatalogController.show_edit_metadata(@document['component'])
+
     @id = params[:id]
     @resource = ResourceService.resource_with_model(@id)
-    @published = @resource[:items][@id]['@type'].include?('http://vocab.lib.umd.edu/access#Published')
+    @displayable = mirador_displayable?(@document)
+
+    @published = @document[:is_published]
+    @show_edit_metadata = CatalogController.show_edit_metadata(@document[:content_model_name__str])
   end
 
   # Returns true if the given component has editable metadata, false otherwise.
@@ -344,6 +347,10 @@ class CatalogController < ApplicationController
   end
 
   private
+
+    def mirador_displayable?(document)
+      document[:content_model_name__str] == 'Item' || document[:content_model_name__str] == 'Page'
+    end
 
     def goto_about_page(err)
       solr_connection_error(err)

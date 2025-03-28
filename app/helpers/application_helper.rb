@@ -12,13 +12,6 @@ module ApplicationHelper
   PCDM_FILE = 'pcdm:File'
   ALLOWED_MIME_TYPE = 'image/tiff'
 
-  def mirador_displayable?(document)
-    rdf_types = document._source[:rdf_type]
-    component = document._source[:component]
-    return true if rdf_types.include?(PCDM_OBJECT) && (component != 'Article')
-
-    false
-  end
 
   def encoded_id(document)
     id = document._source[:id]
