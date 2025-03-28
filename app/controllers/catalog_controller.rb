@@ -40,16 +40,26 @@ class CatalogController < ApplicationController
     ## Default parameters to send to solr for all search-like requests. See also SearchBuilder#processed_parameters
     config.default_solr_params = {
       rows: 10,
-      # UMD Customization
-      # The fq parameter is conditionally overriden in app/models/search_builder.rb
-      fq: ['is_pcdm:true']
-      # End UMD Customization
+    }
+
+    config.fetch_many_document_params = {
+      fl: '*'
     }
 
     # solr path which will be added to solr base url before the other solr params.
     # UMD Customization
     config.solr_path = 'search'
-    config.document_solr_path = 'document'
+    config.document_solr_path = 'select'
+
+    # Default parameters to send on single-document requests to Solr. These settings are the Blacklight defaults (see
+    # SearchHelper#solr_doc_params) or parameters included in the Blacklight-jetty document requestHandler.
+    config.default_document_solr_params = {
+     qt: 'select',
+     ## These are hard-coded in the blacklight 'document' requestHandler
+     fl: '*,[child]',
+     rows: 1,
+     q: '{!term f=id v=$id}'
+    }
     # End UMD Customization
     #config.json_solr_path = 'advanced'
 
