@@ -28,8 +28,8 @@ class CatalogControllerTest < ActionController::TestCase
     end
   end
 
-  test 'show_edit_metadata? should be "true" for top-level components' do
-    assert CatalogController.show_edit_metadata?('Issue')
+  test 'show_edit_metadata should be "true" for top-level components' do
+    assert CatalogController.show_edit_metadata('Item')
   end
 
   test 'show_edit_metadata? should be "false" for non-top-level components' do

@@ -339,10 +339,8 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     @show_edit_metadata = CatalogController.show_edit_metadata(@document[:content_model_name__str])
   end
 
-  # Returns true if the given component has editable metadata, false otherwise.
-  def self.show_edit_metadata?(component)
-    uneditable_types = %w[Page Article]
-    !uneditable_types.include?(component) # rubocop:disable Rails/NegateInclude
+  def self.show_edit_metadata(model)
+    model == 'Item'
   end
 
   private
