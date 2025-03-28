@@ -1,0 +1,12 @@
+<%= render(@layout.new(field: @field)) do |component| %>
+  <% component.with_label do %>
+    <%= label %>
+  <% end %>
+  <% component.with_value do %>
+      <% @field.values.each do |v| %>
+        <li style="display: list-item; list-style: none">
+          <%= v %>
+        </li>
+      <% end %>
+  <% end %>
+<% end %>
