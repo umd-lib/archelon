@@ -69,7 +69,7 @@ class CatalogController < ApplicationController
     # UMD Customization
 
     # solr field configuration for search results/index views
-    config.index.title_field = 'display_title'
+    config.index.title_field = 'item__title__txt'
     # End UMD Customization
     # config.index.display_type_field = 'format'
     # config.index.thumbnail_field = 'thumbnail_path_ss'
@@ -99,7 +99,7 @@ class CatalogController < ApplicationController
 
     # solr field configuration for document/show views
     # UMD Customization
-    config.show.title_field = 'display_title'
+    config.show.title_field = 'item__title__txt'
     # End UMD Customization
     # config.show.display_type_field = 'format'
     # config.show.thumbnail_field = 'thumbnail_path_ss'
@@ -110,9 +110,6 @@ class CatalogController < ApplicationController
     # These components can be configured
     # config.show.document_component = MyApp::DocumentComponent
     # config.show.sidebar_component = MyApp::SidebarComponent
-    # UMD Customization
-    config.show.embed_component = Archelon::FcrepoResourceComponent
-    # End UMD Customization
 
     # solr fields that will be treated as facets by the blacklight application
     #   The ordering of the field names is the order of the display
@@ -139,15 +136,14 @@ class CatalogController < ApplicationController
     # :index_range can be an array or range of prefixes that will be used to create the navigation (note: It is case sensitive when searching values)
 
     # UMD Customization
-    config.add_facet_field 'presentation_set_label', label: 'Presentation Set', limit: 10, collapse: false,
+    config.add_facet_field 'presentation_set__facet', label: 'Presentation Set', limit: 10, collapse: false,
                                                      sort: 'index'
-    config.add_facet_field 'collection_title_facet', label: 'Administrative Set', limit: 10, sort: 'index'
-    config.add_facet_field 'author_not_tokenized', label: 'Author', limit: 10
-    config.add_facet_field 'type', label: 'Type', limit: 10
-    config.add_facet_field 'component_not_tokenized', label: 'Resource Type', limit: 10
-    config.add_facet_field 'rdf_type', label: 'RDF Type', limit: 10
-    config.add_facet_field 'visibility', label: 'Visibility'
-    config.add_facet_field 'publication_status', label: 'Publication'
+    config.add_facet_field 'admin_set__facet', label: 'Administrative Set', limit: 10, sort: 'index'
+    config.add_facet_field 'creator__facet', label: 'Author', limit: 10
+    config.add_facet_field 'resource_type__facet', label: 'Resource Type', limit: 10
+    config.add_facet_field 'rdf_type__facet', label: 'RDF Type', limit: 10
+    config.add_facet_field 'visibility__facet', label: 'Visibility'
+    config.add_facet_field 'publication_status__facet', label: 'Publication'
     # config.add_facet_field 'format', label: 'Format'
     # config.add_facet_field 'pub_date_ssim', label: 'Publication Year', single: true
     # config.add_facet_field 'subject_ssim', label: 'Topic', limit: 20, index_range: 'A'..'Z'
@@ -185,14 +181,14 @@ class CatalogController < ApplicationController
     # config.add_index_field 'lc_callnum_ssim', label: 'Call number'
     config.add_index_field 'id', label: 'Annotation', helper_method: :link_to_document_view, if:
     lambda { |_context, _field, document|
-      document[:rdf_type].include?('oa:Annotation')
+      document[:rdf_type__facet].include?('oa:Annotation')
     }
-    config.add_index_field 'component', label: 'Resource Type'
-    config.add_index_field 'author', label: 'Author'
-    config.add_index_field 'extracted_text', label: 'OCR', highlight: true, helper_method: :format_extracted_text, solr_params: { 'hl.fragsize' => 500 }
-    config.add_index_field 'created_by', label: 'Created By'
-    config.add_index_field 'created', label: 'Created'
-    config.add_index_field 'last_modified', label: 'Last Modified'
+    config.add_index_field 'resource_type__facet', label: 'Resource Type'
+    config.add_index_field 'creator__facet', label: 'Author'
+    # config.add_index_field 'extracted_text', label: 'OCR', highlight: true, helper_method: :format_extracted_text, solr_params: { 'hl.fragsize' => 500 }
+    config.add_index_field 'item__created_by__txt', label: 'Created By'
+    config.add_index_field 'item__created__dt', label: 'Created'
+    config.add_index_field 'item__last_modified__dt', label: 'Last Modified'
 
     # Have BL send the most basic highlighting parameters for you
     config.add_field_configuration_to_solr_request!
@@ -200,7 +196,6 @@ class CatalogController < ApplicationController
 
     # solr fields to be displayed in the show (single result) view
     #   The ordering of the field names is the order of the display
-    # UMD Customization
     # config.add_show_field 'title_tsim', label: 'Title'
     # config.add_show_field 'title_vern_ssim', label: 'Title'
     # config.add_show_field 'subtitle_tsim', label: 'Subtitle'
@@ -216,24 +211,56 @@ class CatalogController < ApplicationController
     # config.add_show_field 'lc_callnum_ssim', label: 'Call number'
     # config.add_show_field 'isbn_ssim', label: 'ISBN'
 
-    config.add_show_field 'pcdm_collection', label: 'Collection', helper_method: :collection_from_subquery
-    config.add_show_field 'publication_status', label: 'Publication Status'
-    config.add_show_field 'visibility', label: 'Visibility'
-    config.add_show_field 'presentation_set_label', label: 'Presentation Set', helper_method: :value_list
-    config.add_show_field 'pcdm_member_of', label: 'Member Of', helper_method: :parent_from_subquery
-    config.add_show_field 'pcdm_members', label: 'Members', helper_method: :members_from_subquery
-    config.add_show_field 'pcdm_related_object_of', label: 'Related To', helper_method: :related_object_of_from_subquery
-    config.add_show_field 'pcdm_related_objects', label: 'Related Objects', helper_method: :related_objects_from_subquery
-    config.add_show_field 'pcdm_file_of', label: 'File Of', helper_method: :file_parent_from_subquery
-    config.add_show_field 'pcdm_files', label: 'Files', helper_method: :files_from_subquery
-    config.add_show_field 'annotation_source', label: 'Pages', helper_method: :annotation_source_from_subquery
-    config.add_show_field 'size', label: 'Size'
-    config.add_show_field 'mime_type', label: 'Mime Type'
-    config.add_show_field 'digest', label: 'Digest'
-    config.add_show_field 'created_by', label: 'Created By'
-    config.add_show_field 'created', label: 'Created'
-    config.add_show_field 'last_modified', label: 'Last Modified'
-    config.add_show_field 'rdf_type', label: 'RDF Type', helper_method: :value_list
+    # UMD Customization
+
+    # Item Level Fields
+    config.add_show_field 'item__object_type__uri', label: 'Object Type', accessor: :object_type_anchor
+    config.add_show_field 'item__identifier__ids', label: 'Identifiers', component: ListMetadataComponent
+    # pair with item__rights__label__txt
+    config.add_show_field 'item__rights__uri', label: 'Rights Statement', accessor: :rights_anchor
+    config.add_show_field 'item__title__display', label: 'Title', accessor: :add_language_badge, component: ListMetadataComponent
+    config.add_show_field 'item__format__uri', label: 'Format'
+    # pair with item__archival_collection__label__txt
+    config.add_show_field 'item__archival_collection__uri', label: 'Archival Collection', accessor: :archival_collection_anchor
+    config.add_show_field 'item__date__dt', label: 'Date'
+    config.add_show_field 'item__description__txt', label: 'Description'
+    config.add_show_field 'creator__facet', label: 'Creator', component: ListMetadataComponent
+    config.add_show_field 'publisher__facet', label: 'Publisher', component: ListMetadataComponent
+    config.add_show_field 'location__facet', label: 'Location', component: ListMetadataComponent
+    # not sure what to do for extent
+    config.add_show_field 'subject__facet', label: 'Subject', component: ListMetadataComponent
+    config.add_show_field 'language__facet', label: 'Language', component: ListMetadataComponent
+    config.add_show_field 'item__terms_of_use__uri', label: 'Terms of Use', accessor: :terms_anchor
+    # not sure what to do for collection information
+    config.add_show_field 'handle__id', label: 'Handle', accessor: :handle_anchor
+
+
+    config.add_show_field 'publication_status__facet', label: 'Publication Status'
+    config.add_show_field 'visibility__facet', label: 'Visibility'
+    config.add_show_field 'presentation_set__facet', label: 'Presentation Set', component: ListMetadataComponent
+    config.add_show_field 'item__member_of__uri', label: 'Member Of', accessor: :member_of_anchor
+    config.add_show_field 'page_uri_sequence__uris', label: 'Members', accessor: :members_anchor, component: ListMetadataComponent
+    # config.add_show_field 'pcdm_related_object_of', label: 'Related To', helper_method: :related_object_of_from_subquery
+    # config.add_show_field 'pcdm_related_objects', label: 'Related Objects', helper_method: :related_objects_from_subquery
+    config.add_show_field 'item__created_by__txt', label: 'Created By'
+    config.add_show_field 'item__created__dt', label: 'Created'
+    config.add_show_field 'item__last_modified__dt', label: 'Last Modified'
+    config.add_show_field 'rdf_type__facet', label: 'RDF Type', component: ListMetadataComponent
+
+    # Page Level Fields
+    config.add_show_field 'page__title__txt', label: 'Page'
+    config.add_show_field 'page__member_of__uri', label: 'Member Of'
+    config.add_show_field 'page__has_file__uris', label: 'Files', component: ListMetadataComponent
+    config.add_show_field 'page__rdf_type__curies', label: 'RDF Types', component: ListMetadataComponent
+
+    # File Level Fields
+    config.add_show_field 'file__title__txt', label: 'Title'
+    config.add_show_field 'file__file_of__uri', label: 'File Of'
+    config.add_show_field 'file__size__int', label: 'Size'
+    config.add_show_field 'file__mime_type__txt', label: 'Mime Type'
+    config.add_show_field 'file__checksum__uri', label: 'Digest'
+    config.add_show_field 'file__rdf_type__uris', label: 'RDF Types', component: ListMetadataComponent
+
     # End UMD Customization
 
     # "fielded" search configuration. Used by pulldown among other places.
@@ -302,12 +329,12 @@ class CatalogController < ApplicationController
     # config.add_sort_field 'year-desc', sort: 'pub_date_si desc, title_si asc', label: 'year'
     # config.add_sort_field 'author', sort: 'author_si asc, title_si asc', label: 'author'
     # config.add_sort_field 'title_si asc, pub_date_si desc', label: 'title'
-    config.add_sort_field 'score desc, display_title asc', label: 'relevance'
-    config.add_sort_field 'display_title asc', label: 'title'
-    config.add_sort_field 'created asc', label: 'created (oldest to newest)'
-    config.add_sort_field 'created desc', label: 'created (newest to oldest)'
-    config.add_sort_field 'last_modified asc', label: 'last modified (oldest to newest)'
-    config.add_sort_field 'last_modified desc', label: 'last modified (newest to oldest)'
+    config.add_sort_field 'score desc, item__title__txt asc', label: 'relevance'
+    config.add_sort_field 'item__title__txt asc', label: 'title'
+    config.add_sort_field 'item__created__dt asc', label: 'created (oldest to newest)'
+    config.add_sort_field 'item__created__dt desc', label: 'created (newest to oldest)'
+    config.add_sort_field 'item__last_modified__dt asc', label: 'last modified (oldest to newest)'
+    config.add_sort_field 'item__last_modified__dt desc', label: 'last modified (newest to oldest)'
     # End UMD Customization
 
     # If there are more than this many search results, no spelling ("did you
