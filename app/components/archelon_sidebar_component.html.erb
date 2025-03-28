@@ -1,0 +1,61 @@
+<%= render(Blacklight::Document::MoreLikeThisComponent.new(document: document)) %>
+
+<%# UMD Customization %>
+<% model = document[:content_model_name__str] %>
+
+<% if model == 'Item' %>
+  <% pages = document[:item__has_member] %>
+  <div class="card">
+    <div class="card-header"> Select Page(s) for More Options </div>
+    <ul class="nav">
+      <% if pages.nil? %>%
+        <li> No Pages Found </li>
+      <% else %>
+        <% pages.each do |page| %>
+          <li>
+              <%= link_to page['page__title__txt'], solr_document_path(page[:id]) %>
+          </li>
+        <% end %>
+      <% end %>
+    </ul>
+  </div>
+
+<% end %>
+
+<% if model == 'Item' || model == 'Page' %>
+  <% files = model == 'Item' ? document[:item__has_file] : document[:page__has_file] %>
+  <div class="card">
+    <div class="card-header"> Select File(s) for Download Options </div>
+    <ul class="nav">
+      <% if files.nil? %>
+        <li> No Pages Found </li>
+      <% else %>
+        <% files.each do |file| %>
+          <li>
+              <%= link_to file['file__title__txt'], solr_document_path(file[:id]) %>
+          </li>
+        <% end %>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<% if model == 'Item' %>
+  <%= render Blacklight::Document::ShowToolsComponent.new(document: document) %>
+<% end %>
+
+<% if model == 'File' %>
+  <% rdf_types = document[:file__rdf_type__curies] %>
+  <% if rdf_types.include? 'fedora:Binary'%>
+    <div class="card">
+        <div class="card-header">Download or Generate Link</div>
+        <div class="card-body">
+        <ul class="nav">
+            <li><%= link_to 'Download', document[:id], target: '_blank' %></li>
+            <li><%= link_to 'Generate Download URL', new_download_url_path(document_url: document[:id]) %></li>
+        </ul>
+        </div>
+    </div>
+  <% end %>
+<% end %>
+<%# End UMD Customization %>
