@@ -64,16 +64,29 @@ class DownloadUrlsController < ApplicationController
 
     # Returns the default value for the "title" field of the DownloadUrl object.
     def create_default_title(solr_document)
-      title = solr_document[:display_title]
-      pcdm_file_of = solr_document[:pcdm_file_of]
-      if pcdm_file_of
-        # UMD Blacklight 8 Fix
-        file_of_document = search_service.fetch(pcdm_file_of)
-        # End UMD Blacklight 8 Fix
-        file_of_title = file_of_document[:display_title]
-        title += " - #{file_of_title}"
+      model = solr_document[:content_model_name__str]
+
+      if model == 'Item'
+        titles = solr_document[:item__title__display]
+
+        if titles.length > 1
+          remove_language_tags = titles.map { |title| title.gsub(/^\[@[\w-]+\]/, '') }
+          return remove_language_tags.join(seperator=" | ")
+        else
+          return titles[0].gsub(/^\[@[\w-]+\]/, '')
+        end
+
+      elsif model == 'Page'
+        item_title = create_default_title(find_solr_document(solr_document[:page__member_of__uri]))
+        return solr_document[:page__title__txt] + " - #{item_title}"
+
+      elsif model == 'File'
+        page_title = create_default_title(find_solr_document(solr_document[:file__file_of__uri]))
+        return solr_document[:file__title__txt] + " - #{page_title}"
+
+      else
+        return solr_document[:id] # Shouldn't happen but this should be noticeable if it does
       end
-      title
     end
 
     # Retrieves the Solr document with the given URL, or nil if the Solr
