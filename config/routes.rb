@@ -36,6 +36,7 @@ Rails.application.routes.draw do
 
   resources :cas_users
   get '/cas_users/:id/history' => 'cas_users#show_history'
+  post '/cas_users/:id/active' => 'cas_users#active_state', as: 'cas_user_active_state'
   get 'public_keys' => 'public_keys#index'
 
   get 'login', to: redirect('/auth/cas'), as: 'login' unless CasHelper.use_developer_login
