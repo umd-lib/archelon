@@ -81,6 +81,9 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # config.index.constraints_component = MyApp::ConstraintsComponent
     # config.index.search_bar_component = MyApp::SearchBarComponent
     # config.index.search_header_component = MyApp::SearchHeaderComponent
+    config.show.sidebar_component = ArchelonSidebarComponent
+    config.show.document_component = ArchelonDocumentComponent
+    config.index.document_component = ArchelonDocumentComponent
     config.index.document_actions.delete(:bookmark)
 
     config.add_results_document_tool(:bookmark, component: Blacklight::Document::BookmarkComponent, if: :render_bookmarks_control?)
