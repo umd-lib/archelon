@@ -55,8 +55,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # SearchHelper#solr_doc_params) or parameters included in the Blacklight-jetty document requestHandler.
     config.default_document_solr_params = {
      qt: 'select',
-     ## These are hard-coded in the blacklight 'document' requestHandler
-     fl: '*,[child]',
+     fl: '*,[child],item__first:[value v=""]',
      rows: 1,
      q: '{!term f=id v=$id}'
     }
