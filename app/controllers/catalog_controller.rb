@@ -219,13 +219,14 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     config.add_show_field 'item__identifier__ids', label: 'Identifiers', component: ListMetadataComponent
     # pair with item__rights__label__txt
     config.add_show_field 'item__rights__uri', label: 'Rights Statement', accessor: :rights_anchor
-    config.add_show_field 'item__title__display', label: 'Title', accessor: :add_language_badge, component: ListMetadataComponent
-    config.add_show_field 'item__format__uri', label: 'Format'
+    config.add_show_field 'item__title__display', label: 'Title', accessor: :title_language_badge, component: ListMetadataComponent
+    config.add_show_field 'item__format__uri', label: 'Format', accessor: :format_anchor
     # pair with item__archival_collection__label__txt
     config.add_show_field 'item__archival_collection__uri', label: 'Archival Collection', accessor: :archival_collection_anchor
     config.add_show_field 'item__date__dt', label: 'Date'
     config.add_show_field 'item__description__txt', label: 'Description'
-    config.add_show_field 'creator__facet', label: 'Creator', component: ListMetadataComponent
+    config.add_show_field 'item__bibliographic_citation__txt', label: 'Bibliographic Citation'
+    config.add_show_field 'item__creator', label: 'Creator', accessor: :creator_language_badge, component: ListMetadataComponent
     config.add_show_field 'publisher__facet', label: 'Publisher', component: ListMetadataComponent
     config.add_show_field 'location__facet', label: 'Location', component: ListMetadataComponent
     # not sure what to do for extent
@@ -239,14 +240,12 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     config.add_show_field 'publication_status__facet', label: 'Publication Status'
     config.add_show_field 'visibility__facet', label: 'Visibility'
     config.add_show_field 'presentation_set__facet', label: 'Presentation Set', component: ListMetadataComponent
-    config.add_show_field 'item__member_of__uri', label: 'Member Of', accessor: :member_of_anchor
-    config.add_show_field 'page_uri_sequence__uris', label: 'Members', accessor: :members_anchor, component: ListMetadataComponent
-    # config.add_show_field 'pcdm_related_object_of', label: 'Related To', helper_method: :related_object_of_from_subquery
-    # config.add_show_field 'pcdm_related_objects', label: 'Related Objects', helper_method: :related_objects_from_subquery
     config.add_show_field 'item__created_by__txt', label: 'Created By'
     config.add_show_field 'item__created__dt', label: 'Created'
     config.add_show_field 'item__last_modified__dt', label: 'Last Modified'
     config.add_show_field 'rdf_type__facet', label: 'RDF Type', component: ListMetadataComponent
+    config.add_show_field 'item__member_of__uri', label: 'Member Of', accessor: :member_of_anchor
+    config.add_show_field 'page_uri_sequence__uris', label: 'Members', accessor: :members_anchor, component: ListMetadataComponent
 
     # Page Level Fields
     config.add_show_field 'page__title__txt', label: 'Page'
