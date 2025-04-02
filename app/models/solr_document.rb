@@ -13,15 +13,32 @@ class SolrDocument
   # Recommendation: Use field names from Dublin Core
   use_extension(Blacklight::Document::DublinCore)
 
-  def add_language_badge
+  def creator_language_badge
+    return unless has? 'item__creator'
+
+    Array(fetch('item__creator')).map do |creator|
+      language_tags = creator[:agent__label__display].map do |name|
+        if name.starts_with? '[@'
+          language_tag = name.split(']')[0][2...]
+          actual_name = name.split(']')[1]
+          actual_name.html_safe + " <span class=\"badge text-bg-secondary\">#{language_tag}</span>".html_safe
+        else
+          name.html_safe
+        end
+      end
+      language_tags.join(' | ').html_safe
+    end
+  end
+
+  def title_language_badge
     return unless has? 'item__title__display'
 
     Array(fetch('item__title__display')).map do |title|
-      if title.starts_with? '['
-        language = title.split(']')[0][2...]
+      if title.starts_with? '[@'
+        language_tag = title.split(']')[0][2...]
         title = title.split(']')[1]
 
-        title.html_safe + " <span class=\"badge text-bg-secondary\">#{language}</span>".html_safe
+        title.html_safe + " <span class=\"badge text-bg-secondary\">#{language_tag}</span>".html_safe
       else
         title.html_safe
       end
@@ -31,6 +48,11 @@ class SolrDocument
   def archival_collection_anchor
     return unless has? 'item__archival_collection__uri'
     add_anchor_tag(fetch('item__archival_collection__uri'), fetch('item__archival_collection__label__txt'))
+  end
+
+  def format_anchor
+    return unless has? 'item__format__uri'
+    add_anchor_tag(fetch('item__format__uri'), fetch('item__format__label__txt'))
   end
 
   def handle_anchor
