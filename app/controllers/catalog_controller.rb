@@ -69,7 +69,7 @@ class CatalogController < ApplicationController
     # UMD Customization
 
     # solr field configuration for search results/index views
-    config.index.title_field = 'item__title__txt'
+    # config.index.title_field = 'item__title__txt'
     # End UMD Customization
     # config.index.display_type_field = 'format'
     # config.index.thumbnail_field = 'thumbnail_path_ss'
