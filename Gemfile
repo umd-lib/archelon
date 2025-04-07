@@ -91,7 +91,7 @@ gem 'delayed_cron_job', '~> 0.8'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
-  gem "debug", platforms: %i[ mri windows ]
+  gem "debug", '~> 1.10', platforms: %i[ mri windows ]
 end
 
 group :development do
