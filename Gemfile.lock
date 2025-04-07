@@ -117,7 +117,7 @@ GEM
     cssbundling-rails (1.4.0)
       railties (>= 6.0.0)
     date (3.3.4)
-    debug (1.9.2)
+    debug (1.10.0)
       irb (~> 1.10)
       reline (>= 0.3.8)
     delayed_cron_job (0.9.0)
@@ -459,7 +459,7 @@ DEPENDENCIES
   cancancan
   capybara
   cssbundling-rails
-  debug
+  debug (~> 1.10)
   delayed_cron_job (~> 0.8)
   delayed_job_active_record (~> 4.1)
   dotenv (~> 3.1.2)
