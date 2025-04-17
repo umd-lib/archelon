@@ -4,7 +4,8 @@
 <% model = document[:content_model_name__str] %>
 
 <% if model == 'Item' %>
-  <% pages = document[:item__has_member] %>
+  <% pages = document.key?(:page_label_sequence__txts) && document.key?(:page_uri_sequence__uris) ?
+      document[:page_label_sequence__txts].zip(document[:page_uri_sequence__uris]) : [] %>
   <div class="card">
     <div class="card-header"> Select Page(s) for More Options </div>
     <% if pages.nil? %>
@@ -17,7 +18,7 @@
         <ul style="list-style-type: none; height: <% 24 * pages.length %>px">
           <% pages.each do |page| %>
             <li>
-                <%= link_to page['page__title__txt'], solr_document_path(page[:id]) %>
+                <%= link_to page[0], solr_document_path(page[1]) %>
             </li>
           <% end %>
         </ul>
@@ -27,7 +28,7 @@
         <ul style="list-style-type: none; height: 200px; overflow: hidden; overflow-y: scroll;">
           <% pages.each do |page| %>
             <li>
-                <%= link_to page['page__title__txt'], solr_document_path(page[:id]) %>
+                <%= link_to page[0], solr_document_path(page[1]) %>
             </li>
           <% end %>
         </ul>
