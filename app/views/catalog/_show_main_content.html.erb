@@ -9,9 +9,10 @@
   <% if @displayable %>
     <div class="skip-link">
       <% if @show_edit_metadata %>
-        <a href="<%= resource_edit_url(id: @document.id)%>" class="btn btn-primary">
-            Edit Metadata
-        </a>
+        <%= link_to "Edit Metadata",
+                    resource_edit_url(id: @document.id),
+                    class: "btn btn-primary",
+                    data: { turbo: false } %>
 
         <%= form_with url: update_resource_url(@document.id), method: :post, data: {remote: false}, class: 'publish-controls' do |form| %>
           <% if @published %>
