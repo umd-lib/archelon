@@ -98,7 +98,7 @@ class ControlledURIRef extends React.Component {
       <React.Fragment>
         <input type="hidden" name="delete[]" value={this.initialStatement} disabled={this.props.value.isNew || this.noStartingValue || valueIsUnchanged}/>
         <input type="hidden" name="insert[]" value={statement} disabled={valueIsUnchanged || valueIsUnset}/>
-        <select name={this.props.name} value={this.state.uri} onChange={this.handleChange}>
+        <select name={this.props.name} value={this.state.uri} onChange={this.handleChange} style={{ maxWidth: '100%' }}>
           <option key="" value=""/>
           {entries.map(([uri, label]) => (
               <option key={uri} value={uri}>{label}</option>

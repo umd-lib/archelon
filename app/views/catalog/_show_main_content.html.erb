@@ -1,0 +1,38 @@
+<%= render blacklight_config.track_search_session.item_pagination_component.new(search_context: @search_context, search_session: search_session, current_document: @document) if blacklight_config.track_search_session.item_pagination_component %>
+<% @page_title = t('blacklight.search.show.title', document_title: document_presenter(@document).html_title, application_name: application_name).html_safe %>
+<% content_for(:head) { render_link_rel_alternates } %>
+
+<% document_component = blacklight_config.view_config(:show).document_component -%>
+<%= render (document_component).new(document_component.collection_parameter => document_presenter(@document), component: :div, show: true, partials: blacklight_config.view_config(:show).partials) do |component| %>
+
+  <%# UMD Customization %>
+  <% if @displayable %>
+    <div class="skip-link">
+      <% if @show_edit_metadata %>
+        <%= link_to "Edit Metadata",
+                    resource_edit_url(id: @document.id),
+                    class: "btn btn-primary",
+                    data: { turbo: false } %>
+
+        <%= form_with url: update_resource_url(@document.id), method: :post, data: {remote: false}, class: 'publish-controls' do |form| %>
+          <% if @published %>
+            <%= form.submit "Unpublish", name: 'command', class: 'btn btn-primary' %>
+          <% else %>
+            <%= form.submit "Publish", name: 'command', class: 'btn btn-primary' %>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+    <div class="image-viewer intrinsic-container ratio-4x3">
+      <iframe src="<%= mirador_viewer_url(@document, @current_query) %>" allowfullscreen></iframe>
+    </div>
+  <% end %>
+  <%# End UMD Customization %>
+
+  <% component.with_footer do %>
+    <% if @document.respond_to?(:export_as_openurl_ctx_kev) %>
+      <!-- COinS, for Zotero among others. -->
+      <span class="Z3988" title="<%= @document.export_as_openurl_ctx_kev(document_presenter(@document).display_type) %>"></span>
+    <% end %>
+  <% end %>
+<% end %>

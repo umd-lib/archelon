@@ -1,31 +1,32 @@
 <div id="error_explanation">
 </div>
 
-<h1><%= @page_title %></h1>
-
 <%= form_with(id: 'resource_edit_form', local: false) do %>
   <%
     content_model = @resource[:content_model]
     items = @resource[:items]
   %>
 
-  <% unless content_model[:required].empty? %>
-    <h2>Required Fields</h2>
-    <%= render 'metadata_edit_components', fields: content_model[:required], items: items, uri: @id %>
-  <% end %>
+  <div class="card">
+    <h1 class="card-header">
+      <%= @page_title %>
+    </h1>
 
-  <% unless content_model[:recommended].empty? %>
-    <h2>Recommended Fields</h2>
-    <%= render 'metadata_edit_components', fields: content_model[:recommended], items: items, uri: @id %>
-  <% end %>
+    <% unless content_model[:required].empty? %>
+      <%= render 'metadata_edit_components', title: 'Required Fields', fields: content_model[:required], items: items, uri: @id %>
+    <% end %>
 
-  <% unless content_model[:optional].empty? %>
-    <h2>Optional Fields</h2>
-    <%= render 'metadata_edit_components', fields: content_model[:optional], items: items, uri: @id %>
-  <% end %>
+    <% unless content_model[:recommended].empty? %>
+      <%= render 'metadata_edit_components', title: 'Recommended Fields', fields: content_model[:recommended], items: items, uri: @id %>
+    <% end %>
 
-  <div class="form-group">
-    <input id="resource_form_submit" type="submit" name="submit" value="Submit" class="btn btn-primary form-control" />
-    <%= link_to 'Cancel', solr_document_path(id: @id), class: 'btn btn-danger form-control' %>
+    <% unless content_model[:optional].empty? %>
+      <%= render 'metadata_edit_components', title: 'Optional Fields', fields: content_model[:optional], items: items, uri: @id %>
+    <% end %>
+  </div>
+
+  <div style="padding-top: 10px;">
+    <input id="resource_form_submit" type="submit" name="submit" value="Submit" class="btn btn-primary" />
+    <%= link_to 'Cancel', solr_document_path(id: @id), class: 'btn btn-danger' %>
   </div>
 <% end %>
