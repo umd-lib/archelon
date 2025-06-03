@@ -16,16 +16,38 @@ class ResourceController < ApplicationController
       flash[:notice] = t('resource_update_successful')
       render json: update_complete
     else
-      response = send_to_plastron(@id, @resource[:content_model_name], sparql_update)
+      plastron_rest_base_url = Addressable::URI.parse(ENV['PLASTRON_REST_BASE_URL'])
+      repo_path = @id.gsub(FCREPO_BASE_URL, '/')
+      plastron_resource_url = plastron_rest_base_url.join('resources' + repo_path)
+      begin
+        response = HTTP.follow.headers(
+          content_type: 'application/sparql-update'
+        ).patch(
+          plastron_resource_url,
+          params: {model: @resource[:content_model_name]},
+          body: sparql_update
+        )
+      rescue HTTP::ConnectionError
+        @errors = [{error: 'Unable to connect to server'}]
+        return render error_display
+      rescue HTTP::Error
+        @errors = [{error: 'System error'}]
+        return render error_display
+      end
 
-      if response.ok? && response.state == 'update_complete'
+      if response.status.success?
         flash[:notice] = t('resource_update_successful')
         return render json: update_complete
       end
 
-      @errors = response.parse_errors(@id)
-      error_display = render_to_string template: 'resource/_error_display', layout: false
-      render json: { state: 'update_failed', errorHtml: error_display, errors: @errors }
+      problem = response.parse
+      if problem['title'] == 'Content-model validation failed'
+        @errors = problem['validation_errors'].collect {|k,v| {error: "#{k}: #{v}"}}
+      else
+        @errors = [{error: problem['details']}]
+      end
+
+      render error_display
     end
   end
 
@@ -112,4 +134,10 @@ class ResourceController < ApplicationController
 
       @sparql_update = "DELETE {\n#{delete_statements.join} } INSERT {\n#{insert_statements.join} } WHERE {}"
     end
+
+    def error_display
+      html = render_to_string template: 'resource/_error_display', layout: false
+      {json: { state: 'update_failed', errorHtml: html, errors: @errors }}
+    end
+
 end
