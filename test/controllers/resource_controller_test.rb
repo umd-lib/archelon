@@ -25,15 +25,15 @@ class ResourceControllerTest < ActionController::TestCase
     resource_id = 'http://example.com/fcrepo/foo'
     ResourceService.should_receive(:resource_with_model).and_return({})
 
-    stub_request(:patch, "http://localhost:5000/resources/foo?model=Item").with(
+    stub_request(:patch, 'http://localhost:5000/resources/foo?model=Item').with(
       body: "DELETE {\n } INSERT {\n<plain_literal> <title> \"Lorem ipsum\"@en .\r\n } WHERE {}",
       headers: {
-        'Connection'=>'close',
-        'Content-Type'=>'application/sparql-update',
-        'Host'=>'localhost:5000',
-        'User-Agent'=>'http.rb/5.2.0'
+        'Connection' => 'close',
+        'Content-Type' => 'application/sparql-update',
+        'Host' => 'localhost:5000',
+        'User-Agent' => 'http.rb/5.2.0'
       }
-    ).to_return(status: 204, body: "", headers: {})
+    ).to_return(status: 204, headers: {}, body: '')
 
     post :update, params: { id: resource_id, insert: ["<plain_literal> <title> \"Lorem ipsum\"@en .\r\n"] }
 
@@ -47,13 +47,13 @@ class ResourceControllerTest < ActionController::TestCase
     resource_id = 'http://example.com/fcrepo/foo'
     ResourceService.should_receive(:resource_with_model).and_return({})
 
-    stub_request(:patch, "http://localhost:5000/resources/foo?model=Item").with(
+    stub_request(:patch, 'http://localhost:5000/resources/foo?model=Item').with(
       body: "DELETE {\n } INSERT {\n<plain_literal> <title> \"Lorem ipsum\"@en .\r\n } WHERE {}",
       headers: {
-        'Connection'=>'close',
-        'Content-Type'=>'application/sparql-update',
-        'Host'=>'localhost:5000',
-        'User-Agent'=>'http.rb/5.2.0'
+        'Connection' => 'close',
+        'Content-Type' => 'application/sparql-update',
+        'Host' => 'localhost:5000',
+        'User-Agent' => 'http.rb/5.2.0'
       }
     ).to_return(
       status: 400,

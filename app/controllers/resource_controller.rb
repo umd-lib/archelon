@@ -24,14 +24,14 @@ class ResourceController < ApplicationController
           content_type: 'application/sparql-update'
         ).patch(
           plastron_resource_url,
-          params: {model: @resource[:content_model_name]},
+          params: { model: @resource[:content_model_name] },
           body: sparql_update
         )
       rescue HTTP::ConnectionError
-        @errors = [{error: 'Unable to connect to server'}]
+        @errors = [{ error: 'Unable to connect to server' }]
         return render error_display
       rescue HTTP::Error
-        @errors = [{error: 'System error'}]
+        @errors = [{ error: 'System error' }]
         return render error_display
       end
 
@@ -40,13 +40,7 @@ class ResourceController < ApplicationController
         return render json: update_complete
       end
 
-      problem = response.parse
-      if problem['title'] == 'Content-model validation failed'
-        @errors = problem['validation_errors'].collect {|k,v| {error: "#{k}: #{v}"}}
-      else
-        @errors = [{error: problem['details']}]
-      end
-
+      @errors = errors_from_problem_details(response.parse)
       render error_display
     end
   end
@@ -86,38 +80,6 @@ class ResourceController < ApplicationController
       end
     end
 
-    def send_to_plastron(id, model, sparql_update) # rubocop:disable Metrics/MethodLength
-      params_to_skip = %w[utf8 authenticity_token submit controller action]
-      submission = params.to_unsafe_h
-      params_to_skip.each { |key| submission.delete(key) }
-
-      Rails.logger.debug("Sending SPARQL query to Plastron: '#{sparql_update}'")
-
-      body = {
-        uris: [id],
-        sparql_update: sparql_update
-      }
-
-      # Send synchronously to STOMP
-      begin
-        stomp_message = StompService.synchronous_message(:jobs_synchronous, body.to_json, update_headers(model))
-        return PlastronMessage.new(stomp_message)
-      rescue MessagingError => e
-        return PlastronExceptionMessage.new(e.message)
-      end
-    end
-
-    def update_headers(model)
-      {
-        PlastronCommand: 'update',
-        'PlastronArg-on-behalf-of': current_user.cas_directory_id,
-        'PlastronArg-no-transactions': 'True',
-        'PlastronArg-validate': 'True',
-        'PlastronArg-model': model,
-        'PlastronJobId': "SYNCHRONOUS-#{SecureRandom.uuid}"
-      }
-    end
-
     def update_complete
       {
         state: 'update_complete',
@@ -135,9 +97,16 @@ class ResourceController < ApplicationController
       @sparql_update = "DELETE {\n#{delete_statements.join} } INSERT {\n#{insert_statements.join} } WHERE {}"
     end
 
-    def error_display
-      html = render_to_string template: 'resource/_error_display', layout: false
-      {json: { state: 'update_failed', errorHtml: html, errors: @errors }}
+    def errors_from_problem_details(problem)
+      if problem['title'] == 'Content-model validation failed'
+        problem['validation_errors'].collect { |k, v| { error: "#{k}: #{v}" } }
+      else
+        [{ error: problem['details'] }]
+      end
     end
 
+    def error_display
+      html = render_to_string template: 'resource/_error_display', layout: false
+      { json: { state: 'update_failed', errorHtml: html, errors: @errors } }
+    end
 end
