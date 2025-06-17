@@ -400,6 +400,12 @@ Issue:
       label: 'Edition'
       type: :TypedLiteral
 
+    - name: 'rights'
+      uri: 'http://purl.org/dc/terms/rights'
+      label: 'Rights Statement'
+      type: :ControlledURIRef
+      vocab: 'rightsStatement'
+
   recommended: []
   optional:
     - name: 'terms_of_use'
