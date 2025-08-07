@@ -55,7 +55,7 @@ class CatalogController < ApplicationController
     # SearchHelper#solr_doc_params) or parameters included in the Blacklight-jetty document requestHandler.
     config.default_document_solr_params = {
      qt: 'select',
-     fl: '*,[child],item__first:[value v=""]',
+     fl: '*,[child],object__first:[value v=""]',
      rows: 1,
      q: '{!term f=id v=$id}'
     }
@@ -68,7 +68,7 @@ class CatalogController < ApplicationController
     # UMD Customization
 
     # solr field configuration for search results/index views
-    # config.index.title_field = 'item__title__txt'
+    # config.index.title_field = 'object__title__txt'
     # End UMD Customization
     # config.index.display_type_field = 'format'
     # config.index.thumbnail_field = 'thumbnail_path_ss'
@@ -101,7 +101,7 @@ class CatalogController < ApplicationController
 
     # solr field configuration for document/show views
     # UMD Customization
-    config.show.title_field = 'item__title__txt'
+    config.show.title_field = 'object__title__txt'
     # End UMD Customization
     # config.show.display_type_field = 'format'
     # config.show.thumbnail_field = 'thumbnail_path_ss'
@@ -188,9 +188,9 @@ class CatalogController < ApplicationController
     config.add_index_field 'resource_type__facet', label: 'Resource Type'
     config.add_index_field 'creator__facet', label: 'Author'
     # config.add_index_field 'extracted_text', label: 'OCR', highlight: true, helper_method: :format_extracted_text, solr_params: { 'hl.fragsize' => 500 }
-    config.add_index_field 'item__created_by__txt', label: 'Created By'
-    config.add_index_field 'item__created__dt', label: 'Created'
-    config.add_index_field 'item__last_modified__dt', label: 'Last Modified'
+    config.add_index_field 'object__created_by__txt', label: 'Created By'
+    config.add_index_field 'object__created__dt', label: 'Created'
+    config.add_index_field 'object__last_modified__dt', label: 'Last Modified'
 
     # Have BL send the most basic highlighting parameters for you
     config.add_field_configuration_to_solr_request!
@@ -216,24 +216,24 @@ class CatalogController < ApplicationController
     # UMD Customization
 
     # Item Level Fields
-    config.add_show_field 'item__object_type__uri', label: 'Object Type', accessor: :object_type_anchor
-    config.add_show_field 'item__identifier__ids', label: 'Identifiers', component: ListMetadataComponent
-    # pair with item__rights__label__txt
-    config.add_show_field 'item__rights__uri', label: 'Rights Statement', accessor: :rights_anchor
-    config.add_show_field 'item__title__display', label: 'Title', accessor: :title_language_badge, component: ListMetadataComponent
-    config.add_show_field 'item__format__uri', label: 'Format', accessor: :format_anchor
-    # pair with item__archival_collection__label__txt
-    config.add_show_field 'item__archival_collection__uri', label: 'Archival Collection', accessor: :archival_collection_anchor
-    config.add_show_field 'item__date__dt', label: 'Date'
-    config.add_show_field 'item__description__txt', label: 'Description'
-    config.add_show_field 'item__bibliographic_citation__txt', label: 'Bibliographic Citation'
-    config.add_show_field 'item__creator', label: 'Creator', accessor: :creator_language_badge, component: ListMetadataComponent
+    config.add_show_field 'object__object_type__uri', label: 'Object Type', accessor: :object_type_anchor
+    config.add_show_field 'object__identifier__ids', label: 'Identifiers', component: ListMetadataComponent
+    # pair with object__rights__label__txt
+    config.add_show_field 'object__rights__uri', label: 'Rights Statement', accessor: :rights_anchor
+    config.add_show_field 'object__title__display', label: 'Title', accessor: :title_language_badge, component: ListMetadataComponent
+    config.add_show_field 'object__format__uri', label: 'Format', accessor: :format_anchor
+    # pair with object__archival_collection__label__txt
+    config.add_show_field 'object__archival_collection__uri', label: 'Archival Collection', accessor: :archival_collection_anchor
+    config.add_show_field 'object__date__dt', label: 'Date'
+    config.add_show_field 'object__description__txt', label: 'Description'
+    config.add_show_field 'object__bibliographic_citation__txt', label: 'Bibliographic Citation'
+    config.add_show_field 'object__creator', label: 'Creator', accessor: :creator_language_badge, component: ListMetadataComponent
     config.add_show_field 'publisher__facet', label: 'Publisher', component: ListMetadataComponent
     config.add_show_field 'location__facet', label: 'Location', component: ListMetadataComponent
     # not sure what to do for extent
     config.add_show_field 'subject__facet', label: 'Subject', component: ListMetadataComponent
     config.add_show_field 'language__facet', label: 'Language', component: ListMetadataComponent
-    config.add_show_field 'item__terms_of_use__uri', label: 'Terms of Use', accessor: :terms_anchor
+    config.add_show_field 'object__terms_of_use__uri', label: 'Terms of Use', accessor: :terms_anchor
     # not sure what to do for collection information
     config.add_show_field 'handle__id', label: 'Handle', accessor: :handle_anchor
 
@@ -241,11 +241,11 @@ class CatalogController < ApplicationController
     config.add_show_field 'publication_status__facet', label: 'Publication Status'
     config.add_show_field 'visibility__facet', label: 'Visibility'
     config.add_show_field 'presentation_set__facet', label: 'Presentation Set', component: ListMetadataComponent
-    config.add_show_field 'item__created_by__txt', label: 'Created By'
-    config.add_show_field 'item__created__dt', label: 'Created'
-    config.add_show_field 'item__last_modified__dt', label: 'Last Modified'
+    config.add_show_field 'object__created_by__txt', label: 'Created By'
+    config.add_show_field 'object__created__dt', label: 'Created'
+    config.add_show_field 'object__last_modified__dt', label: 'Last Modified'
     config.add_show_field 'rdf_type__facet', label: 'RDF Type', component: ListMetadataComponent
-    config.add_show_field 'item__member_of__uri', label: 'Member Of', accessor: :member_of_anchor
+    config.add_show_field 'object__member_of__uri', label: 'Member Of', accessor: :member_of_anchor
     config.add_show_field 'page_uri_sequence__uris', label: 'Members', accessor: :members_anchor, component: ListMetadataComponent
 
     # Page Level Fields
@@ -330,12 +330,12 @@ class CatalogController < ApplicationController
     # config.add_sort_field 'year-desc', sort: 'pub_date_si desc, title_si asc', label: 'year'
     # config.add_sort_field 'author', sort: 'author_si asc, title_si asc', label: 'author'
     # config.add_sort_field 'title_si asc, pub_date_si desc', label: 'title'
-    config.add_sort_field 'score desc, item__title__txt asc', label: 'relevance'
-    config.add_sort_field 'item__title__txt asc', label: 'title'
-    config.add_sort_field 'item__created__dt asc', label: 'created (oldest to newest)'
-    config.add_sort_field 'item__created__dt desc', label: 'created (newest to oldest)'
-    config.add_sort_field 'item__last_modified__dt asc', label: 'last modified (oldest to newest)'
-    config.add_sort_field 'item__last_modified__dt desc', label: 'last modified (newest to oldest)'
+    config.add_sort_field 'score desc, object__title__txt asc', label: 'relevance'
+    config.add_sort_field 'object__title__txt asc', label: 'title'
+    config.add_sort_field 'object__created__dt asc', label: 'created (oldest to newest)'
+    config.add_sort_field 'object__created__dt desc', label: 'created (newest to oldest)'
+    config.add_sort_field 'object__last_modified__dt asc', label: 'last modified (oldest to newest)'
+    config.add_sort_field 'object__last_modified__dt desc', label: 'last modified (newest to oldest)'
     # End UMD Customization
 
     # If there are more than this many search results, no spelling ("did you
@@ -379,7 +379,8 @@ class CatalogController < ApplicationController
   end
 
   def self.show_edit_metadata(model)
-    model == 'Item'
+    uneditable_types = %w[Page File]
+    !uneditable_types.include?(component)
   end
 
   private
