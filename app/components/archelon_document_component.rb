@@ -139,15 +139,16 @@ class ArchelonDocumentComponent < Blacklight::Component
 
   # UMD Customization
   def parse_title(model, document)
-    if model == 'Item'
-      titles = document[:item__title__display].map { |title| title.starts_with?('[@') ? title.split(']')[1] : title }
-      return titles.join(seperator=" | ")
-
-    elsif model == 'Page'
+    if model == 'Page'
       return document[:page__title__txt]
 
     elsif model == 'File'
       return document[:file__title__txt]
+
+    elsif document[:object__title__display] != nil
+      titles = document[:object__title__display].map { |title| title.starts_with?('[@') ? title.split(']')[1] : title }
+      return titles.join(seperator=" | ")
+
     else
       return nil # Title should then default to using the id
     end
