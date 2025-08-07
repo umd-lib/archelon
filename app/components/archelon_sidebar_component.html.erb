@@ -3,7 +3,7 @@
 <%# UMD Customization %>
 <% model = document[:content_model_name__str] %>
 
-<% if model == 'Item' %>
+<% if model != 'Page' && model != 'File' %>
   <% pages = document.key?(:page_label_sequence__txts) && document.key?(:page_uri_sequence__uris) ?
       document[:page_label_sequence__txts].zip(document[:page_uri_sequence__uris]) : [] %>
   <div class="card">
@@ -38,8 +38,8 @@
 
 <% end %>
 
-<% if model == 'Item' || model == 'Page' %>
-  <% files = model == 'Item' ? document[:item__has_file] : document[:page__has_file] %>
+<% if model == 'Page' || model != 'File' %>
+  <% files = model == 'Page' ? document[:page__has_file] : document[:object__has_file] %>
   <div class="card">
     <div class="card-header"> Select File(s) for Download Options </div>
       <% if files.nil? %>
@@ -68,7 +68,7 @@
   </div>
 <% end %>
 
-<% if model == 'Item' %>
+<% if model != 'Page' && model != 'File' %>
   <%= render Blacklight::Document::ShowToolsComponent.new(document: document) %>
 <% end %>
 

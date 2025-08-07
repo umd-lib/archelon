@@ -66,8 +66,8 @@ class DownloadUrlsController < ApplicationController
     def create_default_title(solr_document)
       model = solr_document[:content_model_name__str]
 
-      if model == 'Item'
-        titles = solr_document[:item__title__display]
+      if model != 'Page' && model != 'File'
+        titles = solr_document[:object__title__display]
 
         if titles.length > 1
           remove_language_tags = titles.map { |title| title.gsub(/^\[@[\w-]+\]/, '') }
