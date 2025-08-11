@@ -113,7 +113,10 @@ pipeline {
           export MINITEST_REPORTER=JUnitReporter
 
           bundle exec rails db:reset
-          bundle exec rails test:system test
+
+          # Run the tests (not running test:system, because there are no
+          # system tests.
+          bundle exec rails test
         '''
       }
       post {
