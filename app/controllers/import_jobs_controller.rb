@@ -13,7 +13,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
   def index
     @import_jobs =
       if current_cas_user.admin?
-        ImportJob.all.order(timestamp: :desc)
+        ImportJob.order(timestamp: :desc)
       else
         ImportJob.where(cas_user: current_cas_user).order(timestamp: :desc)
       end
