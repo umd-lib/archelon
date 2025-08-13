@@ -141,7 +141,7 @@ class ImportJob < ApplicationRecord
     relpath = relpath.sub(FCREPO_BASE_URL, '')
 
     # Ensure that relpath starts with a "/"
-    relpath = '/' + relpath unless relpath.starts_with?('/')
+    relpath = "/#{relpath}" unless relpath.starts_with?('/')
 
     # Any path starting with "/pcdm" uses the flat layout, which always has
     # a relpath of '/pcdm'

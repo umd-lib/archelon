@@ -46,7 +46,7 @@ class ExportJob < ApplicationRecord
   end
 
   def filename
-    name + '.zip'
+    "#{name}.zip"
   end
 
   def path
