@@ -10,7 +10,7 @@ class StaticPagesControllerTest < ActionController::TestCase
 
   test 'should get about' do
     mock_env('SOLR_URL' => 'http://localhost:8983/solr/fedora4') do
-      stub_request(:get, ENV['SOLR_URL']).to_return(status: 200, body: '', headers: {})
+      stub_request(:get, ENV.fetch('SOLR_URL', nil)).to_return(status: 200, body: '', headers: {})
       get :about
       assert_response :success
     end

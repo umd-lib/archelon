@@ -128,7 +128,7 @@ class DownloadUrlsControllerTest < ActionController::TestCase
     # Assign a dummy RETRIEVE_BASE_URL so test can run without a .env file
     ENV['RETRIEVE_BASE_URL'] = 'https://example.com/'
     get :show, params: { id: @download_url.id }
-    retrieve_base_url = ENV['RETRIEVE_BASE_URL']
+    retrieve_base_url = ENV.fetch('RETRIEVE_BASE_URL', nil)
     assert_not assigns(:download_url).nil?
     assert_equal retrieve_base_url + @download_url.token, assigns(:download_url).retrieve_url
   end
