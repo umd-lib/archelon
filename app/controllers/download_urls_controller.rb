@@ -4,6 +4,7 @@ class DownloadUrlsController < ApplicationController
   load_and_authorize_resource
   # UMD Blacklight 8 Fix
   include Blacklight::Searchable
+
   # End UMD Blacklight 8 Fix
 
   # GET /download_urls
@@ -23,6 +24,7 @@ class DownloadUrlsController < ApplicationController
   def new
     solr_document = find_solr_document(params['document_url'])
     not_found && return unless solr_document
+
     @download_url = DownloadUrl.new
     @download_url.url = solr_document[:id]
     @download_url.title = create_default_title(solr_document)
@@ -56,7 +58,6 @@ class DownloadUrlsController < ApplicationController
       Rails.logger.error "Unknown state requested: #{params[:state]}"
         redirect_back fallback_location: download_urls_url, error: 'Bad request error'
     end
-
   end
 
   private

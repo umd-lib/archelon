@@ -144,7 +144,6 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
       redirect_to controller: :import_jobs, action: :index if params[:commit] == 'Cancel'
     end
 
-
     # Returns an array of arrays, the first element being the collection title,
     # the second element the URI of the collection.
     #

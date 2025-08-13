@@ -65,6 +65,7 @@ namespace :stomp do # rubocop:disable Metrics/BlockLength
   # Notifies the Archelon main application that a job has been updated
   def notify_archelon(message, type:)
     include Rails.application.routes.url_helpers
+
     default_url_options[:host] = ARCHELON_SERVER[:host]
     default_url_options[:port] = ARCHELON_SERVER[:port]
 
