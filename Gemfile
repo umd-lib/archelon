@@ -113,6 +113,10 @@ group :test do
   # UMD Customization
   gem 'minitest-reporters'
 
+  # Code analysis tools
+  gem 'rubocop', '~> 1.79.0', require: false
+  gem 'rubocop-rails', '~> 2.33.0', require: false
+
   gem 'simplecov', require: false
   gem 'simplecov-rcov', require: false
 
