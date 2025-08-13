@@ -1,4 +1,4 @@
-ENV["RAILS_ENV"] ||= "test"
+ENV['RAILS_ENV'] ||= 'test'
 
 # UMD Customization
 require 'simplecov'
@@ -10,8 +10,8 @@ SimpleCov.formatters = [
 SimpleCov.start
 # End UMD Customization
 
-require_relative "../config/environment"
-require "rails/test_help"
+require_relative '../config/environment'
+require 'rails/test_help'
 
 # UMD Customization
 require 'minitest/reporters'
