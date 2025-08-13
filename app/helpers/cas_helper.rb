@@ -5,7 +5,7 @@ module CasHelper
     redirect_to login_path and return if !logged_in? && !request.env['omniauth.auth'] # rubocop:disable Style/AndOr
     return if allow_access
 
-    render(file: Rails.root.join('public', '403.html'), status: :forbidden, layout: false)
+    render(file: Rails.root.join('public/403.html'), status: :forbidden, layout: false)
   end
 
   # Retrieves the User for the current request from the database, using the

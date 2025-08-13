@@ -4,7 +4,7 @@ namespace :db do
   desc 'Schedule all cron jobs'
   task schedule_jobs: :environment do
     # Need to load all jobs definitions in order to find subclasses
-    glob = Rails.root.join('app', 'cron_jobs', '**', '*_job.rb')
+    glob = Rails.root.join('app/cron_jobs/**/*_job.rb')
     Dir.glob(glob).each { |file| require file }
 
     # Remove any existing CronJobs, in case the cron signature has changed

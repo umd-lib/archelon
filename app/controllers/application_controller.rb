@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
 
   rescue_from CanCan::AccessDenied do
-    render file: Rails.root.join('public', '403.html'), status: :forbidden, layout: false
+    render file: Rails.root.join('public/403.html'), status: :forbidden, layout: false
   end
 
   before_action :authenticate
@@ -25,15 +25,15 @@ class ApplicationController < ActionController::Base
 
   # Causes a "404 - Not Found" error page to be displayed.
   def not_found
-    render file: Rails.root.join('public', '404.html'), status: :not_found, layout: false
+    render file: Rails.root.join('public/404.html'), status: :not_found, layout: false
   end
 
   def forbidden
-    render file: Rails.root.join('public', '403.html'), status: :forbidden, layout: false
+    render file: Rails.root.join('public/403.html'), status: :forbidden, layout: false
   end
 
   def bad_request
-    render file: Rails.root.join('public', '500.html'), status: :bad_request, layout: false
+    render file: Rails.root.join('public/500.html'), status: :bad_request, layout: false
   end
 
   def impersonating?
