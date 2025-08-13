@@ -119,7 +119,7 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     end
 
     def selected_items?
-      return unless current_user.bookmarks.count.zero?
+      return unless current_user.bookmarks.none?
 
       flash[:error] = I18n.t(:needs_selected_items)
       redirect_to controller: :bookmarks, action: :index

@@ -25,7 +25,7 @@ class ImportJobsControllerTest < ActionController::TestCase
   end
 
   test 'index page should show all jobs when user is an admin' do
-    assert ImportJob.count.positive?, 'Test requires at least one import job'
+    assert ImportJob.any?, 'Test requires at least one import job'
     assert @cas_user.admin?, 'Test requires an admin user'
 
     get :index
@@ -34,7 +34,7 @@ class ImportJobsControllerTest < ActionController::TestCase
   end
 
   test "index page should show only user's jobs when user is not an admin" do
-    assert ImportJob.count > 1, 'Test requires at least two import jobs'
+    assert ImportJob.many?, 'Test requires at least two import jobs'
 
     @cas_user = cas_users(:test_user)
     mock_cas_login(@cas_user.cas_directory_id)
@@ -48,7 +48,7 @@ class ImportJobsControllerTest < ActionController::TestCase
 
     get :index
     import_jobs = assigns(:import_jobs)
-    assert import_jobs.count.positive?, 'User must have at least one import job.'
+    assert import_jobs.any?, 'User must have at least one import job.'
     assert import_jobs.count < ImportJob.count, 'There must be some jobs not belonging to user.'
     import_jobs.each do |j|
       assert_equal @cas_user, j.cas_user
