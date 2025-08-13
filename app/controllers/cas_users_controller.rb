@@ -79,12 +79,12 @@ class CasUsersController < ApplicationController
   def destroy
     @cas_user.destroy
     respond_to do |format|
-      format.html { redirect_to cas_users_url, notice: 'Cas user was successfully destroyed.' }
+      format.html { redirect_to cas_users_url, notice: I18n.t('cas_users.destroy.user_destroyed') }
       format.json { head :no_content }
     end
   rescue ActiveRecord::InvalidForeignKey
     respond_to do |format|
-      format.html { redirect_to cas_users_url, error: 'Cas user cannot be removed.' }
+      format.html { redirect_to cas_users_url, error: I18n.t('cas_users.destroy.user_cannot_be_removed') }
       format.json { head :forbidden }
     end
   end

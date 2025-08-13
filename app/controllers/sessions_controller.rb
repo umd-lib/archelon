@@ -39,7 +39,7 @@ class SessionsController < ApplicationController
       session[:admin_id] = current_cas_user.id
       sign_in(user)
     else
-      flash[:notice] = 'You do not have permission to access this page'
+      flash[:notice] = I18n.t('sessions.login_as.no_permission')
     end
     redirect_to root_path
   end
