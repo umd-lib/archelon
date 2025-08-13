@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # UMD Customization
 require 'erb'
 require 'addressable/template'
