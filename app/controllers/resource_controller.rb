@@ -69,7 +69,7 @@ class ResourceController < ApplicationController
       submission = params.to_unsafe_h
       params_to_skip.each { |key| submission.delete(key) }
 
-      Rails.logger.debug("Sending SPARQL query to Plastron: '#{sparql_update}'")
+      Rails.logger.debug { "Sending SPARQL query to Plastron: '#{sparql_update}'" }
 
       body = {
         uris: [id],
