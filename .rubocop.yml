@@ -49,10 +49,3 @@ Layout/IndentationConsistency:
 
 Style/EmptyMethod:
   EnforcedStyle: expanded
-
-Rails/UnknownEnv:
-  Environments:
-    - production
-    - development
-    - test
-    - vagrant
