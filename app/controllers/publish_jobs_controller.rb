@@ -39,9 +39,9 @@ class PublishJobsController < ApplicationController
   def index
     @jobs =
       if current_cas_user.admin?
-        PublishJob.all.order('updated_at DESC')
+        PublishJob.all.order(updated_at: :desc)
       else
-        PublishJob.where(cas_user: current_cas_user).order('updated_at DESC')
+        PublishJob.where(cas_user: current_cas_user).order(updated_at: :desc)
       end
   end
 
