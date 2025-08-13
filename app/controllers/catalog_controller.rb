@@ -332,14 +332,14 @@ class CatalogController < ApplicationController
 
   def show
     super
-    @show_edit_metadata = CatalogController.show_edit_metadata(@document['component'])
+    @show_edit_metadata = CatalogController.show_edit_metadata?(@document['component'])
     @id = params[:id]
     @resource = ResourceService.resource_with_model(@id)
     @published = @resource[:items][@id]['@type'].include?('http://vocab.lib.umd.edu/access#Published')
   end
 
   # Returns true if the given component has editable metadata, false otherwise.
-  def self.show_edit_metadata(component)
+  def self.show_edit_metadata?(component)
     uneditable_types = %w[Page Article]
     !uneditable_types.include?(component)
   end

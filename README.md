@@ -206,7 +206,7 @@ To enable use of "localhost", the CAS login must be bypassed. To do this:
 This functionality uses the OmniAuth "[developer][omniauth_developer]" strategy,
 and is only available in the local development environment
 (`ENV["RAILS_ENV"] == "development"`) and when the `ARCHELON_AUTH` environment
-variable is set to "developer" (see the `use_developer_login` method in
+variable is set to "developer" (see the `use_developer_login?` method in
 [app/helpers/cas_helper.rb](app/helpers/cas_helper.rb)).
 
 ## Action Cable

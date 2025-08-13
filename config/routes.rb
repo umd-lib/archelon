@@ -39,8 +39,8 @@ Rails.application.routes.draw do
   post '/cas_users/:id/active' => 'cas_users#active_state', as: 'cas_user_active_state'
   get 'public_keys' => 'public_keys#index'
 
-  get 'login', to: redirect('/auth/cas'), as: 'login' unless CasHelper.use_developer_login
-  get 'login', to: redirect('/auth/developer'), as: 'login' if CasHelper.use_developer_login
+  get 'login', to: redirect('/auth/cas'), as: 'login' unless CasHelper.use_developer_login?
+  get 'login', to: redirect('/auth/developer'), as: 'login' if CasHelper.use_developer_login?
   get 'admin/user/login_as/:user_id', to: 'sessions#login_as', as: 'admin_user_login_as'
   get 'logout', to: 'sessions#destroy', as: 'logout'
   get 'auth/:provider/callback', to: 'sessions#create'
