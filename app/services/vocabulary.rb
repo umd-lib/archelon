@@ -29,6 +29,6 @@ class Vocabulary
 
   # Returns the URI for this vocabulary
   def uri
-    VOCAB_CONFIG['local_authority_base_uri'] + identifier + '#'
+    "#{VOCAB_CONFIG['local_authority_base_uri']}#{identifier}#"
   end
 end
