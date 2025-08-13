@@ -3,7 +3,7 @@
 module Archelon
   class FcrepoResourceComponent < Blacklight::Component
 
-    def initialize(document: nil, presenter: nil, document_counter: nil)
+    def initialize(document: nil, presenter: nil, document_counter: nil) # rubocop:disable Lint/UnusedMethodArgument
       @document = document
     end
   end
