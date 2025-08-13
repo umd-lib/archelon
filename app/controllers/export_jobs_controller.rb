@@ -34,7 +34,7 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
   def destroy
     job = ExportJob.find(params[:id])
 
-    File.delete(job.path) if File.exist? job.path
+    FileUtils.rm_f(job.path)
 
     ExportJob.destroy(params[:id])
     redirect_to export_jobs_path, status: :see_other

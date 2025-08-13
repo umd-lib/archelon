@@ -11,7 +11,7 @@ class DeleteOldExportsJob < ApplicationJob
     if export_jobs.any?
       export_jobs.each do |job|
         Rails.logger.info("Deleting export job: #{job.name}")
-        File.delete(job.path) if File.exist? job.path
+        FileUtils.rm_f(job.path)
         job.destroy
       end
     else
