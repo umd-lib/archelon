@@ -26,7 +26,7 @@ class PublishJob < ApplicationRecord
   serialize :solr_ids, class: Array, coder: YAML
   # End UMD Blacklight 8 Fix
 
-  enum state: {
+  enum :state, {
     publish_not_submitted: 1,
     publish_pending: 2,
     publish_in_progress: 3,

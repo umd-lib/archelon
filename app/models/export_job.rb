@@ -4,7 +4,7 @@
 class ExportJob < ApplicationRecord
   belongs_to :cas_user
 
-  enum state: {
+  enum :state, {
     pending: 1,
     in_progress: 2,
     export_complete: 3,
