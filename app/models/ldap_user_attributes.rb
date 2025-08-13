@@ -21,7 +21,7 @@ class LdapUserAttributes
     @cas_directory_id = cas_directory_id
 
     # Possible skip LDAP search (intended to only work in development environment)
-    return new(cas_directory_id, LDAP_OVERRIDE.split(' ')) if ldap_override?
+    return new(cas_directory_id, LDAP_OVERRIDE.split) if ldap_override?
 
     filter = Net::LDAP::Filter.eq('uid', cas_directory_id)
     first_entry = LDAP.search(base: LDAP_BASE, filter: filter, attributes: LDAP_ATTRIBUTES)&.first
