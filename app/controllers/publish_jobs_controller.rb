@@ -104,7 +104,7 @@ class PublishJobsController < ApplicationController
     # it is important to use perform_now so that
     # ActionCable receives timely updates
     PublishJobStatusUpdatedJob.perform_now(@publish_job)
-    render plain: '', status: :no_content
+    render status: :no_content
   end
 
   # UMD Blacklight 8 Fix

@@ -86,7 +86,7 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     # it is important to use perform_now so that
     # ActionCable receives timely updates
     ExportJobStatusUpdatedJob.perform_now(@job)
-    render plain: '', status: :no_content
+    render status: :no_content
   end
 
   private
