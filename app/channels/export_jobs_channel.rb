@@ -4,7 +4,7 @@
 class ExportJobsChannel < ApplicationCable::Channel
   def subscribed
     export_job = ExportJob.find(params[:id])
-    Rails.logger.debug("Received subscription for ExportJob #{export_job.id} from user #{username}")
+    Rails.logger.debug { "Received subscription for ExportJob #{export_job.id} from user #{username}" }
     stream_for export_job if authorized_to_stream export_job
   end
 
@@ -21,7 +21,7 @@ class ExportJobsChannel < ApplicationCable::Channel
     export_job = ExportJob.find(job_id)
     return if export_job.nil?
 
-    Rails.logger.debug("Performing ExportJobStatusUpdatedJob ExportJob #{job_id}")
+    Rails.logger.debug { "Performing ExportJobStatusUpdatedJob ExportJob #{job_id}" }
     ExportJobStatusUpdatedJob.perform_now(export_job)
   end
 
@@ -34,7 +34,7 @@ class ExportJobsChannel < ApplicationCable::Channel
     # confirm that the current user should be able to subscribe to this export job
     def authorized_to_stream(export_job)
       if current_user.admin? || export_job.cas_user == current_user
-        Rails.logger.debug("Streaming Export Job #{export_job.id} for user #{username}")
+        Rails.logger.debug { "Streaming Export Job #{export_job.id} for user #{username}" }
         true
       else
         Rails.logger.warning("User #{username} does not have permission to view ExportJob #{export_job.id}")
