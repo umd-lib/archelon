@@ -87,7 +87,6 @@ class StompListener
       self
     rescue Stomp::Error::MaxReconnectAttempts
       puts "Unable to connect to STOMP message broker at #{server}"
-      return
     end
   end
 

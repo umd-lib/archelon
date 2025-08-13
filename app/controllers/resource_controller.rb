@@ -79,9 +79,9 @@ class ResourceController < ApplicationController
       # Send synchronously to STOMP
       begin
         stomp_message = StompService.synchronous_message(:jobs_synchronous, body.to_json, update_headers(model))
-        return PlastronMessage.new(stomp_message)
+        PlastronMessage.new(stomp_message)
       rescue MessagingError => e
-        return PlastronExceptionMessage.new(e.message)
+        PlastronExceptionMessage.new(e.message)
       end
     end
 

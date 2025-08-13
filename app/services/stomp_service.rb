@@ -43,8 +43,8 @@ class StompService
         return stomp_message
       end
     rescue Timeout::Error
-      return raise MessagingError,
-                   "No message received in #{receive_timeout} seconds. #{I18n.t('resource_update_timeout_error')}"
+      raise MessagingError,
+            "No message received in #{receive_timeout} seconds. #{I18n.t('resource_update_timeout_error')}"
     ensure
       connection.disconnect
     end
