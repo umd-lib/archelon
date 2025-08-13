@@ -44,7 +44,7 @@ class DownloadUrlsController < ApplicationController
     end
   end
 
-  def update
+  def update # rubocop:disable Metrics/AbcSize
     @download_url = DownloadUrl.find(params[:id])
     if params[:state] == 'disable'
       if @download_url&.enabled?
