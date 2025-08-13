@@ -33,7 +33,7 @@ class ImportJob < ApplicationRecord
   has_one_attached :metadata_file
   has_one_attached :binary_zip_file
 
-  enum state: {
+  enum :state, {
     validate_pending: 1,
     validate_success: 2,
     validate_failed: 3,
