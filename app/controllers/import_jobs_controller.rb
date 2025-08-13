@@ -110,7 +110,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     # it is important to use perform_now so that
     # ActionCable receives timely updates
     ImportJobStatusUpdatedJob.perform_now(@import_job)
-    render plain: '', status: :no_content
+    render status: :no_content
   end
 
   # UMD Blacklight 8 Fix
