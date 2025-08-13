@@ -80,7 +80,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     render :edit
   end
 
-  def import # rubocop:disable Metrics/MethodLength
+  def import # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     if @import_job.import_complete?
       flash[:error] = I18n.t(:import_already_performed)
     elsif @import_job.validate_failed?
