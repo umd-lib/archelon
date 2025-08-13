@@ -17,11 +17,11 @@ class DownloadUrl < ApplicationRecord
   end
 
   # UMD Blacklight 8 Fix
-  def self.ransackable_associations(auth_object = nil)
+  def self.ransackable_associations(auth_object = nil) # rubocop:disable Lint/UnusedMethodArgument
     []
   end
 
-  def self.ransackable_attributes(auth_object = nil)
+  def self.ransackable_attributes(auth_object = nil) # rubocop:disable Lint/UnusedMethodArgument
     ['created_at', 'creator_eq', 'enabled', 'enabled_eq']
   end
   # End UMD Blacklight 8 Fix
