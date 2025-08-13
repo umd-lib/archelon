@@ -42,7 +42,6 @@ class MimeTypes < SolrQueryService
       end
     end
 
-    mime_types = mime_set.sort.to_a
-    mime_types
+    mime_set.sort.to_a
   end
 end

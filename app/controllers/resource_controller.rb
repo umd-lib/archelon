@@ -106,8 +106,8 @@ class ResourceController < ApplicationController
     def sparql_update
       return @sparql_update if @sparql_update
 
-      delete_statements = (params[:delete] || [])
-      insert_statements = (params[:insert] || [])
+      delete_statements = params[:delete] || []
+      insert_statements = params[:insert] || []
       return '' if delete_statements.empty? && insert_statements.empty?
 
       @sparql_update = "DELETE {\n#{delete_statements.join} } INSERT {\n#{insert_statements.join} } WHERE {}"
