@@ -13,7 +13,7 @@ class DownloadUrl < ApplicationRecord
   # Return a String representing the one-time use URL to retrieve the
   # associated Fedora document.
   def retrieve_url
-    ENV['RETRIEVE_BASE_URL'] + token
+    ENV.fetch('RETRIEVE_BASE_URL', nil) + token
   end
 
   # UMD Blacklight 8 Fix

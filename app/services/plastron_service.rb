@@ -16,7 +16,7 @@ class PlastronService
   # Returns the Plastron URL to query from the given job id (which is
   # assumed to have the form 'http://localhost:3000/import_jobs/5')
   def self.construct_import_job_url(import_job_id)
-    plastron_rest_base_url = ENV['PLASTRON_REST_BASE_URL']
+    plastron_rest_base_url = ENV.fetch('PLASTRON_REST_BASE_URL', nil)
     raise StandardError, 'PLASTRON_REST_BASE_URL not set' if plastron_rest_base_url.nil?
 
     encoded_job_id = Addressable::URI.encode_component(import_job_id, Addressable::URI::CharacterClasses::UNRESERVED)
