@@ -48,7 +48,8 @@ class DownloadUrlsController < ApplicationController
       if @download_url&.enabled?
         @download_url.enabled = false
         @download_url.save!
-        redirect_back fallback_location: download_urls_url, notice: "Download URL token \"#{@download_url.token}\" was disabled"
+        redirect_back fallback_location: download_urls_url,
+                      notice: "Download URL token \"#{@download_url.token}\" was disabled"
       end
     else
       # this shouldn't happen in the normal course of navigating through the site

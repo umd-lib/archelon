@@ -6,7 +6,8 @@ class BookmarksController < CatalogController
   # UMD Customization
   blacklight_config.add_show_tools_partial(:export, path: :new_export_job_url, modal: false)
   blacklight_config.add_show_tools_partial(:publish_job, path: :new_publish_job_url, modal: false, label: 'Publish')
-  blacklight_config.add_show_tools_partial(:unpublish_job, path: :new_unpublish_job_url, modal: false, label: 'Unpublish')
+  blacklight_config.add_show_tools_partial(:unpublish_job, path: :new_unpublish_job_url, modal: false,
+                                                           label: 'Unpublish')
 
   def create
     if current_user.bookmarks.count >= max_limit

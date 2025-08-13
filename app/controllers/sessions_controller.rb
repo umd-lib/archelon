@@ -10,7 +10,7 @@ class SessionsController < ApplicationController
       session[:unauthorized_user] = true # Not sure if this is actually used anywhere
       CasAuthentication.sign_out(session, cookies)
 
-      render(file: Rails.root.join('public', '403.html'), status: :forbidden, layout: false) and return # rubocop:disable Style/AndOr, Metrics/LineLength
+      render(file: Rails.root.join('public', '403.html'), status: :forbidden, layout: false) and return # rubocop:disable Style/AndOr, Layout/LineLength
     else
       sign_in(@user)
       redirect_to root_path
@@ -29,12 +29,12 @@ class SessionsController < ApplicationController
     # End UMD Blacklight 8 Fix
   end
 
-  def login_as # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/LineLength
+  def login_as # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Layout/LineLength
     user = CasUser.find(params[:user_id])
     if impersonating? && impersonating_admin_id == user.id
       sign_in(user)
       session.delete(:admin_id)
-      redirect_to request.headers['HTTP_REFERER'] and return if request.headers['HTTP_REFERER'] # rubocop:disable Style/AndOr, Metrics/LineLength
+      redirect_to request.headers['HTTP_REFERER'] and return if request.headers['HTTP_REFERER'] # rubocop:disable Style/AndOr, Layout/LineLength
     elsif user && can_login_as?(user)
       session[:admin_id] = current_cas_user.id
       sign_in(user)

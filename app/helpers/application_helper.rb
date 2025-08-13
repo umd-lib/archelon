@@ -104,7 +104,7 @@ module ApplicationHelper
 
   def format_extracted_text(args)
     if args[:value].is_a? Array
-      args[:value].map { |v| format_extracted_text(value: v) }.join('... ').html_safe # rubocop:disable Rails/OutputSafety, Metrics/LineLength - I assume the .html_safe is intended
+      args[:value].map { |v| format_extracted_text(value: v) }.join('... ').html_safe # rubocop:disable Rails/OutputSafety, Layout/LineLength - I assume the .html_safe is intended
     else
       # to strip out the embedded word corrdinates
       coord_pattern = /\|\d+,\d+,\d+,\d+/
@@ -151,7 +151,7 @@ module ApplicationHelper
     link_to node['@type'], node['@type'], class: 'badge badge-light', style: 'background: #ddd; color: #333'
   end
 
-  def display_node(node, field, items) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/MethodLength, Metrics/LineLength
+  def display_node(node, field, items) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/MethodLength, Layout/LineLength
     return display_handle(node) if field[:datatype] == 'http://vocab.lib.umd.edu/datatype#handle'
 
     if node.key? '@value'

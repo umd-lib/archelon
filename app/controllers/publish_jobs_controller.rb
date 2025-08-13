@@ -93,7 +93,7 @@ class PublishJobsController < ApplicationController
   def status_text(publish_job)
     return '' if publish_job.state.blank?
 
-    return I18n.t("activerecord.attributes.publish_job.status.#{publish_job.state}") unless publish_job.publish_in_progress? # rubocop:disable Metrics/LineLength
+    return I18n.t("activerecord.attributes.publish_job.status.#{publish_job.state}") unless publish_job.publish_in_progress? # rubocop:disable Layout/LineLength
 
     I18n.t('activerecord.attributes.publish_job.status.publish_in_progress') + publish_job.progress_text
   end
