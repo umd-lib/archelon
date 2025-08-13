@@ -71,11 +71,11 @@ class ImportJobsControllerTest < ActionController::TestCase
     name = "#{@cas_user.cas_directory_id}-#{Time.now.iso8601}"
     assert_difference('ImportJob.count') do
       post :create, params: {
+        # UMD Blacklight 8 Fix
         import_job: { name: name, collection: 'http://example.com/foo/baz',
-                      # UMD Blacklight 8 Fix
                       # fixture_file_upload paths are now relative to "fixtures/files"
                       metadata_file: fixture_file_upload('valid_import.csv') }
-                      # End UMD Blacklight 8 Fix
+        # End UMD Blacklight 8 Fix
       }
     end
 
@@ -86,11 +86,11 @@ class ImportJobsControllerTest < ActionController::TestCase
     name = ''
     assert_no_difference('ImportJob.count') do
       post :create, params: {
+        # UMD Blacklight 8 Fix
         import_job: { name: name, collection: 'http://example.com/foo/baz',
-                      # UMD Blacklight 8 Fix
                       # fixture_file_upload paths are now relative to "fixtures/files"
                       metadata_file: fixture_file_upload('valid_import.csv') }
-                      # End UMD Blacklight 8 Fix
+        # End UMD Blacklight 8 Fix
       }
     end
 
@@ -156,11 +156,11 @@ class ImportJobsControllerTest < ActionController::TestCase
     import_job = ImportJob.first
     import_job.state = :import_complete
     import_job.save!
+    # UMD Blacklight 8 Fix
     patch :update, params: { id: import_job.id,
-                             # UMD Blacklight 8 Fix
                              # fixture_file_upload paths are now relative to "fixtures/files"
                              import_job: { name: import_job.name, metadata_file: fixture_file_upload('valid_import.csv') } }
-                             # End UMD Blacklight 8 Fix
+    # End UMD Blacklight 8 Fix
     assert_redirected_to import_jobs_url
     assert_equal I18n.t(:import_already_performed), flash[:error]
   end
