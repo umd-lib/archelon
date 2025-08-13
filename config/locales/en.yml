@@ -115,6 +115,19 @@ en:
       download_url: Download URL
       export_job: Export Job
       import_job: Import Job
+  cas_users:
+    destroy:
+      user_cannot_be_removed: Cas user cannot be removed.
+      user_destroyed: Cas user was successfully destroyed.
+  download_urls:
+    create:
+      success: Download URL was successfully created.
+  import_jobs:
+    import:
+      cannot_start_or_resume: Cannot start or resume this import
+  sessions:
+    login_as:
+      no_permission: You do not have permission to access this page
   mime_types:
     application/pdf: PDF (application/pdf)
     application/xml: XML (application/xml)

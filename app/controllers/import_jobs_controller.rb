@@ -90,7 +90,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     elsif @import_job.import_incomplete?
       resume_import
     else
-      flash[:error] = 'Cannot start or resume this import'
+      flash[:error] = I18n.t('import_jobs.import.cannot_start_or_resume')
     end
     redirect_to action: 'index', status: :see_other
   end

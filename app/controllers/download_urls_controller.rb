@@ -35,7 +35,7 @@ class DownloadUrlsController < ApplicationController
     @download_url = create_download_url(solr_document)
     respond_to do |format|
       if @download_url.save
-        format.html { redirect_to @download_url, notice: 'Download URL was successfully created.' }
+        format.html { redirect_to @download_url, notice: I18n.t('download_urls.create.success') }
       else
         format.html { render :new }
       end
