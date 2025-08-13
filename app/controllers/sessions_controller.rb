@@ -10,7 +10,7 @@ class SessionsController < ApplicationController
       session[:unauthorized_user] = true # Not sure if this is actually used anywhere
       CasAuthentication.sign_out(session, cookies)
 
-      render(file: Rails.root.join('public', '403.html'), status: :forbidden, layout: false) and return # rubocop:disable Style/AndOr, Layout/LineLength
+      render(file: Rails.root.join('public/403.html'), status: :forbidden, layout: false) and return # rubocop:disable Style/AndOr, Layout/LineLength
     else
       sign_in(@user)
       redirect_to root_path
