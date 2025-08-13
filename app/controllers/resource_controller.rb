@@ -92,7 +92,7 @@ class ResourceController < ApplicationController
         'PlastronArg-no-transactions': 'True',
         'PlastronArg-validate': 'True',
         'PlastronArg-model': model,
-        'PlastronJobId': "SYNCHRONOUS-#{SecureRandom.uuid}"
+        PlastronJobId: "SYNCHRONOUS-#{SecureRandom.uuid}"
       }
     end
 

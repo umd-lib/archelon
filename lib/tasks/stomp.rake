@@ -81,7 +81,7 @@ class StompListener
     server = "#{STOMP_SERVER[:host]}:#{STOMP_SERVER[:port]}"
     puts "Connecting to STOMP server at #{server}"
     begin
-      connect_headers = { 'accept-version': '1.2', 'host': STOMP_SERVER[:host] }
+      connect_headers = { 'accept-version': '1.2', host: STOMP_SERVER[:host] }
       @client = Stomp::Client.new(hosts: [STOMP_SERVER], reliable: true, connect_headers: connect_headers)
       puts "Connected to STOMP server at #{server}"
       self

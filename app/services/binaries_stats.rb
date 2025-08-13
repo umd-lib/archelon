@@ -13,7 +13,7 @@ class BinariesStats < SolrQueryService
   }.freeze
 
   def self.query(uris, mime_types)
-    fq = QUERY.merge 'fq': match_any('id', uris)
+    fq = QUERY.merge fq: match_any('id', uris)
     fq = fq.merge 'files.fq': match_any('mime_type', mime_types) if mime_types
     fq
   end
