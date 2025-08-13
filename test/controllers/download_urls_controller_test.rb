@@ -146,7 +146,7 @@ class DownloadUrlsControllerTest < ActionController::TestCase
     get :index, params: { rq: { enabled_eq: 1 } }
 
     download_urls = assigns(:download_urls)
-    assert download_urls.count.positive?
+    assert download_urls.any?
     assert download_urls.all?(&:enabled?)
   end
 
@@ -155,7 +155,7 @@ class DownloadUrlsControllerTest < ActionController::TestCase
     get :index, params: { rq: { creator_eq: creator } }
 
     download_urls = assigns(:download_urls)
-    assert download_urls.count.positive?
+    assert download_urls.any?
     assert(download_urls.all?) { |d| d.creator == creator }
   end
 
