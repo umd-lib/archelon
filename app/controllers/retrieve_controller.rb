@@ -8,7 +8,7 @@ class RetrieveController < ApplicationController
     @token = params['token']
     @download_url = DownloadUrl.find_by(token: @token)
 
-    return unless verify_download_url(@download_url)
+    return unless verify_download_url?(@download_url)
 
     render 'retrieve', layout: 'retrieve'
   end
@@ -16,7 +16,7 @@ class RetrieveController < ApplicationController
   def do_retrieve # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     @token = params['token']
     download_url = DownloadUrl.find_by(token: @token)
-    return unless verify_download_url(download_url)
+    return unless verify_download_url?(download_url)
 
     response = ResourceService.get(download_url.url)
     data = response.body
@@ -43,7 +43,7 @@ class RetrieveController < ApplicationController
 
   private
 
-    def verify_download_url(download_url) # rubocop:disable Metrics/MethodLength
+    def verify_download_url?(download_url) # rubocop:disable Metrics/MethodLength
       not_found unless download_url
       unless download_url.enabled?
         render 'disabled', layout: 'retrieve', status: :gone

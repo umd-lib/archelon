@@ -5,7 +5,7 @@ class ExportJobsChannel < ApplicationCable::Channel
   def subscribed
     export_job = ExportJob.find(params[:id])
     Rails.logger.debug { "Received subscription for ExportJob #{export_job.id} from user #{username}" }
-    stream_for export_job if authorized_to_stream export_job
+    stream_for export_job if authorized_to_stream? export_job
   end
 
   # Called by the client with an export job id. This method triggers an
@@ -32,7 +32,7 @@ class ExportJobsChannel < ApplicationCable::Channel
     end
 
     # confirm that the current user should be able to subscribe to this export job
-    def authorized_to_stream(export_job)
+    def authorized_to_stream?(export_job)
       if current_user.admin? || export_job.cas_user == current_user
         Rails.logger.debug { "Streaming Export Job #{export_job.id} for user #{username}" }
         true

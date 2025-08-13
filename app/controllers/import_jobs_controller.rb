@@ -71,7 +71,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
       return redirect_to action: 'index', status: :see_other
     end
 
-    if valid_update && @import_job.save
+    if valid_update? && @import_job.save
       start_validation resume: true
       return redirect_to action: 'index', status: :see_other
     end
@@ -192,7 +192,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
       filename.present? ? File.join(IMPORT_CONFIG[:binaries_base_location], filename) : nil
     end
 
-    def valid_update
+    def valid_update?
       @import_job.update(import_job_params)
 
       if import_job_params['metadata_file'].present?
