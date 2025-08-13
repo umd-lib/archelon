@@ -74,7 +74,7 @@ class ResourceService
     return if resource_titles.blank?
 
     sorted_titles = sort_titles_by_language(resource_titles)
-    return sorted_titles.join(', ') if sorted_titles
+    sorted_titles.join(', ') if sorted_titles
   end
 
   # Sorts resource titles by language to ensure consistent ordering
