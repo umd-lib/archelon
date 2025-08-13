@@ -10,7 +10,7 @@ class MimeTypes < SolrQueryService
     'files.q': '{!terms f=pcdm_file_of v=$row.pcdm_members}',
     'files.fl': 'mime_type',
     'files.rows': '1000',
-    'facet': 'on',
+    facet: 'on',
     'facet.field': 'mime_type'
   }.freeze
 
@@ -22,7 +22,7 @@ class MimeTypes < SolrQueryService
   end
 
   def self.query(uris)
-    QUERY.merge 'fq': match_any('id', uris)
+    QUERY.merge fq: match_any('id', uris)
   end
 
   # Processes the Solr response, returning an array of Strings
