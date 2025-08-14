@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Blacklight controller that handles searches and document requests
-class CatalogController < ApplicationController
+class CatalogController < ApplicationController # rubocop:disable Metrics/ClassLength
   include Blacklight::Catalog
 
   # UMD Customization
@@ -18,7 +18,7 @@ class CatalogController < ApplicationController
   # rescue_from Blacklight::Exceptions::InvalidRequest, with: :my_handling_method
 
   # rubocop:disable Layout/LineLength
-  configure_blacklight do |config|
+  configure_blacklight do |config| # rubocop:disable Metrics/BlockLength
     ## Specify the style of markup to be generated (may be 4 or 5)
     # config.bootstrap_version = 5
     #
