@@ -55,7 +55,7 @@ class ExportJob < ApplicationRecord
 
   def self.from_uri(uri)
     # assume that the last path segment of the uri is the identifier
-    id = uri[uri.rindex('/') + 1..]
+    id = uri[(uri.rindex('/') + 1)..]
     find(id)
   end
 
