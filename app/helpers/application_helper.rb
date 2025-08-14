@@ -80,7 +80,7 @@ module ApplicationHelper # rubocop:disable Metrics/ModuleLength
   end
 
   def unique_component_types(pcdm_members_info)
-    pcdm_members_info.map { |member| member['component'] }.uniq
+    pcdm_members_info.pluck('component').uniq
   end
 
   def fcrepo_url
