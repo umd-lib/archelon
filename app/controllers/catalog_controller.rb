@@ -339,7 +339,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
   # Returns true if the given component has editable metadata, false otherwise.
   def self.show_edit_metadata?(component)
     uneditable_types = %w[Page Article]
-    !uneditable_types.include?(component)
+    !uneditable_types.include?(component) # rubocop:disable Rails/NegateInclude
   end
 
   private
@@ -370,7 +370,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
       # Check if this is a identifier search
       #  1. the query is enclosed in quotation marks.
       #  2. And, it does not have blank spaces
-      query.present? && query.start_with?('"') && query.end_with?('"') && !query.include?(' ')
+      query.present? && query.start_with?('"') && query.end_with?('"') && !query.include?(' ') # rubocop:disable Rails/NegateInclude
     end
 
   # End UMD Customization
