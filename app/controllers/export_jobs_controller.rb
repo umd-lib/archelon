@@ -119,14 +119,14 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     end
 
     def selected_items?
-      return unless current_user.bookmarks.none?
+      return unless current_user.bookmarks.none? # rubocop:disable Style/ReturnNilInPredicateMethodDefinition
 
       flash[:error] = I18n.t(:needs_selected_items)
       redirect_to controller: :bookmarks, action: :index
     end
 
     def selected_items_changed?
-      return if params[:export_job][:item_count] == bookmarks.count.to_s
+      return if params[:export_job][:item_count] == bookmarks.count.to_s # rubocop:disable Style/ReturnNilInPredicateMethodDefinition
 
       flash[:notice] = I18n.t(:selected_items_changed)
       review
