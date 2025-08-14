@@ -38,10 +38,10 @@ class ResourceService
 
   def self.resource_with_model(id)
     # create a hash of resources by their URIs
-    items = Hash[resources(id).map do |resource|
+    items = resources(id).to_h do |resource|
       uri = resource.delete('@id')
       [uri, resource]
-    end]
+    end
 
     # default to the Item content model
     name = content_model_name(items[id]['@type']) || :Item

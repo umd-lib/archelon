@@ -44,7 +44,7 @@ class VocabularyService
   # Parses the given terms, returning a Hash suitable for use in the "vocab"
   # field of the ControlledURIRef React component.
   def self.parse_options(terms)
-    Hash[terms.map { |r| [r.uri, r.label] }]
+    terms.to_h { |r| [r.uri, r.label] }
   end
 
   class << self
