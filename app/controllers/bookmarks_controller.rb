@@ -49,7 +49,7 @@ class BookmarksController < CatalogController
 
   private
 
-    def add_selected (document_ids) # rubocop:disable Metrics/AbcSize
+    def add_selected(document_ids) # rubocop:disable Metrics/AbcSize
       selected_ids = current_user.bookmarks.map(&:document_id)
       missing_ids = document_ids.reject { |doc_id| selected_ids.include?(doc_id) }
       select_ids = missing_ids.take(max_limit - current_user.bookmarks.count)

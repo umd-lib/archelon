@@ -141,7 +141,7 @@ module ActiveSupport
     # module also includes a "stub_const" method.
     #
     # Using the method makes it explicit which method is being called.
-    def rspec_stub_const(constant_name, value, options={})
+    def rspec_stub_const(constant_name, value, options = {})
       # Using the "Class.new.extend(RSpec::Mocks::ExampleMethods)"
       # to ensure that the "stub_const" method from the module is called,
       # instead of the "stub_const" method from the

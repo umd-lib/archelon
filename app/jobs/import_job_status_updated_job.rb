@@ -7,7 +7,7 @@ class ImportJobStatusUpdatedJob < ApplicationJob
   def perform(import_job)
     Rails.logger.debug {
       "Broadcasting ImportJob #{import_job.id} to ImportJobsChannel, " \
-      "status=#{import_job.state}, progress=#{import_job.progress_text}"
+        "status=#{import_job.state}, progress=#{import_job.progress_text}"
     }
     ImportJobsChannel.broadcast_to(import_job, job: import_job, statusWidget: status_widget(import_job))
   end
