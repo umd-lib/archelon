@@ -38,7 +38,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     name = params[:name] || "#{current_cas_user.cas_directory_id}-#{Time.now.iso8601}"
     @import_job = ImportJob.new(name: name)
     @collections_options_array = retrieve_collections
-    @binaries_files = Dir.children(IMPORT_CONFIG[:binaries_dir])&.select { |filename| filename =~ /\.zip$/ }
+    @binaries_files = Dir.children(IMPORT_CONFIG[:binaries_dir])&.grep(/\.zip$/)
   end
 
   # GET /import_jobs/1/edit
@@ -49,7 +49,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     end
 
     @collections_options_array = retrieve_collections
-    @binaries_files = Dir.children(IMPORT_CONFIG[:binaries_dir])&.select { |filename| filename =~ /\.zip$/ }
+    @binaries_files = Dir.children(IMPORT_CONFIG[:binaries_dir])&.grep(/\.zip$/)
   end
 
   # POST /import_jobs
