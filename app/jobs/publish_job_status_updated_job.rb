@@ -5,10 +5,10 @@ class PublishJobStatusUpdatedJob < ApplicationJob
   retry_on RuntimeError
 
   def perform(publish_job)
-    Rails.logger.debug {
+    Rails.logger.debug do
       "Broadcasting PublishJob #{publish_job.id} to PublishJobsChannel, " \
         "status=#{publish_job.state}, progress=#{publish_job.progress_text}"
-    }
+    end
     PublishJobsChannel.broadcast_to(publish_job, job: publish_job, statusWidget: status_widget(publish_job))
   end
 
