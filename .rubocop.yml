@@ -31,6 +31,13 @@ Metrics/ClassLength:
   Exclude:
     - 'test/**/*'
 
+# Setting to Naming/BlockForwarding to "explicit" because it is a seldom-used
+# feature in Archelon, and having the "&block" syntax instead of an anonymous
+# "&" seems clearer
+Naming/BlockForwarding:
+  EnforcedStyle: explicit
+  BlockForwardingName: block
+
 # Disable Rails/ActionControllerTestCase because ActionController::TestCase
 # is still in use via the "rails-controller-testing" gem
 Rails/ActionControllerTestCase:
