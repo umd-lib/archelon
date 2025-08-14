@@ -8,7 +8,7 @@ LABEL_PREDICATE = 'http://www.w3.org/2000/01/rdf-schema#label'
 SAME_AS_PREDICATE = 'http://www.w3.org/2002/07/owl#sameAs'
 # End UMD Customization
 
-module ApplicationHelper
+module ApplicationHelper # rubocop:disable Metrics/ModuleLength
   # UMD Customization
   PCDM_OBJECT = 'pcdm:Object'
   PCDM_FILE = 'pcdm:File'

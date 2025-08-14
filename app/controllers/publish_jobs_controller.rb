@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class PublishJobsController < ApplicationController
+class PublishJobsController < ApplicationController # rubocop:disable Metrics/ClassLength
   include Blacklight::Bookmarks
   include Blacklight::Searchable
 
@@ -45,7 +45,7 @@ class PublishJobsController < ApplicationController
       end
   end
 
-  def show # rubocop:disable Metrics/AbcSize
+  def show # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
     id = params[:id]
     @job = PublishJob.find(id)
     # UMD Blacklight 8 Fix
