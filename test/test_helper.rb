@@ -87,8 +87,6 @@ module ActiveSupport
 
       begin
         yield
-      rescue Exception => e # rubocop:disable Lint/RescueException
-        raise e
       ensure
         # Restore fake user
         CasAuthentication.sign_in(CasUser.find(session[:admin_id]).cas_directory_id, session, cookies)
@@ -103,8 +101,6 @@ module ActiveSupport
 
       begin
         yield
-      rescue Exception => e # rubocop:disable Lint/RescueException
-        raise e
       ensure
         # Restore fake user
         mock_cas_login(DEFAULT_TEST_USER)
