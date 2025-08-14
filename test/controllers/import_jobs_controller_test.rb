@@ -185,7 +185,7 @@ class ImportJobsControllerTest < ActionController::TestCase
     assert_equal I18n.t(:cannot_import_invalid_file), flash[:error]
   end
 
-  test 'status_text should show information about the current status' do # rubocop:disable Metrics/BlockLength:
+  test 'status_text should show information about the current status' do # rubocop:disable Metrics/BlockLength
     tests = [
       # Validate Stages
       { state: :validate_pending, progress: 0,
