@@ -25,7 +25,7 @@ class CasUsersController < ApplicationController
   def active_state
     @cas_user.active = params[:active]
     @cas_user.save
-    redirect_to action: :index, params: {show_inactive: params[:show_inactive]}
+    redirect_to action: :index, params: { show_inactive: params[:show_inactive] }
   end
 
   def audit_events(bindings) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize

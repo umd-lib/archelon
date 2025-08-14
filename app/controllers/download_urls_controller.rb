@@ -56,7 +56,7 @@ class DownloadUrlsController < ApplicationController
     else
       # this shouldn't happen in the normal course of navigating through the site
       Rails.logger.error "Unknown state requested: #{params[:state]}"
-        redirect_back fallback_location: download_urls_url, error: 'Bad request error'
+      redirect_back fallback_location: download_urls_url, error: 'Bad request error'
     end
   end
 

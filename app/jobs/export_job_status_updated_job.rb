@@ -7,7 +7,7 @@ class ExportJobStatusUpdatedJob < ApplicationJob
   def perform(export_job)
     Rails.logger.debug {
       "Broadcasting ExportJob #{export_job.id} to ExportJobsChannel, " \
-      "status=#{export_job.state}, progress=#{export_job.progress_text}"
+        "status=#{export_job.state}, progress=#{export_job.progress_text}"
     }
     ExportJobsChannel.broadcast_to(export_job, job: export_job, statusWidget: status_widget(export_job))
   end

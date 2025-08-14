@@ -72,7 +72,7 @@ class VocabularyService
 
         Rails.logger.debug do
           "vocabulary retrieved: parsed_json=#{json_rest_result.parsed_json}," \
-          "error_message='#{json_rest_result.error_message}'"
+            "error_message='#{json_rest_result.error_message}'"
         end
 
         json_rest_result
