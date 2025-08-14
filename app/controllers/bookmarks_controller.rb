@@ -24,17 +24,14 @@ class BookmarksController < CatalogController
   end
 
   def select_results # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
-    if current_user.bookmarks.count >= max_limit
-      return redirect_back_to_catalog(params, search_params)
-    end
+    return redirect_back_to_catalog(params, search_params) if current_user.bookmarks.count >= max_limit
 
     # Adding only the ids on the page
-    if params.has_key? :ids
+    if params.key? :ids
       add_selected(params[:ids])
-      redirect_back_to_catalog(params, current_search_session.query_params)
     else
       # Retrieving all ids from the search
-      (@response, _) = search_service.search_results do |builder|
+      (@response,) = search_service.search_results do |builder|
         builder.rows = params[:numFound].to_i
         builder
       end
@@ -42,9 +39,9 @@ class BookmarksController < CatalogController
       document_ids = @response.documents.map(&:id)
 
       add_selected(document_ids)
-
-      redirect_back_to_catalog(params, current_search_session.query_params)
     end
+
+    redirect_back_to_catalog(params, current_search_session.query_params)
   end
 
   private
@@ -54,7 +51,7 @@ class BookmarksController < CatalogController
       missing_ids = document_ids.reject { |doc_id| selected_ids.include?(doc_id) }
       select_ids = missing_ids.take(max_limit - current_user.bookmarks.count)
 
-      if select_ids.length.zero?
+      if select_ids.empty?
         flash[:notice] = I18n.t(:already_selected)
       else
         select_ids.each do |id|
