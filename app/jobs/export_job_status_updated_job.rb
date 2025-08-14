@@ -5,10 +5,10 @@ class ExportJobStatusUpdatedJob < ApplicationJob
   retry_on RuntimeError
 
   def perform(export_job)
-    Rails.logger.debug {
+    Rails.logger.debug do
       "Broadcasting ExportJob #{export_job.id} to ExportJobsChannel, " \
         "status=#{export_job.state}, progress=#{export_job.progress_text}"
-    }
+    end
     ExportJobsChannel.broadcast_to(export_job, job: export_job, statusWidget: status_widget(export_job))
   end
 
