@@ -82,7 +82,7 @@ class PublishJobsController < ApplicationController # rubocop:disable Metrics/Cl
 
   def submit # rubocop:disable Metrics/AbcSize
     job = PublishJob.find(params[:id])
-    force_hidden = !params[:publish_job].nil? ? params[:publish_job][:force_hidden] == '1' : job.force_hidden
+    force_hidden = params[:publish_job].nil? ? job.force_hidden : params[:publish_job][:force_hidden] == '1'
 
     job.update!(state: 2, force_hidden: force_hidden)
     start_publish
