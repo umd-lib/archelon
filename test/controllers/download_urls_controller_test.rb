@@ -169,15 +169,13 @@ class DownloadUrlsControllerTest < ActionController::TestCase
     # stub_find_solr_document do
     #   <Code that calls "find_solr_document">
     # end
-    def stub_find_solr_document
+    def stub_find_solr_document(&block)
       stub_response = SolrDocument.new(
         id: 'http://www.example.com',
         mime_type: 'image/jp2',
         display_title: 'Example'
       )
 
-      @controller.stub :find_solr_document, stub_response do
-        yield
-      end
+      @controller.stub :find_solr_document, stub_response, &block
     end
 end
