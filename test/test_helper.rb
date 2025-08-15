@@ -112,9 +112,10 @@ module ActiveSupport
       connection_double = double('stomp_connection')
       allow(connection_double).to receive(:disconnect)
 
-      if error == :none
+      case error
+      when :none
         allow(connection_double).to receive(:publish)
-      elsif error == :transient
+      when :transient
         # raise an error on the first two calls to publish, to simulate a
         # short-term, transient network failure
         call_count = 0
@@ -122,7 +123,7 @@ module ActiveSupport
           call_count += 1
           call_count < 3 ? raise(RuntimeError) : true
         end
-      elsif error == :permanent
+      when :permanent
         # always fail to publish, to simulate a completely dead connection
         allow(connection_double).to receive(:publish).and_raise(RuntimeError)
       end
