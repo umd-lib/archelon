@@ -31,6 +31,18 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     @mime_types = MimeTypes.mime_types(export_uris)
   end
 
+  def create
+    @job = create_job(export_job_params)
+    render :job_submission_not_allowed and return unless @job.job_submission_allowed?
+
+    @job.uris = bookmarks.map(&:document_id).join("\n")
+
+    return unless @job.save
+
+    submit_job
+    redirect_to action: 'index', status: :see_other
+  end
+
   def destroy
     job = ExportJob.find(params[:id])
 
@@ -61,17 +73,6 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     else
       render :job_submission_not_allowed
     end
-  end
-
-  def create
-    @job = create_job(export_job_params)
-    render :job_submission_not_allowed && return unless @job.job_submission_allowed?
-    @job.uris = bookmarks.map(&:document_id).join("\n")
-
-    return unless @job.save
-
-    submit_job
-    redirect_to action: 'index', status: :see_other
   end
 
   def download
