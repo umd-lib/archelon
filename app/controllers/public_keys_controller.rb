@@ -10,7 +10,7 @@ class PublicKeysController < ApplicationController
     # include the Plastron public key from the environment, if set
     keys << PLASTRON_PUBLIC_KEY if PLASTRON_PUBLIC_KEY.present?
 
-    CasUser.all.each do |user|
+    CasUser.find_each do |user|
       user.public_keys.find_each do |public_key|
         keys << public_key.key
       end
