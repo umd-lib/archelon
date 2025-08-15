@@ -22,7 +22,7 @@ class DownloadUrl < ApplicationRecord
   end
 
   def self.ransackable_attributes(auth_object = nil) # rubocop:disable Lint/UnusedMethodArgument
-    ['created_at', 'creator_eq', 'enabled', 'enabled_eq']
+    %w[created_at creator_eq enabled enabled_eq]
   end
   # End UMD Blacklight 8 Fix
 end
