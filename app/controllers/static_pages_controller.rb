@@ -7,9 +7,7 @@ class StaticPagesController < ApplicationController
     # UMD Blacklight 8 Fix
     Net::HTTP.get(uri)
     # End UMD Blacklight 8 Fix
-  rescue Errno::ECONNREFUSED => e
-    solr_connection_error(e)
-  rescue SocketError => e
+  rescue Errno::ECONNREFUSED, SocketError => e
     solr_connection_error(e)
   end
 end
