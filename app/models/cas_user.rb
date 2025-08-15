@@ -31,7 +31,7 @@ class CasUser < ApplicationRecord
 
     self.name = ldap_attributes.name || cas_directory_id
     self.user_type = ldap_attributes.user_type
-    self.groups = ldap_attributes.groups.map { |dn| Group.from_dn(dn) }.reject(&:nil?)
+    self.groups = ldap_attributes.groups.map { |dn| Group.from_dn(dn) }.compact
   end
 
   def in_group?(group_name)
