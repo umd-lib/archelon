@@ -9,7 +9,7 @@ class JsonRestResult
   attr_reader :raw_json, :parsed_json, :error_message
 
   def initialize(raw_json: nil, parsed_json: nil, error_message: nil)
-    # Note: Consider using the "create_from_json" or "create_error_result"
+    # NOTE: Consider using the "create_from_json" or "create_error_result"
     # methods, insted of creating this object directly.
     @raw_json = raw_json
     @parsed_json = parsed_json
