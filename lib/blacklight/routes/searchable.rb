@@ -8,7 +8,7 @@ module Blacklight
       end
 
       def call(mapper, _options = {})
-        mapper.match '/', action: 'index', as: 'search', via: [:get, :post]
+        mapper.match '/', action: 'index', as: 'search', via: %i[get post]
         mapper.get '/advanced', action: 'advanced_search', as: 'advanced_search'
         mapper.get '/page_links', action: 'page_links', as: 'page_links'
 
