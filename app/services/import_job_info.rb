@@ -5,7 +5,7 @@
 # If an error has occurred, the "error_occurred?" method returns true,
 # and the error message is available in the "error_message" attribute.
 class ImportJobInfo
-  attr_reader :completed, :failed, :invalid, :total, :error_message
+  attr_reader :completed, :failed, :invalid, :total
 
   def initialize(json_rest_result)
     # Constructed from a JsonRestResult object
