@@ -17,42 +17,22 @@ class SolrDocument
     return unless has? 'object__creator'
 
     Array(fetch('object__creator')).map do |creator|
-      language_tags = creator[:agent__label__display].map do |name|
-        if name.starts_with? '[@'
-          language_tag = name.split(']')[0][2...]
-          actual_name = name.split(']')[1]
-          actual_name.html_safe + " <span class=\"badge text-bg-secondary\">#{language_tag}</span>".html_safe
-        else
-          name.html_safe
-        end
-      end
-      language_tags.join(' | ').html_safe
+      creator[:agent__label__display].map {|name| format_with_language_tag(name)}.join(' | ').html_safe
     end
   end
 
   def title_language_badge
     return unless has? 'object__title__display'
 
-    Array(fetch('object__title__display')).map do |title|
-      if title.starts_with? '[@'
-        language_tag = title.split(']')[0][2...]
-        title = title.split(']')[1]
-
-        title.html_safe + " <span class=\"badge text-bg-secondary\">#{language_tag}</span>".html_safe
-      else
-        title.html_safe
-      end
-    end
+    Array(fetch('object__title__display')).map {|title| format_with_language_tag(title)}
   end
 
   def archival_collection_anchor
-    return unless has? 'object__archival_collection__uri'
-    add_anchor_tag(fetch('object__archival_collection__uri'), fetch('object__archival_collection__label__txt'))
+    vocab_term_with_same_as :object__archival_collection
   end
 
   def format_anchor
-    return unless has? 'object__format__uri'
-    add_anchor_tag(fetch('object__format__uri'), fetch('object__format__label__txt'))
+    vocab_term_with_same_as :object__format
   end
 
   def handle_anchor
@@ -79,8 +59,7 @@ class SolrDocument
   end
 
   def rights_anchor
-    return unless has? 'object__rights__uri'
-    add_anchor_tag(fetch('object__rights__uri'), fetch('object__rights__label__txt'))
+    vocab_term_with_same_as :object__rights
   end
 
   def terms_anchor
@@ -89,13 +68,42 @@ class SolrDocument
   end
 
   def object_type_anchor
-    return unless has? 'object__object_type__uri'
-    add_anchor_tag(fetch('object__object_type__uri'), fetch('object__object_type__uri'))
+    vocab_term_with_uri :object__object_type, label_suffix: '__label__txt_en'
   end
 
   private
 
+    def format_with_language_tag(value)
+      if value.starts_with? '[@'
+        language_tag = value.split(']')[0][2...]
+        value = value.split(']')[1]
+        value.html_safe + " <span class=\"badge text-bg-secondary\">#{language_tag}</span>".html_safe
+      else
+        value.html_safe
+      end
+    end
+
     def add_anchor_tag(uri, label)
       "<a href=#{uri}> #{label} </a>".html_safe
+    end
+
+    def vocab_term_with_uri(base_field, label_suffix: '__label__txt')
+      return unless has? "#{base_field}__uri"
+
+      uri = fetch("#{base_field}__uri")
+      label = fetch("#{base_field}#{label_suffix}") || uri
+
+      "#{label} → <a href=#{uri}>#{uri}</a>".html_safe
+    end
+
+    def vocab_term_with_same_as(base_field, label_suffix: '__label__txt', same_as_suffix: '__same_as__uris')
+      return unless has? "#{base_field}__uri"
+
+      uri = fetch("#{base_field}__uri")
+      label = fetch("#{base_field}#{label_suffix}") || uri
+      same_as_uri = fetch("#{base_field}#{same_as_suffix}").first
+      return label if same_as_uri.nil?
+
+      "#{label} → <a href=#{same_as_uri}>#{same_as_uri}</a>".html_safe
     end
 end
