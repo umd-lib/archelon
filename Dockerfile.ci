@@ -1,0 +1,40 @@
+# Dockerfile for use by the continuous integration server (ci), in order to
+# build and test the application.
+#
+# This Dockerfile provides the appropriate environment for building and testing
+# the application. It should _not_ be used for creating Docker images for use
+# in production.
+
+ARG RUBY_VERSION=3.2.4
+
+FROM registry.docker.com/library/ruby:$RUBY_VERSION-slim
+
+# Install packages needed to build gems and node modules
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y build-essential curl git libvips node-gyp pkg-config python-is-python3 && \
+    apt-get install --no-install-recommends -y libpq-dev && \
+    apt-get install -y libsqlite3-dev && \
+    apt-get clean
+
+ARG BUNDLER_VERSION=2.4.19
+ARG NODE_VERSION=18.19.0
+ARG YARN_VERSION=1.22.22
+
+ENV PATH=/usr/local/node/bin:$PATH
+RUN curl -sL https://github.com/nodenv/node-build/archive/master.tar.gz | tar xz -C /tmp/ && \
+    /tmp/node-build-master/bin/node-build "${NODE_VERSION}" /usr/local/node && \
+    npm install -g yarn@$YARN_VERSION && \
+    rm -rf /tmp/node-build-master
+
+# Copy in the Gemfile and Gemfile.lock, and install the gems
+# This makes builds where the Gemfile/Gemfile.lock file hasn't
+# changed faster by having the correct gems already downloaded
+# and cached.
+COPY Gemfile* /tmp/
+
+# Run bundler to install the gems
+WORKDIR /tmp
+RUN gem install bundler:$BUNDLER_VERSION
+RUN bundle install --without production
+
+WORKDIR /
