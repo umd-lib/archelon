@@ -23,7 +23,7 @@ class ApplicationController < ActionController::Base
   # UMD Customization
   def solr_connection_error(err)
     Rails.logger.error(err.message)
-    flash[:error] = I18n.t(:solr_is_down)
+    flash[:error] = I18n.t(:solr_is_down) # rubocop:disable Rails/ActionControllerFlashBeforeRender
   end
 
   # Causes a "404 - Not Found" error page to be displayed.

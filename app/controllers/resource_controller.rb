@@ -19,7 +19,7 @@ class ResourceController < ApplicationController
       response = send_to_plastron(@id, @resource[:content_model_name], sparql_update)
 
       if response.ok? && response.state == 'update_complete'
-        flash[:notice] = t('resource_update_successful')
+        flash[:notice] = t('resource_update_successful') # rubocop:disable Rails/ActionControllerFlashBeforeRender
         return render json: update_complete
       end
 
