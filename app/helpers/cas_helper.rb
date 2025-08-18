@@ -2,7 +2,7 @@
 
 module CasHelper
   def authenticate
-    redirect_to login_path and return if !logged_in? && !request.env['omniauth.auth'] # rubocop:disable Style/AndOr
+    redirect_to login_path and return if !logged_in? && !request.env['omniauth.auth']
     return if allow_access?
 
     render(file: Rails.public_path.join('403.html'), status: :forbidden, layout: false)

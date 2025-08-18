@@ -80,7 +80,7 @@ class PublishJobsController < ApplicationController # rubocop:disable Metrics/Cl
     redirect_to publish_jobs_url, status: :see_other
   end
 
-  def submit # rubocop:disable Metrics/AbcSize
+  def submit
     job = PublishJob.find(params[:id])
     force_hidden = params[:publish_job].nil? ? job.force_hidden : params[:publish_job][:force_hidden] == '1'
 

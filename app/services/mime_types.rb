@@ -26,7 +26,7 @@ class MimeTypes < SolrQueryService
   end
 
   # Processes the Solr response, returning an array of Strings
-  def self.process_solr_response(solr_response) # rubocop:disable Metrics/MethodLength
+  def self.process_solr_response(solr_response)
     # This method is a bit of a kludge, because it's not clear how to get the
     # facet list directly from a Solr query. This brute-force method iterates
     # through all the files in the response, generating a set of all the
