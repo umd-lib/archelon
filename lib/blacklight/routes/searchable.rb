@@ -2,6 +2,16 @@
 
 module Blacklight
   module Routes
+    # Archelon is unusual in that the “id” parameters for individual item pages
+    # contains the URL of the “fcrepo” server. This URL contains “.”
+    # (period) characters that are confusing to the stock Blacklight route
+    # handlers
+    #
+    # This files is copied from the “lib/blacklight/routes/searchable.rb” file
+    # from Blacklight 8.3.0, and modified to add the constraints: { id: /.*/ }.
+    #
+    # Also add constraints: { id: /.*/ } to the affected routed in
+    # “config/routes.rb”.
     class Searchable
       def initialize(defaults = {})
         @defaults = defaults

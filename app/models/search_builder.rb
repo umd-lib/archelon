@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Customized SearchBuilder
 class SearchBuilder < Blacklight::SearchBuilder
   include Blacklight::Solr::SearchBuilderBehavior
 
