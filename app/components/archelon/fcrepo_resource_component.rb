@@ -7,7 +7,7 @@ module Archelon
   # “app/controllers/catalog_controller.rb”.
   # This implementation is likely *not* optimal.
   class FcrepoResourceComponent < Blacklight::Component
-    def initialize(document: nil, presenter: nil, document_counter: nil) # rubocop:disable Lint/UnusedMethodArgument
+    def initialize(document: nil, presenter: nil, document_counter: nil)
       super
       @document = document
     end

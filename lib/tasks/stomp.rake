@@ -78,7 +78,7 @@ end
 # STOMP client for long-running subscriptions to queues and topics
 class StompListener
   # Connects to the STOMP server
-  def connect # rubocop:disable Metrics/MethodLength
+  def connect
     server = "#{STOMP_SERVER[:host]}:#{STOMP_SERVER[:port]}"
     puts "Connecting to STOMP server at #{server}"
     begin

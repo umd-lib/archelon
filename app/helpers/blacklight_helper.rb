@@ -49,13 +49,11 @@ module BlacklightHelper
   # end
 
   # # Retrieves the display title using Fedora resource data, or nil
-  # # rubocop:disable Rails/HelperInstanceVariable:
   # def fedora_resource_title
   #   return unless @resource && @id
 
   #   ResourceService.display_title(@resource, @id)
   # end
-  # # rubocop:enable Rails/HelperInstanceVariable:
 
   # End UMD Blacklight 8 Fix
 end

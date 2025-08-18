@@ -153,7 +153,7 @@ module ApplicationHelper # rubocop:disable Metrics/ModuleLength
     link_to node['@type'], node['@type'], class: 'badge badge-light', style: 'background: #ddd; color: #333'
   end
 
-  def display_node(node, field, items) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/MethodLength, Layout/LineLength
+  def display_node(node, field, items) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/MethodLength
     return display_handle(node) if field[:datatype] == 'http://vocab.lib.umd.edu/datatype#handle'
 
     if node.key? '@value'

@@ -76,7 +76,7 @@ class ImportJob < ApplicationRecord
     errors.add(:base, :multiple_include_binaries_options) if binary_zip_file.attached? && remote_server.present?
   end
 
-  def update_progress(message) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
+  def update_progress(message) # rubocop:disable Metrics/AbcSize
     return if message.body.blank?
 
     validate_in_progress! if validate_pending?
