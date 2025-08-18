@@ -23,7 +23,7 @@ module PlastronServices
       private
 
         def base_url
-          ENV['PLASTRON_REST_BASE_URL']
+          ENV.fetch('PLASTRON_REST_BASE_URL', nil)
         end
 
         def inbox_url

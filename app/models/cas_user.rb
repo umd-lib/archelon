@@ -8,7 +8,7 @@ class CasUser < ApplicationRecord
   has_and_belongs_to_many :groups # rubocop:disable Rails/HasAndBelongsToMany
   has_many :public_keys, dependent: :destroy
 
-  enum user_type: { admin: 'admin', user: 'user', unauthorized: 'unauthorized' }
+  enum :user_type, { admin: 'admin', user: 'user', unauthorized: 'unauthorized' }
   validates :cas_directory_id, presence: true, uniqueness: { case_sensitive: false }
   validates :name, presence: true
 
@@ -31,7 +31,7 @@ class CasUser < ApplicationRecord
 
     self.name = ldap_attributes.name || cas_directory_id
     self.user_type = ldap_attributes.user_type
-    self.groups = ldap_attributes.groups.map { |dn| Group.from_dn(dn) }.reject(&:nil?)
+    self.groups = ldap_attributes.groups.map { |dn| Group.from_dn(dn) }.compact
   end
 
   def in_group?(group_name)

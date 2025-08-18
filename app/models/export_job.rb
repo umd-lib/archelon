@@ -4,7 +4,7 @@
 class ExportJob < ApplicationRecord
   belongs_to :cas_user
 
-  enum state: {
+  enum :state, {
     pending: 1,
     in_progress: 2,
     export_complete: 3,
@@ -46,7 +46,7 @@ class ExportJob < ApplicationRecord
   end
 
   def filename
-    name + '.zip'
+    "#{name}.zip"
   end
 
   def path
@@ -55,7 +55,7 @@ class ExportJob < ApplicationRecord
 
   def self.from_uri(uri)
     # assume that the last path segment of the uri is the identifier
-    id = uri[uri.rindex('/') + 1..]
+    id = uri[(uri.rindex('/') + 1)..]
     find(id)
   end
 

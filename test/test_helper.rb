@@ -1,4 +1,6 @@
-ENV["RAILS_ENV"] ||= "test"
+# frozen_string_literal: true
+
+ENV['RAILS_ENV'] ||= 'test'
 
 # UMD Customization
 require 'simplecov'
@@ -10,8 +12,8 @@ SimpleCov.formatters = [
 SimpleCov.start
 # End UMD Customization
 
-require_relative "../config/environment"
-require "rails/test_help"
+require_relative '../config/environment'
+require 'rails/test_help'
 
 # UMD Customization
 require 'minitest/reporters'
@@ -77,7 +79,7 @@ module ActiveSupport
     end
 
     # Runs the contents of a block using the given user as the current_user.
-    def impersonate_as_user(user) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+    def impersonate_as_user(user) # rubocop:disable Metrics/AbcSize
       current_admin_user = CasUser.find_by(cas_directory_id: session[:cas_user])
       session[:admin_id] = current_admin_user.id
       # session[:cas_user] = user.cas_directory_id
@@ -85,8 +87,6 @@ module ActiveSupport
 
       begin
         yield
-      rescue Exception => e # rubocop:disable Lint/RescueException
-        raise e
       ensure
         # Restore fake user
         CasAuthentication.sign_in(CasUser.find(session[:admin_id]).cas_directory_id, session, cookies)
@@ -101,8 +101,6 @@ module ActiveSupport
 
       begin
         yield
-      rescue Exception => e # rubocop:disable Lint/RescueException
-        raise e
       ensure
         # Restore fake user
         mock_cas_login(DEFAULT_TEST_USER)
@@ -114,9 +112,10 @@ module ActiveSupport
       connection_double = double('stomp_connection')
       allow(connection_double).to receive(:disconnect)
 
-      if error == :none
+      case error
+      when :none
         allow(connection_double).to receive(:publish)
-      elsif error == :transient
+      when :transient
         # raise an error on the first two calls to publish, to simulate a
         # short-term, transient network failure
         call_count = 0
@@ -124,7 +123,7 @@ module ActiveSupport
           call_count += 1
           call_count < 3 ? raise(RuntimeError) : true
         end
-      elsif error == :permanent
+      when :permanent
         # always fail to publish, to simulate a completely dead connection
         allow(connection_double).to receive(:publish).and_raise(RuntimeError)
       end
@@ -139,7 +138,7 @@ module ActiveSupport
     # module also includes a "stub_const" method.
     #
     # Using the method makes it explicit which method is being called.
-    def rspec_stub_const(constant_name, value, options={})
+    def rspec_stub_const(constant_name, value, options = {})
       # Using the "Class.new.extend(RSpec::Mocks::ExampleMethods)"
       # to ensure that the "stub_const" method from the module is called,
       # instead of the "stub_const" method from the

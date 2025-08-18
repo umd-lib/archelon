@@ -9,7 +9,7 @@ class DisableExpiredDownloadUrlsJob < ApplicationJob
   def perform(current_time)
     Rails.logger.info "Running DisableExpiredDownloadUrlsCronJob at #{current_time}"
 
-    urls_to_expire = DownloadUrl.where(enabled: true).where('expires_at <= ?', current_time)
+    urls_to_expire = DownloadUrl.where(enabled: true).where(expires_at: ..current_time)
     if urls_to_expire.any?
       Rails.logger.info "Disabling #{urls_to_expire.size} expired URLs"
       urls_to_expire.update_all(enabled: false) # rubocop:disable Rails/SkipsModelValidations

@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 # Blacklight controller that handles searches and document requests
-class CatalogController < ApplicationController
-
+class CatalogController < ApplicationController # rubocop:disable Metrics/ClassLength
   include Blacklight::Catalog
 
   # UMD Customization
@@ -18,7 +17,8 @@ class CatalogController < ApplicationController
   #
   # rescue_from Blacklight::Exceptions::InvalidRequest, with: :my_handling_method
 
-  configure_blacklight do |config|
+  # rubocop:disable Layout/LineLength
+  configure_blacklight do |config| # rubocop:disable Metrics/BlockLength
     ## Specify the style of markup to be generated (may be 4 or 5)
     # config.bootstrap_version = 5
     #
@@ -51,10 +51,10 @@ class CatalogController < ApplicationController
     config.solr_path = 'search'
     config.document_solr_path = 'document'
     # End UMD Customization
-    #config.json_solr_path = 'advanced'
+    # config.json_solr_path = 'advanced'
 
     # items to show per page, each number in the array represent another option to choose from.
-    #config.per_page = [10,20,50,100]
+    # config.per_page = [10,20,50,100]
 
     # UMD Customization
 
@@ -155,7 +155,6 @@ class CatalogController < ApplicationController
     # }
     # End UMD Customization
 
-
     # Have BL send all facet field names to Solr, which has been the default
     # previously. Simply remove these lines if you'd rather use Solr request
     # handler defaults, or have no facets.
@@ -246,7 +245,6 @@ class CatalogController < ApplicationController
 
     config.add_search_field 'all_fields', label: 'All Fields'
 
-
     # Now we see how to over-ride Solr request handler defaults, in this
     # case for a BL "search field", which is really a dismax aggregate
     # of Solr search fields.
@@ -311,6 +309,7 @@ class CatalogController < ApplicationController
     # default 'mySuggester', uncomment and provide it below
     # config.autocomplete_suggester = 'mySuggester'
   end
+  # rubocop:enable Layout/LineLength
 
   # UMD Customization
 
@@ -331,16 +330,16 @@ class CatalogController < ApplicationController
 
   def show
     super
-    @show_edit_metadata = CatalogController.show_edit_metadata(@document['component'])
+    @show_edit_metadata = CatalogController.show_edit_metadata?(@document['component'])
     @id = params[:id]
     @resource = ResourceService.resource_with_model(@id)
     @published = @resource[:items][@id]['@type'].include?('http://vocab.lib.umd.edu/access#Published')
   end
 
   # Returns true if the given component has editable metadata, false otherwise.
-  def self.show_edit_metadata(component)
+  def self.show_edit_metadata?(component)
     uneditable_types = %w[Page Article]
-    !uneditable_types.include?(component)
+    !uneditable_types.include?(component) # rubocop:disable Rails/NegateInclude
   end
 
   private
@@ -371,7 +370,7 @@ class CatalogController < ApplicationController
       # Check if this is a identifier search
       #  1. the query is enclosed in quotation marks.
       #  2. And, it does not have blank spaces
-      query.present? && query.start_with?('"') && query.end_with?('"') && !query.include?(' ')
+      query.present? && query.start_with?('"') && query.end_with?('"') && !query.include?(' ') # rubocop:disable Rails/NegateInclude
     end
 
   # End UMD Customization

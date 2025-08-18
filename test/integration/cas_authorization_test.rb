@@ -13,7 +13,7 @@ class CasAuthorizationTest < ActionDispatch::IntegrationTest
     solr_response = double(Blacklight::Solr::Response)
     expect(solr_response).to receive(:aggregations).at_least(:once).and_return({})
     expect_any_instance_of(Blacklight::SearchService).to receive(:search_results).and_return(solr_response)
-     # End UMD Blacklight 8 Fix
+    # End UMD Blacklight 8 Fix
   end
 
   # LDAP call will return the given CAS user ldap_attrs map

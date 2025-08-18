@@ -10,7 +10,7 @@ class PublishJobsControllerTest < ActionController::TestCase
   end
 
   test 'non-Admin users should only see their own jobs on the index page' do
-    assert PublishJob.count > 1, 'Test requires at least two publish jobs'
+    assert PublishJob.many?, 'Test requires at least two publish jobs'
 
     @cas_user = cas_users(:test_user)
     mock_cas_login(@cas_user.cas_directory_id)
@@ -27,7 +27,7 @@ class PublishJobsControllerTest < ActionController::TestCase
 
     get :index
     jobs = assigns(:jobs)
-    assert jobs.count.positive?, 'User must have at least one publish job.'
+    assert jobs.any?, 'User must have at least one publish job.'
     assert jobs.count < PublishJob.count, 'There must be some jobs not belonging to user.'
     jobs.each do |j|
       assert_equal @cas_user, j.cas_user
@@ -35,7 +35,7 @@ class PublishJobsControllerTest < ActionController::TestCase
   end
 
   test 'admin users should see all jobs on the index page' do
-    assert PublishJob.count.positive?, 'Test requires at least one publish job'
+    assert PublishJob.any?, 'Test requires at least one publish job'
     assert @cas_user.admin?, 'Test requires an admin user'
 
     get :index
@@ -44,7 +44,7 @@ class PublishJobsControllerTest < ActionController::TestCase
   end
 
   test 'assert valid results when viewing a job' do
-    assert PublishJob.count.positive?, 'Test requires at least one publish job'
+    assert PublishJob.any?, 'Test requires at least one publish job'
 
     # Set up an publish job for the user
     publish_job = PublishJob.first

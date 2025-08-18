@@ -25,7 +25,7 @@ class ImportJobsControllerTest < ActionController::TestCase
   end
 
   test 'index page should show all jobs when user is an admin' do
-    assert ImportJob.count.positive?, 'Test requires at least one import job'
+    assert ImportJob.any?, 'Test requires at least one import job'
     assert @cas_user.admin?, 'Test requires an admin user'
 
     get :index
@@ -34,7 +34,7 @@ class ImportJobsControllerTest < ActionController::TestCase
   end
 
   test "index page should show only user's jobs when user is not an admin" do
-    assert ImportJob.count > 1, 'Test requires at least two import jobs'
+    assert ImportJob.many?, 'Test requires at least two import jobs'
 
     @cas_user = cas_users(:test_user)
     mock_cas_login(@cas_user.cas_directory_id)
@@ -48,7 +48,7 @@ class ImportJobsControllerTest < ActionController::TestCase
 
     get :index
     import_jobs = assigns(:import_jobs)
-    assert import_jobs.count.positive?, 'User must have at least one import job.'
+    assert import_jobs.any?, 'User must have at least one import job.'
     assert import_jobs.count < ImportJob.count, 'There must be some jobs not belonging to user.'
     import_jobs.each do |j|
       assert_equal @cas_user, j.cas_user
@@ -71,11 +71,11 @@ class ImportJobsControllerTest < ActionController::TestCase
     name = "#{@cas_user.cas_directory_id}-#{Time.now.iso8601}"
     assert_difference('ImportJob.count') do
       post :create, params: {
+        # UMD Blacklight 8 Fix
         import_job: { name: name, collection: 'http://example.com/foo/baz',
-                      # UMD Blacklight 8 Fix
                       # fixture_file_upload paths are now relative to "fixtures/files"
                       metadata_file: fixture_file_upload('valid_import.csv') }
-                      # End UMD Blacklight 8 Fix
+        # End UMD Blacklight 8 Fix
       }
     end
 
@@ -86,11 +86,11 @@ class ImportJobsControllerTest < ActionController::TestCase
     name = ''
     assert_no_difference('ImportJob.count') do
       post :create, params: {
+        # UMD Blacklight 8 Fix
         import_job: { name: name, collection: 'http://example.com/foo/baz',
-                      # UMD Blacklight 8 Fix
                       # fixture_file_upload paths are now relative to "fixtures/files"
                       metadata_file: fixture_file_upload('valid_import.csv') }
-                      # End UMD Blacklight 8 Fix
+        # End UMD Blacklight 8 Fix
       }
     end
 
@@ -118,7 +118,7 @@ class ImportJobsControllerTest < ActionController::TestCase
     # Stub HTTP.get to handle PlastronService request
     json_fixture_file = 'services/import_job/plastron_job_detail_response.json'
     json_response = file_fixture(json_fixture_file).read
-    stub_result = OpenStruct.new
+    stub_result = OpenStruct.new # rubocop:disable Style/OpenStructUse
     stub_result.body = json_response
 
     HTTP.stub :get, stub_result do
@@ -156,11 +156,11 @@ class ImportJobsControllerTest < ActionController::TestCase
     import_job = ImportJob.first
     import_job.state = :import_complete
     import_job.save!
+    # UMD Blacklight 8 Fix
     patch :update, params: { id: import_job.id,
-                             # UMD Blacklight 8 Fix
                              # fixture_file_upload paths are now relative to "fixtures/files"
                              import_job: { name: import_job.name, metadata_file: fixture_file_upload('valid_import.csv') } }
-                             # End UMD Blacklight 8 Fix
+    # End UMD Blacklight 8 Fix
     assert_redirected_to import_jobs_url
     assert_equal I18n.t(:import_already_performed), flash[:error]
   end
@@ -185,7 +185,7 @@ class ImportJobsControllerTest < ActionController::TestCase
     assert_equal I18n.t(:cannot_import_invalid_file), flash[:error]
   end
 
-  test 'status_text should show information about the current status' do # rubocop:disable Metrics/BlockLength:
+  test 'status_text should show information about the current status' do # rubocop:disable Metrics/BlockLength
     tests = [
       # Validate Stages
       { state: :validate_pending, progress: 0,

@@ -33,7 +33,7 @@ class ImportJob < ApplicationRecord
   has_one_attached :metadata_file
   has_one_attached :binary_zip_file
 
-  enum state: {
+  enum :state, {
     validate_pending: 1,
     validate_success: 2,
     validate_failed: 3,
@@ -76,7 +76,7 @@ class ImportJob < ApplicationRecord
     errors.add(:base, :multiple_include_binaries_options) if binary_zip_file.attached? && remote_server.present?
   end
 
-  def update_progress(message) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
+  def update_progress(message) # rubocop:disable Metrics/AbcSize
     return if message.body.blank?
 
     validate_in_progress! if validate_pending?
@@ -141,7 +141,7 @@ class ImportJob < ApplicationRecord
     relpath = relpath.sub(FCREPO_BASE_URL, '')
 
     # Ensure that relpath starts with a "/"
-    relpath = '/' + relpath unless relpath.starts_with?('/')
+    relpath = "/#{relpath}" unless relpath.starts_with?('/')
 
     # Any path starting with "/pcdm" uses the flat layout, which always has
     # a relpath of '/pcdm'

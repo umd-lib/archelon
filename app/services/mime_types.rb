@@ -10,7 +10,7 @@ class MimeTypes < SolrQueryService
     'files.q': '{!terms f=pcdm_file_of v=$row.pcdm_members}',
     'files.fl': 'mime_type',
     'files.rows': '1000',
-    'facet': 'on',
+    facet: 'on',
     'facet.field': 'mime_type'
   }.freeze
 
@@ -22,11 +22,11 @@ class MimeTypes < SolrQueryService
   end
 
   def self.query(uris)
-    QUERY.merge 'fq': match_any('id', uris)
+    QUERY.merge fq: match_any('id', uris)
   end
 
   # Processes the Solr response, returning an array of Strings
-  def self.process_solr_response(solr_response) # rubocop:disable Metrics/MethodLength
+  def self.process_solr_response(solr_response)
     # This method is a bit of a kludge, because it's not clear how to get the
     # facet list directly from a Solr query. This brute-force method iterates
     # through all the files in the response, generating a set of all the
@@ -42,7 +42,6 @@ class MimeTypes < SolrQueryService
       end
     end
 
-    mime_types = mime_set.sort.to_a
-    mime_types
+    mime_set.sort.to_a
   end
 end

@@ -85,21 +85,21 @@ class ImportJobTest < ActiveSupport::TestCase
 
     stomp_message = Stomp::Message.new('')
     stomp_message.body = {
-      'time': {
-        'started': 1_612_895_677.028775,
-        'now': 1_612_895_784.956666,
-        'elapsed': 107.92789101600647
+      time: {
+        started: 1_612_895_677.028775,
+        now: 1_612_895_784.956666,
+        elapsed: 107.92789101600647
       },
-      'count': {
-        'total': 25,
-        'rows': 25,
-        'errors': 1,
-        'valid': 5,
-        'invalid': 0,
-        'created': 2,
-        'updated': 1,
-        'unchanged': 1,
-        'files': 25
+      count: {
+        total: 25,
+        rows: 25,
+        errors: 1,
+        valid: 5,
+        invalid: 0,
+        created: 2,
+        updated: 1,
+        unchanged: 1,
+        files: 25
       }
     }.to_json
 

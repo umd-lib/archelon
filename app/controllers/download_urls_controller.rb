@@ -4,6 +4,7 @@ class DownloadUrlsController < ApplicationController
   load_and_authorize_resource
   # UMD Blacklight 8 Fix
   include Blacklight::Searchable
+
   # End UMD Blacklight 8 Fix
 
   # GET /download_urls
@@ -23,6 +24,7 @@ class DownloadUrlsController < ApplicationController
   def new
     solr_document = find_solr_document(params['document_url'])
     not_found && return unless solr_document
+
     @download_url = DownloadUrl.new
     @download_url.url = solr_document[:id]
     @download_url.title = create_default_title(solr_document)
@@ -35,27 +37,27 @@ class DownloadUrlsController < ApplicationController
     @download_url = create_download_url(solr_document)
     respond_to do |format|
       if @download_url.save
-        format.html { redirect_to @download_url, notice: 'Download URL was successfully created.' }
+        format.html { redirect_to @download_url, notice: I18n.t('download_urls.create.success') }
       else
         format.html { render :new }
       end
     end
   end
 
-  def update
+  def update # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     @download_url = DownloadUrl.find(params[:id])
     if params[:state] == 'disable'
       if @download_url&.enabled?
         @download_url.enabled = false
         @download_url.save!
-        redirect_back fallback_location: download_urls_url, notice: "Download URL token \"#{@download_url.token}\" was disabled"
+        redirect_back fallback_location: download_urls_url,
+                      notice: "Download URL token \"#{@download_url.token}\" was disabled"
       end
     else
       # this shouldn't happen in the normal course of navigating through the site
       Rails.logger.error "Unknown state requested: #{params[:state]}"
-        redirect_back fallback_location: download_urls_url, error: 'Bad request error'
+      redirect_back fallback_location: download_urls_url, error: 'Bad request error'
     end
-
   end
 
   private

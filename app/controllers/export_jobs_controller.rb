@@ -13,9 +13,9 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
   def index
     @jobs =
       if current_cas_user.admin?
-        ExportJob.all.order('timestamp DESC')
+        ExportJob.order(timestamp: :desc)
       else
-        ExportJob.where(cas_user: current_cas_user).order('timestamp DESC')
+        ExportJob.where(cas_user: current_cas_user).order(timestamp: :desc)
       end
   end
 
@@ -31,10 +31,22 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     @mime_types = MimeTypes.mime_types(export_uris)
   end
 
+  def create
+    @job = create_job(export_job_params)
+    render :job_submission_not_allowed and return unless @job.job_submission_allowed?
+
+    @job.uris = bookmarks.map(&:document_id).join("\n")
+
+    return unless @job.save
+
+    submit_job
+    redirect_to action: 'index', status: :see_other
+  end
+
   def destroy
     job = ExportJob.find(params[:id])
 
-    File.delete(job.path) if File.exist? job.path
+    FileUtils.rm_f(job.path)
 
     ExportJob.destroy(params[:id])
     redirect_to export_jobs_path, status: :see_other
@@ -63,17 +75,6 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     end
   end
 
-  def create
-    @job = create_job(export_job_params)
-    render :job_submission_not_allowed && return unless @job.job_submission_allowed?
-    @job.uris = bookmarks.map(&:document_id).join("\n")
-
-    return unless @job.save
-
-    submit_job
-    redirect_to action: 'index', status: :see_other
-  end
-
   def download
     send_file(@job.path)
   rescue ActionController::MissingFile
@@ -86,7 +87,7 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     # it is important to use perform_now so that
     # ActionCable receives timely updates
     ExportJobStatusUpdatedJob.perform_now(@job)
-    render plain: '', status: :no_content
+    render status: :no_content
   end
 
   private
@@ -119,14 +120,14 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     end
 
     def selected_items?
-      return unless current_user.bookmarks.count.zero?
+      return unless current_user.bookmarks.none? # rubocop:disable Style/ReturnNilInPredicateMethodDefinition
 
       flash[:error] = I18n.t(:needs_selected_items)
       redirect_to controller: :bookmarks, action: :index
     end
 
     def selected_items_changed?
-      return if params[:export_job][:item_count] == bookmarks.count.to_s
+      return if params[:export_job][:item_count] == bookmarks.count.to_s # rubocop:disable Style/ReturnNilInPredicateMethodDefinition
 
       flash[:notice] = I18n.t(:selected_items_changed)
       review

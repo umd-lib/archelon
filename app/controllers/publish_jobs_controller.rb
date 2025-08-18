@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class PublishJobsController < ApplicationController
+class PublishJobsController < ApplicationController # rubocop:disable Metrics/ClassLength
   include Blacklight::Bookmarks
   include Blacklight::Searchable
 
@@ -39,13 +39,13 @@ class PublishJobsController < ApplicationController
   def index
     @jobs =
       if current_cas_user.admin?
-        PublishJob.all.order('updated_at DESC')
+        PublishJob.order(updated_at: :desc)
       else
-        PublishJob.where(cas_user: current_cas_user).order('updated_at DESC')
+        PublishJob.where(cas_user: current_cas_user).order(updated_at: :desc)
       end
   end
 
-  def show # rubocop:disable Metrics/AbcSize
+  def show # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
     id = params[:id]
     @job = PublishJob.find(id)
     # UMD Blacklight 8 Fix
@@ -80,9 +80,9 @@ class PublishJobsController < ApplicationController
     redirect_to publish_jobs_url, status: :see_other
   end
 
-  def submit # rubocop:disable Metrics/AbcSize
+  def submit
     job = PublishJob.find(params[:id])
-    force_hidden = !params[:publish_job].nil? ? params[:publish_job][:force_hidden] == '1' : job.force_hidden
+    force_hidden = params[:publish_job].nil? ? job.force_hidden : params[:publish_job][:force_hidden] == '1'
 
     job.update!(state: 2, force_hidden: force_hidden)
     start_publish
@@ -93,7 +93,7 @@ class PublishJobsController < ApplicationController
   def status_text(publish_job)
     return '' if publish_job.state.blank?
 
-    return I18n.t("activerecord.attributes.publish_job.status.#{publish_job.state}") unless publish_job.publish_in_progress? # rubocop:disable Metrics/LineLength
+    return I18n.t("activerecord.attributes.publish_job.status.#{publish_job.state}") unless publish_job.publish_in_progress? # rubocop:disable Layout/LineLength
 
     I18n.t('activerecord.attributes.publish_job.status.publish_in_progress') + publish_job.progress_text
   end
@@ -104,7 +104,7 @@ class PublishJobsController < ApplicationController
     # it is important to use perform_now so that
     # ActionCable receives timely updates
     PublishJobStatusUpdatedJob.perform_now(@publish_job)
-    render plain: '', status: :no_content
+    render status: :no_content
   end
 
   # UMD Blacklight 8 Fix

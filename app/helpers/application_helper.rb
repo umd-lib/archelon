@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # UMD Customization
 require 'erb'
 require 'addressable/template'
@@ -6,7 +8,7 @@ LABEL_PREDICATE = 'http://www.w3.org/2000/01/rdf-schema#label'
 SAME_AS_PREDICATE = 'http://www.w3.org/2002/07/owl#sameAs'
 # End UMD Customization
 
-module ApplicationHelper
+module ApplicationHelper # rubocop:disable Metrics/ModuleLength
   # UMD Customization
   PCDM_OBJECT = 'pcdm:Object'
   PCDM_FILE = 'pcdm:File'
@@ -78,7 +80,7 @@ module ApplicationHelper
   end
 
   def unique_component_types(pcdm_members_info)
-    pcdm_members_info.map { |member| member['component'] }.uniq
+    pcdm_members_info.pluck('component').uniq
   end
 
   def fcrepo_url
@@ -104,7 +106,7 @@ module ApplicationHelper
 
   def format_extracted_text(args)
     if args[:value].is_a? Array
-      args[:value].map { |v| format_extracted_text(value: v) }.join('... ').html_safe # rubocop:disable Rails/OutputSafety, Metrics/LineLength - I assume the .html_safe is intended
+      args[:value].map { |v| format_extracted_text(value: v) }.join('... ').html_safe # rubocop:disable Rails/OutputSafety -- I assume the .html_safe is intended
     else
       # to strip out the embedded word corrdinates
       coord_pattern = /\|\d+,\d+,\d+,\d+/
@@ -151,7 +153,7 @@ module ApplicationHelper
     link_to node['@type'], node['@type'], class: 'badge badge-light', style: 'background: #ddd; color: #333'
   end
 
-  def display_node(node, field, items) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/MethodLength, Metrics/LineLength
+  def display_node(node, field, items) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/MethodLength
     return display_handle(node) if field[:datatype] == 'http://vocab.lib.umd.edu/datatype#handle'
 
     if node.key? '@value'

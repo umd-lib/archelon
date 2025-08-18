@@ -19,7 +19,7 @@ class ResourceController < ApplicationController
       response = send_to_plastron(@id, @resource[:content_model_name], sparql_update)
 
       if response.ok? && response.state == 'update_complete'
-        flash[:notice] = t('resource_update_successful')
+        flash[:notice] = t('resource_update_successful') # rubocop:disable Rails/ActionControllerFlashBeforeRender
         return render json: update_complete
       end
 
@@ -69,7 +69,7 @@ class ResourceController < ApplicationController
       submission = params.to_unsafe_h
       params_to_skip.each { |key| submission.delete(key) }
 
-      Rails.logger.debug("Sending SPARQL query to Plastron: '#{sparql_update}'")
+      Rails.logger.debug { "Sending SPARQL query to Plastron: '#{sparql_update}'" }
 
       body = {
         uris: [id],
@@ -79,9 +79,9 @@ class ResourceController < ApplicationController
       # Send synchronously to STOMP
       begin
         stomp_message = StompService.synchronous_message(:jobs_synchronous, body.to_json, update_headers(model))
-        return PlastronMessage.new(stomp_message)
+        PlastronMessage.new(stomp_message)
       rescue MessagingError => e
-        return PlastronExceptionMessage.new(e.message)
+        PlastronExceptionMessage.new(e.message)
       end
     end
 
@@ -92,7 +92,7 @@ class ResourceController < ApplicationController
         'PlastronArg-no-transactions': 'True',
         'PlastronArg-validate': 'True',
         'PlastronArg-model': model,
-        'PlastronJobId': "SYNCHRONOUS-#{SecureRandom.uuid}"
+        PlastronJobId: "SYNCHRONOUS-#{SecureRandom.uuid}"
       }
     end
 
@@ -106,8 +106,8 @@ class ResourceController < ApplicationController
     def sparql_update
       return @sparql_update if @sparql_update
 
-      delete_statements = (params[:delete] || [])
-      insert_statements = (params[:insert] || [])
+      delete_statements = params[:delete] || []
+      insert_statements = params[:insert] || []
       return '' if delete_statements.empty? && insert_statements.empty?
 
       @sparql_update = "DELETE {\n#{delete_statements.join} } INSERT {\n#{insert_statements.join} } WHERE {}"

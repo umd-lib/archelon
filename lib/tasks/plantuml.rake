@@ -2,11 +2,11 @@
 
 namespace :plantuml do
   task images: :environment do
-    JAR_FILE = ENV['PLANTUML_JAR']
-    SRC_DIR = Rails.root.join('docs').to_s
-    OUTPUT_DIR = Rails.root.join('docs', 'img').to_s
-    IMAGE_FORMAT = 'svg'
+    jar_file = ENV.fetch('PLANTUML_JAR', nil)
+    src_dir = Rails.root.join('docs').to_s
+    output_dir = Rails.root.join('docs/img').to_s
+    image_format = 'svg'
 
-    system 'java', '-jar', JAR_FILE, '-verbose', "-t#{IMAGE_FORMAT}", '-output', OUTPUT_DIR, SRC_DIR
+    system 'java', '-jar', jar_file, '-verbose', "-t#{image_format}", '-output', output_dir, src_dir
   end
 end

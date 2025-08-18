@@ -2,10 +2,10 @@
 
 module CasHelper
   def authenticate
-    redirect_to login_path and return if !logged_in? && !request.env['omniauth.auth'] # rubocop:disable Style/AndOr
-    return if allow_access
+    redirect_to login_path and return if !logged_in? && !request.env['omniauth.auth']
+    return if allow_access?
 
-    render(file: Rails.root.join('public', '403.html'), status: :forbidden, layout: false)
+    render(file: Rails.public_path.join('403.html'), status: :forbidden, layout: false)
   end
 
   # Retrieves the User for the current request from the database, using the
@@ -23,14 +23,14 @@ module CasHelper
   end
 
   # Returns true if "developer" login bypass should be used
-  def self.use_developer_login
-    ENV["RAILS_ENV"] == "development" && ENV["ARCHELON_AUTH"] == 'developer'
+  def self.use_developer_login?
+    ENV['RAILS_ENV'] == 'development' && ENV['ARCHELON_AUTH'] == 'developer'
   end
 
   private
 
     # Returns true if entry is authorized, false otherwise.
-    def allow_access
+    def allow_access?
       !current_cas_user.nil? && !current_cas_user.unauthorized? && current_cas_user.active?
     end
 end

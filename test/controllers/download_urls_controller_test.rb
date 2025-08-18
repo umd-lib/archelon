@@ -128,7 +128,7 @@ class DownloadUrlsControllerTest < ActionController::TestCase
     # Assign a dummy RETRIEVE_BASE_URL so test can run without a .env file
     ENV['RETRIEVE_BASE_URL'] = 'https://example.com/'
     get :show, params: { id: @download_url.id }
-    retrieve_base_url = ENV['RETRIEVE_BASE_URL']
+    retrieve_base_url = ENV.fetch('RETRIEVE_BASE_URL', nil)
     assert_not assigns(:download_url).nil?
     assert_equal retrieve_base_url + @download_url.token, assigns(:download_url).retrieve_url
   end
@@ -146,7 +146,7 @@ class DownloadUrlsControllerTest < ActionController::TestCase
     get :index, params: { rq: { enabled_eq: 1 } }
 
     download_urls = assigns(:download_urls)
-    assert download_urls.count.positive?
+    assert download_urls.any?
     assert download_urls.all?(&:enabled?)
   end
 
@@ -155,7 +155,7 @@ class DownloadUrlsControllerTest < ActionController::TestCase
     get :index, params: { rq: { creator_eq: creator } }
 
     download_urls = assigns(:download_urls)
-    assert download_urls.count.positive?
+    assert download_urls.any?
     assert(download_urls.all?) { |d| d.creator == creator }
   end
 
@@ -169,15 +169,13 @@ class DownloadUrlsControllerTest < ActionController::TestCase
     # stub_find_solr_document do
     #   <Code that calls "find_solr_document">
     # end
-    def stub_find_solr_document
+    def stub_find_solr_document(&block)
       stub_response = SolrDocument.new(
         id: 'http://www.example.com',
         mime_type: 'image/jp2',
         display_title: 'Example'
       )
 
-      @controller.stub :find_solr_document, stub_response do
-        yield
-      end
+      @controller.stub :find_solr_document, stub_response, &block
     end
 end

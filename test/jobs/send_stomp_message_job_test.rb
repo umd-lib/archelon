@@ -13,7 +13,7 @@ class SendStompMessageJobTest < ActiveJob::TestCase
   def import_request
     request = ImportJobRequest.first
     request.import_job.metadata_file.attach(
-      io: File.open(Rails.root.join('test', 'fixtures', 'files', 'valid_import.csv')),
+      io: Rails.root.join('test/fixtures/files/valid_import.csv').open,
       filename: 'valid_import.csv',
       content_type: 'text/csv'
     )
