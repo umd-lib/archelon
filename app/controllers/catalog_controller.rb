@@ -7,8 +7,10 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
   # UMD Customization
   before_action :make_current_query_accessible, only: %i[show index]
 
-  rescue_from Blacklight::Exceptions::ECONNREFUSED, with: :goto_about_page
-  rescue_from Blacklight::Exceptions::InvalidRequest, with: :goto_about_page
+  unless Rails.env.development?
+    rescue_from Blacklight::Exceptions::ECONNREFUSED, with: :goto_about_page
+    rescue_from Blacklight::Exceptions::InvalidRequest, with: :goto_about_page
+  end
   # End UMD Customization
 
   # If you'd like to handle errors returned by Solr in a certain way,
@@ -180,10 +182,6 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # config.add_index_field 'published_ssim', label: 'Published'
     # config.add_index_field 'published_vern_ssim', label: 'Published'
     # config.add_index_field 'lc_callnum_ssim', label: 'Call number'
-    config.add_index_field 'id', label: 'Annotation', helper_method: :link_to_document_view, if:
-    lambda { |_context, _field, document|
-      document[:rdf_type__facet].include?('oa:Annotation')
-    }
     config.add_index_field 'resource_type__facet', label: 'Resource Type'
     config.add_index_field 'creator__facet', label: 'Author'
     # config.add_index_field 'extracted_text', label: 'OCR', highlight: true, helper_method: :format_extracted_text, solr_params: { 'hl.fragsize' => 500 }
@@ -223,7 +221,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     config.add_show_field 'object__format__uri', label: 'Format', accessor: :format_anchor
     # pair with object__archival_collection__label__txt
     config.add_show_field 'object__archival_collection__uri', label: 'Archival Collection', accessor: :archival_collection_anchor
-    config.add_show_field 'object__date__dt', label: 'Date'
+    config.add_show_field 'object__date__edtf', label: 'Date'
     config.add_show_field 'object__description__txt', label: 'Description'
     config.add_show_field 'object__bibliographic_citation__txt', label: 'Bibliographic Citation'
     config.add_show_field 'object__creator', label: 'Creator', accessor: :creator_language_badge, component: ListMetadataComponent
@@ -379,7 +377,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
 
   def self.show_edit_metadata(model)
     uneditable_types = %w[Page File]
-    !uneditable_types.include?(component)
+    !uneditable_types.include?(model)
   end
 
   private
