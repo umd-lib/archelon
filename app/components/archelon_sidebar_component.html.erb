@@ -1,7 +1,10 @@
 <%= render(Blacklight::Document::MoreLikeThisComponent.new(document: document)) %>
 
 <%# UMD Customization %>
-<% model = document[:content_model_name__str] %>
+<%
+  model = document[:content_model_name__str]
+  view_in_fedora = document.has? :described_by__uri
+%>
 
 <% if model != 'Page' && model != 'File' %>
   <% pages = document.key?(:page_label_sequence__txts) && document.key?(:page_uri_sequence__uris) ?
@@ -85,5 +88,15 @@
         </div>
     </div>
   <% end %>
+<% end %>
+
+<% if view_in_fedora %>
+  <div class="card">
+    <div class="card-header">Administrative</div>
+      <ul class="nav">
+        <li><%= link_to 'View in Fedora', document[:described_by__uri], target: '_blank', rel: 'noopener' %></li>
+      </ul>
+    </div>
+  </div>
 <% end %>
 <%# End UMD Customization %>
