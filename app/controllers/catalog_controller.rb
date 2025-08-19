@@ -238,8 +238,9 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     config.add_show_field 'publication_status__facet', label: 'Publication Status'
     config.add_show_field 'visibility__facet', label: 'Visibility'
     config.add_show_field 'presentation_set__facet', label: 'Presentation Set', component: ListMetadataComponent
-    config.add_show_field 'object__created_by__txt', label: 'Created By'
+    config.add_show_field 'object__created_by__str', label: 'Created By'
     config.add_show_field 'object__created__dt', label: 'Created'
+    config.add_show_field 'object__last_modified_by__str', label: 'Last Modified By'
     config.add_show_field 'object__last_modified__dt', label: 'Last Modified'
     config.add_show_field 'rdf_type__facet', label: 'RDF Type', component: ListMetadataComponent
     config.add_show_field 'admin_set__facet', label: 'Member Of', accessor: :member_of_anchor
