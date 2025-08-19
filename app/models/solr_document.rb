@@ -54,11 +54,6 @@ class SolrDocument
     end
   end
 
-  def member_of_anchor
-    return unless has? 'admin_set__facet'
-    return fetch('admin_set__facet')
-  end
-
   def rights_anchor
     vocab_term_with_same_as :object__rights
   end
