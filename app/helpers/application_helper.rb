@@ -80,12 +80,6 @@ module ApplicationHelper # rubocop:disable Metrics/ModuleLength
     FCREPO_BASE_URL.sub(%r{fcrepo/rest/?}, '')
   end
 
-  def view_in_fedora_link(document)
-    url = document[:id]
-    url += '/fcr:metadata' if document[:rdf_type].include? 'fedora:Binary'
-    link_to 'View in Fedora', url, target: '_blank', rel: 'noopener'
-  end
-
   def link_to_document_view(args)
     value = args[:value]
     value = [value] unless value.is_a? Array
