@@ -375,9 +375,9 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     @show_edit_metadata = CatalogController.show_edit_metadata(@document[:content_model_name__str])
   end
 
-  def self.show_edit_metadata(model)
-    uneditable_types = %w[Page File]
-    !uneditable_types.include?(model)
+  def self.show_edit_metadata?(model)
+    editable_types = %w[Item Issue]
+    editable_types.include?(model)
   end
 
   private

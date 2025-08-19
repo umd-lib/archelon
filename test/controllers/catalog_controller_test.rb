@@ -29,12 +29,14 @@ class CatalogControllerTest < ActionController::TestCase
   end
 
   test 'show_edit_metadata should be "true" for top-level components' do
-    assert CatalogController.show_edit_metadata('Item')
+    assert CatalogController.show_edit_metadata?('Item')
+    assert CatalogController.show_edit_metadata?('Issue')
   end
 
   test 'show_edit_metadata? should be "false" for non-top-level components' do
     assert_not CatalogController.show_edit_metadata?('Article')
     assert_not CatalogController.show_edit_metadata?('Page')
+    assert_not CatalogController.show_edit_metadata?('File')
   end
 
   test 'should redirect to item detail page on identifier search with a single match' do
