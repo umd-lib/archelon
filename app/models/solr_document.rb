@@ -17,14 +17,14 @@ class SolrDocument
     return unless has? 'object__creator'
 
     Array(fetch('object__creator')).map do |creator|
-      creator[:agent__label__display].map {|name| format_with_language_tag(name)}.join(' | ').html_safe
+      creator[:agent__label__display].map { |name| format_with_language_tag(name) }.join(' | ').html_safe
     end
   end
 
   def title_language_badge
     return unless has? 'object__title__display'
 
-    Array(fetch('object__title__display')).map {|title| format_with_language_tag(title)}
+    Array(fetch('object__title__display')).map { |title| format_with_language_tag(title) }
   end
 
   def archival_collection_anchor
@@ -37,11 +37,13 @@ class SolrDocument
 
   def handle_anchor
     return unless has? 'handle__id'
+
     add_anchor_tag(fetch('handle_proxied__uri'), fetch('handle__id'))
   end
 
   def members_anchor
     return unless has? 'page_uri_sequence__uris'
+
     labels = fetch('page_label_sequence__txts')
     uris = fetch('page_uri_sequence__uris')
 
@@ -50,7 +52,6 @@ class SolrDocument
     paired_uris.map do |uri, label|
       add_anchor_tag(uri, label)
     end
-
   end
 
   def member_of_anchor
