@@ -372,7 +372,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     @displayable = mirador_displayable?(@document)
 
     @published = @document[:is_published]
-    @show_edit_metadata = CatalogController.show_edit_metadata(@document[:content_model_name__str])
+    @show_edit_metadata = CatalogController.show_edit_metadata?(@document[:content_model_name__str])
   end
 
   def self.show_edit_metadata?(model)

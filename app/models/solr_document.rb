@@ -82,7 +82,7 @@ class SolrDocument
       return unless has? "#{base_field}__uri"
 
       uri = fetch("#{base_field}__uri")
-      label = fetch("#{base_field}#{label_suffix}") || uri
+      label = fetch("#{base_field}#{label_suffix}", uri)
 
       "#{label} → <a href=#{uri}>#{uri}</a>".html_safe
     end
@@ -91,8 +91,8 @@ class SolrDocument
       return unless has? "#{base_field}__uri"
 
       uri = fetch("#{base_field}__uri")
-      label = fetch("#{base_field}#{label_suffix}") || uri
-      same_as_uri = fetch("#{base_field}#{same_as_suffix}").first
+      label = fetch("#{base_field}#{label_suffix}", uri)
+      same_as_uri = fetch("#{base_field}#{same_as_suffix}", []).first
       return label if same_as_uri.nil?
 
       "#{label} → <a href=#{same_as_uri}>#{same_as_uri}</a>".html_safe
