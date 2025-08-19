@@ -383,7 +383,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
   private
 
     def mirador_displayable?(document)
-      document[:content_model_name__str] == 'Item' || document[:content_model_name__str] == 'Page'
+      %w[Item Issue Page].include?(document[:content_model_name__str])
     end
 
     def goto_about_page(err)
