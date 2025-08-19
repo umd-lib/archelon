@@ -62,11 +62,6 @@ class SolrDocument
     vocab_term_with_same_as :object__rights
   end
 
-  def terms_anchor
-    return unless has? 'object__terms_of_use__uri'
-    add_anchor_tag(fetch('object__terms_of_use__uri'), fetch('object__terms_of_use__label__txt'))
-  end
-
   def object_type_anchor
     vocab_term_with_uri :object__object_type, label_suffix: '__label__txt_en'
   end
