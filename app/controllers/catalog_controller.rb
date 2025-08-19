@@ -41,7 +41,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
 
     ## Default parameters to send to solr for all search-like requests. See also SearchBuilder#processed_parameters
     config.default_solr_params = {
-      rows: 10,
+      rows: 10
     }
 
     config.fetch_many_document_params = {
@@ -56,10 +56,10 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # Default parameters to send on single-document requests to Solr. These settings are the Blacklight defaults (see
     # SearchHelper#solr_doc_params) or parameters included in the Blacklight-jetty document requestHandler.
     config.default_document_solr_params = {
-     qt: 'select',
-     fl: '*,[child],object__first:[value v=""]',
-     rows: 1,
-     q: '{!term f=id v=$id}'
+      qt: 'select',
+      fl: '*,[child],object__first:[value v=""]',
+      rows: 1,
+      q: '{!term f=id v=$id}'
     }
     # End UMD Customization
     # config.json_solr_path = 'advanced'
@@ -141,7 +141,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
 
     # UMD Customization
     config.add_facet_field 'presentation_set__facet', label: 'Presentation Set', limit: 10, collapse: false,
-                                                     sort: 'index'
+                                                      sort: 'index'
     config.add_facet_field 'admin_set__facet', label: 'Administrative Set', limit: 10, sort: 'index'
     config.add_facet_field 'creator__facet', label: 'Author', limit: 10
     config.add_facet_field 'resource_type__facet', label: 'Resource Type', limit: 10
@@ -233,7 +233,6 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     config.add_show_field 'object__terms_of_use__value__txt', label: 'Terms of Use'
     # not sure what to do for collection information
     config.add_show_field 'handle__id', label: 'Handle', accessor: :handle_anchor
-
 
     config.add_show_field 'publication_status__facet', label: 'Publication Status'
     config.add_show_field 'visibility__facet', label: 'Visibility'
