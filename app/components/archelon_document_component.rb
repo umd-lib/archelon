@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Component to display an individual Archelon resource
 class ArchelonDocumentComponent < Blacklight::Component
   with_collection_parameter :document
 
@@ -26,7 +29,8 @@ class ArchelonDocumentComponent < Blacklight::Component
     title = parse_title(model, @document)
 
     # I added the title in as a argument
-    component.new(*args, title, counter: @counter, document: @document, presenter: @presenter, as: @title_component, actions: !@show, link_to_document: !@show, document_component: self, **kwargs)
+    component.new(*args, title, counter: @counter, document: @document, presenter: @presenter, as: @title_component,
+                                actions: !@show, link_to_document: !@show, document_component: self, **kwargs)
 
     # End UMD Customization
   end)
@@ -58,17 +62,18 @@ class ArchelonDocumentComponent < Blacklight::Component
 
     component ||= @presenter&.view_config&.thumbnail_component || Blacklight::Document::ThumbnailComponent
 
-    component.new(*args, document: @document, presenter: @presenter, counter: @counter, image_options: image_options_or_static_content, **kwargs)
+    component.new(*args, document: @document, presenter: @presenter, counter: @counter,
+                         image_options: image_options_or_static_content, **kwargs)
   end)
 
-  # A container for partials rendered using the view config partials configuration. Its use is discouraged, but necessary until
-  # the ecosystem fully adopts view components.
+  # A container for partials rendered using the view config partials configuration. Its use is discouraged, but
+  # necessary until the ecosystem fully adopts view components.
   renders_many :partials
 
   # Backwards compatibility
   renders_one :actions
 
-  # rubocop:disable Metrics/ParameterLists
+  # rubocop:disable Metrics/ParameterLists, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/MethodLength
   # @param document [Blacklight::DocumentPresenter]
   # @param presenter [Blacklight::DocumentPresenter] alias for document
   # @param partials [Array, nil] view partial names that should be used to provide content for the `partials` slot
@@ -78,13 +83,21 @@ class ArchelonDocumentComponent < Blacklight::Component
   # @param title_component [Symbol, String] HTML tag type to use for the title element
   # @param counter [Number, nil] a pre-computed counter for the position of this document in a search result set
   # @param document_counter [Number, nil] provided by ViewComponent collection iteration
-  # @param counter_offset [Number] the offset of the start of the collection counter parameter for the component to the overall result set
-  # @param show [Boolean] are we showing only a single document (vs a list of search results); used for backwards-compatibility
+  # @param counter_offset [Number] the offset of the start of the collection counter parameter for the component to the
+  #                                overall result set
+  # @param show [Boolean] are we showing only a single document (vs a list of search results); used for
+  #                       backwards-compatibility
   def initialize(document: nil, presenter: nil, partials: nil,
                  id: nil, classes: [], component: :article, title_component: nil,
                  counter: nil, document_counter: nil, counter_offset: 0,
                  show: false, **args)
-    Blacklight.deprecation.warn('the `presenter` argument to DocumentComponent#initialize is deprecated; pass the `presenter` in as document instead') if presenter
+    super
+    if presenter
+      Blacklight.deprecation.warn(
+        'the `presenter` argument to DocumentComponent#initialize is deprecated; ' \
+        'pass the `presenter` in as document instead'
+      )
+    end
 
     @presenter = presenter || document || args[self.class.collection_parameter]
     @document = @presenter.document
@@ -101,7 +114,7 @@ class ArchelonDocumentComponent < Blacklight::Component
 
     @show = show
   end
-  # rubocop:enable Metrics/ParameterLists
+  # rubocop:enable Metrics/ParameterLists, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/MethodLength
 
   # HTML classes to apply to the root element
   def classes
@@ -119,11 +132,7 @@ class ArchelonDocumentComponent < Blacklight::Component
     set_slot(:metadata, nil, fields: presenter.field_presenters) unless metadata
     set_slot(:embed, nil) unless embed
     if view_partials.present?
-      view_partials.each do |view_partial|
-        with_partial(view_partial) do
-          helpers.render_document_partial @document, view_partial, component: self, document_counter: @counter
-        end
-      end
+      render_partials
     else
       set_slot(:partials, nil)
     end
@@ -131,27 +140,36 @@ class ArchelonDocumentComponent < Blacklight::Component
 
   private
 
-  attr_reader :document_counter, :presenter, :view_partials
+    attr_reader :document_counter, :presenter, :view_partials
 
-  def show?
-    @show
-  end
-
-  # UMD Customization
-  def parse_title(model, document)
-    if model == 'Page'
-      return document[:page__title__txt]
-
-    elsif model == 'File'
-      return document[:file__title__txt]
-
-    elsif document[:object__title__display] != nil
-      titles = document[:object__title__display].map { |title| title.starts_with?('[@') ? title.split(']')[1] : title }
-      return titles.join(seperator=" | ")
-
-    else
-      return nil # Title should then default to using the id
+    def show?
+      @show
     end
-  end
+
+    def render_partials
+      view_partials.each do |view_partial|
+        with_partial(view_partial) do
+          helpers.render_document_partial @document, view_partial, component: self, document_counter: @counter
+        end
+      end
+    end
+
+    # UMD Customization
+    def parse_title(model, document)
+      if model == 'Page'
+        document[:page__title__txt]
+
+      elsif model == 'File'
+        document[:file__title__txt]
+
+      elsif !document[:object__title__display].nil?
+        titles = document[:object__title__display].map do |title|
+          title.starts_with?('[@') ? title.split(']')[1] : title
+        end
+        titles.join(' | ')
+
+      end
+      # if none of the cases match, title should then default to using the id
+    end
   # End UMD Customization
 end

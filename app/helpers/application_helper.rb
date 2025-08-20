@@ -14,7 +14,6 @@ module ApplicationHelper # rubocop:disable Metrics/ModuleLength
   PCDM_FILE = 'pcdm:File'
   ALLOWED_MIME_TYPE = 'image/tiff'
 
-
   def encoded_id(document)
     id = document._source[:id]
     ERB::Util.url_encode(id.slice(FCREPO_BASE_URL.size, id.size))

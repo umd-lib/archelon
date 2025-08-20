@@ -11,5 +11,4 @@ class SearchBuilder < Blacklight::SearchBuilder
   #   def add_custom_data_to_query(solr_parameters)
   #     solr_parameters[:custom] = blacklight_params[:user_value]
   #   end
-
 end
