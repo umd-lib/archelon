@@ -55,8 +55,6 @@ Rails.application.routes.draw do
   post '/edit/:id', controller: 'resource', action: 'update', constraints: { id: /.*/ }
   post '/update/:id', controller: 'resource', action: 'update_state', constraints: { id: /.*/ }, as: 'update_resource'
 
-  get '/ping' => 'ping#verify'
-
   # Export Jobs
   resources :export_jobs do
     collection do
