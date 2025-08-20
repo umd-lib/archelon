@@ -62,6 +62,13 @@ class SolrDocument
     vocab_term_with_uri :object__object_type, label_suffix: '__label__txt_en'
   end
 
+  def terms_of_use
+    terms_text = fetch(:object__terms_of_use__value__txt)
+    return terms_text unless has? :object__terms_of_use__label__txt
+
+    "#{fetch(:object__terms_of_use__label__txt)}: #{terms_text}"
+  end
+
   private
 
     def format_with_language_tag(value)
