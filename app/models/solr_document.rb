@@ -3,6 +3,7 @@
 # Represents a single document returned from Solr
 class SolrDocument
   include Blacklight::Solr::Document
+  include ActionView::Helpers::TagHelper
 
   # self.unique_key = 'id'
 
@@ -17,7 +18,8 @@ class SolrDocument
     return unless has? 'object__creator'
 
     Array(fetch('object__creator')).map do |creator|
-      creator[:agent__label__display].map { |name| format_with_language_tag(name) }.join(' | ').html_safe
+      tagged_names = creator[:agent__label__display].map { |name| format_with_language_tag(name) }
+      safe_join(tagged_names, ' | ')
     end
   end
 
@@ -63,10 +65,12 @@ class SolrDocument
   end
 
   def terms_of_use
-    terms_text = fetch(:object__terms_of_use__value__txt)
-    return terms_text unless has? :object__terms_of_use__label__txt
+    return unless has? 'object__terms_of_use__value__txt'
 
-    "#{fetch(:object__terms_of_use__label__txt)}: #{terms_text}"
+    terms_text = fetch('object__terms_of_use__value__txt')
+    return terms_text unless has? 'object__terms_of_use__label__txt'
+
+    "#{fetch('object__terms_of_use__label__txt')}: #{terms_text}"
   end
 
   private
@@ -75,14 +79,14 @@ class SolrDocument
       if value.starts_with? '[@'
         language_tag = value.split(']')[0][2...]
         value = value.split(']')[1]
-        value.html_safe + " <span class=\"badge text-bg-secondary\">#{language_tag}</span>".html_safe
+        safe_join([value, tag.span(language_tag, class: %w[badge text-bg-secondary])], "\xa0")
       else
-        value.html_safe
+        value
       end
     end
 
     def add_anchor_tag(uri, label)
-      "<a href=#{uri}> #{label} </a>".html_safe
+      tag.a(label, href: uri)
     end
 
     def vocab_term_with_uri(base_field, label_suffix: '__label__txt')
@@ -91,7 +95,7 @@ class SolrDocument
       uri = fetch("#{base_field}__uri")
       label = fetch("#{base_field}#{label_suffix}", uri)
 
-      "#{label} → <a href=#{uri}>#{uri}</a>".html_safe
+      safe_join([label, tag.a(uri, href: uri)], ' → ')
     end
 
     def vocab_term_with_same_as(base_field, label_suffix: '__label__txt', same_as_suffix: '__same_as__uris')
@@ -102,6 +106,6 @@ class SolrDocument
       same_as_uri = fetch("#{base_field}#{same_as_suffix}", []).first
       return label if same_as_uri.nil?
 
-      "#{label} → <a href=#{same_as_uri}>#{same_as_uri}</a>".html_safe
+      safe_join([label, tag.a(same_as_uri, href: same_as_uri)], ' → ')
     end
 end
