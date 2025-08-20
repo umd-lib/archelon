@@ -230,7 +230,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # not sure what to do for extent
     config.add_show_field 'subject__facet', label: 'Subject', component: ListMetadataComponent
     config.add_show_field 'language__facet', label: 'Language', component: ListMetadataComponent
-    config.add_show_field 'object__terms_of_use__value__txt', label: 'Terms of Use'
+    config.add_show_field 'object__terms_of_use__value__txt', label: 'Terms of Use', accessor: :terms_of_use
     # not sure what to do for collection information
     config.add_show_field 'handle__id', label: 'Handle', accessor: :handle_anchor
 
