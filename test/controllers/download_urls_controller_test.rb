@@ -173,7 +173,7 @@ class DownloadUrlsControllerTest < ActionController::TestCase
       stub_response = SolrDocument.new(
         id: 'http://www.example.com',
         mime_type: 'image/jp2',
-        display_title: 'Example'
+        object__title__display: ['Example']
       )
 
       @controller.stub :find_solr_document, stub_response, &block

@@ -14,14 +14,6 @@ module ApplicationHelper # rubocop:disable Metrics/ModuleLength
   PCDM_FILE = 'pcdm:File'
   ALLOWED_MIME_TYPE = 'image/tiff'
 
-  def mirador_displayable?(document)
-    rdf_types = document._source[:rdf_type]
-    component = document._source[:component]
-    return true if rdf_types.include?(PCDM_OBJECT) && (component != 'Article')
-
-    false
-  end
-
   def encoded_id(document)
     id = document._source[:id]
     ERB::Util.url_encode(id.slice(FCREPO_BASE_URL.size, id.size))
@@ -85,12 +77,6 @@ module ApplicationHelper # rubocop:disable Metrics/ModuleLength
 
   def fcrepo_url
     FCREPO_BASE_URL.sub(%r{fcrepo/rest/?}, '')
-  end
-
-  def view_in_fedora_link(document)
-    url = document[:id]
-    url += '/fcr:metadata' if document[:rdf_type].include? 'fedora:Binary'
-    link_to 'View in Fedora', url, target: '_blank', rel: 'noopener'
   end
 
   def link_to_document_view(args)

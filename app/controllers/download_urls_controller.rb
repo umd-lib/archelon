@@ -27,7 +27,7 @@ class DownloadUrlsController < ApplicationController
 
     @download_url = DownloadUrl.new
     @download_url.url = solr_document[:id]
-    @download_url.title = create_default_title(solr_document)
+    @download_url.title = create_title(solr_document)
   end
 
   def create
@@ -62,19 +62,28 @@ class DownloadUrlsController < ApplicationController
 
   private
 
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     # Returns the default value for the "title" field of the DownloadUrl object.
-    def create_default_title(solr_document)
-      title = solr_document[:display_title]
-      pcdm_file_of = solr_document[:pcdm_file_of]
-      if pcdm_file_of
-        # UMD Blacklight 8 Fix
-        file_of_document = search_service.fetch(pcdm_file_of)
-        # End UMD Blacklight 8 Fix
-        file_of_title = file_of_document[:display_title]
-        title += " - #{file_of_title}"
+    def create_title(solr_document)
+      model = solr_document[:content_model_name__str]
+
+      if model != 'Page' && model != 'File'
+        titles = solr_document[:object__title__display]
+        titles.map { |title| title.gsub(/^\[@[\w-]+\]/, '') }.join(' | ')
+
+      elsif model == 'Page'
+        item_title = create_title(find_solr_document(solr_document[:page__member_of__uri]))
+        solr_document[:page__title__txt] + " - #{item_title}"
+
+      elsif model == 'File'
+        page_title = create_title(find_solr_document(solr_document[:file__file_of__uri]))
+        solr_document[:file__title__txt] + " - #{page_title}"
+
+      else
+        solr_document[:id] # Shouldn't happen but this should be noticeable if it does
       end
-      title
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     # Retrieves the Solr document with the given URL, or nil if the Solr
     # document can't be found.
@@ -107,7 +116,7 @@ class DownloadUrlsController < ApplicationController
       @download_url.expires_at = 7.days.from_now
       # Title is not a form parameter, so we have to re-create it in order
       # for it to saved to the model
-      @download_url.title = create_default_title(solr_document)
+      @download_url.title = create_title(solr_document)
       @download_url
     end
 

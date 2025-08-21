@@ -1,8 +1,14 @@
-<dl class="dl-horizontal dl-invert">
+<div class="card-body">
+  <h2 class="card-title">
+      <%= title %>
+  </h2>
+
   <% define_react_components(fields, items, uri).each do |label, type, args| %>
-    <dt><%= label %>:</dt>
-    <dd>
-      <%= react_component(type, **args) %>
-    </dd>
+
+    <h5 class="card-title" style="padding-top: 10px;">
+      <%= label %>
+    </h5>
+
+    <%= react_component(type, **args) %>
   <% end %>
-</dl>
+</div>
