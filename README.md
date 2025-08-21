@@ -64,11 +64,11 @@ send the log to standard out.
 In general, Archelon requires a CAS login to access the application,
 and the user must have been added to the system by an administrator.
 
-Two notable exceptions are the "ping" endpoint and "public keys" endpoint
-(there are also some other minor endpoints, such as import/export status
-updates).
+Two notable exceptions are the "up" (health check) endpoint and "public keys"
+endpoint (there are also some other minor endpoints, such as import/export
+status updates).
 
-The "ping" endpoint is unrestricted, and is suitable for monitoring the
+The "up" endpoint is unrestricted, and is suitable for monitoring the
 health of the application.
 
 The "public keys" endpoint returns a JSON list of the public keys allowed to SFTP
