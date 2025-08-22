@@ -40,29 +40,20 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # config.raw_endpoint.enabled = false
 
     ## Default parameters to send to solr for all search-like requests. See also SearchBuilder#processed_parameters
-    config.default_solr_params = {
-      rows: 10
-    }
+    # config.default_solr_params = {}
 
-    config.fetch_many_document_params = {
-      fl: '*'
-    }
+    # config.fetch_many_document_params = {}
 
     # solr path which will be added to solr base url before the other solr params.
     # UMD Customization
-    config.solr_path = 'search'
+    config.solr_path = 'select'
     config.document_solr_path = 'select'
 
     # Default parameters to send on single-document requests to Solr. These settings are the Blacklight defaults (see
     # SearchHelper#solr_doc_params) or parameters included in the Blacklight-jetty document requestHandler.
-    config.default_document_solr_params = {
-      qt: 'select',
-      fl: '*,[child],object__first:[value v=""]',
-      rows: 1,
-      q: '{!term f=id v=$id}'
-    }
+    # config.default_document_solr_params = {}
     # End UMD Customization
-    # config.json_solr_path = 'advanced'
+    config.json_solr_path = nil
 
     # items to show per page, each number in the array represent another option to choose from.
     # config.per_page = [10,20,50,100]
@@ -339,8 +330,8 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     config.spell_max = 5
 
     # Configuration for autocomplete suggester
-    config.autocomplete_enabled = true
-    config.autocomplete_path = 'suggest'
+    # config.autocomplete_enabled = true
+    # config.autocomplete_path = 'suggest'
     # if the name of the solr.SuggestComponent provided in your solrconfig.xml is not the
     # default 'mySuggester', uncomment and provide it below
     # config.autocomplete_suggester = 'mySuggester'
