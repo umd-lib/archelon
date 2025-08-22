@@ -163,10 +163,7 @@ class ArchelonDocumentComponent < Blacklight::Component
         document[:file__title__txt]
 
       elsif !document[:object__title__display].nil?
-        titles = document[:object__title__display].map do |title|
-          title.starts_with?('[@') ? title.split(']')[1] : title
-        end
-        titles.join(' | ')
+        document.display_titles
 
       end
       # if none of the cases match, title should then default to using the id

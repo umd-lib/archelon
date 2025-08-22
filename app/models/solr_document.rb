@@ -73,6 +73,16 @@ class SolrDocument
     "#{fetch('object__terms_of_use__label__txt')}: #{terms_text}"
   end
 
+  # Concatenates titles for display, stripping out any language tags
+  def display_titles
+    return '' unless has? 'object__title__display'
+
+    titles = fetch(:object__title__display, []).map do |title|
+      title.starts_with?('[@') ? title.split(']')[1] : title
+    end
+    titles.join(' | ')
+  end
+
   private
 
     def format_with_language_tag(value)
