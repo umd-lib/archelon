@@ -266,11 +266,14 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # urls.  A display label will be automatically calculated from the :key,
     # or can be specified manually to be different.
 
-    # This one uses all the defaults set by the solr request handler. Which
-    # solr request handler? The one set in config[:default_solr_parameters][:qt],
-    # since we aren't specifying it otherwise.
-
-    config.add_search_field 'all_fields', label: 'All Fields'
+    config.add_search_field('text') do |field|
+      field.label = 'Text/Keywords'
+      field.solr_parameters = { df: 'text', defType: 'edismax', 'q.alt': '*:*' }
+    end
+    config.add_search_field('identifier') do |field|
+      field.label = 'Identifier'
+      field.solr_parameters = { df: 'identifier', defType: 'edismax', 'q:alt': '*:*' }
+    end
 
     # Now we see how to over-ride Solr request handler defaults, in this
     # case for a BL "search field", which is really a dismax aggregate
@@ -342,17 +345,8 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
 
   # get search results from the solr index
   def index
-    fix_query_param
-    # Use 'search' for regular searches, and 'identifier_search' for identifier searches.
-    is_identifier_search = identifier_search?(params[:q])
-    blacklight_config[:solr_path] = is_identifier_search ? 'identifier_search' : 'search'
     super
-    return unless is_identifier_search && @response.response['numFound'] == 1
-
-    # UMD Blacklight 8 Fix
-    @document_list = @response.response['docs']
-    redirect_to action: 'show', id: @document_list[0]['id']
-    # End UMD Blacklight 8 Fix
+    redirect_to action: 'show', id: first_result['id'] if identifier_search? && single_result?
   end
 
   def show
@@ -390,20 +384,19 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
       params[:f] && params[:f][:collection_title_facet]
     end
 
-    # Solr does not escape ':' character when using single quotes. Replace
-    # single quotes with double quotes to ensure ':" characters in identifiers
-    # are not misidentified. For instance, a pid query in single quote, such as
-    # 'umd:123', will cause solr to look for a solr field with name "umd"
-    # leading to a 400 response.
-    def fix_query_param
-      params[:q] = params[:q] ? params[:q].tr("'", '"') : ''
+    def single_result?
+      # True if there is exactly one result found by the current search
+      @response.response['numFound'] == 1
     end
 
-    def identifier_search?(query)
+    def first_result
+      # Get the first result; returns nil if there were no results
+      @response.response['docs'].first
+    end
+
+    def identifier_search?
       # Check if this is a identifier search
-      #  1. the query is enclosed in quotation marks.
-      #  2. And, it does not have blank spaces
-      query.present? && query.start_with?('"') && query.end_with?('"') && !query.include?(' ') # rubocop:disable Rails/NegateInclude
+      params[:search_field] == 'identifier'
     end
 
   # End UMD Customization
