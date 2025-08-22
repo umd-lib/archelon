@@ -39,7 +39,7 @@
           <% if doc._source.exclude? "object__title__display" %>
             <td>"Title" not found</td>
           <% else %>
-            <td><%= doc._source["object__title__display"][0] %> </td>
+            <td><%= doc.display_titles %> </td>
           <% end %>
 
           <% if doc._source.exclude? "resource_type__facet" %>
