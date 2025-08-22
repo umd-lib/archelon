@@ -26,7 +26,6 @@
       <tr>
         <th>Title</th>
         <th>Resource Type</th>
-        <th>Access Level</th>
         <th>Member Of</th>
         <th>Collection Information</th>
         <th>Handle Identifier</th>
@@ -37,44 +36,34 @@
     <tbody>
       <% @result_documents.each do |doc| %>
         <tr>
-          <% if doc._source.exclude? "title" %>
+          <% if doc._source.exclude? "object__title__display" %>
             <td>"Title" not found</td>
           <% else %>
-            <td><%= doc._source["title"][0] %> </td>
+            <td><%= doc._source["object__title__display"][0] %> </td>
           <% end %>
 
-          <% if doc._source.exclude? "component" %>
+          <% if doc._source.exclude? "resource_type__facet" %>
             <td>"Resource Type" not found</td>
           <% else %>
-            <td><%= doc._source["component"] %> </td>
+            <td><%= doc._source["resource_type__facet"][0] %> </td>
           <% end %>
 
-          <% if doc._source.exclude? "rdf_type" %>
-            <td>rdf_type not found</td>
-          <% elsif doc._source["rdf_type"].include? "umd_access:public" %>
-            <td>Public</td>
-          <% elsif doc._source["rdf_type"].include? "umd_access:campus" %>
-            <td>Campus</td>
-          <% else %>
-            <td>None</td>
-          <% end %>
-
-          <% if doc._source.exclude? "collection_title_facet" %>
+          <% if doc._source.exclude? "admin_set__facet" %>
             <td>"Member Of" not found</td>
           <% else %>
-            <td><%= doc._source["collection_title_facet"][0] %> </td>
+            <td><%= doc._source["admin_set__facet"][0] %> </td>
           <% end %>
 
-          <% if doc._source.exclude? "citation" %>
+          <% if doc._source.exclude? "object__bibliographic_citation__display" %>
             <td>"Collection Information" not found</td>
           <% else %>
-            <td><%= doc._source["citation"][0] %> </td>
+            <td><%= doc._source["object__bibliographic_citation__display"][0] %> </td>
           <% end %>
 
-          <% if doc._source.exclude? "handle" %>
+          <% if doc._source.exclude? "object__handle__id" %>
             <td> "Handle" not found </td>
           <% else %>
-            <td><%= doc._source["handle"] %> </td>
+            <td><%= doc._source["object__handle__id"] %> </td>
           <% end %>
 
           <% if doc._source.exclude? "is_published" or doc._source.exclude? "is_hidden" %>
