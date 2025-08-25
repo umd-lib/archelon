@@ -43,7 +43,7 @@ class CatalogControllerTest < ActionController::TestCase
     # Inject the stubbed search_results_mock into the controller
     # UMD Blacklight 8 Fix
     stub_search_results_single_result
-    get :index, params: { q: '"test:123"' }
+    get :index, params: { q: 'test:123', search_field: 'identifier' }
 
     # Assert that the request was redirected to the show method with the correct ID param
     assert_redirected_to(controller: 'catalog', action: 'show', id: 'http://fcrepo-test/123')
