@@ -216,6 +216,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     config.add_show_field 'object__description__txt', label: 'Description'
     config.add_show_field 'object__bibliographic_citation__txt', label: 'Bibliographic Citation'
     config.add_show_field 'object__creator', label: 'Creator', accessor: :creator_language_badge, component: ListMetadataComponent
+    config.add_show_field 'object__audience', label: 'Audience', accessor: :audience_language_badge, component: ListMetadataComponent
     config.add_show_field 'publisher__facet', label: 'Publisher', component: ListMetadataComponent
     config.add_show_field 'location__facet', label: 'Location', component: ListMetadataComponent
     # not sure what to do for extent

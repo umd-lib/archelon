@@ -23,6 +23,15 @@ class SolrDocument
     end
   end
 
+  def audience_language_badge
+    return unless has? 'object__audience'
+
+    Array(fetch('object__audience')).map do |audience|
+      tagged_names = audience[:agent__label__display].map { |name| format_with_language_tag(name) }
+      safe_join(tagged_names, ' | ')
+    end
+  end
+
   def title_language_badge
     return unless has? 'object__title__display'
 

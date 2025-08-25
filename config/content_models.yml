@@ -67,6 +67,12 @@ Item:
       type: :LabeledThing
       repeatable: true
 
+    - name: 'audience'
+      uri: 'http://purl.org/dc/terms/audience'
+      label: 'Audience'
+      type: :LabeledThing
+      repeatable: true
+
     - name: 'publisher'
       uri: 'http://purl.org/dc/terms/publisher'
       label: 'Publisher'
