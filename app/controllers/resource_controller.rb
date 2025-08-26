@@ -16,9 +16,9 @@ class ResourceController < ApplicationController
       flash[:notice] = t('resource_update_successful')
       render json: update_complete
     else
-      plastron_rest_base_url = Addressable::URI.parse(ENV['PLASTRON_REST_BASE_URL'])
+      plastron_rest_base_url = Addressable::URI.parse(ENV.fetch('PLASTRON_REST_BASE_URL', nil))
       repo_path = @id.gsub(FCREPO_BASE_URL, '/')
-      plastron_resource_url = plastron_rest_base_url.join('resources' + repo_path)
+      plastron_resource_url = plastron_rest_base_url.join("resources#{repo_path}")
       begin
         response = HTTP.follow.headers(
           content_type: 'application/sparql-update'
@@ -36,7 +36,7 @@ class ResourceController < ApplicationController
       end
 
       if response.status.success?
-        flash[:notice] = t('resource_update_successful')
+        flash.now[:notice] = t('resource_update_successful')
         return render json: update_complete
       end
 
