@@ -5,35 +5,41 @@ class BinariesStats < SolrQueryService
   QUERY = {
     q: '*:*',
     rows: '10000',
-    'files.q': '{!terms f=pcdm_file_of v=$row.pcdm_members}',
     indent: 'on',
-    fl: 'id,pcdm_members,files:[subquery]',
-    'files.fl': 'id,size',
     'files.rows': '10000'
   }.freeze
 
-  def self.query(uris, mime_types)
-    fq = QUERY.merge fq: match_any('id', uris)
-    fq = fq.merge 'files.fq': match_any('mime_type', mime_types) if mime_types
-    fq
+  def self.query(uris)
+    QUERY.merge fq: match_any('id', uris)
   end
 
   def self.get_stats(uris, mime_types)
     solr = Blacklight::Solr::Repository.new(blacklight_config)
-    process_solr_response(solr.search(query(uris, mime_types)))
+    process_solr_response(solr.search(query(uris)), mime_types)
   end
 
-  def self.process_solr_response(solr_response)
-    solr_docs = solr_response['response']['docs']
+  def self.process_solr_response(solr_response, mime_types) # rubocop:disable Metrics/MethodLength
+    docs = solr_response.fetch('response', {}).fetch('docs', [])
+    binary_counts = 0
+    binary_sizes = 0
 
-    binary_sizes = solr_docs.map do |doc|
-      doc['files']['docs'].map { |f| f['size'].to_i }.sum
+    docs.each do |doc|
+      object_has_members = doc.fetch('object__has_member', [])
+      object_has_members.each do |obj|
+        page_has_files = obj.fetch('page__has_file', [])
+        page_has_files.each do |page|
+          mime_type = page.fetch('file__mime_type__str', nil)
+          if mime_types.include?(mime_type)
+            binary_counts += 1
+            binary_sizes += page.fetch('file__size__int', '0').to_i
+          end
+        end
+      end
     end
-    binary_counts = solr_docs.map { |doc| doc['files']['numFound'] }
 
     {
-      count: binary_counts.sum,
-      total_size: binary_sizes.sum
+      count: binary_counts,
+      total_size: binary_sizes
     }
   end
 end
