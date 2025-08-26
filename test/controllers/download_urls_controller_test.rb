@@ -119,7 +119,7 @@ class DownloadUrlsControllerTest < ActionController::TestCase
 
   test 'create_download_url should respond with 404 if document cannot be found' do
     @controller.stub(:find_solr_document, nil) do
-      post :create, params: { download_url: { document_url: 'document does not exist' } }
+      post :create, params: { download_url: { id: 1 }, document_url: 'document does not exist' }
       assert_response :not_found
     end
   end
