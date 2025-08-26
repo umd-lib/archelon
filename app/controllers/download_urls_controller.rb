@@ -91,11 +91,8 @@ class DownloadUrlsController < ApplicationController
     # The Fedora document URL of the Solr document to retrieve.
     def find_solr_document(document_url)
       # UMD Blacklight 8 Fix
-      solr_documents = search_service.fetch([document_url])
+      search_service.fetch(document_url)
       # End UMD Blacklight 8 Fix
-      return solr_documents.first if solr_documents.any?
-
-      nil
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
@@ -103,7 +100,8 @@ class DownloadUrlsController < ApplicationController
       # "token", and "creator" should not be settable by the user
       params.require(:download_url).permit(
         :url, :title, :notes, :mime_type, :enabled, :request_ip,
-        :request_user_agent, :accessed_at, :download_completed_at
+        :request_user_agent, :accessed_at, :download_completed_at,
+        :document_url
       )
     end
 
