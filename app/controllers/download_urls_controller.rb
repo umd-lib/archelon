@@ -27,7 +27,7 @@ class DownloadUrlsController < ApplicationController
 
     @download_url = DownloadUrl.new
     @download_url.url = solr_document[:id]
-    @download_url.title = create_title(solr_document)
+    @download_url.title = full_title(solr_document)
   end
 
   def create
@@ -62,28 +62,18 @@ class DownloadUrlsController < ApplicationController
 
   private
 
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-    # Returns the default value for the "title" field of the DownloadUrl object.
-    def create_title(solr_document)
-      model = solr_document[:content_model_name__str]
-
-      if model != 'Page' && model != 'File'
-        titles = solr_document[:object__title__display]
-        titles.map { |title| title.gsub(/^\[@[\w-]+\]/, '') }.join(' | ')
-
-      elsif model == 'Page'
-        item_title = create_title(find_solr_document(solr_document[:page__member_of__uri]))
-        solr_document[:page__title__txt] + " - #{item_title}"
-
-      elsif model == 'File'
-        page_title = create_title(find_solr_document(solr_document[:file__file_of__uri]))
-        solr_document[:file__title__txt] + " - #{page_title}"
-
+    # Build a full title of the form "{File Title} - {Page Title} - {Object Title}".
+    def full_title(solr_document)
+      if solr_document.has? :object__title__display
+        solr_document[:object__title__display].map { |title| title.gsub(/^\[@[\w-]+\]/, '') }.join(' | ')
+      elsif solr_document.has? :page__member_of__uri
+        "#{solr_document[:page__title__txt]} - #{full_title(find_solr_document(solr_document[:page__member_of__uri]))}"
+      elsif solr_document.has? :file__file_of__uri
+        "#{solr_document[:file__title__txt]} - #{full_title(find_solr_document(solr_document[:file__file_of__uri]))}"
       else
-        solr_document[:id] # Shouldn't happen but this should be noticeable if it does
+        solr_document[:id]
       end
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     # Retrieves the Solr document with the given URL, or nil if the Solr
     # document can't be found.
@@ -108,13 +98,13 @@ class DownloadUrlsController < ApplicationController
     def create_download_url(solr_document)
       @download_url = DownloadUrl.new(download_url_params)
       @download_url.url = solr_document[:id]
-      @download_url.mime_type = solr_document[:mime_type]
+      @download_url.mime_type = solr_document[:file__mime_type__str]
       @download_url.creator = real_user.cas_directory_id
       @download_url.enabled = true
       @download_url.expires_at = 7.days.from_now
       # Title is not a form parameter, so we have to re-create it in order
       # for it to saved to the model
-      @download_url.title = create_title(solr_document)
+      @download_url.title = full_title(solr_document)
       @download_url
     end
 
