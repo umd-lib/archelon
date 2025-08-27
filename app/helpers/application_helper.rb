@@ -10,10 +10,6 @@ SAME_AS_PREDICATE = 'http://www.w3.org/2002/07/owl#sameAs'
 
 module ApplicationHelper # rubocop:disable Metrics/ModuleLength
   # UMD Customization
-  PCDM_OBJECT = 'pcdm:Object'
-  PCDM_FILE = 'pcdm:File'
-  ALLOWED_MIME_TYPE = 'image/tiff'
-
   def encoded_id(document)
     id = document._source[:id]
     ERB::Util.url_encode(id.slice(FCREPO_BASE_URL.size, id.size))
@@ -25,54 +21,6 @@ module ApplicationHelper # rubocop:disable Metrics/ModuleLength
 
   def iiif_base_url
     IIIF_BASE_URL
-  end
-
-  def from_subquery(subquery_field, args)
-    # UMD Blacklight 8 fix
-    # see https://github.com/projectblacklight/blacklight/commit/dcfc74aebd4446aac85b2c2f7d10cd2c6ff8fef3
-    # Can no longer assign to args[:document], so just return the value
-    args[:document][subquery_field]['docs']
-    # End UMD Blacklight 8 fix
-  end
-
-  def collection_from_subquery(args)
-    from_subquery 'pcdm_collection_info', args
-  end
-
-  def parent_from_subquery(args)
-    from_subquery 'pcdm_member_of_info', args
-  end
-
-  def members_from_subquery(args)
-    from_subquery 'pcdm_members_info', args
-  end
-
-  def file_parent_from_subquery(args)
-    from_subquery 'pcdm_file_of_info', args
-  end
-
-  def files_from_subquery(args)
-    from_subquery 'pcdm_files_info', args
-  end
-
-  def related_objects_from_subquery(args)
-    from_subquery 'pcdm_related_objects_info', args
-  end
-
-  def related_object_of_from_subquery(args)
-    from_subquery 'pcdm_related_object_of_info', args
-  end
-
-  def annotation_source_from_subquery(args)
-    from_subquery 'annotation_source_info', args
-  end
-
-  def value_list(args)
-    args[:document][args[:field]]
-  end
-
-  def unique_component_types(pcdm_members_info)
-    pcdm_members_info.pluck('component').uniq
   end
 
   def fcrepo_url
