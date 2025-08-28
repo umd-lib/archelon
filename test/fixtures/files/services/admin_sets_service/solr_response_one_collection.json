@@ -1,0 +1,42 @@
+{
+  "responseHeader": {
+    "status": 0,
+    "QTime": 0,
+    "params": {
+      "fq": "content_model_name__str:AdminSet",
+      "rows": "1"
+    }
+  },
+  "response": {
+    "numFound": 22,
+    "start": 0,
+    "numFoundExact": true,
+    "docs": [
+      {
+        "id": "https://fcrepo-test.lib.umd.edu/fcrepo/rest/pcdm/9d/05/57/c2/9d0557c2-825f-4e33-8a52-a6d70145878e",
+        "content_model_name__str": "AdminSet",
+        "object__rdf_type__curies": [
+          "pcdm:Collection",
+          "fedora:Container",
+          "fedora:Resource",
+          "pcdm:Object",
+          "ldp:RDFSource",
+          "ldp:Container"
+        ],
+        "object__rdf_type__uris": [
+          "http://pcdm.org/models#Collection",
+          "http://fedora.info/definitions/v4/repository#Container",
+          "http://fedora.info/definitions/v4/repository#Resource",
+          "http://pcdm.org/models#Object",
+          "http://www.w3.org/ns/ldp#RDFSource",
+          "http://www.w3.org/ns/ldp#Container"
+        ],
+        "object__title__display": [
+          "UMD Student Newspapers"
+        ],
+        "object__title__txt": "UMD Student Newspapers",
+        "_version_": 1839812340769357800
+      }
+    ]
+  }
+}

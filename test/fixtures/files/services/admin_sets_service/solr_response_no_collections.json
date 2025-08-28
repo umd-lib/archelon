@@ -1,0 +1,15 @@
+{
+  "responseHeader": {
+    "status": 0,
+    "QTime": 0,
+    "params": {
+      "fq": "content_model_name__str:AdminSet"
+    }
+  },
+  "response": {
+    "numFound": 8,
+    "start": 0,
+    "numFoundExact": true,
+    "docs": []
+  }
+}

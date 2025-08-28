@@ -1,0 +1,115 @@
+{
+  "responseHeader": {
+    "status": 0,
+    "QTime": 0,
+    "params": {
+      "fq": "content_model_name__str:AdminSet",
+      "rows": "4"
+    }
+  },
+  "response": {
+    "numFound": 22,
+    "start": 0,
+    "numFoundExact": true,
+    "docs": [
+      {
+        "id": "https://fcrepo-test.lib.umd.edu/fcrepo/rest/pcdm/9d/05/57/c2/9d0557c2-825f-4e33-8a52-a6d70145878e",
+        "content_model_name__str": "AdminSet",
+        "object__rdf_type__curies": [
+          "pcdm:Collection",
+          "fedora:Container",
+          "fedora:Resource",
+          "pcdm:Object",
+          "ldp:RDFSource",
+          "ldp:Container"
+        ],
+        "object__rdf_type__uris": [
+          "http://pcdm.org/models#Collection",
+          "http://fedora.info/definitions/v4/repository#Container",
+          "http://fedora.info/definitions/v4/repository#Resource",
+          "http://pcdm.org/models#Object",
+          "http://www.w3.org/ns/ldp#RDFSource",
+          "http://www.w3.org/ns/ldp#Container"
+        ],
+        "object__title__display": [
+          "UMD Student Newspapers"
+        ],
+        "object__title__txt": "UMD Student Newspapers",
+        "_version_": 1839812340769357800
+      },
+      {
+        "id": "https://fcrepo-test.lib.umd.edu/fcrepo/rest/pcdm/9c/33/f7/f3/9c33f7f3-e275-4248-9c46-36666b28d704",
+        "content_model_name__str": "AdminSet",
+        "object__rdf_type__curies": [
+          "pcdm:Collection",
+          "fedora:Container",
+          "umdaccess:Public",
+          "fedora:Resource",
+          "pcdm:Object",
+          "ldp:RDFSource",
+          "ldp:Container"
+        ],
+        "object__rdf_type__uris": [
+          "http://pcdm.org/models#Collection",
+          "http://fedora.info/definitions/v4/repository#Container",
+          "http://vocab.lib.umd.edu/access#Public",
+          "http://fedora.info/definitions/v4/repository#Resource",
+          "http://pcdm.org/models#Object",
+          "http://www.w3.org/ns/ldp#RDFSource",
+          "http://www.w3.org/ns/ldp#Container"
+        ],
+        "object__title__display": [
+          "Prange Posters and Wall Newspapers Collection"
+        ],
+        "object__title__txt": "Prange Posters and Wall Newspapers Collection",
+        "_version_": 1839812413799530500
+      },
+      {
+        "id": "https://fcrepo-test.lib.umd.edu/fcrepo/rest/pcdm/7b/ee/90/4f/7bee904f-ce36-4e16-8ece-a7cae1ab5be9",
+        "content_model_name__str": "AdminSet",
+        "object__rdf_type__curies": [
+          "pcdm:Collection",
+          "fedora:Container",
+          "fedora:Resource",
+          "ldp:RDFSource",
+          "ldp:Container"
+        ],
+        "object__rdf_type__uris": [
+          "http://pcdm.org/models#Collection",
+          "http://fedora.info/definitions/v4/repository#Container",
+          "http://fedora.info/definitions/v4/repository#Resource",
+          "http://www.w3.org/ns/ldp#RDFSource",
+          "http://www.w3.org/ns/ldp#Container"
+        ],
+        "object__title__display": [
+          "The Katherine Anne Porter Correspondence Collection"
+        ],
+        "object__title__txt": "The Katherine Anne Porter Correspondence Collection",
+        "_version_": 1839812376161943600
+      },
+      {
+        "id": "https://fcrepo-test.lib.umd.edu/fcrepo/rest/pcdm/4a/21/d7/58/4a21d758-7ec2-42ee-9444-8e36c09cb5c4",
+        "content_model_name__str": "AdminSet",
+        "object__rdf_type__curies": [
+          "pcdm:Collection",
+          "fedora:Container",
+          "fedora:Resource",
+          "ldp:RDFSource",
+          "ldp:Container"
+        ],
+        "object__rdf_type__uris": [
+          "http://pcdm.org/models#Collection",
+          "http://fedora.info/definitions/v4/repository#Container",
+          "http://fedora.info/definitions/v4/repository#Resource",
+          "http://www.w3.org/ns/ldp#RDFSource",
+          "http://www.w3.org/ns/ldp#Container"
+        ],
+        "object__title__display": [
+          "Plant Patents Image Database"
+        ],
+        "object__title__txt": "Plant Patents Image Database",
+        "_version_": 1839812389368758300
+      }
+    ]
+  }
+}

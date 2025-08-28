@@ -156,8 +156,8 @@ end
 
 # UMD Customization
 
-# Stub response for RepositoryCollections Solr requests from fixture file
-def stub_repository_collections_solr_response(fixture_filename)
+# Stub response for AdminSetsService Solr requests from fixture file
+def stub_admin_sets_service_solr_response(fixture_filename)
   file = file_fixture(fixture_filename).read
   data_hash = JSON.parse(file)
 

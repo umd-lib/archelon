@@ -37,7 +37,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
   def new
     name = params[:name] || "#{current_cas_user.cas_directory_id}-#{Time.now.iso8601}"
     @import_job = ImportJob.new(name: name)
-    @collections_options_array = retrieve_collections
+    @collections_options_array = retrieve_admin_sets
     @binaries_files = Dir.children(IMPORT_CONFIG[:binaries_dir])&.grep(/\.zip$/)
   end
 
@@ -48,7 +48,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
       return redirect_to action: 'index', status: :see_other
     end
 
-    @collections_options_array = retrieve_collections
+    @collections_options_array = retrieve_admin_sets
     @binaries_files = Dir.children(IMPORT_CONFIG[:binaries_dir])&.grep(/\.zip$/)
   end
 
@@ -61,7 +61,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
       return redirect_to action: 'index', status: :see_other
     end
 
-    @collections_options_array = retrieve_collections
+    @collections_options_array = retrieve_admin_sets
     render :new
   end
 
@@ -76,7 +76,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
       return redirect_to action: 'index', status: :see_other
     end
 
-    @collections_options_array = retrieve_collections
+    @collections_options_array = retrieve_admin_sets
     render :edit
   end
 
@@ -148,9 +148,9 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     # the second element the URI of the collection.
     #
     # If an error occurs, an empty array is returned.
-    def retrieve_collections
-      collections = RepositoryCollections.list
-      collections.map { |c| [c[:display_title], c[:uri]] }
+    def retrieve_admin_sets
+      admin_sets = AdminSetsService.list
+      admin_sets.map { |c| [c[:display_title], c[:uri]] }
     rescue StandardError
       flash[:error] = I18n.t(:solr_is_down)
       []
