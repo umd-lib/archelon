@@ -22,9 +22,11 @@
 class PublishJob < ApplicationRecord
   belongs_to :cas_user
   has_many :publish_job_request, dependent: :destroy
-  serialize :solr_ids, Array
+  # UMD Blacklight 8 Fix
+  serialize :solr_ids, class: Array, coder: YAML
+  # End UMD Blacklight 8 Fix
 
-  enum state: {
+  enum :state, {
     publish_not_submitted: 1,
     publish_pending: 2,
     publish_in_progress: 3,

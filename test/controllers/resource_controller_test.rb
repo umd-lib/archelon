@@ -16,7 +16,7 @@ class ResourceControllerTest < ActionController::TestCase
     post :update, params: { id: resource_id, insert: [], delete: [] }
 
     assert_equal(I18n.t('resource_update_successful'), flash[:notice])
-    json_response = JSON.parse(response.body)
+    json_response = response.parsed_body
     assert_equal 'update_complete', json_response['state']
   end
 
@@ -38,7 +38,7 @@ class ResourceControllerTest < ActionController::TestCase
     post :update, params: { id: resource_id, insert: ["<plain_literal> <title> \"Lorem ipsum\"@en .\r\n"] }
 
     assert_equal(I18n.t('resource_update_successful'), flash[:notice])
-    json_response = JSON.parse(response.body)
+    json_response = response.parsed_body
     assert_equal 'update_complete', json_response['state']
   end
 

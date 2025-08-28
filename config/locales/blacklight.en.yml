@@ -1,53 +1,49 @@
 en:
   blacklight:
-    application_name: 'Archelon'
+    application_name: Archelon
 
     header_links:
-      bookmarks: 'Selected Items'
+      bookmarks: Selected Items
 
     bookmarks:
-      page_title: 'Selected Items - Archelon'
-      title: 'Selected Items'
-      no_bookmarks: 'You have not selected any items'
-      addall:
-        button: 'Select all on page'
-      addallresults:
-        button: 'Select all search results'
+      page_title: Selected Items - Archelon
+      title: Selected Items
+      no_bookmarks: You have not selected any items
+      add_page_results:
+        button: Select all on page
+      add_all_results:
+        button: Select all search results
       add:
-        button: 'Select'
+        button: Select
         success:
-          one: 'Successfully selected item.'
-          other: 'Successfully selected items.'
-        failure:  'Sorry, there was a problem saving the selected items.'
+          one: Successfully selected item.
+          other: Successfully selected items.
+        failure:  Sorry, there was a problem saving the selected items.
       remove:
-        button: 'Unselect'
-        success: 'Successfully removed selected item.'
-        failure: 'Sorry, there was a problem removing the selected items.'
-        action_confirm: 'Remove the selected items?'
+        button: Unselect
+        success: Successfully removed selected item.
+        failure: Sorry, there was a problem removing the selected items.
+        action_confirm: Remove the selected items?
       clear:
-        action_title: 'Clear selected items'
-        action_confirm: 'Clear your selected items?'
-        success: 'Cleared your selected items.'
-        failure: 'Sorry, there was a problem clearing your selected items.'
-      need_login: 'Please log in to manage and view your selected items.'
-      list_title: 'Your Selected Items'
-      delete: 'Remove'
+        action_title: Clear selected items
+        action_confirm: Clear your selected items?
+        success: Cleared your selected items.
+        failure: Sorry, there was a problem clearing your selected items.
+      need_login: Please log in to manage and view your selected items.
+      list_title: Your Selected Items
+      delete: Remove
 
-    back_to_bookmarks: 'Back to Selected Items'
+    back_to_bookmarks: Back to Selected Items
 
     search:
-      title: '%{constraints} - %{application_name} Search'
+      title: "%{constraints} - %{application_name} Search"
       bookmarks:
-        present: "Selected"
-        absent: "Select"
-        inprogress: "Saving..."
+        present: Selected
+        absent: Select
+        inprogress: Saving...
       facets:
-        title: 'Limit your search'
+        title: Limit your search
       facets-workflow:
-        title: 'Limit to'
+        title: Limit to
       filters:
-        none: 'Browse'
-      zero_results:
-        use_fewer_keywords: 'Use fewer keywords to start, then refine your search using the links on the left.'
-        identifier_search: 'When searching for pids or other identifiers, wrap them in quotes (eg: "umd:123", "hdl:1903.1/456", etc).'
-        use_quotes_correctly: 'Use quotes for identifier search as described above or for phrase search (search term(s) enclosed in quotes and does not contain any space will be processed as a identifier search.).'
+        none: Browse

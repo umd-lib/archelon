@@ -1,3 +1,9 @@
+# SQLite. Versions 3.8.0 and up are supported.
+#   gem install sqlite3
+#
+#   Ensure the SQLite 3 gem is defined in your Gemfile
+#   gem "sqlite3"
+#
 default: &default
   adapter: <%= ENV["ARCHELON_DATABASE_ADAPTER"] %>
   encoding: <%= ENV["ARCHELON_DATABASE_ENCODING"] %>
@@ -18,7 +24,7 @@ test:
   adapter: sqlite3
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
-  database: db/test.sqlite3
+  database: storage/test.sqlite3
 
 production:
   <<: *default

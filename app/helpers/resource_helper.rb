@@ -15,7 +15,7 @@ module ResourceHelper
     item_values_for_predicate.select { |value| value['@type'] == field_data_type }
   end
 
-  def define_react_components(fields, items, uri) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+  def define_react_components(fields, items, uri) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
     item = items[uri]
     fields.map do |field|
       component_type = :Repeatable

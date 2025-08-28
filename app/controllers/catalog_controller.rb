@@ -1,13 +1,29 @@
 # frozen_string_literal: true
 
+# Blacklight controller that handles searches and document requests
 class CatalogController < ApplicationController # rubocop:disable Metrics/ClassLength
   include Blacklight::Catalog
+
+  # UMD Customization
   before_action :make_current_query_accessible, only: %i[show index]
 
-  rescue_from Blacklight::Exceptions::ECONNREFUSED, with: :goto_about_page
-  rescue_from Blacklight::Exceptions::InvalidRequest, with: :goto_about_page
+  unless Rails.env.development?
+    rescue_from Blacklight::Exceptions::ECONNREFUSED, with: :goto_about_page
+    rescue_from Blacklight::Exceptions::InvalidRequest, with: :goto_about_page
+  end
+  # End UMD Customization
 
+  # If you'd like to handle errors returned by Solr in a certain way,
+  # you can use Rails rescue_from with a method you define in this controller,
+  # uncomment:
+  #
+  # rescue_from Blacklight::Exceptions::InvalidRequest, with: :my_handling_method
+
+  # rubocop:disable Layout/LineLength
   configure_blacklight do |config| # rubocop:disable Metrics/BlockLength
+    ## Specify the style of markup to be generated (may be 4 or 5)
+    # config.bootstrap_version = 5
+    #
     ## Class for sending and receiving requests from a search index
     # config.repository_class = Blacklight::Solr::Repository
     #
@@ -16,45 +32,79 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     #
     ## Model that maps search index responses to the blacklight response model
     # config.response_model = Blacklight::Solr::Response
+    #
+    ## The destination for the link around the logo in the header
+    # config.logo_link = root_path
+    #
+    ## Should the raw solr document endpoint (e.g. /catalog/:id/raw) be enabled
+    # config.raw_endpoint.enabled = false
 
     ## Default parameters to send to solr for all search-like requests. See also SearchBuilder#processed_parameters
-    # The fq parameter is conditionally overriden in app/models/search_builder.rb
-    config.default_solr_params = {
-      rows: 10,
-      fq: ['is_pcdm:true']
-    }
+    # config.default_solr_params = {}
 
-    config.fetch_many_document_params = {
-      fl: '*'
-    }
+    # config.fetch_many_document_params = {}
 
     # solr path which will be added to solr base url before the other solr params.
-    config.solr_path = 'search'
-    config.document_solr_path = 'document'
+    # UMD Customization
+    config.solr_path = 'select'
+    config.document_solr_path = 'select'
+
+    # Default parameters to send on single-document requests to Solr. These settings are the Blacklight defaults (see
+    # SearchHelper#solr_doc_params) or parameters included in the Blacklight-jetty document requestHandler.
+    # config.default_document_solr_params = {}
+    # End UMD Customization
+    config.json_solr_path = nil
 
     # items to show per page, each number in the array represent another option to choose from.
     # config.per_page = [10,20,50,100]
 
-    ## Default parameters to send on single-document requests to Solr. These settings are the Blackligt defaults (see
-    ## SearchHelper#solr_doc_params) or parameters included in the Blacklight-jetty document requestHandler.
-    #
-    # config.default_document_solr_params = {
-    #  qt: 'document',
-    #  ## These are hard-coded in the blacklight 'document' requestHandler
-    #  # fl: '*',
-    #  # rows: 1,
-    #  # q: '{!term f=id v=$id}'
-    # }
-
-    # Remove default right-side rendering of blacklight bookmark select checkbox
-    config.index.document_actions.delete(:bookmark)
+    # UMD Customization
 
     # solr field configuration for search results/index views
-    config.index.title_field = 'display_title'
+    # config.index.title_field = 'object__title__txt'
+    # End UMD Customization
+    # config.index.display_type_field = 'format'
+    # config.index.thumbnail_field = 'thumbnail_path_ss'
+
+    # The presenter is the view-model class for the page
+    # config.index.document_presenter_class = MyApp::IndexPresenter
+
+    # Some components can be configured
+    # config.index.document_component = MyApp::SearchResultComponent
+    # config.index.constraints_component = MyApp::ConstraintsComponent
+    # config.index.search_bar_component = MyApp::SearchBarComponent
+    # config.index.search_header_component = MyApp::SearchHeaderComponent
+    config.show.sidebar_component = ArchelonSidebarComponent
+    config.show.document_component = ArchelonDocumentComponent
+    config.index.document_component = ArchelonDocumentComponent
+    config.index.document_actions.delete(:bookmark)
+
+    config.add_results_document_tool(:bookmark, component: Blacklight::Document::BookmarkComponent, if: :render_bookmarks_control?)
+
+    config.add_results_collection_tool(:sort_widget)
+    config.add_results_collection_tool(:per_page_widget)
+    # config.add_results_collection_tool(:view_type_group)
+
+    config.add_show_tools_partial(:bookmark, component: Blacklight::Document::BookmarkComponent, if: :render_bookmarks_control?)
+    # config.add_show_tools_partial(:sms, if: :render_sms_action?, callback: :sms_action, validator: :validate_sms_params)
+    # config.add_show_tools_partial(:citation)
+
+    config.add_nav_action(:bookmark, partial: 'blacklight/nav/bookmark', if: :render_bookmarks_control?)
+    # config.add_nav_action(:search_history, partial: 'blacklight/nav/search_history')
 
     # solr field configuration for document/show views
-    config.show.title_field = 'display_title'
+    # UMD Customization
+    config.show.title_field = 'object__title__txt'
+    # End UMD Customization
     # config.show.display_type_field = 'format'
+    # config.show.thumbnail_field = 'thumbnail_path_ss'
+    #
+    # The presenter is a view-model class for the page
+    # config.show.document_presenter_class = MyApp::ShowPresenter
+    #
+    # These components can be configured
+    # config.show.document_component = MyApp::DocumentComponent
+    # config.show.sidebar_component = MyApp::SidebarComponent
 
     # solr fields that will be treated as facets by the blacklight application
     #   The ordering of the field names is the order of the display
@@ -77,34 +127,34 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # facet bar
     #
     # set :index_range to true if you want the facet pagination view to have facet prefix-based navigation
-    #  (useful when user clicks "more" on a large facet and wants to navigate alphabetically across a large set
-    #  of results)
-    # :index_range can be an array or range of prefixes that will be used to create the navigation
-    # (note: It is case sensitive when searching values)
+    #  (useful when user clicks "more" on a large facet and wants to navigate alphabetically across a large set of results)
+    # :index_range can be an array or range of prefixes that will be used to create the navigation (note: It is case sensitive when searching values)
 
-    config.add_facet_field 'presentation_set_label', label: 'Presentation Set', limit: 10, collapse: false,
-                                                     sort: 'index'
-    config.add_facet_field 'collection_title_facet', label: 'Administrative Set', limit: 10, sort: 'index'
-    config.add_facet_field 'author_not_tokenized', label: 'Author', limit: 10
-    config.add_facet_field 'type', label: 'Type', limit: 10
-    config.add_facet_field 'component_not_tokenized', label: 'Resource Type', limit: 10
-    config.add_facet_field 'rdf_type', label: 'RDF Type', limit: 10
-    config.add_facet_field 'visibility', label: 'Visibility'
-    config.add_facet_field 'publication_status', label: 'Publication'
-    # config.add_facet_field 'pub_date', label: 'Publication Year', single: true
-    # config.add_facet_field 'subject_topic_facet', label: 'Topic', limit: 20, index_range: 'A'..'Z'
-    # config.add_facet_field 'language_facet', label: 'Language', limit: true
-    # config.add_facet_field 'lc_1letter_facet', label: 'Call Number'
-    # config.add_facet_field 'subject_geo_facet', label: 'Region'
-    # config.add_facet_field 'subject_era_facet', label: 'Era'
+    # UMD Customization
+    config.add_facet_field 'presentation_set__facet', label: 'Presentation Set', limit: 10, collapse: false,
+                                                      sort: 'index'
+    config.add_facet_field 'admin_set__facet', label: 'Administrative Set', limit: 10, sort: 'index'
+    config.add_facet_field 'creator__facet', label: 'Author', limit: 10
+    config.add_facet_field 'resource_type__facet', label: 'Resource Type', limit: 10
+    config.add_facet_field 'rdf_type__facet', label: 'RDF Type', limit: 10
+    config.add_facet_field 'visibility__facet', label: 'Visibility'
+    config.add_facet_field 'publication_status__facet', label: 'Publication'
+    # config.add_facet_field 'format', label: 'Format'
+    # config.add_facet_field 'pub_date_ssim', label: 'Publication Year', single: true
+    # config.add_facet_field 'subject_ssim', label: 'Topic', limit: 20, index_range: 'A'..'Z'
+    # config.add_facet_field 'language_ssim', label: 'Language', limit: true
+    # config.add_facet_field 'lc_1letter_ssim', label: 'Call Number'
+    # config.add_facet_field 'subject_geo_ssim', label: 'Region'
+    # config.add_facet_field 'subject_era_ssim', label: 'Era'
 
-    # config.add_facet_field 'example_pivot_field', label: 'Pivot Field', pivot: %w(format language_facet)
+    # config.add_facet_field 'example_pivot_field', label: 'Pivot Field', pivot: ['format', 'language_ssim'], collapsing: true
 
-    # config.add_facet_field 'example_query_facet_field', label: 'Publish Date', query: {
-    #  years_5: { label: 'within 5 Years', fq: "pub_date:[#{Time.zone.now.year - 5} TO *]" },
-    #  years_10: { label: 'within 10 Years', fq: "pub_date:[#{Time.zone.now.year - 10} TO *]" },
-    #  years_25: { label: 'within 25 Years', fq: "pub_date:[#{Time.zone.now.year - 25} TO *]" }
+    # config.add_facet_field 'example_query_facet_field', label: 'Publish Date', :query => {
+    #    :years_5 => { label: 'within 5 Years', fq: "pub_date_ssim:[#{Time.zone.now.year - 5 } TO *]" },
+    #    :years_10 => { label: 'within 10 Years', fq: "pub_date_ssim:[#{Time.zone.now.year - 10 } TO *]" },
+    #    :years_25 => { label: 'within 25 Years', fq: "pub_date_ssim:[#{Time.zone.now.year - 25 } TO *]" }
     # }
+    # End UMD Customization
 
     # Have BL send all facet field names to Solr, which has been the default
     # previously. Simply remove these lines if you'd rather use Solr request
@@ -113,49 +163,95 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
 
     # solr fields to be displayed in the index (search results) view
     #   The ordering of the field names is the order of the display
-    config.add_index_field 'id', label: 'Annotation', helper_method: :link_to_document_view, if:
-    lambda { |_context, _field, document|
-      document[:rdf_type].include?('oa:Annotation')
-    }
-    config.add_index_field 'component', label: 'Resource Type'
-    config.add_index_field 'author', label: 'Author'
-    # rubocop:disable Metrics/LineLength
-    config.add_index_field 'extracted_text', label: 'OCR', highlight: true, helper_method: :format_extracted_text, solr_params: { 'hl.fragsize' => 500 }
-    # rubocop:enable Metrics/LineLength
-    config.add_index_field 'created_by', label: 'Created By'
-    config.add_index_field 'created', label: 'Created'
-    config.add_index_field 'last_modified', label: 'Last Modified'
+    # UMD Customization
+    # config.add_index_field 'title_tsim', label: 'Title'
+    # config.add_index_field 'title_vern_ssim', label: 'Title'
+    # config.add_index_field 'author_tsim', label: 'Author'
+    # config.add_index_field 'author_vern_ssim', label: 'Author'
+    # config.add_index_field 'format', label: 'Format'
+    # config.add_index_field 'language_ssim', label: 'Language'
+    # config.add_index_field 'published_ssim', label: 'Published'
+    # config.add_index_field 'published_vern_ssim', label: 'Published'
+    # config.add_index_field 'lc_callnum_ssim', label: 'Call number'
+    config.add_index_field 'resource_type__facet', label: 'Resource Type'
+    config.add_index_field 'creator__facet', label: 'Author'
+    # config.add_index_field 'extracted_text', label: 'OCR', highlight: true, helper_method: :format_extracted_text, solr_params: { 'hl.fragsize' => 500 }
+    config.add_index_field 'object__created_by__txt', label: 'Created By'
+    config.add_index_field 'object__created__dt', label: 'Created'
+    config.add_index_field 'object__last_modified__dt', label: 'Last Modified'
 
     # Have BL send the most basic highlighting parameters for you
     config.add_field_configuration_to_solr_request!
+    # End UMD Customization
 
-    # Solr fields to be displayed in the show (single result) view.
-    # The ordering of the field names is the order of the display.
-    #
-    # Note that as of implementation of in-browser editing of descriptive metadata,
-    # the only fields being displayed from Solr are those relating to structural,
-    # administrative, and technical metadata.
-    config.add_show_field 'terms_of_use_text', label: 'Terms of Use'
-    config.add_show_field 'pcdm_collection', label: 'Collection', helper_method: :collection_from_subquery
-    config.add_show_field 'publication_status', label: 'Publication Status'
-    config.add_show_field 'visibility', label: 'Visibility'
-    config.add_show_field 'presentation_set_label', label: 'Presentation Set', helper_method: :value_list
-    config.add_show_field 'pcdm_member_of', label: 'Member Of', helper_method: :parent_from_subquery
-    config.add_show_field 'pcdm_members', label: 'Members', helper_method: :members_from_subquery
-    config.add_show_field 'pcdm_related_object_of', label: 'Related To', helper_method: :related_object_of_from_subquery
-    # rubocop:disable Metrics/LineLength
-    config.add_show_field 'pcdm_related_objects', label: 'Related Objects', helper_method: :related_objects_from_subquery
-    # rubocop:enable Metrics/LineLength
-    config.add_show_field 'pcdm_file_of', label: 'File Of', helper_method: :file_parent_from_subquery
-    config.add_show_field 'pcdm_files', label: 'Files', helper_method: :files_from_subquery
-    config.add_show_field 'annotation_source', label: 'Pages', helper_method: :annotation_source_from_subquery
-    config.add_show_field 'size', label: 'Size'
-    config.add_show_field 'mime_type', label: 'Mime Type'
-    config.add_show_field 'digest', label: 'Digest'
-    config.add_show_field 'created_by', label: 'Created By'
-    config.add_show_field 'created', label: 'Created'
-    config.add_show_field 'last_modified', label: 'Last Modified'
-    config.add_show_field 'rdf_type', label: 'RDF Type', helper_method: :value_list
+    # solr fields to be displayed in the show (single result) view
+    #   The ordering of the field names is the order of the display
+    # config.add_show_field 'title_tsim', label: 'Title'
+    # config.add_show_field 'title_vern_ssim', label: 'Title'
+    # config.add_show_field 'subtitle_tsim', label: 'Subtitle'
+    # config.add_show_field 'subtitle_vern_ssim', label: 'Subtitle'
+    # config.add_show_field 'author_tsim', label: 'Author'
+    # config.add_show_field 'author_vern_ssim', label: 'Author'
+    # config.add_show_field 'format', label: 'Format'
+    # config.add_show_field 'url_fulltext_ssim', label: 'URL'
+    # config.add_show_field 'url_suppl_ssim', label: 'More Information'
+    # config.add_show_field 'language_ssim', label: 'Language'
+    # config.add_show_field 'published_ssim', label: 'Published'
+    # config.add_show_field 'published_vern_ssim', label: 'Published'
+    # config.add_show_field 'lc_callnum_ssim', label: 'Call number'
+    # config.add_show_field 'isbn_ssim', label: 'ISBN'
+
+    # UMD Customization
+
+    # Item Level Fields
+    config.add_show_field 'object__object_type__uri', label: 'Object Type', accessor: :object_type_anchor
+    config.add_show_field 'object__identifier__ids', label: 'Identifiers', component: ListMetadataComponent
+    # pair with object__rights__label__txt
+    config.add_show_field 'object__rights__uri', label: 'Rights Statement', accessor: :rights_anchor
+    config.add_show_field 'object__title__display', label: 'Title', accessor: :title_language_badge, component: ListMetadataComponent
+    config.add_show_field 'object__format__uri', label: 'Format', accessor: :format_anchor
+    # pair with object__archival_collection__label__txt
+    config.add_show_field 'object__archival_collection__uri', label: 'Archival Collection', accessor: :archival_collection_anchor
+    config.add_show_field 'object__date__edtf', label: 'Date'
+    config.add_show_field 'object__description__txt', label: 'Description'
+    config.add_show_field 'object__bibliographic_citation__txt', label: 'Bibliographic Citation'
+    config.add_show_field 'object__creator', label: 'Creator', accessor: :creator_language_badge, component: ListMetadataComponent
+    config.add_show_field 'object__audience', label: 'Audience', accessor: :audience_language_badge, component: ListMetadataComponent
+    config.add_show_field 'publisher__facet', label: 'Publisher', component: ListMetadataComponent
+    config.add_show_field 'location__facet', label: 'Location', component: ListMetadataComponent
+    # not sure what to do for extent
+    config.add_show_field 'subject__facet', label: 'Subject', component: ListMetadataComponent
+    config.add_show_field 'language__facet', label: 'Language', component: ListMetadataComponent
+    config.add_show_field 'object__terms_of_use__value__txt', label: 'Terms of Use', accessor: :terms_of_use
+    # not sure what to do for collection information
+    config.add_show_field 'handle__id', label: 'Handle', accessor: :handle_anchor
+
+    config.add_show_field 'publication_status__facet', label: 'Publication Status'
+    config.add_show_field 'visibility__facet', label: 'Visibility'
+    config.add_show_field 'presentation_set__facet', label: 'Presentation Set', component: ListMetadataComponent
+    config.add_show_field 'object__created_by__str', label: 'Created By'
+    config.add_show_field 'object__created__dt', label: 'Created'
+    config.add_show_field 'object__last_modified_by__str', label: 'Last Modified By'
+    config.add_show_field 'object__last_modified__dt', label: 'Last Modified'
+    config.add_show_field 'rdf_type__facet', label: 'RDF Type', component: ListMetadataComponent
+    config.add_show_field 'admin_set__facet', label: 'Member Of'
+    config.add_show_field 'page_uri_sequence__uris', label: 'Members', accessor: :members_anchor, component: ListMetadataComponent
+
+    # Page Level Fields
+    config.add_show_field 'page__title__txt', label: 'Page'
+    config.add_show_field 'page__member_of__uri', label: 'Member Of'
+    config.add_show_field 'page__has_file__uris', label: 'Files', component: ListMetadataComponent
+    config.add_show_field 'page__rdf_type__curies', label: 'RDF Types', component: ListMetadataComponent
+
+    # File Level Fields
+    config.add_show_field 'file__title__txt', label: 'Title'
+    config.add_show_field 'file__file_of__uri', label: 'File Of'
+    config.add_show_field 'file__size__int', label: 'Size'
+    config.add_show_field 'file__mime_type__txt', label: 'Mime Type'
+    config.add_show_field 'file__checksum__uri', label: 'Digest'
+    config.add_show_field 'file__rdf_type__uris', label: 'RDF Types', component: ListMetadataComponent
+
+    # End UMD Customization
 
     # "fielded" search configuration. Used by pulldown among other places.
     # For supported keys in hash, see rdoc for Blacklight::SearchFields
@@ -171,62 +267,110 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # urls.  A display label will be automatically calculated from the :key,
     # or can be specified manually to be different.
 
-    # This one uses all the defaults set by the solr request handler. Which
-    # solr request handler? The one set in config[:default_solr_parameters][:qt],
-    # since we aren't specifying it otherwise.
+    config.add_search_field('text') do |field|
+      field.label = 'Text/Keywords'
+      field.solr_parameters = { df: 'text', defType: 'edismax', 'q.alt': '*:*' }
+    end
+    config.add_search_field('identifier') do |field|
+      field.label = 'Identifier'
+      field.solr_parameters = { df: 'identifier', defType: 'edismax', 'q:alt': '*:*' }
+    end
 
-    config.add_search_field 'all_fields', label: 'All Fields'
+    # Now we see how to over-ride Solr request handler defaults, in this
+    # case for a BL "search field", which is really a dismax aggregate
+    # of Solr search fields.
+
+    # UMD Customization
+    # config.add_search_field('title') do |field|
+    #   # solr_parameters hash are sent to Solr as ordinary url query params.
+    #   field.solr_parameters = {
+    #     'spellcheck.dictionary': 'title',
+    #     qf: '${title_qf}',
+    #     pf: '${title_pf}'
+    #   }
+    # end
+
+    # config.add_search_field('author') do |field|
+    #   field.solr_parameters = {
+    #     'spellcheck.dictionary': 'author',
+    #     qf: '${author_qf}',
+    #     pf: '${author_pf}'
+    #   }
+    # end
+
+    # # Specifying a :qt only to show it's possible, and so our internal automated
+    # # tests can test it. In this case it's the same as
+    # # config[:default_solr_parameters][:qt], so isn't actually neccesary.
+    # config.add_search_field('subject') do |field|
+    #   field.qt = 'search'
+    #   field.solr_parameters = {
+    #     'spellcheck.dictionary': 'subject',
+    #     qf: '${subject_qf}',
+    #     pf: '${subject_pf}'
+    #   }
+    # end
+    # End UMD Customization
 
     # "sort results by" select (pulldown)
-    # label in pulldown is followed by the name of the SOLR field to sort by and
+    # label in pulldown is followed by the name of the Solr field to sort by and
     # whether the sort is ascending or descending (it must be asc or desc
-    # except in the relevancy case).
-    config.add_sort_field 'score desc, display_title asc', label: 'relevance'
-    # config.add_sort_field 'pub_date_sort desc, title_sort asc', label: 'year'
-    # config.add_sort_field 'author_sort asc, title_sort asc', label: 'author'
-    # config.add_sort_field 'title_sort asc, pub_date_sort desc', label: 'title'
-    config.add_sort_field 'display_title asc', label: 'title'
-    config.add_sort_field 'created asc', label: 'created (oldest to newest)'
-    config.add_sort_field 'created desc', label: 'created (newest to oldest)'
-    config.add_sort_field 'last_modified asc', label: 'last modified (oldest to newest)'
-    config.add_sort_field 'last_modified desc', label: 'last modified (newest to oldest)'
+    # except in the relevancy case). Add the sort: option to configure a
+    # custom Blacklight url parameter value separate from the Solr sort fields.
+    # UMD Customization
+    # config.add_sort_field 'relevance', sort: 'score desc, pub_date_si desc, title_si asc', label: 'relevance'
+    # config.add_sort_field 'year-desc', sort: 'pub_date_si desc, title_si asc', label: 'year'
+    # config.add_sort_field 'author', sort: 'author_si asc, title_si asc', label: 'author'
+    # config.add_sort_field 'title_si asc, pub_date_si desc', label: 'title'
+    config.add_sort_field 'score desc, object__title__txt asc', label: 'relevance'
+    config.add_sort_field 'object__title__txt asc', label: 'title'
+    config.add_sort_field 'object__created__dt asc', label: 'created (oldest to newest)'
+    config.add_sort_field 'object__created__dt desc', label: 'created (newest to oldest)'
+    config.add_sort_field 'object__last_modified__dt asc', label: 'last modified (oldest to newest)'
+    config.add_sort_field 'object__last_modified__dt desc', label: 'last modified (newest to oldest)'
+    # End UMD Customization
 
     # If there are more than this many search results, no spelling ("did you
     # mean") suggestion is offered.
     config.spell_max = 5
 
-    # Configuration for autocomplete suggestor
-    config.autocomplete_enabled = true
-    config.autocomplete_path = 'suggest'
+    # Configuration for autocomplete suggester
+    # config.autocomplete_enabled = true
+    # config.autocomplete_path = 'suggest'
+    # if the name of the solr.SuggestComponent provided in your solrconfig.xml is not the
+    # default 'mySuggester', uncomment and provide it below
+    # config.autocomplete_suggester = 'mySuggester'
   end
+  # rubocop:enable Layout/LineLength
+
+  # UMD Customization
 
   # get search results from the solr index
   def index
-    fix_query_param
-    # Use 'search' for regular searches, and 'identifier_search' for identifier searches.
-    is_identifier_search = identifier_search?(params[:q])
-    blacklight_config[:solr_path] = is_identifier_search ? 'identifier_search' : 'search'
     super
-    return unless is_identifier_search && @response.response['numFound'] == 1
-
-    redirect_to action: 'show', id: @document_list[0].id
+    redirect_to action: 'show', id: first_result['id'] if identifier_search? && single_result?
   end
 
   def show
     super
-    @show_edit_metadata = CatalogController.show_edit_metadata(@document['component'])
+
     @id = params[:id]
     @resource = ResourceService.resource_with_model(@id)
-    @published = @resource[:items][@id]['@type'].include?('http://vocab.lib.umd.edu/access#Published')
+    @displayable = mirador_displayable?(@document)
+
+    @published = @document[:is_published]
+    @show_edit_metadata = CatalogController.show_edit_metadata?(@document[:content_model_name__str])
   end
 
-  # Returns true if the given component has editable metadata, false otherwise.
-  def self.show_edit_metadata(component)
-    uneditable_types = %w[Page Article]
-    !uneditable_types.include?(component)
+  def self.show_edit_metadata?(model)
+    editable_types = %w[Item Issue]
+    editable_types.include?(model)
   end
 
   private
+
+    def mirador_displayable?(document)
+      %w[Item Issue Page].include?(document[:content_model_name__str])
+    end
 
     def goto_about_page(err)
       solr_connection_error(err)
@@ -241,19 +385,20 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
       params[:f] && params[:f][:collection_title_facet]
     end
 
-    # Solr does not escape ':' character when using single quotes. Replace
-    # single quotes with double quotes to ensure ':" characters in identifiers
-    # are not misidentified. For instance, a pid query in single quote, such as
-    # 'umd:123', will cause solr to look for a solr field with name "umd"
-    # leading to a 400 response.
-    def fix_query_param
-      params[:q] = params[:q] ? params[:q].tr("'", '"') : ''
+    def single_result?
+      # True if there is exactly one result found by the current search
+      @response.response['numFound'] == 1
     end
 
-    def identifier_search?(query)
-      # Check if this is a identifier search
-      #  1. the query is enclosed in quotation marks.
-      #  2. And, it does not have blank spaces
-      query.present? && query.start_with?('"') && query.end_with?('"') && !query.include?(' ')
+    def first_result
+      # Get the first result; returns nil if there were no results
+      @response.response['docs'].first
     end
+
+    def identifier_search?
+      # Check if this is a identifier search
+      params[:search_field] == 'identifier'
+    end
+
+  # End UMD Customization
 end

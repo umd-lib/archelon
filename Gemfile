@@ -1,115 +1,121 @@
-source 'https://rubygems.org'
-git_source(:github) { |repo| "https://github.com/#{repo}.git" }
+source "https://rubygems.org"
 
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.8', '>= 5.2.8.1'
+ruby "3.2.4"
+
+# Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
+gem "rails", "~> 7.1.3", ">= 7.1.3.4"
+
+# The modern asset pipeline for Rails [https://github.com/rails/propshaft]
+gem "propshaft"
+
 # Use sqlite3 as the database for Active Record
-gem 'sqlite3'
-# Use Puma as the app server
-gem 'puma', '>= 4.3.11'
-# Use SCSS for stylesheets
-gem 'sass-rails', '~> 5.0'
-# Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 1.3.0'
-# See https://github.com/rails/execjs#readme for more supported runtimes
-# gem 'mini_racer', platforms: :ruby
+gem "sqlite3", "~> 1.4"
 
-# Use CoffeeScript for .coffee assets and views
-gem 'coffee-rails', '~> 4.2'
-# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder'
+# Use the Puma web server [https://github.com/puma/puma]
+gem "puma", ">= 5.0"
+
+# Bundle and transpile JavaScript [https://github.com/rails/jsbundling-rails]
+gem "jsbundling-rails"
+
+# Bundle and process CSS [https://github.com/rails/cssbundling-rails]
+gem "cssbundling-rails"
+
 # Use Redis adapter to run Action Cable in production
-# gem 'redis', '~> 3.0'
-# Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
+# gem "redis", ">= 4.0.1"
 
-# Use ActiveStorage variant
-# gem 'mini_magick', '~> 4.8'
+# Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
+# gem "kredis"
 
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
+# Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
+# gem "bcrypt", "~> 3.1.7"
+
+# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+gem "tzinfo-data", platforms: %i[ windows jruby ]
 
 # Reduces boot times through caching; required in config/boot.rb
-gem 'bootsnap', '>= 1.1.0', require: false
+gem "bootsnap", require: false
 
-# Use jquery as the JavaScript library
-gem 'jquery-rails'
+# Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
+# gem "image_processing", "~> 1.2"
 
-# bundle exec rake doc:rails generates the API under doc/api.
-gem 'sdoc', '~> 1.1.0', group: :doc
+# UMD Customization
+# Blacklight gem
+gem 'blacklight', "~> 8.3.0"
 
-# Blacklight Gems
-gem 'blacklight', '~> 6.0'
+# RSolr Gem
+gem 'rsolr'
 
-# ARM processor (e.g. Apple M1 Macbook)
-install_if -> {RUBY_PLATFORM.include?('arm64')} do
-  gem 'mini_racer'
-end
-
-# AMD processor
-install_if -> {RUBY_PLATFORM.include?('amd64')} do
-  gem 'therubyracer'
-end
+# dotenv - For storing production configuration parameters
+gem 'dotenv', "~> 3.1.2"
 
 # CAS Authentication
 gem 'omniauth-cas', '~> 1.1.1'
 
+# Authorization
+gem 'cancancan'
+
 # LDAP
 gem 'net-ldap', '~> 0.16.1'
 
-# dotenv - For storing production configuration parameters
-gem 'dotenv-rails'
+# Used by Rake tasks to generate sample data
+# UMD Blacklight 8 Fix
+gem 'faker', '~> 3.4.1'
+# End UMD Blacklight 8 Fix
 
-# clipboard - Uses clipboard.js to provide "Copy to Clipboard" functionality
-gem 'clipboard-rails', '~>1.7.1'
+# UMD Blacklight 8 Fix
+gem 'net-http', '~> 0.4.1'
+# End UMD Blacklight 8 Fix
 
-# Pagination
-gem 'will_paginate', '~> 3.1.0'
-gem 'will_paginate-bootstrap', '~> 1.0.0'
+gem 'turbo-rails'
+gem 'json-ld', '~> 3.3.1'
+
+gem 'http', '~> 5.2.0'
+
+gem 'react-rails', '~>3.2.1'
+
+gem 'stomp'
+gem 'faraday', '~> 1.0'
+
+gem 'pg'
+
+gem 'delayed_job_active_record', '~> 4.1'
 
 # Table sorting
 gem 'ransack'
 
-# Used by Rake tasks to generate sample data
-gem 'faker', '~> 1.8'
+# Cron jobs
+gem 'delayed_cron_job', '~> 0.8'
 
-gem 'http', '~> 5.0'
+# End UMD Customization
 
-# RFC-compliant URI and URI template handling
-gem 'addressable', '~> 2.8'
-
-gem 'pg'
 
 group :development, :test do
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
+  gem "debug", '~> 1.10', platforms: %i[ mri windows ]
 end
 
 group :development do
-  # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
-  gem 'web-console', '>= 3.3.0'
-  gem 'listen', '>= 3.0.5', '< 3.2'
+  # Use console on exceptions pages [https://github.com/rails/web-console]
+  gem "web-console"
 
-  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring'
-  gem 'spring-watcher-listen', '~> 2.0.0'
+  # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
+  # gem "rack-mini-profiler"
+
+  # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
+  # gem "spring"
 end
 
-gem "boathook", git: 'https://github.com/umd-lib/boathook', branch: 'main'
-
 group :test do
-  # Adds support for Capybara system testing and selenium driver
-  gem 'capybara', '>= 2.15'
-  gem 'selenium-webdriver'
-  # Easy installation and use of web drivers to run system tests with browsers
-  gem 'webdrivers'
+  # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
+  gem "capybara"
+  gem "selenium-webdriver"
 
+  # UMD Customization
   gem 'minitest-reporters'
 
   # Code analysis tools
-  gem 'rubocop', '~> 0.74.0', require: false
-  gem 'rubocop-rails', '~> 2.3.0', require: false
-  gem 'rubocop-checkstyle_formatter', '~> 0.2.0', require: false
+  gem 'rubocop', '~> 1.79.0', require: false
+  gem 'rubocop-rails', '~> 2.33.0', require: false
 
   gem 'simplecov', require: false
   gem 'simplecov-rcov', require: false
@@ -117,32 +123,10 @@ group :test do
   gem 'rails-controller-testing'
 
   gem 'rspec'
-  gem 'rspec-mocks', '~> 3.8.1'
+  # UMD Blacklight 8 Fix
+  gem 'rspec-mocks', '~> 3.13.1'
+  # End UMD Blacklight 8 Fix
 
   gem 'webmock', '~> 3.23.0'
-
-  # Note: The "action-cable-testing" gem can be removed when migrating to
-  # Rails 6, as the gem is already included as part of Rails 6.
-  gem 'action-cable-testing'
+  # End UMD Customization
 end
-
-# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-
-gem 'rsolr'
-
-gem "sparql-client", "~> 3.0"
-
-gem 'stomp'
-
-gem 'mechanize'
-
-gem 'rdf-turtle'
-gem 'json-ld'
-gem 'cancancan'
-
-gem 'webpacker'
-gem 'react-rails'
-gem 'delayed_job_active_record', '~> 4.1'
-gem 'faraday', '~> 1.0'
-gem 'delayed_cron_job', '~> 0.8'

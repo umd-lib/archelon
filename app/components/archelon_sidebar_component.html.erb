@@ -1,0 +1,102 @@
+<%= render(Blacklight::Document::MoreLikeThisComponent.new(document: document)) %>
+
+<%# UMD Customization %>
+<%
+  model = document[:content_model_name__str]
+  view_in_fedora = document.has? :described_by__uri
+%>
+
+<% if model != 'Page' && model != 'File' %>
+  <% pages = document.key?(:page_label_sequence__txts) && document.key?(:page_uri_sequence__uris) ?
+      document[:page_label_sequence__txts].zip(document[:page_uri_sequence__uris]) : [] %>
+  <div class="card">
+    <div class="card-header"> Select Page(s) for More Options </div>
+    <% if pages.nil? %>
+      <ul class="nav">
+        <li> No File Found </li>
+      </ul>
+    <% elsif pages.length < 8 %>
+      &nbsp;
+      <nav>
+        <ul style="list-style-type: none; height: <% 24 * pages.length %>px">
+          <% pages.each do |page| %>
+            <li>
+                <%= link_to page[0], solr_document_path(page[1]) %>
+            </li>
+          <% end %>
+        </ul>
+      </nav>
+    <% else %>
+      <nav>
+        <ul style="list-style-type: none; height: 200px; overflow: hidden; overflow-y: scroll;">
+          <% pages.each do |page| %>
+            <li>
+                <%= link_to page[0], solr_document_path(page[1]) %>
+            </li>
+          <% end %>
+        </ul>
+      </nav>
+    <% end %>
+  </div>
+
+<% end %>
+
+<% if model == 'Page' || model != 'File' %>
+  <% files = model == 'Page' ? document[:page__has_file] : document[:object__has_file] %>
+  <div class="card">
+    <div class="card-header"> Select File(s) for Download Options </div>
+      <% if files.nil? %>
+        <ul class="nav">
+          <li> No File Found </li>
+        </ul>
+      <% elsif files.length < 8 %>
+        <ul class="nav">
+          <% files.each do |file| %>
+            <li>
+                <%= link_to file['file__title__txt'], solr_document_path(file[:id]) %>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <nav>
+          <ul style="list-style-type: none; height: 200px; overflow: hidden; overflow-y: scroll;">
+            <% files.each do |file| %>
+              <li>
+                  <%= link_to file['file__title__txt'], solr_document_path(file[:id]) %>
+              </li>
+            <% end %>
+          </ul>
+        </nav>
+      <% end %>
+  </div>
+<% end %>
+
+<% if model != 'Page' && model != 'File' %>
+  <%= render Blacklight::Document::ShowToolsComponent.new(document: document) %>
+<% end %>
+
+<% if model == 'File' %>
+  <% rdf_types = document[:file__rdf_type__curies] %>
+  <% if rdf_types.include? 'fedora:Binary'%>
+    <div class="card">
+        <div class="card-header">Download or Generate Link</div>
+        <div class="card-body">
+        <ul class="nav">
+            <li><%= link_to 'Download', document[:id], target: '_blank' %></li>
+            <li><%= link_to 'Generate Download URL', new_download_url_path(document_url: document[:id]) %></li>
+        </ul>
+        </div>
+    </div>
+  <% end %>
+<% end %>
+
+<% if view_in_fedora %>
+  <div class="card">
+    <div class="card-header">Administrative</div>
+      <ul class="nav">
+        <li><%= link_to 'View in Fedora', document[:described_by__uri], target: '_blank', rel: 'noopener' %></li>
+      </ul>
+    </div>
+  </div>
+<% end %>
+<%# End UMD Customization %>

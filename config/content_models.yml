@@ -67,6 +67,12 @@ Item:
       type: :LabeledThing
       repeatable: true
 
+    - name: 'audience'
+      uri: 'http://purl.org/dc/terms/audience'
+      label: 'Audience'
+      type: :LabeledThing
+      repeatable: true
+
     - name: 'publisher'
       uri: 'http://purl.org/dc/terms/publisher'
       label: 'Publisher'
@@ -399,12 +405,6 @@ Issue:
       uri: 'http://purl.org/ontology/bibo/edition'
       label: 'Edition'
       type: :TypedLiteral
-
-    - name: 'rights'
-      uri: 'http://purl.org/dc/terms/rights'
-      label: 'Rights Statement'
-      type: :ControlledURIRef
-      vocab: 'rightsStatement'
 
   recommended: []
   optional:

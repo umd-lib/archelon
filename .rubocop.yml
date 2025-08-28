@@ -1,7 +1,14 @@
-require: rubocop-rails
+plugins:
+  - rubocop-rails
 
 # Exclude auto-generated files
 AllCops:
+  TargetRubyVersion: 3.2
+  TargetRailsVersion: 7.1
+  NewCops: enable
+  SuggestExtensions:
+    rubocop-capybara: false
+    rubocop-rspec: false
   Exclude:
     - 'config.ru'
     - 'Gemfile'
@@ -15,7 +22,7 @@ AllCops:
     - 'node_modules/**/*'
 
 # Increase max allowed line length
-Metrics/LineLength:
+Layout/LineLength:
   Max: 120
   Exclude:
     - 'test/**/*'
@@ -23,6 +30,18 @@ Metrics/LineLength:
 Metrics/ClassLength:
   Exclude:
     - 'test/**/*'
+
+# Setting to Naming/BlockForwarding to "explicit" because it is a seldom-used
+# feature in Archelon, and having the "&block" syntax instead of an anonymous
+# "&" seems clearer
+Naming/BlockForwarding:
+  EnforcedStyle: explicit
+  BlockForwardingName: block
+
+# Disable Rails/ActionControllerTestCase because ActionController::TestCase
+# is still in use via the "rails-controller-testing" gem
+Rails/ActionControllerTestCase:
+  Enabled: false
 
 # The following configuration exclude checks that seem
 # silly, or conflict with the way Rails naturally does
@@ -42,10 +61,3 @@ Layout/IndentationConsistency:
 
 Style/EmptyMethod:
   EnforcedStyle: expanded
-
-Rails/UnknownEnv:
-  Environments:
-    - production
-    - development
-    - test
-    - vagrant

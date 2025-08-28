@@ -1,11 +1,13 @@
 # archelon
 
 Archelon is the Web front-end for a [Fedora 4][fedora] repository-based set of
-applications known collectively as "umd-fcrepo". The umd-fcrepo system consists
-of the following parts:
+applications known collectively as "umd-fcrepo".
 
-* [umd-fcrepo-docker][umd-fcrepo-docker] - a set of Docker images for running
-  the Fedora repository platform
+The [umd-fcrepo][umd-fcrepo] GitHub repository contains each component of the
+system as Git submodules.
+
+Of particular interest for this application are two of the submodules:
+
 * [Plastron][plastron] - a utility application for performing batch operations
    on the Fedora repository
 * Archelon - a web GUI providing an administrative interface for
@@ -13,7 +15,7 @@ of the following parts:
 
 While Archelon is technically able to run without access to any other
 application, its functionality is extremely limited without Plastron or
-the applications provided by umd-fcrepo-docker.
+the other applications provided by umd-fcrepo.
 
 ## Archelon Components
 
@@ -31,109 +33,19 @@ search functionality.
 
 Archelon interacts directly with the following umd-fcrepo components:
 
-* [ActiveMQ] - Archelon communicates to Plastron using STOMP messaging mediated by
-ActiveMQ queues.
+* [ActiveMQ] - Archelon communicates to Plastron using STOMP messaging mediated
+by ActiveMQ queues.
 * [Solr] - Archelon communicates directly with the Solr instance in the
-"umd-fcrepo-docker" stack for metadata search and retrieval.
+"umd-fcrepo" stack for metadata search and retrieval.
 * [Plastron] - Archelon uses the HTTP REST interface provided by Plastron to
 retrieve information about export and import jobs (some export/import status
 information is also provided via STOMP messaging).
-
-## Quick Start
-
-See [Installing Prerequisites](docs/Prerequisites.md) for information on
-prerequisites on a local workstation.
 
 ### Setup
 
 There are several ways to setup the umd-fcrepo system -- see
 [umd-lib/umd-fcrepo/README.md][umd-fcrepo]
 for information about setting up a local development environment for Archelon.
-
-### Archelon Setup (Currently not working, use the VSCode Dev Container Setup below instead)
-
-The following are the basic steps to run the Archelon Rails application.
-Archelon requires other components of the umd-fcrepo system to enable most
-functionality.
-
-1. Checkout the code and install the dependencies:
-    ```bash
-    git clone git@github.com:umd-lib/archelon.git
-    cd archelon
-    yarn
-    bundle install
-    ```
-2. Create a `.env` file from the `env_example` file and fill in appropriate
-   values for the environment variables.
-3. Set up the database:
-    ```bash
-    rails db:migrate
-    ```
-4. *(Optional)* Load sample "Download URL" data:
-    ```bash
-    rails db:reset_with_sample_data
-    ```
-5. In three separate terminals:
-   1. Start the STOMP listener:
-       ```bash
-      rails stomp:listen
-      ```
-   2. Start the Delayed Jobs worker:
-       ```bash
-      rails jobs:work
-       ```
-   3. Run the web application:
-       ```bash
-       rails server
-       ```
-
-Archelon will be available at <http://archelon-local:3000/>
-
-### Archelon Setup (VSCode Dev Container)
-Archelon requires other components of the umd-fcrepo system to enable most
-functionality.
-
-1. Checkout the repo, and open the codebase in VSCode:
-    ```bash
-    git clone git@github.com:umd-lib/archelon.git
-    cd archelon
-    code .
-2. When opening the codebase, there will be a notification to reopen the directory in a dev container, select "Reopen in Container"
-
-    ℹ️ **Note:** If there isn't a notification, you can also open the command palette (cmd+shift+p) and type “Dev Containers: Rebuild and Reopen in Container”
-
-    The dev container will take a moment to build the docker image, and install the javascript and ruby dependencies.
-
-2. Create a `.env` file from the `env_example` file, and adding these environment variables:
-    - LDAP_BIND_PASSWORD (Obtained from LastPass)
-    - FCREPO_AUTH_TOKEN (Obtained from generating a JWT token from the local fcrepo stack)
-
-3. Run yarn install
-    ```bash
-    yarn install
-    ```
-    <!-- https://umd-dit.atlassian.net/browse/LIBHYDRA-540 -->
-<!-- 4. *(Optional)* Load sample "Download URL" data:
-    ```bash
-    rails db:reset_with_sample_data
-    ``` -->
-4. Open three separate terminals in VSCode and run these respectively in each:
-   - Start the STOMP listener:
-       ```bash
-      rails stomp:listen
-      ```
-   - Start the Delayed Jobs worker:
-       ```bash
-      rails jobs:work
-       ```
-   - Run the web application:
-       ```bash
-       rails server
-       ```
-
-Archelon will be available at <http://archelon-local:3000/>
-
-**Note:** If a 403 Not Authorized Error occurs when visiting, visit the page in a private window.
 
 ## Logging
 
@@ -152,50 +64,17 @@ send the log to standard out.
 In general, Archelon requires a CAS login to access the application,
 and the user must have been added to the system by an administrator.
 
-Two notable exceptions are the "ping" endpoint and "public keys" endpoint
-(there are also some other minor endpoints, such as import/export status
-updates).
+Two notable exceptions are the "up" (health check) endpoint and "public keys"
+endpoint (there are also some other minor endpoints, such as import/export
+status updates).
 
-The "ping" endpoint is unrestricted, and is suitable for monitoring the
+The "up" endpoint is unrestricted, and is suitable for monitoring the
 health of the application.
 
 The "public keys" endpoint returns a JSON list of the public keys allowed to SFTP
 to the Archelon server. While these are _public_ keys, and hence not
 technically a security issue, current SSDR policy is to limit access to this
 endpoint to "localhost", or nodes in the Kubernetes cluster.
-
-## Docker
-
-Archelon uses the [boathook] gem to provide [Rake tasks](lib/tasks/docker.rake)
-for building and pushing Docker images, as described in the following Dockerfiles:
-
-|Dockerfile                        |Image Name                        |Application|
-|----------------------------------|----------------------------------|-----------|
-|[Dockerfile](Dockerfile)          |`docker.lib.umd.edu/archelon`     |main Rails application|
-|[Dockerfile.sftp](Dockerfile.sftp)|`docker.lib.umd.edu/archelon-sftp`|SFTP server for import/export|
-
-Usage:
-
-```bash
-# list the images that would be built, and the metadata for them
-rails docker:tags
-
-# builds the images
-rails docker:build
-
-# pushes to docker.lib.umd.edu hub
-rails docker:push
-```
-
-See [umd-lib/umd-fcrepo/README.md][umd-fcrepo] for information about setting up
-a local development environment for Archelon using Docker.
-
-When running locally in Docker, the Archelon database can be accessed using:
-
-```bash
-# Archelon database backing the Archelon Rails app
-psql -U archelon -h localhost -p 5434 archelon
-```
 
 ### Multi-Platform Docker Builds
 
@@ -244,14 +123,11 @@ server.
 
 ### Concurrent operation in the development environment
 
-Rails disables concurrent operation when using the development environment.
+As of Rails 7.1, the local development environment allows concurrent
+operations by default, i.e., the `config.allow_concurrency` parameter
+defaults to "true".
 
-Edit the "config/development.rb" file, and add the following line inside
-the `Rails.application.configure` block:
-
-```
-config.allow_concurrency=true
-```
+See <https://guides.rubyonrails.org/v7.1/configuring.html#config-allow-concurrency>
 
 ## Batch Export
 
@@ -295,12 +171,54 @@ this application is vulnerable to CVE-2015-9284, due to its use of the
 As configured, this application uses CAS for authentication. As the application
 does not use OAuth it is not vulnerable to CVE-2015-9284.
 
+## CAS Bypass to allow "localhost"
+
+In the local development environment, the Rails Action Cable functionality does
+not work in Firefox by default because the "archelon-local" hostname is used,
+instead of "localhost".
+
+To enable use of "localhost", the CAS login must be bypassed. To do this:
+
+1) Edit the "config/environments/development.rb" file and add "localhost" to
+   the list of "config.hosts", i.e.:
+
+   ```
+     config.hosts = [
+       "archelon-local",
+       "localhost"
+     ]
+   ```
+
+2) Run the application, setting the "ARCHELON_AUTH" environment variable
+   to "developer", i.e:
+
+   ```
+   $ ARCHELON_AUTH=developer bin/dev
+   ```
+
+3) In a web browser go to
+
+    <http://localhost:3000/>
+
+    Instead of a CAS login, a simple form with a "Uid" field will be displayed.
+    Enter the username of any user in LDAP, to be logged in as that user.
+
+This functionality uses the OmniAuth "[developer][omniauth_developer]" strategy,
+and is only available in the local development environment
+(`ENV["RAILS_ENV"] == "development"`) and when the `ARCHELON_AUTH` environment
+variable is set to "developer" (see the `use_developer_login?` method in
+[app/helpers/cas_helper.rb](app/helpers/cas_helper.rb)).
+
 ## Action Cable
 
 The Rails "Action Cable" functionality is used to provide dynamic updates to
 the GUI.
 
 See [ActionCable](docs/ActionCable.md) for more information.
+
+**Note:** In the local development environment, dynamic status updates (for
+Export Jobs, Import Jobs, and Publish Jobs) *may not* work in reliably in
+Firefox, but do appear to work consistently in Chrome and Safari.
 
 ## ActiveJob and Delayed::Job
 
@@ -342,24 +260,6 @@ is available at:
 
 http://archelon-local:3000/react_components
 
-### Documenting React Components
-
-React components are documented using "React Styleguidist"
-[https://react-styleguidist.js.org/][react-styleguidist]
-
-In the development environment, web-based interactive documentation can be
-accessed by running:
-
-```
-> yarn styleguidist server
-```
-
-and then accessing the documentation at http://localhost:6060/
-
-See the "Documenting Components" page on the "React Styleguidist" website
-[https://react-styleguidist.js.org/docs/documenting][react-styleguidist-documenting],
-for information about writing documentation for the React components.
-
 ## License
 
 See the [LICENSE](LICENSE.md) file for license rights and limitations
@@ -372,11 +272,8 @@ See the [LICENSE](LICENSE.md) file for license rights and limitations
 [delayed_job]: https://github.com/collectiveidea/delayed_job
 [delayed_job_active_record]: https://github.com/collectiveidea/delayed_job_active_record
 [fedora]: https://duraspace.org/fedora/
+[omniauth_developer]: https://github.com/omniauth/omniauth/blob/v1.9.2/lib/omniauth/strategies/developer.rb
 [plastron]: https://github.com/umd-lib/plastron
-[react-styleguidist]: https://react-styleguidist.js.org/
-[react-styleguidist-documenting]: https://react-styleguidist.js.org/docs/documenting
 [Solr]: https://github.com/umd-lib/umd-fcrepo-solr
 [stomp]: https://stomp.github.io/
 [umd-fcrepo]: https://github.com/umd-lib/umd-fcrepo
-[umd-fcrepo-docker]: https://github.com/umd-lib/umd-fcrepo-docker
-[boathook]: https://github.com/umd-lib/boathook

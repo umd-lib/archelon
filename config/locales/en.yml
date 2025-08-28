@@ -1,14 +1,14 @@
-# Files in the config/locales directory are used for internationalization
-# and are automatically loaded by Rails. If you want to use locales other
-# than English, add the necessary files in this directory.
+# Files in the config/locales directory are used for internationalization and
+# are automatically loaded by Rails. If you want to use locales other than
+# English, add the necessary files in this directory.
 #
 # To use the locales, use `I18n.t`:
 #
-#     I18n.t 'hello'
+#     I18n.t "hello"
 #
 # In views, this is aliased to just `t`:
 #
-#     <%= t('hello') %>
+#     <%= t("hello") %>
 #
 # To use a different locale, set it with `I18n.locale`:
 #
@@ -16,21 +16,19 @@
 #
 # This would use the information in config/locales/es.yml.
 #
-# The following keys must be escaped otherwise they will not be retrieved by
-# the default I18n backend:
+# To learn more about the API, please read the Rails Internationalization guide
+# at https://guides.rubyonrails.org/i18n.html.
 #
-# true, false, on, off, yes, no
+# Be aware that YAML interprets the following case-insensitive strings as
+# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
+# must be quoted to be interpreted as strings. For example:
 #
-# Instead, surround them with single quotes.
-#
-# en:
-#   'true': 'foo'
-#
-# To learn more, please read the Rails Internationalization guide
-# available at http://guides.rubyonrails.org/i18n.html.
+#     en:
+#       "yes": yup
+#       enabled: "ON"
 
 en:
-  hello: 'Hello world'
+  hello: "Hello world"
   solr_is_down: 'Unable to connect to Solr index. Search functionality is unavailable at this time.'
   active_mq_is_down: 'Unable to connect to ActiveMQ. Import/export functionality is unavailable at this time.'
   needs_selected_items: 'To create a export job, you must select items first.'
@@ -45,6 +43,7 @@ en:
   resource_update_failed: 'Update failed'
   resource_update_no_change: 'Please make a change before submitting.'
   resource_update_timeout_error: 'Timeout error. Fedora has taken too long to respond. Please report this error and check back in a few minutes as your changes may have been saved.'
+
   activerecord:
     attributes:
       publish_job:
@@ -116,6 +115,19 @@ en:
       download_url: Download URL
       export_job: Export Job
       import_job: Import Job
+  cas_users:
+    destroy:
+      user_cannot_be_removed: Cas user cannot be removed.
+      user_destroyed: Cas user was successfully destroyed.
+  download_urls:
+    create:
+      success: Download URL was successfully created.
+  import_jobs:
+    import:
+      cannot_start_or_resume: Cannot start or resume this import
+  sessions:
+    login_as:
+      no_permission: You do not have permission to access this page
   mime_types:
     application/pdf: PDF (application/pdf)
     application/xml: XML (application/xml)

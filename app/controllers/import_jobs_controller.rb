@@ -13,9 +13,9 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
   def index
     @import_jobs =
       if current_cas_user.admin?
-        ImportJob.all.order('timestamp DESC').paginate(page: params[:page])
+        ImportJob.order(timestamp: :desc)
       else
-        ImportJob.where(cas_user: current_cas_user).order('timestamp DESC').paginate(page: params[:page])
+        ImportJob.where(cas_user: current_cas_user).order(timestamp: :desc)
       end
   end
 
@@ -38,7 +38,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     name = params[:name] || "#{current_cas_user.cas_directory_id}-#{Time.now.iso8601}"
     @import_job = ImportJob.new(name: name)
     @collections_options_array = retrieve_collections
-    @binaries_files = Dir.children(IMPORT_CONFIG[:binaries_dir])&.select { |filename| filename =~ /\.zip$/ }
+    @binaries_files = Dir.children(IMPORT_CONFIG[:binaries_dir])&.grep(/\.zip$/)
   end
 
   # GET /import_jobs/1/edit
@@ -49,7 +49,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     end
 
     @collections_options_array = retrieve_collections
-    @binaries_files = Dir.children(IMPORT_CONFIG[:binaries_dir])&.select { |filename| filename =~ /\.zip$/ }
+    @binaries_files = Dir.children(IMPORT_CONFIG[:binaries_dir])&.grep(/\.zip$/)
   end
 
   # POST /import_jobs
@@ -71,7 +71,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
       return redirect_to action: 'index', status: :see_other
     end
 
-    if valid_update && @import_job.save
+    if valid_update? && @import_job.save
       start_validation resume: true
       return redirect_to action: 'index', status: :see_other
     end
@@ -80,7 +80,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     render :edit
   end
 
-  def import # rubocop:disable Metrics/MethodLength
+  def import # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     if @import_job.import_complete?
       flash[:error] = I18n.t(:import_already_performed)
     elsif @import_job.validate_failed?
@@ -90,7 +90,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     elsif @import_job.import_incomplete?
       resume_import
     else
-      flash[:error] = 'Cannot start or resume this import'
+      flash[:error] = I18n.t('import_jobs.import.cannot_start_or_resume')
     end
     redirect_to action: 'index', status: :see_other
   end
@@ -110,17 +110,38 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     # it is important to use perform_now so that
     # ActionCable receives timely updates
     ImportJobStatusUpdatedJob.perform_now(@import_job)
-    render plain: '', status: :no_content
+    render status: :no_content
   end
+
+  # UMD Blacklight 8 Fix
+  def set_import_job
+    @import_job = ImportJob.find(params[:id])
+  end
+
+  def start_validation(resume: false)
+    SendStompMessageJob.perform_later jobs_destination, job_request(@import_job, validate_only: true, resume: resume)
+    @import_job.validate_pending!
+  end
+
+  def start_import
+    # must set resume to 'true' since there will already be a job directory that was created
+    # by the validation phase, and Plastron complains if you try to start a job when there is
+    # an existing directory for it
+    SendStompMessageJob.perform_later jobs_destination, job_request(@import_job, resume: true)
+    @import_job.import_pending!
+  end
+
+  def resume_import
+    SendStompMessageJob.perform_later jobs_destination, job_request(@import_job, resume: true)
+    @import_job.import_pending!
+  end
+
+  # End UMD Blacklight 8 Fix
 
   private
 
     def cancel_workflow?
       redirect_to controller: :import_jobs, action: :index if params[:commit] == 'Cancel'
-    end
-
-    def set_import_job
-      @import_job = ImportJob.find(params[:id])
     end
 
     # Returns an array of arrays, the first element being the collection title,
@@ -156,24 +177,6 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
       STOMP_CONFIG['destinations'][:jobs]
     end
 
-    def start_validation(resume: false)
-      SendStompMessageJob.perform_later jobs_destination, job_request(@import_job, validate_only: true, resume: resume)
-      @import_job.validate_pending!
-    end
-
-    def start_import
-      # must set resume to 'true' since there will already be a job directory that was created
-      # by the validation phase, and Plastron complains if you try to start a job when there is
-      # an existing directory for it
-      SendStompMessageJob.perform_later jobs_destination, job_request(@import_job, resume: true)
-      @import_job.import_pending!
-    end
-
-    def resume_import
-      SendStompMessageJob.perform_later jobs_destination, job_request(@import_job, resume: true)
-      @import_job.import_pending!
-    end
-
     # Never trust parameters from the scary internet, only allow the white list through.
     def import_job_params
       safe_params = params.require(:import_job).permit(:name, :model, :access, :collection,
@@ -188,7 +191,7 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
       filename.present? ? File.join(IMPORT_CONFIG[:binaries_base_location], filename) : nil
     end
 
-    def valid_update
+    def valid_update?
       @import_job.update(import_job_params)
 
       if import_job_params['metadata_file'].present?

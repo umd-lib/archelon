@@ -1,7 +1,15 @@
-<h3 id="retrieve_url"><%= object.retrieve_url %></h3>
-
-<div  style="text-align:center">
-<button class="clipboard-btn" data-clipboard-action="copy" data-clipboard-target="#retrieve_url">
-    Copy to clipboard
+<button id="copy-button" class="btn btn-secondary" data-clipboard-target="#retrieve_url">
+  Copy to clipboard
 </button>
-</div>
+
+<script>
+window.addEventListener('load', function () {
+  const button = document.getElementById('copy-button');
+  const clipboard = new ClipboardJS('#copy-button');
+  clipboard.on('success', function(e) {
+    button.innerHTML = 'Copied!';
+    window.setTimeout(function() {button.innerHTML = 'Copy to clipboard'}, 5000);
+    e.clearSelection();
+  })
+})
+</script>

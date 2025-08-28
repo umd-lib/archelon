@@ -2,14 +2,17 @@
 
 class DownloadUrlsController < ApplicationController
   load_and_authorize_resource
-  include Blacklight::SearchHelper
+  # UMD Blacklight 8 Fix
+  include Blacklight::Searchable
+
+  # End UMD Blacklight 8 Fix
 
   # GET /download_urls
   # GET /download_urls.json
   def index
     @rq = DownloadUrl.ransack(query_params)
     @rq.sorts = 'created_at desc' if @rq.sorts.empty?
-    @download_urls = @rq.result.paginate(page: params[:page])
+    @download_urls = @rq.result
     @creators = DownloadUrl.select('creator').distinct.order(:creator)
   end
 
@@ -18,75 +21,58 @@ class DownloadUrlsController < ApplicationController
   def show
   end
 
-  # GET /download_urls/generate/:document_url
-  def generate_download_url
+  def new
     solr_document = find_solr_document(params['document_url'])
     not_found && return unless solr_document
+
     @download_url = DownloadUrl.new
     @download_url.url = solr_document[:id]
-    @download_url.title = create_default_title(solr_document)
+    @download_url.title = full_title(solr_document)
   end
 
-  # POST /download_urls/create/:document_url
-  def create_download_url # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+  def create
     solr_document = find_solr_document(params['document_url'])
     not_found && return unless solr_document
 
-    @download_url = DownloadUrl.new(download_url_params)
-    @download_url.url = solr_document[:id]
-    @download_url.mime_type = solr_document[:mime_type]
-    @download_url.creator = real_user.cas_directory_id
-    @download_url.enabled = true
-    @download_url.expires_at = 7.days.from_now
-    # Title is not a form parameter, so we have to re-create it in order
-    # for it to saved to the model
-    @download_url.title = create_default_title(solr_document)
-
+    @download_url = create_download_url(solr_document)
     respond_to do |format|
       if @download_url.save
-        format.html do
-          redirect_to show_download_url_path(token: @download_url.token),
-                      notice: 'Download URL was successfully created.'
-        end
+        format.html { redirect_to @download_url, notice: I18n.t('download_urls.create.success') }
       else
-        format.html { render :generate_download_url }
+        format.html { render :new }
       end
     end
   end
 
-  # GET /download_urls/show/:token
-  def show_download_url
-    token = params[:token]
-    @download_url = DownloadUrl.find_by(token: token)
-  end
-
-  # PUT /download_urls/disable/:token
-  def disable
-    token = params[:token]
-    notice_msg = nil
-    @download_url = DownloadUrl.find_by(token: token)
-    if @download_url&.enabled?
-      @download_url.enabled = false
-      @download_url.save!
-      notice_msg = 'Download URL was disabled'
+  def update # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    @download_url = DownloadUrl.find(params[:id])
+    if params[:state] == 'disable'
+      if @download_url&.enabled?
+        @download_url.enabled = false
+        @download_url.save!
+        redirect_back fallback_location: download_urls_url,
+                      notice: "Download URL token \"#{@download_url.token}\" was disabled"
+      end
+    else
+      # this shouldn't happen in the normal course of navigating through the site
+      Rails.logger.error "Unknown state requested: #{params[:state]}"
+      redirect_back fallback_location: download_urls_url, error: 'Bad request error'
     end
-
-    redirect_back fallback_location: download_urls_url, notice: notice_msg
   end
 
   private
 
-    # Returns the default value for the "title" field of the DownloadUrl object.
-    def create_default_title(solr_document)
-      title = solr_document[:display_title]
-      pcdm_file_of = solr_document[:pcdm_file_of]
-      if pcdm_file_of
-        file_of_result = fetch(pcdm_file_of)
-        file_of_document = file_of_result[1]
-        file_of_title = file_of_document[:display_title]
-        title += " - #{file_of_title}"
+    # Build a full title of the form "{File Title} - {Page Title} - {Object Title}".
+    def full_title(solr_document)
+      if solr_document.has? :object__title__display
+        solr_document[:object__title__display].map { |title| title.gsub(/^\[@[\w-]+\]/, '') }.join(' | ')
+      elsif solr_document.has? :page__member_of__uri
+        "#{solr_document[:page__title__txt]} - #{full_title(find_solr_document(solr_document[:page__member_of__uri]))}"
+      elsif solr_document.has? :file__file_of__uri
+        "#{solr_document[:file__title__txt]} - #{full_title(find_solr_document(solr_document[:file__file_of__uri]))}"
+      else
+        solr_document[:id]
       end
-      title
     end
 
     # Retrieves the Solr document with the given URL, or nil if the Solr
@@ -94,11 +80,9 @@ class DownloadUrlsController < ApplicationController
     #
     # The Fedora document URL of the Solr document to retrieve.
     def find_solr_document(document_url)
-      results = fetch([document_url])
-      solr_documents = results[1]
-      return solr_documents.first if solr_documents.any?
-
-      nil
+      # UMD Blacklight 8 Fix
+      search_service.fetch(document_url)
+      # End UMD Blacklight 8 Fix
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
@@ -106,8 +90,22 @@ class DownloadUrlsController < ApplicationController
       # "token", and "creator" should not be settable by the user
       params.require(:download_url).permit(
         :url, :title, :notes, :mime_type, :enabled, :request_ip,
-        :request_user_agent, :accessed_at, :download_completed_at
+        :request_user_agent, :accessed_at, :download_completed_at,
+        :document_url
       )
+    end
+
+    def create_download_url(solr_document)
+      @download_url = DownloadUrl.new(download_url_params)
+      @download_url.url = solr_document[:id]
+      @download_url.mime_type = solr_document[:file__mime_type__str]
+      @download_url.creator = real_user.cas_directory_id
+      @download_url.enabled = true
+      @download_url.expires_at = 7.days.from_now
+      # Title is not a form parameter, so we have to re-create it in order
+      # for it to saved to the model
+      @download_url.title = full_title(solr_document)
+      @download_url
     end
 
     # Removes "enabled_eq" if it is 0.

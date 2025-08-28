@@ -5,8 +5,8 @@ class ImportJobsChannel < ApplicationCable::Channel
   def subscribed
     import_job = ImportJob.find(params[:id])
     username = current_user.cas_directory_id
-    Rails.logger.debug("Received subscription for ImportJob #{import_job.id} from user #{username}")
-    stream_for import_job if authorized_to_stream import_job
+    Rails.logger.debug { "Received subscription for ImportJob #{import_job.id} from user #{username}" }
+    stream_for import_job if authorized_to_stream? import_job
   end
 
   # Called by the client with an import job id. This method triggers an
@@ -22,6 +22,7 @@ class ImportJobsChannel < ApplicationCable::Channel
     import_job = ImportJob.find(job_id)
     return if import_job.nil?
 
+    Rails.logger.debug { "Performing ImportJobStatusUpdatedJob ImportJob #{job_id}" }
     ImportJobStatusUpdatedJob.perform_now(import_job)
   end
 
@@ -32,9 +33,9 @@ class ImportJobsChannel < ApplicationCable::Channel
     end
 
     # confirm that the current user should be able to subscribe to this import job
-    def authorized_to_stream(import_job)
+    def authorized_to_stream?(import_job)
       if current_user.admin? || import_job.cas_user == current_user
-        Rails.logger.debug("Streaming Import Job #{import_job.id} for user #{username}")
+        Rails.logger.debug { "Streaming Import Job #{import_job.id} for user #{username}" }
         true
       else
         Rails.logger.warning("User #{username} does not have permission to view ImportJob #{import_job.id}")

@@ -5,6 +5,10 @@ class ImportJobStatusUpdatedJob < ApplicationJob
   retry_on RuntimeError
 
   def perform(import_job)
+    Rails.logger.debug do
+      "Broadcasting ImportJob #{import_job.id} to ImportJobsChannel, " \
+        "status=#{import_job.state}, progress=#{import_job.progress_text}"
+    end
     ImportJobsChannel.broadcast_to(import_job, job: import_job, statusWidget: status_widget(import_job))
   end
 

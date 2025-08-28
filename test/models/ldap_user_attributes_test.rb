@@ -78,14 +78,14 @@ class LdapUserAttributesTest < ActiveSupport::TestCase
 
   test 'LDAP_OVERRIDE should set the user_type value and LDAP is not searched' do
     Rails.env = 'development'
-    stub_const('LDAP_OVERRIDE', 'user')
+    rspec_stub_const('LDAP_OVERRIDE', 'user')
 
     ldap_user_attributes = LdapUserAttributes.create('foo')
     assert 'foo', ldap_user_attributes.name
     assert 'user', ldap_user_attributes.user_type
     expect(LDAP).not_to receive(:search)
 
-    stub_const('LDAP_OVERRIDE', 'barbaz')
+    rspec_stub_const('LDAP_OVERRIDE', 'barbaz')
     ldap_user_attributes = LdapUserAttributes.create('foo')
     assert 'foo', ldap_user_attributes.name
     assert 'barbaz', ldap_user_attributes.user_type
@@ -93,7 +93,7 @@ class LdapUserAttributesTest < ActiveSupport::TestCase
   end
 
   test 'ldap_override? should only work in Rails development environment' do
-    stub_const('LDAP_OVERRIDE', 'user')
+    rspec_stub_const('LDAP_OVERRIDE', 'user')
 
     assert_not_equal 'development', Rails.env
     assert_not LdapUserAttributes.ldap_override?
@@ -111,16 +111,16 @@ class LdapUserAttributesTest < ActiveSupport::TestCase
     Rails.env = 'development'
     assert_equal 'development', Rails.env
 
-    stub_const('LDAP_OVERRIDE', 'user')
+    rspec_stub_const('LDAP_OVERRIDE', 'user')
     assert LdapUserAttributes.ldap_override?
 
-    stub_const('LDAP_OVERRIDE', nil)
+    rspec_stub_const('LDAP_OVERRIDE', nil)
     assert_not LdapUserAttributes.ldap_override?
 
-    stub_const('LDAP_OVERRIDE', '')
+    rspec_stub_const('LDAP_OVERRIDE', '')
     assert_not LdapUserAttributes.ldap_override?
 
-    stub_const('LDAP_OVERRIDE', '   ')
+    rspec_stub_const('LDAP_OVERRIDE', '   ')
     assert_not LdapUserAttributes.ldap_override?
   end
 

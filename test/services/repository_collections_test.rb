@@ -48,7 +48,7 @@ class RepositoryCollectionsTest < ActiveSupport::TestCase
     assert_equal 4, collections.size
 
     # Verify collections are sorted by display_title
-    display_titles = collections.map { |c| c[:display_title] }
+    display_titles = collections.pluck(:display_title)
     display_titles_sorted = display_titles.sort
     assert_equal display_titles_sorted, display_titles
   end

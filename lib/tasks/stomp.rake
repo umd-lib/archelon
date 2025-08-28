@@ -13,7 +13,7 @@ namespace :stomp do # rubocop:disable Metrics/BlockLength
 
     listener.subscribe(:job_status, 'client-individual') do |stomp_msg|
       message = PlastronMessage.new(stomp_msg)
-      puts "Updating job status for #{message.job_id}"
+      puts "Updating job status for #{message.job_id}, message headers='#{message.headers}', message body='#{message.body}'" # rubocop:disable Layout/LineLength
 
       begin
         # Wrapping in "with_connection" in case connection has timed out
@@ -33,7 +33,7 @@ namespace :stomp do # rubocop:disable Metrics/BlockLength
       message = PlastronMessage.new(stomp_msg)
       # ignore synchronous job progress messages
       unless message.job_id.start_with? 'SYNCHRONOUS'
-        puts "Updating job progress for #{message.job_id}"
+        puts "Updating job progress for #{message.job_id}, message headers='#{message.headers}', message body='#{message.body}''" # rubocop:disable Layout/LineLength
 
         begin
           # Wrapping in "with_connection" in case connection has timed out
@@ -65,6 +65,7 @@ namespace :stomp do # rubocop:disable Metrics/BlockLength
   # Notifies the Archelon main application that a job has been updated
   def notify_archelon(message, type:)
     include Rails.application.routes.url_helpers
+
     default_url_options[:host] = ARCHELON_SERVER[:host]
     default_url_options[:port] = ARCHELON_SERVER[:port]
 
@@ -77,17 +78,16 @@ end
 # STOMP client for long-running subscriptions to queues and topics
 class StompListener
   # Connects to the STOMP server
-  def connect # rubocop:disable Metrics/MethodLength
+  def connect
     server = "#{STOMP_SERVER[:host]}:#{STOMP_SERVER[:port]}"
     puts "Connecting to STOMP server at #{server}"
     begin
-      connect_headers = { 'accept-version': '1.2', 'host': STOMP_SERVER[:host] }
+      connect_headers = { 'accept-version': '1.2', host: STOMP_SERVER[:host] }
       @client = Stomp::Client.new(hosts: [STOMP_SERVER], reliable: true, connect_headers: connect_headers)
       puts "Connected to STOMP server at #{server}"
       self
     rescue Stomp::Error::MaxReconnectAttempts
       puts "Unable to connect to STOMP message broker at #{server}"
-      return
     end
   end
 

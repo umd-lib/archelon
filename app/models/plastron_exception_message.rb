@@ -2,7 +2,7 @@
 
 # Message used when there is an error communicating with Plastron
 class PlastronExceptionMessage < PlastronMessage
-  def initialize(exception_msg)
+  def initialize(exception_msg) # rubocop:disable Lint/MissingSuper -- TODO re-examine this class because call "super" throws exception
     @exception_msg = exception_msg
   end
 

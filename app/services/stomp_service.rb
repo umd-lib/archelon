@@ -18,7 +18,7 @@ class StompService
   #
   # Raises a MessagingError if cannot connect to the STOMP server, a timeout
   # occurs, or a nil STOMP message is received.
-  def self.synchronous_message(destination, body, headers, receive_timeout = 120) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/LineLength
+  def self.synchronous_message(destination, body, headers, receive_timeout = 120) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     destination_queue = STOMP_CONFIG['destinations'][destination.to_s]
     receive_queue = '/temp-queue/synchronous'
 
@@ -43,8 +43,8 @@ class StompService
         return stomp_message
       end
     rescue Timeout::Error
-      return raise MessagingError,
-                   "No message received in #{receive_timeout} seconds. #{I18n.t('resource_update_timeout_error')}"
+      raise MessagingError,
+            "No message received in #{receive_timeout} seconds. #{I18n.t('resource_update_timeout_error')}"
     ensure
       connection.disconnect
     end

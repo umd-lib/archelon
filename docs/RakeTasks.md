@@ -1,36 +1,10 @@
 # Archelon Rake Tasks
 
-* [docker:tags, docker:build, docker:push](#dockertags-dockerbuild-dockerpush) - Build and Push Docker Images
 * [jobs:work](#jobswork) - Run the DelayedJobs Workers
-* [user:add_public_key](#useradd_public_key) - Add User Public Key
-* [user:add_public_key_file](#useradd_public_key_file) - Add User Public Key File
 * [plantuml:images](#plantumlimages) - Generate Documentation Images
 * [stomp:listen](#stomplisten) - Run the STOMP Listener
-* [vocab:import](#vocabimport) - Importing Controlled Vocabularies
-
-## docker:tags, docker:build, docker:push
-
-There are three Rake tasks to list, build, and push Docker images for the Archelon
-application as well as the SFTP service. The image tag version is determined
-by the value of `Archelon::VERSION`. If it contains the string "dev", then
-it is considered a development version as is tagged using "latest". Any other
-value is used as-is.
-
-Note that once a non-"latest" tag has been successfully pushed, further attempts
-to push that same tag will fail.
-
-```bash
-# lists the tags that would be built or pushed
-rails docker:tags
-
-# builds "docker.lib.umd.edu/archelon:VERSION" and "docker.lib.umd.edu/archelon-sftp:VERSION"
-rails docker:build
-
-# push to the registry
-rails docker:push
-```
-
-Implemented using **Boathook::DockerTasks** from the [boathook](https://github.com/umd-lib/boathook) gem; source: [docker.rake](../lib/tasks/docker.rake)
+* [user:add_public_key](#useradd_public_key) - Add User Public Key
+* [user:add_public_key_file](#useradd_public_key_file) - Add User Public Key File
 
 ## jobs:work
 
@@ -49,9 +23,15 @@ Requires the `PLANTUML_JAR` environment variable to be set, giving the full path
 to the `plantuml.jar` file to run. It is recommended to add this value to a
 `.env` or `.env.local` file on your development workstation.
 
+A PlantUML jar file can be downloaded from <https://plantuml.com/download>.
+
 ```bash
 rails plantuml:images
 ```
+
+**Note:** This task does not work when running Archelon in a VS Code Dev
+container, as it has dependencies (such as the Java JVM and the "dot" package)
+that are not currently part of the container configuration.
 
 Source: [plantuml.rake](../lib/tasks/plantuml.rake)
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module PlastronServices
-  module HTTP
+  module Http
     # Command the publish an item but hide it from search results
     class PublishHiddenItem < PublicationCommand
       def activity_type

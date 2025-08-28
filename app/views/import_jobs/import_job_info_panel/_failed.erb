@@ -1,30 +1,27 @@
 <% if !import_job_info.failed.empty? %>
-  <strong>Dropped Items (<%= import_job_info.failed.count %>)</strong>
-  <table class="table table-striped">
+  <table class="table">
     <thead>
-    <tr>
-      <th>#</th>
-      <th>ID</th>
-      <th>Timestamp</th>
-      <th>Title</th>
-      <th>Error</th>
-    </tr>
-    </thead>
-    <tbody>
-    <% import_job_info.failed.each_with_index do |item, index| %>
       <tr>
-        <td><%= (index+1) %></td>
-        <td><%= item['id'] %></td>
-        <td><%= item['timestamp'] %></td>
-        <td><%= item['title'] %></td>
-        <td><%= item['reason'] %></td>
+        <th>#</th>
+        <th>ID</th>
+        <th>Timestamp</th>
+        <th>Title</th>
+        <th>Error</th>
       </tr>
-    <% end %>
+    </thead>
+
+    <tbody>
+      <% import_job_info.failed.each_with_index do |item, index| %>
+        <tr>
+          <td><%= (index+1) %></td>
+          <td><%= item['id'] %></td>
+          <td><%= item['timestamp'] %></td>
+          <td><%= item['title'] %></td>
+          <td><%= item['reason'] %></td>
+        </tr>
+      <% end %>
     </tbody>
   </table>
-  <div class="retry-import">
-    <%= button_to "Retry #{import_job_info.failed.count} Item(s)", perform_import_import_jobs_path(@import_job), class: 'btn btn-success' %>
-  </div>
 <% else %>
   <p>There are no dropped items for this import job.</p>
 <% end %>

@@ -1,14 +1,15 @@
 # frozen_string_literal: true
 
 class CasUsersController < ApplicationController
-  before_action :set_cas_user, only: %i[show show_history destroy]
-  before_action :verify_admin, only: %i[index destroy]
+  before_action :set_cas_user, only: %i[show show_history active_state destroy]
+  before_action :verify_admin, only: %i[index destroy active_state]
   before_action :verify_self_or_admin, only: %i[show show_history]
 
   # GET /cas_users
   # GET /cas_users.json
   def index
     @cas_users = CasUser.all
+    @show_inactive = params[:show_inactive] == 'true'
   end
 
   # GET /cas_users/1
@@ -19,6 +20,12 @@ class CasUsersController < ApplicationController
   def show_history
     @days = params.key?(:days) ? params[:days].to_i : 90
     @events = audit_events_for_user(@cas_user.cas_directory_id, @days)
+  end
+
+  def active_state
+    @cas_user.active = params[:active]
+    @cas_user.save
+    redirect_to action: :index, params: { show_inactive: params[:show_inactive] }
   end
 
   def audit_events(bindings) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
@@ -72,8 +79,13 @@ class CasUsersController < ApplicationController
   def destroy
     @cas_user.destroy
     respond_to do |format|
-      format.html { redirect_to cas_users_url, notice: 'Cas user was successfully destroyed.' }
+      format.html { redirect_to cas_users_url, notice: I18n.t('cas_users.destroy.user_destroyed') }
       format.json { head :no_content }
+    end
+  rescue ActiveRecord::InvalidForeignKey
+    respond_to do |format|
+      format.html { redirect_to cas_users_url, error: I18n.t('cas_users.destroy.user_cannot_be_removed') }
+      format.json { head :forbidden }
     end
   end
 
@@ -93,13 +105,13 @@ class CasUsersController < ApplicationController
     def verify_admin
       return if current_cas_user.admin?
 
-      render(file: Rails.root.join('public', '403.html'), status: :forbidden, layout: false)
+      render(file: Rails.public_path.join('403.html'), status: :forbidden, layout: false)
     end
 
     # Verify current user is an admin before all actions except :show
     def verify_self_or_admin
       return unless !current_cas_user.admin? && (current_cas_user.id != @cas_user.id)
 
-      render(file: Rails.root.join('public', '403.html'), status: :forbidden, layout: false)
+      render(file: Rails.public_path.join('403.html'), status: :forbidden, layout: false)
     end
 end

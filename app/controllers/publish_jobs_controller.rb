@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
-class PublishJobsController < BookmarksController # rubocop:disable  Metrics/ClassLength
+class PublishJobsController < ApplicationController # rubocop:disable Metrics/ClassLength
+  include Blacklight::Bookmarks
+  include Blacklight::Searchable
+
   before_action :set_publish_job, only: %i[submit start_publish status_update]
 
   helper_method :status_text
@@ -29,21 +32,24 @@ class PublishJobsController < BookmarksController # rubocop:disable  Metrics/Cla
     }
   end
 
-  add_show_tools_partial(:export, path: :new_export_job_url, modal: false)
+  # UMD Blacklight 8 Fix
+  blacklight_config.add_show_tools_partial(:export, path: :new_export_job_url, modal: false)
+  # End UMD Blacklight 8 Fix
 
   def index
     @jobs =
       if current_cas_user.admin?
-        PublishJob.all.order('updated_at DESC')
+        PublishJob.order(updated_at: :desc)
       else
-        PublishJob.where(cas_user: current_cas_user).order('updated_at DESC')
+        PublishJob.where(cas_user: current_cas_user).order(updated_at: :desc)
       end
   end
 
-  def show # rubocop:disable Metrics/AbcSize
+  def show # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
     id = params[:id]
     @job = PublishJob.find(id)
-    @result_documents = @job.solr_ids.map { |solr_id| fetch(solr_id)[1] }
+    # UMD Blacklight 8 Fix
+    @result_documents = @job.solr_ids.map { |solr_id| search_service.fetch(solr_id) }
 
     @hidden = @result_documents.sum do |doc|
       doc._source.include?('is_hidden') && doc._source['is_hidden'] == true ? 1 : 0
@@ -52,6 +58,7 @@ class PublishJobsController < BookmarksController # rubocop:disable  Metrics/Cla
     @published = @result_documents.sum do |doc|
       doc._source.include?('is_published') && doc._source['is_published'] == true ? 1 : 0
     end
+    # End UMD Blacklight 8 Fix
 
     @unpublished = @result_documents.length - @published
   end
@@ -73,9 +80,9 @@ class PublishJobsController < BookmarksController # rubocop:disable  Metrics/Cla
     redirect_to publish_jobs_url, status: :see_other
   end
 
-  def submit # rubocop:disable Metrics/AbcSize
+  def submit
     job = PublishJob.find(params[:id])
-    force_hidden = !params[:publish_job].nil? ? params[:publish_job][:force_hidden] == '1' : job.force_hidden
+    force_hidden = params[:publish_job].nil? ? job.force_hidden : params[:publish_job][:force_hidden] == '1'
 
     job.update!(state: 2, force_hidden: force_hidden)
     start_publish
@@ -86,7 +93,7 @@ class PublishJobsController < BookmarksController # rubocop:disable  Metrics/Cla
   def status_text(publish_job)
     return '' if publish_job.state.blank?
 
-    return I18n.t("activerecord.attributes.publish_job.status.#{publish_job.state}") unless publish_job.publish_in_progress? # rubocop:disable Metrics/LineLength
+    return I18n.t("activerecord.attributes.publish_job.status.#{publish_job.state}") unless publish_job.publish_in_progress? # rubocop:disable Layout/LineLength
 
     I18n.t('activerecord.attributes.publish_job.status.publish_in_progress') + publish_job.progress_text
   end
@@ -97,8 +104,17 @@ class PublishJobsController < BookmarksController # rubocop:disable  Metrics/Cla
     # it is important to use perform_now so that
     # ActionCable receives timely updates
     PublishJobStatusUpdatedJob.perform_now(@publish_job)
-    render plain: '', status: :no_content
+    render status: :no_content
   end
+
+  # UMD Blacklight 8 Fix
+  # Making this method public, because otherwise Rails 7.1 displays and
+  # "Unknown action" error when using the controller.
+  def start_publish
+    SendStompMessageJob.perform_later jobs_destination, job_request(@publish_job)
+    @publish_job.publish_pending!
+  end
+  # End UMD Blacklight 8 Fix
 
   private
 
@@ -125,11 +141,6 @@ class PublishJobsController < BookmarksController # rubocop:disable  Metrics/Cla
 
     def jobs_destination
       STOMP_CONFIG['destinations'][:jobs]
-    end
-
-    def start_publish
-      SendStompMessageJob.perform_later jobs_destination, job_request(@publish_job)
-      @publish_job.publish_pending!
     end
 
     def resume_publish

@@ -29,32 +29,36 @@ class CatalogControllerTest < ActionController::TestCase
   end
 
   test 'show_edit_metadata should be "true" for top-level components' do
-    assert CatalogController.show_edit_metadata('Issue')
+    assert CatalogController.show_edit_metadata?('Item')
+    assert CatalogController.show_edit_metadata?('Issue')
   end
 
-  test 'show_edit_metadata should be "false" for non-top-level components' do
-    assert_not CatalogController.show_edit_metadata('Article')
-    assert_not CatalogController.show_edit_metadata('Page')
+  test 'show_edit_metadata? should be "false" for non-top-level components' do
+    assert_not CatalogController.show_edit_metadata?('Article')
+    assert_not CatalogController.show_edit_metadata?('Page')
+    assert_not CatalogController.show_edit_metadata?('File')
   end
 
   test 'should redirect to item detail page on identifier search with a single match' do
     # Inject the stubbed search_results_mock into the controller
-    stub_search_results_single_result do
-      get :index, params: { q: '"test:123"' }
+    # UMD Blacklight 8 Fix
+    stub_search_results_single_result
+    get :index, params: { q: 'test:123', search_field: 'identifier' }
 
-      # Assert that the request was redirected to the show method with the correct ID param
-      assert_redirected_to(controller: 'catalog', action: 'show', id: 'http://fcrepo-test/123')
-    end
+    # Assert that the request was redirected to the show method with the correct ID param
+    assert_redirected_to(controller: 'catalog', action: 'show', id: 'http://fcrepo-test/123')
+    # End UMD Blacklight 8 Fix
   end
 
   test 'should not redirect to item detail page regular search with a single match' do
     # Inject the stubbed search_results_mock into the controller
-    stub_search_results_single_result do
-      get :index, params: { q: 'test' }
+    # UMD Blacklight 8 Fix
+    stub_search_results_single_result
+    get :index, params: { q: 'test' }
 
-      # Assert that the request was redirected to the show method with the correct ID param
-      assert_response(:success)
-    end
+    # Assert that the request was not redirected
+    assert_response(:success)
+    # End UMD Blacklight 8 Fix
   end
 
   private
@@ -71,16 +75,10 @@ class CatalogControllerTest < ActionController::TestCase
       # Mock objects for response and document_list
       bl_config = @controller.blacklight_config
       response_mock = bl_config.response_model.new(mock_query_response('', 1, mock_solr_doc), {}, document_model: bl_config.document_model, blacklight_config: bl_config)
-      document_mock = SolrDocument.new(mock_solr_doc, response_mock)
 
-      # Stub the search_results method to return the desired values
-      stub_response = [response_mock, [document_mock]]
-
-      # byebug
-
-      @controller.stub :search_results, stub_response do
-        yield
-      end
+      # UMD Blacklight 8 Fix
+      expect_any_instance_of(Blacklight::SearchService).to receive(:search_results).and_return(response_mock)
+      # End UMD Blacklight 8 Fix
     end
 
     def mock_query_response(query = '*:*', num_found = 0, doc = mock_solr_doc)

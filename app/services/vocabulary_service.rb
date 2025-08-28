@@ -44,7 +44,7 @@ class VocabularyService
   # Parses the given terms, returning a Hash suitable for use in the "vocab"
   # field of the ControlledURIRef React component.
   def self.parse_options(terms)
-    Hash[terms.map { |r| [r.uri, r.label] }]
+    terms.to_h { |r| [r.uri, r.label] }
   end
 
   class << self
@@ -67,12 +67,12 @@ class VocabularyService
       def retrieve(url)
         Rails.logger.info("Retrieving vocabulary: url='#{url}'")
 
-        send_json_request = SendJSONRequest.new(url: url, follow_redirects: true)
+        send_json_request = SendJsonRequest.new(url: url, follow_redirects: true)
         json_rest_result = send_json_request.call
 
         Rails.logger.debug do
           "vocabulary retrieved: parsed_json=#{json_rest_result.parsed_json}," \
-          "error_message='#{json_rest_result.error_message}'"
+            "error_message='#{json_rest_result.error_message}'"
         end
 
         json_rest_result

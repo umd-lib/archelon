@@ -8,7 +8,9 @@ LDAP_NAME_ATTR = LDAP_CONFIG['name_attr']
 LDAP_GROUPS_ATTR = LDAP_CONFIG['groups_attr']
 LDAP_ATTRIBUTES = [LDAP_NAME_ATTR,LDAP_GROUPS_ATTR]
 LDAP_BASE = LDAP_CONFIG['base']
-GROUPER_GROUPS = LDAP_CONFIG['grouper_groups']
+# UMD Blacklight 8 fix
+GROUPER_GROUPS = LDAP_CONFIG['grouper_groups'].with_indifferent_access
+# End UMD Blacklight 8 fix
 LDAP_OVERRIDE = LDAP_CONFIG['ldap_override']
 
 # Initialize LDAP object

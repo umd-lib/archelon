@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Service class that sends JSON requests to an \HTTP endpoint.
-class SendJSONRequest
+class SendJsonRequest
   def initialize(url:, method: :get, follow_redirects: false, content: nil)
     @url = url
     @method = method

@@ -9,7 +9,7 @@ class ExportJobsControllerTest < ActionController::TestCase
   end
 
   test "index page should show only user's jobs when user is not an admin" do
-    assert ExportJob.count > 1, 'Test requires at least two export jobs'
+    assert ExportJob.many?, 'Test requires at least two export jobs'
 
     @cas_user = cas_users(:test_user)
     mock_cas_login(@cas_user.cas_directory_id)
@@ -23,7 +23,7 @@ class ExportJobsControllerTest < ActionController::TestCase
 
     get :index
     jobs = assigns(:jobs)
-    assert jobs.count.positive?, 'User must have at least one export job.'
+    assert jobs.any?, 'User must have at least one export job.'
     assert jobs.count < ExportJob.count, 'There must be some jobs not belonging to user.'
     jobs.each do |j|
       assert_equal @cas_user, j.cas_user
@@ -31,7 +31,7 @@ class ExportJobsControllerTest < ActionController::TestCase
   end
 
   test 'index page should show all jobs when user is an admin' do
-    assert ExportJob.count.positive?, 'Test requires at least one export job'
+    assert ExportJob.any?, 'Test requires at least one export job'
     assert @cas_user.admin?, 'Test requires an admin user'
 
     get :index
@@ -69,7 +69,7 @@ class ExportJobsControllerTest < ActionController::TestCase
 
     max_size = export_job.max_allowed_binaries_download_size
     ExportJobsController.any_instance.stub(:selected_items?).and_return(true)
-    BinariesStats.stub(:get_stats, count: 1, total_size: max_size) do
+    BinariesStats.stub(:get_stats, { count: 1, total_size: max_size }) do
       params = {}
       params[:export_job] = { name: 'test', format: 'CSV', item_count: 2, export_binaries: true, mime_types: ['application/pdf'] }
       get :review, params: params
@@ -83,7 +83,7 @@ class ExportJobsControllerTest < ActionController::TestCase
     max_size = export_job.max_allowed_binaries_download_size
     too_large = max_size + 1
     ExportJobsController.any_instance.stub(:selected_items?).and_return(true)
-    BinariesStats.stub(:get_stats, count: 1, total_size: too_large) do
+    BinariesStats.stub(:get_stats, { count: 1, total_size: too_large }) do
       params = {}
       params[:export_job] = { name: 'test', format: 'CSV', item_count: 2, export_binaries: true, mime_types: ['application/pdf'] }
       get :review, params: params
@@ -97,7 +97,7 @@ class ExportJobsControllerTest < ActionController::TestCase
     max_size = export_job.max_allowed_binaries_download_size
     too_large = max_size + 1
     ExportJobsController.any_instance.stub(:selected_items?).and_return(true)
-    BinariesStats.stub(:get_stats, count: 1, total_size: too_large) do
+    BinariesStats.stub(:get_stats, { count: 1, total_size: too_large }) do
       params = {}
       params[:export_job] = { name: 'test', format: 'CSV', item_count: 2, export_binaries: true, mime_types: ['application/pdf'] }
       post :create, params: params

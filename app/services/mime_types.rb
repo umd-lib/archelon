@@ -1,17 +1,29 @@
 # frozen_string_literal: true
 
 # Utility to retrieve MIME types from Solr
+#
+# Expected Solr response has the form
+# { response:
+#   { docs:
+#     [
+#       { object_had_members:
+#         [
+#           { page_has_files:
+#             [
+#               { mime_types: '<MIME_TYPE>', ... },
+#                ...
+#             ]
+#           }
+#         ]
+#       }
+#     ]
+#   }
+# }
 class MimeTypes < SolrQueryService
   QUERY = {
     q: '*:*',
     indent: 'on',
-    rows: '1000',
-    fl: 'id,pcdm_members,files:[subquery]',
-    'files.q': '{!terms f=pcdm_file_of v=$row.pcdm_members}',
-    'files.fl': 'mime_type',
-    'files.rows': '1000',
-    'facet': 'on',
-    'facet.field': 'mime_type'
+    rows: '1000'
   }.freeze
 
   # Queries Solr and returns an array of Strings representing the MIME types
@@ -22,27 +34,23 @@ class MimeTypes < SolrQueryService
   end
 
   def self.query(uris)
-    QUERY.merge 'fq': match_any('id', uris)
+    QUERY.merge fq: match_any('id', uris)
   end
 
-  # Processes the Solr response, returning an array of Strings
+  # Processes the Solr response, returning an array of Strings representing the
+  # unique MIME types of the files, sorted alphabetically
   def self.process_solr_response(solr_response) # rubocop:disable Metrics/MethodLength
-    # This method is a bit of a kludge, because it's not clear how to get the
-    # facet list directly from a Solr query. This brute-force method iterates
-    # through all the files in the response, generating a set of all the
-    # "mime_type" fields encountered, and then converts it to an array.
-    docs = solr_response.dig('response', 'docs')
-
     mime_set = Set[]
+    docs = solr_response.fetch('response', {}).fetch('docs', [])
     docs.each do |doc|
-      file_docs = doc.dig('files', 'docs')
-      file_docs.each do |file_doc|
-        mime_type = file_doc['mime_type']
-        mime_set << mime_type
+      object_has_members = doc.fetch('object__has_member', [])
+      object_has_members.each do |obj|
+        page_has_files = obj.fetch('page__has_file', [])
+        page_has_files.each do |page|
+          mime_set << page.fetch('file__mime_type__str', nil)
+        end
       end
     end
-
-    mime_types = mime_set.sort.to_a
-    mime_types
+    mime_set.compact.sort.to_a
   end
 end

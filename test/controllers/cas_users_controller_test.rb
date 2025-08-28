@@ -19,20 +19,31 @@ class CasUsersControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test 'should destroy cas_user' do
-    assert_difference('CasUser.count', -1) do
-      delete :destroy, params: { id: @cas_user }
+  test 'should not destroy cas_user with jobs' do
+    assert_difference('CasUser.count', 0) do
+      delete :destroy, params: { id: cas_users(:one) }
     end
 
     assert_redirected_to cas_users_path
   end
 
-  test 'non-admin users should not have access to index, new, create, edit, update,destroy' do
+  test 'should destroy jobless cas_user' do
+    assert_difference('CasUser.count', -1) do
+      delete :destroy, params: { id: cas_users(:jobless_user) }
+    end
+
+    assert_redirected_to cas_users_path
+  end
+
+  test 'non-admin users should not have access to index, new, create, edit, update, destroy' do
     run_as_user(cas_users(:one)) do
       get :index
       assert_response :forbidden
 
       delete :destroy, params: { id: @cas_user }
+      assert_response :forbidden
+
+      post :active_state, params: { id: @cas_user, active: false }
       assert_response :forbidden
     end
   end

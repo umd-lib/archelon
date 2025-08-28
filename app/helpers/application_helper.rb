@@ -1,24 +1,15 @@
 # frozen_string_literal: true
 
+# UMD Customization
 require 'erb'
 require 'addressable/template'
 
 LABEL_PREDICATE = 'http://www.w3.org/2000/01/rdf-schema#label'
 SAME_AS_PREDICATE = 'http://www.w3.org/2002/07/owl#sameAs'
+# End UMD Customization
 
 module ApplicationHelper # rubocop:disable Metrics/ModuleLength
-  PCDM_OBJECT = 'pcdm:Object'
-  PCDM_FILE = 'pcdm:File'
-  ALLOWED_MIME_TYPE = 'image/tiff'
-
-  def mirador_displayable?(document)
-    rdf_types = document._source[:rdf_type]
-    component = document._source[:component]
-    return true if rdf_types.include?(PCDM_OBJECT) && (component != 'Article')
-
-    false
-  end
-
+  # UMD Customization
   def encoded_id(document)
     id = document._source[:id]
     ERB::Util.url_encode(id.slice(FCREPO_BASE_URL.size, id.size))
@@ -32,58 +23,8 @@ module ApplicationHelper # rubocop:disable Metrics/ModuleLength
     IIIF_BASE_URL
   end
 
-  def from_subquery(subquery_field, args)
-    args[:document][args[:field]] = args[:document][subquery_field]['docs']
-  end
-
-  def collection_from_subquery(args)
-    from_subquery 'pcdm_collection_info', args
-  end
-
-  def parent_from_subquery(args)
-    from_subquery 'pcdm_member_of_info', args
-  end
-
-  def members_from_subquery(args)
-    from_subquery 'pcdm_members_info', args
-  end
-
-  def file_parent_from_subquery(args)
-    from_subquery 'pcdm_file_of_info', args
-  end
-
-  def files_from_subquery(args)
-    from_subquery 'pcdm_files_info', args
-  end
-
-  def related_objects_from_subquery(args)
-    from_subquery 'pcdm_related_objects_info', args
-  end
-
-  def related_object_of_from_subquery(args)
-    from_subquery 'pcdm_related_object_of_info', args
-  end
-
-  def annotation_source_from_subquery(args)
-    from_subquery 'annotation_source_info', args
-  end
-
-  def value_list(args)
-    args[:document][args[:field]]
-  end
-
-  def unique_component_types(pcdm_members_info)
-    pcdm_members_info.map { |member| member['component'] }.uniq
-  end
-
   def fcrepo_url
     FCREPO_BASE_URL.sub(%r{fcrepo/rest/?}, '')
-  end
-
-  def view_in_fedora_link(document)
-    url = document[:id]
-    url += '/fcr:metadata' if document[:rdf_type].include? 'fedora:Binary'
-    link_to 'View in Fedora', url, target: '_blank', rel: 'noopener'
   end
 
   def link_to_document_view(args)
@@ -99,7 +40,7 @@ module ApplicationHelper # rubocop:disable Metrics/ModuleLength
 
   def format_extracted_text(args)
     if args[:value].is_a? Array
-      args[:value].map { |v| format_extracted_text(value: v) }.join('... ').html_safe # rubocop:disable Rails/OutputSafety, Metrics/LineLength - I assume the .html_safe is intended
+      args[:value].map { |v| format_extracted_text(value: v) }.join('... ').html_safe # rubocop:disable Rails/OutputSafety -- I assume the .html_safe is intended
     else
       # to strip out the embedded word corrdinates
       coord_pattern = /\|\d+,\d+,\d+,\d+/
@@ -146,7 +87,7 @@ module ApplicationHelper # rubocop:disable Metrics/ModuleLength
     link_to node['@type'], node['@type'], class: 'badge badge-light', style: 'background: #ddd; color: #333'
   end
 
-  def display_node(node, field, items) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/MethodLength, Metrics/LineLength
+  def display_node(node, field, items) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/MethodLength
     return display_handle(node) if field[:datatype] == 'http://vocab.lib.umd.edu/datatype#handle'
 
     if node.key? '@value'
@@ -205,4 +146,5 @@ module ApplicationHelper # rubocop:disable Metrics/ModuleLength
 
     content
   end
+  # End UMD Customization
 end

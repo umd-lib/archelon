@@ -1,47 +1,95 @@
-<% unless import_job_info.error_occurred? %>
-  <div>
-    <!-- Nav tabs -->
-    <ul class="nav nav-tabs" role="tablist">
-      <li role="presentation" class="active">
-        <a href="#completed" aria-controls="completed" role="tab" data-toggle="tab">
-          Completed <span class="badge"><%= import_job_info.completed.count %></span>
-        </a>
-      </li>
-      <li role="presentation">
-        <a href="#dropped" aria-controls="dropped" role="tab" data-toggle="tab">
-          Dropped <span class="badge"><%= import_job_info.failed.count %></span>
-        </a>
-      </li>
-      <li role="presentation">
-        <a href="#invalid" aria-controls="invalid" role="tab" data-toggle="tab">
-          Invalid <span class="badge"><%= import_job_info.invalid.count %></span>
-        </a>
-      </li>
-    </ul>
-
-    <!-- Tab panes -->
-    <div class="tab-content">
-      <div role="tabpanel" class="tab-pane active" id="completed">
-        <%= render "import_jobs/import_job_info_panel/completed",
-           import_job_info: @import_job_info
-        %>
-      </div>
-
-      <div role="tabpanel" class="tab-pane" id="dropped">
-        <%= render "import_jobs/import_job_info_panel/failed",
-                   import_job_info: @import_job_info
-        %>
-      </div>
-      <div role="tabpanel" class="tab-pane" id="invalid">
-        <%= render "import_jobs/import_job_info_panel/invalid",
-                   import_job_info: @import_job_info
-        %>
-      </div>
-    </div>
+<% if import_job_info.error_occurred? %>
+  <div style="padding-top: 10px;">
+    <%= render "import_jobs/import_job_info_panel/error", import_job_info: @import_job_info %>
   </div>
 
 <% else %>
-  <%= render "import_jobs/import_job_info_panel/error",
-      import_job_info: @import_job_info
-  %>
+    <div style="padding-top: 10px;">
+      <!-- Nav tabs -->
+      <ul class="nav nav-tabs" role="tablist" id="importJobInfo">
+        <li role="presentation" class="nav-item">
+          <button
+            class="nav-link active"
+            id="completed-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#completed"
+            type="button"
+            role="tab"
+            aria-controls="completed"
+            aria-selected="true"
+          >
+            Completed <%= import_job_info.completed.count %>
+          </button>
+        </li>
+
+        <li role="presentation" class="nav-item">
+          <button
+            class="nav-link"
+            id="dropped-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#dropped"
+            type="button"
+            role="tab"
+            aria-controls="dropped"
+            aria-selected="false"
+          >
+            Dropped <%= import_job_info.failed.count %>
+          </button>
+        </li>
+
+        <li role="presentation" class="nav-item">
+          <button
+            class="nav-link"
+            id="invalid-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#invalid"
+            type="button"
+            role="tab"
+            aria-controls="invalid"
+            aria-selected="false"
+          >
+            Invalid <%= import_job_info.invalid.count %>
+          </button>
+        </li>
+      </ul>
+
+      <!-- Tab panes -->
+      <div class="tab-content" id="importJobInfoContent">
+        <div
+          class="tab-pane fade show active"
+          id="completed"
+          role="tabpanel"
+          aria-labelledby="completed-tab"
+          tabindex="0"
+        >
+          <%= render "import_jobs/import_job_info_panel/completed",
+            import_job_info: @import_job_info
+          %>
+        </div>
+
+        <div
+          class="tab-pane fade"
+          id="dropped"
+          role="tabpanel"
+          aria-labelledby="dropped-tab"
+          tabindex="0"
+        >
+          <%= render "import_jobs/import_job_info_panel/failed",
+                    import_job_info: @import_job_info
+          %>
+        </div>
+
+        <div
+          class="tab-pane fade"
+          id="invalid"
+          role="tabpanel"
+          aria-labelledby="invalid-tab"
+          tabindex="0"
+        >
+          <%= render "import_jobs/import_job_info_panel/invalid",
+                    import_job_info: @import_job_info
+          %>
+        </div>
+    </div>
+  </div>
 <% end %>

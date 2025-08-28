@@ -16,9 +16,9 @@ class ResourceController < ApplicationController
       flash[:notice] = t('resource_update_successful')
       render json: update_complete
     else
-      plastron_rest_base_url = Addressable::URI.parse(ENV['PLASTRON_REST_BASE_URL'])
+      plastron_rest_base_url = Addressable::URI.parse(ENV.fetch('PLASTRON_REST_BASE_URL', nil))
       repo_path = @id.gsub(FCREPO_BASE_URL, '/')
-      plastron_resource_url = plastron_rest_base_url.join('resources' + repo_path)
+      plastron_resource_url = plastron_rest_base_url.join("resources#{repo_path}")
       begin
         response = HTTP.follow.headers(
           content_type: 'application/sparql-update'
@@ -36,7 +36,7 @@ class ResourceController < ApplicationController
       end
 
       if response.status.success?
-        flash[:notice] = t('resource_update_successful')
+        flash.now[:notice] = t('resource_update_successful')
         return render json: update_complete
       end
 
@@ -70,11 +70,11 @@ class ResourceController < ApplicationController
     def update_command
       case params[:command]
       when 'Publish'
-        PlastronServices::HTTP::PublishItem
+        PlastronServices::Http::PublishItem
       when 'Publish Hidden'
-        PlastronServices::HTTP::PublishHiddenItem
+        PlastronServices::Http::PublishHiddenItem
       when 'Unpublish'
-        PlastronServices::HTTP::UnpublishItem
+        PlastronServices::Http::UnpublishItem
       else
         raise "Unknown command #{params[:command]}"
       end
@@ -90,8 +90,8 @@ class ResourceController < ApplicationController
     def sparql_update
       return @sparql_update if @sparql_update
 
-      delete_statements = (params[:delete] || [])
-      insert_statements = (params[:insert] || [])
+      delete_statements = params[:delete] || []
+      insert_statements = params[:insert] || []
       return '' if delete_statements.empty? && insert_statements.empty?
 
       @sparql_update = "DELETE {\n#{delete_statements.join} } INSERT {\n#{insert_statements.join} } WHERE {}"

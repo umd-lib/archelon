@@ -1,9 +1,17 @@
-<td data-job-id="<%= publish_job.id %>" data-state="<%= publish_job.state %>">
+<td
+  data-job-id="<%= publish_job.id %>"
+  data-state="<%= publish_job.state %>"
+  style="text-align: center; vertical-align: middle;"
+>
   <%= link_to status_text(publish_job), publish_job_path(publish_job), class: "publish_job_status_#{publish_job.state}" %>
-  <% if publish_job.stalled? %>(may be stalled)<% end %>
+
+  <% if publish_job.stalled? %>
+    (may be stalled)
+  <% end %>
+
   <% if publish_job.publish_complete? %>
     (Job Succeeded)
   <% elsif publish_job.publish_incomplete? or publish_job.publish_error? %>
-    <%= link_to 'View Job', publish_job_url(publish_job), class: 'btn-xs btn-danger' %>
+    <%= link_to 'View Job', publish_job_path(publish_job), class: 'btn btn-sm btn-danger' %>
   <% end %>
 </td>

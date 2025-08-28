@@ -1,33 +1,42 @@
 # frozen_string_literal: true
 
 class ApplicationController < ActionController::Base
+  # UMD Customization
   include CasHelper
+
+  add_flash_types :error
 
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
 
   rescue_from CanCan::AccessDenied do
-    render file: Rails.root.join('public', '403.html'), status: :forbidden, layout: false
+    render file: Rails.public_path.join('403.html'), status: :forbidden, layout: false
   end
 
   before_action :authenticate
+  # End UMD Customization
 
   # Adds a few additional behaviors into the application controller
   include Blacklight::Controller
-  layout 'blacklight'
-  skip_after_action :discard_flash_if_xhr
 
+  layout :determine_layout if respond_to? :layout
+
+  # UMD Customization
   def solr_connection_error(err)
     Rails.logger.error(err.message)
-    flash[:error] = I18n.t(:solr_is_down)
+    flash[:error] = I18n.t(:solr_is_down) # rubocop:disable Rails/ActionControllerFlashBeforeRender
   end
 
   # Causes a "404 - Not Found" error page to be displayed.
   def not_found
-    render file: Rails.root.join('public', '404.html'), status: :not_found, layout: false
+    render file: Rails.public_path.join('404.html'), status: :not_found, layout: false
   end
 
   def forbidden
-    render file: Rails.root.join('public', '403.html'), status: :forbidden, layout: false
+    render file: Rails.public_path.join('403.html'), status: :forbidden, layout: false
+  end
+
+  def bad_request
+    render file: Rails.public_path.join('500.html'), status: :bad_request, layout: false
   end
 
   def impersonating?
@@ -56,4 +65,5 @@ class ApplicationController < ActionController::Base
     current_cas_user.admin? && user.user? && (user.id != current_cas_user.id)
   end
   helper_method :can_login_as?
+  # End UMD Customization
 end

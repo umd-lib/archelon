@@ -18,7 +18,7 @@ class DownloadUrlsControllerTest < ActionController::TestCase
   test 'should add creator on create' do
     stub_find_solr_document do
       assert_difference('DownloadUrl.count') do
-        post :create_download_url, params: {
+        post :create, params: {
           download_url: {
             accessed_at: @download_url.accessed_at,
             download_completed_at: @download_url.download_completed_at,
@@ -41,7 +41,7 @@ class DownloadUrlsControllerTest < ActionController::TestCase
       assert_difference('DownloadUrl.count') do
         impersonate_as_user(user_one) do
           assert_equal session[:cas_user], user_one.cas_directory_id
-          post :create_download_url, params: {
+          post :create, params: {
             download_url: {
               accessed_at: @download_url.accessed_at,
               download_completed_at: @download_url.download_completed_at,
@@ -66,7 +66,7 @@ class DownloadUrlsControllerTest < ActionController::TestCase
     creator_to_try = 'one'
     stub_find_solr_document do
       assert_difference('DownloadUrl.count') do
-        post :create_download_url, params: {
+        post :create, params: {
           download_url: {
             accessed_at: @download_url.accessed_at,
             download_completed_at: @download_url.download_completed_at,
@@ -87,7 +87,7 @@ class DownloadUrlsControllerTest < ActionController::TestCase
   test 'should require a note on create' do
     stub_find_solr_document do
       assert_no_difference('DownloadUrl.count') do
-        post :create_download_url, params: {
+        post :create, params: {
           download_url: {
             accessed_at: @download_url.accessed_at,
             download_completed_at: @download_url.download_completed_at,
@@ -112,14 +112,14 @@ class DownloadUrlsControllerTest < ActionController::TestCase
 
   test 'generate_download_url should respond with 404 if document cannot be found' do
     @controller.stub(:find_solr_document, nil) do
-      get :generate_download_url, params: { document_url: 'document does not exist' }
+      get :new, params: { document_url: 'document does not exist' }
       assert_response :not_found
     end
   end
 
   test 'create_download_url should respond with 404 if document cannot be found' do
     @controller.stub(:find_solr_document, nil) do
-      get :create_download_url, params: { document_url: 'document does not exist' }
+      post :create, params: { download_url: { id: 1 }, document_url: 'document does not exist' }
       assert_response :not_found
     end
   end
@@ -127,8 +127,8 @@ class DownloadUrlsControllerTest < ActionController::TestCase
   test 'show_download_url should assign the retrieve url' do
     # Assign a dummy RETRIEVE_BASE_URL so test can run without a .env file
     ENV['RETRIEVE_BASE_URL'] = 'https://example.com/'
-    get :show_download_url, params: { token: @download_url.token }
-    retrieve_base_url = ENV['RETRIEVE_BASE_URL']
+    get :show, params: { id: @download_url.id }
+    retrieve_base_url = ENV.fetch('RETRIEVE_BASE_URL', nil)
     assert_not assigns(:download_url).nil?
     assert_equal retrieve_base_url + @download_url.token, assigns(:download_url).retrieve_url
   end
@@ -136,7 +136,7 @@ class DownloadUrlsControllerTest < ActionController::TestCase
   test 'disable should disable an enabled download_url' do
     assert @download_url.enabled?
 
-    put :disable, params: { token: @download_url.token }
+    put :update, params: { state: 'disable', id: @download_url.id }
 
     @download_url.reload
     assert_not @download_url.enabled?
@@ -146,7 +146,7 @@ class DownloadUrlsControllerTest < ActionController::TestCase
     get :index, params: { rq: { enabled_eq: 1 } }
 
     download_urls = assigns(:download_urls)
-    assert download_urls.count.positive?
+    assert download_urls.any?
     assert download_urls.all?(&:enabled?)
   end
 
@@ -155,7 +155,7 @@ class DownloadUrlsControllerTest < ActionController::TestCase
     get :index, params: { rq: { creator_eq: creator } }
 
     download_urls = assigns(:download_urls)
-    assert download_urls.count.positive?
+    assert download_urls.any?
     assert(download_urls.all?) { |d| d.creator == creator }
   end
 
@@ -169,15 +169,13 @@ class DownloadUrlsControllerTest < ActionController::TestCase
     # stub_find_solr_document do
     #   <Code that calls "find_solr_document">
     # end
-    def stub_find_solr_document
+    def stub_find_solr_document(&block)
       stub_response = SolrDocument.new(
         id: 'http://www.example.com',
         mime_type: 'image/jp2',
-        display_title: 'Example'
+        object__title__display: ['Example']
       )
 
-      @controller.stub :find_solr_document, stub_response do
-        yield
-      end
+      @controller.stub :find_solr_document, stub_response, &block
     end
 end

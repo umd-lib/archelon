@@ -7,6 +7,7 @@ one_blob:
   metadata: nil
   byte_size: 275
   checksum: "zJIVJPfwxpOUA3wsbeXocQ=="
+  service_name: 'test'
 
 two_blob:
   key: 'yiAo9fPFFEGNtmmWvvjA1NeY'
@@ -15,6 +16,7 @@ two_blob:
   metadata: nil
   byte_size: 275
   checksum: "zJIVJPfwxpOUA3wsbeXocQ=="
+  service_name: 'test'
 
 three_blob:
   key: 'YeN1AjvvWmmtNGEFFPf9oAiy'
@@ -23,6 +25,7 @@ three_blob:
   metadata: nil
   byte_size: 275
   checksum: "zJIVJPfwxpOUA3wsbeXocQ=="
+  service_name: 'test'
 
 four_blob:
   key: '7ceayqBAijiwxsWJXbcsL4cK'
@@ -31,6 +34,7 @@ four_blob:
   metadata: nil
   byte_size: 275
   checksum: "zJIVJPfwxpOUA3wsbeXocQ=="
+  service_name: 'test'
 
 five_blob:
   key: 's6RELrUGZAGsQhwmj4oNkk9r'
@@ -39,6 +43,7 @@ five_blob:
   metadata: nil
   byte_size: 275
   checksum: "zJIVJPfwxpOUA3wsbeXocQ=="
+  service_name: 'test'
 
 six_blob:
   key: 'pUzZ8WwdpqyWhuj9cgEnW1WT'
@@ -47,6 +52,7 @@ six_blob:
   metadata: nil
   byte_size: 1024
   checksum: "zJIVJPfwxpOUA3wsbeXocQ=="
+  service_name: 'test'
 
 seven_blob:
   key: 'mT7DQdgANwchBodPUbaNP7ay'
@@ -55,3 +61,4 @@ seven_blob:
   metadata: nil
   byte_size: 275
   checksum: "zJIVJPfwxpOUA3wsbeXocQ=="
+  service_name: 'test'

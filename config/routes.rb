@@ -1,15 +1,6 @@
-Rails.application.routes.draw do # rubocop:disable Metrics/BlockLength
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-
-  get 'static_pages/about'
-
-  resources :cas_users
-  get '/cas_users/:id/history' => 'cas_users#show_history'
-
-  get 'public_keys' => 'public_keys#index'
-
+Rails.application.routes.draw do
   mount Blacklight::Engine => '/'
-  root to: 'catalog#index'
+  root to: "catalog#index"
   concern :searchable, Blacklight::Routes::Searchable.new
 
   resource :catalog, only: [:index], as: 'catalog', path: '/catalog', controller: 'catalog' do
@@ -22,37 +13,49 @@ Rails.application.routes.draw do # rubocop:disable Metrics/BlockLength
     concerns :exportable
   end
 
-  get '/edit/:id', controller: 'resource', action: 'edit', constraints: { id: /.*/ }, as: 'resource_edit'
-  post '/edit/:id', controller: 'resource', action: 'update', constraints: { id: /.*/ }
-
-  post '/update/:id', controller: 'resource', action: 'update_state', constraints: { id: /.*/ }, as: 'update_resource'
-
   resources :bookmarks, constraints: { id: /.*/ } do
     concerns :exportable
 
     collection do
       delete 'clear'
-      get 'export'
-      get 'select_all_results'
-      post 'toggle_multiple_selections'
+      get 'select_results'
     end
   end
+  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
-  resources :download_urls, only: %i[index show]
-  get '/download_urls/generate/:document_url', controller: 'download_urls',
-      action: 'generate_download_url', as: 'generate_download_url', constraints: { document_url: /.*/ }
-  post '/download_urls/create', controller: 'download_urls',
-       action: 'create_download_url', as: 'create_download_url'
-  get '/download_urls/show/:token', controller: 'download_urls',
-      action: 'show_download_url', as: 'show_download_url'
-  put '/download_urls/disable/:token', controller: 'download_urls',
-      action: 'disable', as: 'disable_download_url'
+  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
+  # Can be used by load balancers and uptime monitors to verify that the app is live.
+  get "up" => "rails/health#show", as: :rails_health_check
 
-  get '/retrieve/:token', controller: 'retrieve', action: 'retrieve',
-      as: 'retrieve'
-  get '/retrieve/do/:token', controller: 'retrieve', action: 'do_retrieve',
-      as: 'do_retrieve'
+  # Defines the root path route ("/")
+  # root "posts#index"
 
+  # UMD Customization
+  get 'about' => 'static_pages#about'
+  get 'help' => 'static_pages#help'
+
+  resources :cas_users
+  get '/cas_users/:id/history' => 'cas_users#show_history'
+  post '/cas_users/:id/active' => 'cas_users#active_state', as: 'cas_user_active_state'
+  get 'public_keys' => 'public_keys#index'
+
+  get 'login', to: redirect('/auth/cas'), as: 'login' unless CasHelper.use_developer_login?
+  get 'login', to: redirect('/auth/developer'), as: 'login' if CasHelper.use_developer_login?
+  get 'admin/user/login_as/:user_id', to: 'sessions#login_as', as: 'admin_user_login_as'
+  get 'logout', to: 'sessions#destroy', as: 'logout'
+  get 'auth/:provider/callback', to: 'sessions#create'
+  post 'auth/:provider/callback', to: 'sessions#create'
+  get 'auth/failure', to: redirect('/')
+
+  get 'react_components' => 'react_components#react_components'
+  post 'react_components' => 'react_components#react_components_submit'
+
+  # Metadata Edit endpoints
+  get '/edit/:id', controller: 'resource', action: 'edit', constraints: { id: /.*/ }, as: 'resource_edit'
+  post '/edit/:id', controller: 'resource', action: 'update', constraints: { id: /.*/ }
+  post '/update/:id', controller: 'resource', action: 'update_state', constraints: { id: /.*/ }, as: 'update_resource'
+
+  # Export Jobs
   resources :export_jobs do
     collection do
       get 'review'
@@ -64,6 +67,7 @@ Rails.application.routes.draw do # rubocop:disable Metrics/BlockLength
     end
   end
 
+  # Import Jobs
   resources :import_jobs do
     collection do
       post ':id/import', to: 'import_jobs#import', as: 'perform_import'
@@ -73,18 +77,16 @@ Rails.application.routes.draw do # rubocop:disable Metrics/BlockLength
     end
   end
 
-  get 'login', to: redirect('/auth/cas'), as: 'login'
-  get 'admin/user/login_as/:user_id', to: 'sessions#login_as', as: 'admin_user_login_as'
-  get 'logout', to: 'sessions#destroy', as: 'logout'
-  get 'auth/:provider/callback', to: 'sessions#create'
-  get 'auth/failure', to: redirect('/')
+  # Download URLs
+  resources :download_urls
 
-  get 'about' => 'static_pages#about'
-  get 'help' => 'static_pages#help'
+  # Retrieve using download URLs
+  get '/retrieve/:token', controller: 'retrieve', action: 'retrieve',
+      as: 'retrieve'
+  get '/retrieve/do/:token', controller: 'retrieve', action: 'do_retrieve',
+      as: 'do_retrieve'
 
-  get 'react_components' => 'react_components#react_components'
-  post 'react_components' => 'react_components#react_components_submit'
-
+  # Publish Jobs
   resources :publish_jobs, except: [:new] do
     member do
       post 'submit' => 'publish_jobs#submit'
@@ -94,7 +96,6 @@ Rails.application.routes.draw do # rubocop:disable Metrics/BlockLength
   get '/new_publish_job' => 'publish_jobs#new_publish_job'
   get '/new_unpublish_job' => 'publish_jobs#new_unpublish_job'
 
-  get '/ping' => 'ping#verify'
+  # End UMD Customization
 
-  mount ActionCable.server, at: '/cable'
 end

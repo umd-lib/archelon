@@ -13,6 +13,16 @@ class DownloadUrl < ApplicationRecord
   # Return a String representing the one-time use URL to retrieve the
   # associated Fedora document.
   def retrieve_url
-    ENV['RETRIEVE_BASE_URL'] + token
+    ENV.fetch('RETRIEVE_BASE_URL', nil) + token
   end
+
+  # UMD Blacklight 8 Fix
+  def self.ransackable_associations(auth_object = nil) # rubocop:disable Lint/UnusedMethodArgument
+    []
+  end
+
+  def self.ransackable_attributes(auth_object = nil) # rubocop:disable Lint/UnusedMethodArgument
+    %w[created_at creator_eq enabled enabled_eq]
+  end
+  # End UMD Blacklight 8 Fix
 end
