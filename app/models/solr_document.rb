@@ -4,6 +4,7 @@
 class SolrDocument
   include Blacklight::Solr::Document
   include ActionView::Helpers::TagHelper
+  include Rails.application.routes.url_helpers
 
   # self.unique_key = 'id'
 
@@ -61,7 +62,7 @@ class SolrDocument
     paired_uris = uris.zip(labels)
 
     paired_uris.map do |uri, label|
-      add_anchor_tag(uri, label)
+      add_anchor_tag(solr_document_path(uri), label)
     end
   end
 
