@@ -1,0 +1,8 @@
+<%= render(@layout.new(field: @field)) do |component| %>
+  <% component.with_label do %>
+    <%= label %>
+  <% end %>
+  <% component.with_value do %>
+    <%= link_to(@backlink_text, @backlink_url) %>
+  <% end %>
+<% end %>
