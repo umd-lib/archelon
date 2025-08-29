@@ -239,13 +239,13 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
 
     # Page Level Fields
     config.add_show_field 'page__title__txt', label: 'Page'
-    config.add_show_field 'page__member_of__uri', label: 'Member Of'
+    config.add_show_field 'page__member_of__uri', label: 'Member Of', backlink_text_accessor: 'display_titles', component: ArchelonBacklinkComponent
     config.add_show_field 'page__has_file__uris', label: 'Files', component: ListMetadataComponent
     config.add_show_field 'page__rdf_type__curies', label: 'RDF Types', component: ListMetadataComponent
 
     # File Level Fields
     config.add_show_field 'file__title__txt', label: 'Title'
-    config.add_show_field 'file__file_of__uri', label: 'File Of'
+    config.add_show_field 'file__file_of__uri', label: 'File Of', backlink_text_field: 'page__title__txt', component: ArchelonBacklinkComponent
     config.add_show_field 'file__size__int', label: 'Size'
     config.add_show_field 'file__mime_type__txt', label: 'Mime Type'
     config.add_show_field 'file__checksum__uri', label: 'Digest'
