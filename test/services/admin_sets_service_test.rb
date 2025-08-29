@@ -2,7 +2,7 @@
 
 require 'test_helper'
 
-class RepositoryCollectionsTest < ActiveSupport::TestCase
+class AdminSetsServiceTest < ActiveSupport::TestCase
   def setup
   end
 
@@ -10,7 +10,7 @@ class RepositoryCollectionsTest < ActiveSupport::TestCase
     Blacklight::Solr::Repository.any_instance.stub(:search).and_raise(Blacklight::Exceptions::ECONNREFUSED)
 
     assert_raise(Blacklight::Exceptions::ECONNREFUSED) do
-      RepositoryCollections.list
+      AdminSetsService.list
     end
   end
 
@@ -18,32 +18,32 @@ class RepositoryCollectionsTest < ActiveSupport::TestCase
     Blacklight::Solr::Repository.any_instance.stub(:search).and_raise(Blacklight::Exceptions::InvalidRequest)
 
     assert_raise(Blacklight::Exceptions::InvalidRequest) do
-      RepositoryCollections.list
+      AdminSetsService.list
     end
   end
 
   test 'valid Solr response - no collections' do
-    stub_repository_collections_solr_response('services/repository_collections/solr_response_no_collections.json')
+    stub_admin_sets_service_solr_response('services/admin_sets_service/solr_response_no_collections.json')
 
-    collections = RepositoryCollections.list
+    collections = AdminSetsService.list
 
     assert_equal 0, collections.size
   end
 
   test 'valid Solr response - one collection' do
-    stub_repository_collections_solr_response('services/repository_collections/solr_response_one_collection.json')
+    stub_admin_sets_service_solr_response('services/admin_sets_service/solr_response_one_collection.json')
 
-    collections = RepositoryCollections.list
+    collections = AdminSetsService.list
 
     assert_equal 1, collections.size
-    assert_equal 'Student Newspapers', collections[0][:display_title]
-    assert_equal 'https://fcrepolocal/fcrepo/rest/pcdm/93/82/84/73/93828473-c387-481b-82e4-e7c00992c983', collections[0][:uri]
+    assert_equal 'UMD Student Newspapers', collections[0][:display_title]
+    assert_equal 'https://fcrepo-test.lib.umd.edu/fcrepo/rest/pcdm/9d/05/57/c2/9d0557c2-825f-4e33-8a52-a6d70145878e', collections[0][:uri]
   end
 
   test 'valid Solr response - multiple collections' do
-    stub_repository_collections_solr_response('services/repository_collections/solr_response_multiple_collections.json')
+    stub_admin_sets_service_solr_response('services/admin_sets_service/solr_response_multiple_collections.json')
 
-    collections = RepositoryCollections.list
+    collections = AdminSetsService.list
 
     assert_equal 4, collections.size
 

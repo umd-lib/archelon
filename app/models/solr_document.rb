@@ -85,24 +85,34 @@ class SolrDocument
 
   # Concatenates titles for display, stripping out any language tags
   def display_titles
-    return '' unless has? 'object__title__display'
-
-    titles = fetch(:object__title__display, []).map do |title|
-      title.starts_with?('[@') ? title.split(']')[1] : title
-    end
-    titles.join(' | ')
+    strip_language_tags(:object__title__display).join(' | ')
   end
 
   private
 
-    def format_with_language_tag(value)
-      if value.starts_with? '[@'
-        language_tag = value.split(']')[0][2...]
-        value = value.split(']')[1]
-        safe_join([value, tag.span(language_tag, class: %w[badge text-bg-secondary])], "\xa0")
+    def extract_language_tags(field_name)
+      return [] unless has? field_name
+
+      fetch(field_name, []).map { |value| parse_language_tagged_value(value) }
+    end
+
+    def parse_language_tagged_value(value)
+      if value =~ /^\[@(.*?)\](.*)/
+        { value: ::Regexp.last_match(2), lang: ::Regexp.last_match(1) }
       else
-        value
+        { value: value, lang: nil }
       end
+    end
+
+    def strip_language_tags(field_name)
+      extract_language_tags(field_name).pluck(:value)
+    end
+
+    def format_with_language_tag(value)
+      parsed_value = parse_language_tagged_value(value)
+      return parsed_value[:value] if parsed_value[:lang].nil?
+
+      safe_join([parsed_value[:value], tag.span(parsed_value[:lang], class: %w[badge text-bg-secondary])], "\xa0")
     end
 
     def add_anchor_tag(uri, label)

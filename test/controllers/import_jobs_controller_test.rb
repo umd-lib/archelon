@@ -8,7 +8,7 @@ class ImportJobsControllerTest < ActionController::TestCase
     mock_cas_login(@cas_user.cas_directory_id)
 
     # Stub Blacklight::Solr::Repository so that repository collections can be retrieved
-    stub_repository_collections_solr_response('services/repository_collections/solr_response_one_collection.json')
+    stub_admin_sets_service_solr_response('services/admin_sets_service/solr_response_one_collection.json')
 
     stub_request(:get, 'http://vocab.lib.umd.edu/access').to_return(status: 200, body: '', headers: {})
   end
