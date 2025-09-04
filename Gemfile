@@ -66,7 +66,6 @@ gem 'faker', '~> 3.4.1'
 gem 'net-http', '~> 0.4.1'
 # End UMD Blacklight 8 Fix
 
-gem 'turbo-rails'
 gem 'json-ld', '~> 3.3.1'
 
 gem 'http', '~> 5.2.0'
