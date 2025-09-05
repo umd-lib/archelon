@@ -59,11 +59,11 @@ Rails.application.routes.draw do
   resources :export_jobs do
     collection do
       get 'review'
-      get ':id/file', to: 'export_jobs#download', as: 'download'
-      get ':id/binaries', to: 'export_jobs#download_binaries', as: 'download_binaries'
     end
     member do
-      post 'status_update', to: 'export_jobs#status_update', as: 'status_update'
+      get 'file', to: 'export_jobs#download', as: 'download'
+      get 'binaries', to: 'export_jobs#download_binaries', as: 'download_binaries'
+      post 'status', to: 'export_jobs#status_update', as: 'update_status_of'
     end
   end
 

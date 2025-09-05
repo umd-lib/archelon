@@ -81,13 +81,15 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
     not_found
   end
 
-  # POST /export_jobs/1/status_update
+  # POST /export_jobs/1/status
   def status_update
-    # Triggers export job notification to channel;
-    # it is important to use perform_now so that
-    # ActionCable receives timely updates
-    ExportJobStatusUpdatedJob.perform_now(@job)
-    render status: :no_content
+    Rails.logger.debug { "Received export job status update message with body #{request.body.read}" }
+    message = JSON.parse(request.raw_post)
+    @job.state = message['state'].to_sym
+    @job.progress = message['progress']
+    @job.save!
+
+    head :no_content
   end
 
   private
@@ -148,6 +150,9 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
         job_id: export_job_url(@job)
       )
       destination = STOMP_CONFIG['destinations'][:jobs]
+      # use a delayed job so that we can return immediately,
+      # and the job can get sent to the STOMP service in the
+      # background
       SendStompMessageJob.perform_later destination, request
     end
 end

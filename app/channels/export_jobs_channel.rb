@@ -2,6 +2,18 @@
 
 # Channel for Export Jobs
 class ExportJobsChannel < ApplicationCable::Channel
+  def self.update_status_widget(export_job)
+    Rails.logger.debug { "Updating status display for ExportJob #{export_job.id}" }
+    broadcast_to(
+      export_job,
+      job: export_job,
+      statusWidget: ActionController::Renderer.for(ExportJobsController).render(
+        partial: 'export_job_status',
+        locals: { export_job: export_job }
+      )
+    )
+  end
+
   def subscribed
     export_job = ExportJob.find(params[:id])
     Rails.logger.debug { "Received subscription for ExportJob #{export_job.id} from user #{username}" }
@@ -21,8 +33,7 @@ class ExportJobsChannel < ApplicationCable::Channel
     export_job = ExportJob.find(job_id)
     return if export_job.nil?
 
-    Rails.logger.debug { "Performing ExportJobStatusUpdatedJob ExportJob #{job_id}" }
-    ExportJobStatusUpdatedJob.perform_now(export_job)
+    self.class.update_status_widget(export_job)
   end
 
   private
