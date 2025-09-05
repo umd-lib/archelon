@@ -90,7 +90,7 @@ Rails.application.routes.draw do
   resources :publish_jobs, except: [:new] do
     member do
       post 'submit' => 'publish_jobs#submit'
-      post 'status_update' => 'publish_jobs#status_update'
+      post 'status' => 'publish_jobs#status_update', as: 'update_status_of'
     end
   end
   get '/new_publish_job' => 'publish_jobs#new_publish_job'

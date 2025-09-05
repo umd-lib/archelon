@@ -38,6 +38,8 @@ class PublishJob < ApplicationRecord
     unpublish_error: 9
   }
 
+  after_commit :send_status_notification
+
   IDLE_THRESHOLD = 30.seconds
 
   # after_update_commit { PublishJobStatusUpdatedJob.perform_now(self) }
@@ -87,6 +89,10 @@ class PublishJob < ApplicationRecord
 
   def active?
     publish_pending? || publish_in_progress?
+  end
+
+  def send_status_notification
+    PublishJobsChannel.update_status_widget(self)
   end
 
   private
