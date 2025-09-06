@@ -10,7 +10,7 @@
   <% end %>
 
   <% if import_job.validate_success? %>
-    <%= form_with model: import_job, method: :post, local: false, url: perform_import_import_jobs_path(import_job) do |form| %>
+    <%= form_with model: import_job, method: :post, local: false, url: perform_import_job_path(import_job) do |form| %>
       <%= form.submit 'Import', class: 'btn btn-sm btn-success' %>
     <% end %>
 

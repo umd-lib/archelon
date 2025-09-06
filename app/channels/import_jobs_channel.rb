@@ -2,9 +2,20 @@
 
 # Channel for Import Jobs
 class ImportJobsChannel < ApplicationCable::Channel
+  def self.update_status_widget(import_job)
+    Rails.logger.debug { "Updating status display for ImportJob #{import_job.id}" }
+    broadcast_to(
+      import_job,
+      job: import_job,
+      statusWidget: ActionController::Renderer.for(ImportJobsController).render(
+        partial: 'import_job_status',
+        locals: { import_job: import_job }
+      )
+    )
+  end
+
   def subscribed
     import_job = ImportJob.find(params[:id])
-    username = current_user.cas_directory_id
     Rails.logger.debug { "Received subscription for ImportJob #{import_job.id} from user #{username}" }
     stream_for import_job if authorized_to_stream? import_job
   end
@@ -22,8 +33,7 @@ class ImportJobsChannel < ApplicationCable::Channel
     import_job = ImportJob.find(job_id)
     return if import_job.nil?
 
-    Rails.logger.debug { "Performing ImportJobStatusUpdatedJob ImportJob #{job_id}" }
-    ImportJobStatusUpdatedJob.perform_now(import_job)
+    self.class.update_status_widget(import_job)
   end
 
   private

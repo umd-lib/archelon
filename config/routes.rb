@@ -69,11 +69,9 @@ Rails.application.routes.draw do
 
   # Import Jobs
   resources :import_jobs do
-    collection do
-      post ':id/import', to: 'import_jobs#import', as: 'perform_import'
-    end
     member do
-      post 'status_update', to: 'import_jobs#status_update', as: 'status_update'
+      post 'import', to: 'import_jobs#import', as: 'perform'
+      post 'status', to: 'import_jobs#status_update', as: 'update_status_of'
     end
   end
 

@@ -50,7 +50,7 @@
   <% end %>
 
   <% if !@import_job_info.failed.empty? %>
-    <%= button_to "Retry #{@import_job_info.failed.count} Item(s)", perform_import_import_jobs_path(@import_job), class: 'btn btn-primary' %>
+    <%= button_to "Retry #{@import_job_info.failed.count} Item(s)", perform_import_job_path(@import_job), class: 'btn btn-primary' %>
   <% end%>
 </div>
 

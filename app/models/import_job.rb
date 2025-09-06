@@ -46,7 +46,7 @@ class ImportJob < ApplicationRecord
     validate_in_progress: 10
   }
 
-  after_commit { ImportJobStatusUpdatedJob.perform_now(self) }
+  after_commit :send_status_notification
 
   validates :name, presence: true
   validates :collection, presence: true
@@ -157,6 +157,10 @@ class ImportJob < ApplicationRecord
     return :flat if relpath.starts_with?(FLAT_LAYOUT_RELPATH)
 
     :hierarchical
+  end
+
+  def send_status_notification
+    ImportJobsChannel.update_status_widget(self)
   end
 
   private

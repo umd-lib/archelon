@@ -99,18 +99,22 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
   def status_text(import_job)
     return '' if import_job.state.blank?
 
-    return I18n.t("activerecord.attributes.import_job.status.#{import_job.state}") unless import_job.import_in_progress?
+    unless import_job.import_in_progress? || import_job.validate_in_progress?
+      return I18n.t("activerecord.attributes.import_job.status.#{import_job.state}")
+    end
 
-    I18n.t('activerecord.attributes.import_job.status.import_in_progress') + import_job.progress_text
+    I18n.t("activerecord.attributes.import_job.status.#{import_job.state}") + import_job.progress_text
   end
 
   # POST /import_jobs/1/status_update
   def status_update
-    # Triggers import job notification to channel;
-    # it is important to use perform_now so that
-    # ActionCable receives timely updates
-    ImportJobStatusUpdatedJob.perform_now(@import_job)
-    render status: :no_content
+    Rails.logger.debug { "Received import job status update message with body #{request.body.read}" }
+    message = JSON.parse(request.raw_post)
+    @import_job.state = message['state'].to_sym
+    @import_job.progress = message['progress']
+    @import_job.save!
+
+    head :no_content
   end
 
   # UMD Blacklight 8 Fix
