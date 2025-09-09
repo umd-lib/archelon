@@ -93,4 +93,7 @@ Rails.application.configure do
   # ]
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+
+  # disable this check since getting a reliable list of origins has proved difficult
+  config.action_cable.disable_request_forgery_protection = true
 end
