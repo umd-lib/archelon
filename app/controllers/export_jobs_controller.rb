@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ExportJobsController < ApplicationController # rubocop:disable Metrics/ClassLength
+  include StompJobRequest
+
   before_action -> { authorize! :manage, ExportJob }, except: %i[download status_update]
   before_action -> { authorize! :download, ExportJob }, only: %i[download]
   before_action :set_export_job, only: %i[download status_update]
@@ -149,10 +151,6 @@ class ExportJobsController < ApplicationController # rubocop:disable Metrics/Cla
         export_job: @job,
         job_id: export_job_url(@job)
       )
-      destination = STOMP_CONFIG['destinations'][:jobs]
-      # use a delayed job so that we can return immediately,
-      # and the job can get sent to the STOMP service in the
-      # background
-      SendStompMessageJob.perform_later destination, request
+      submit_job_request(@job, request)
     end
 end

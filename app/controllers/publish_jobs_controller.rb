@@ -3,6 +3,7 @@
 class PublishJobsController < ApplicationController # rubocop:disable Metrics/ClassLength
   include Blacklight::Bookmarks
   include Blacklight::Searchable
+  include StompJobRequest
 
   before_action :set_publish_job, only: %i[submit start_publish status_update]
 
@@ -113,8 +114,8 @@ class PublishJobsController < ApplicationController # rubocop:disable Metrics/Cl
   # Making this method public, because otherwise Rails 7.1 displays and
   # "Unknown action" error when using the controller.
   def start_publish
-    SendStompMessageJob.perform_later jobs_destination, job_request(@job)
     @job.publish_pending!
+    submit_job_request(@job, job_request(@job))
   end
   # End UMD Blacklight 8 Fix
 
@@ -146,7 +147,7 @@ class PublishJobsController < ApplicationController # rubocop:disable Metrics/Cl
     end
 
     def resume_publish
-      SendStompMessageJob.perform_later jobs_destination, job_request(@job, resume: true)
       @job.publish_pending!
+      submit_job_request(@job, job_request(@job))
     end
 end

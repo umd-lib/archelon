@@ -1,21 +1,16 @@
 # frozen_string_literal: true
 
-# Submit a message to the external message queue via STOMP
-class SendStompMessageJob < ApplicationJob
-  attr_reader :request
+# Mix-in for controllers that need to send STOMP job requests
+module StompJobRequest
+  extend ActiveSupport::Concern
 
-  queue_as :default
-  # UMD Blacklight 8 Fix
-  retry_on(MessagingError, wait: :polynomially_longer, attempts: STOMP_CONFIG[:max_retry_attempts]) do |job, _error|
-    # all retry attempts have failed; message publication failed
-    job.request.error!
-  end
-  # End UMD Blacklight 8 Fix
-
-  def perform(destination, request)
-    @request ||= request
-    publish_message(destination, request.headers, request.body)
-    request.submitted!
+  included do
+    def submit_job_request(job, request)
+      publish_message(STOMP_CONFIG['destinations'][:jobs], request.headers, request.body)
+      request.submitted!
+    rescue MessagingError
+      job.export_error!
+    end
   end
 
   private
@@ -35,8 +30,8 @@ class SendStompMessageJob < ApplicationJob
       # catch all runtime exceptions and indicate failure to publish the message
       Rails.logger.error("Error while communicating with STOMP server: #{e}")
       raise MessagingError
-    else
-      # no errors when connecting or publishing; disconnect
+    ensure
+      # always disconnect
       connection.disconnect
     end
 end

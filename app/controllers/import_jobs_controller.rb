@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ImportJobsController < ApplicationController # rubocop:disable Metrics/ClassLength
+  include StompJobRequest
+
   before_action :set_import_job, only: %i[update show edit start_validation start_import resume_import
                                           import status_update]
   before_action :cancel_workflow?, only: %i[create update]
@@ -123,21 +125,21 @@ class ImportJobsController < ApplicationController # rubocop:disable Metrics/Cla
   end
 
   def start_validation(resume: false)
-    SendStompMessageJob.perform_later jobs_destination, job_request(@import_job, validate_only: true, resume: resume)
     @import_job.validate_pending!
+    submit_job_request(@import_job, job_request(@import_job, validate_only: true, resume: resume))
   end
 
   def start_import
     # must set resume to 'true' since there will already be a job directory that was created
     # by the validation phase, and Plastron complains if you try to start a job when there is
     # an existing directory for it
-    SendStompMessageJob.perform_later jobs_destination, job_request(@import_job, resume: true)
     @import_job.import_pending!
+    submit_job_request(@import_job, job_request(@import_job, resume: true))
   end
 
   def resume_import
-    SendStompMessageJob.perform_later jobs_destination, job_request(@import_job, resume: true)
     @import_job.import_pending!
+    submit_job_request(@import_job, job_request(@import_job, resume: true))
   end
 
   # End UMD Blacklight 8 Fix
