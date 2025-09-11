@@ -65,6 +65,17 @@ Replace the custom `stomp:listen` Rake task implementation with an Apache Camel
 route that transmits messages from the Job Status Queue directly to the
 Archelon webapp via HTTP.
 
+In the case where the Camel route is unable to successfully send the HTTP
+request to Archelon, the standard exception handling we have put in place
+for the Camel routing means that the undelivered status message gets sent
+to a dedicated error queue. It would be possible (though out of scope for
+this initial implementation) to set up a system that would attempt automatic
+redelivery of the status messages to the Job Status Queue.
+
+Testing has confirmed that redelivering the status messages to the Job
+Status Queue will (assuming Archelon is able to receive them) trigger the
+correct status updates in Archelon.
+
 ### Remove Delayed Jobs for Sending UI Updates
 
 Change the trigger for sending UI update notifications through ActionCable from
