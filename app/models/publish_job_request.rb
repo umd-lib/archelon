@@ -22,7 +22,8 @@ class PublishJobRequest < ApplicationRecord
   end
 
   def status_callback_url
-    STATUS_CALLBACK_BASE_URL + Rails.application.routes.url_helpers.update_status_of_publish_job_path(id: publish_job.id)
+    STATUS_CALLBACK_BASE_URL \
+      + Rails.application.routes.url_helpers.update_status_of_publish_job_path(id: publish_job.id)
   end
 
   def submitted!
