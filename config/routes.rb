@@ -59,21 +59,19 @@ Rails.application.routes.draw do
   resources :export_jobs do
     collection do
       get 'review'
-      get ':id/file', to: 'export_jobs#download', as: 'download'
-      get ':id/binaries', to: 'export_jobs#download_binaries', as: 'download_binaries'
     end
     member do
-      post 'status_update', to: 'export_jobs#status_update', as: 'status_update'
+      get 'file', to: 'export_jobs#download', as: 'download'
+      get 'binaries', to: 'export_jobs#download_binaries', as: 'download_binaries'
+      post 'status', to: 'export_jobs#status_update', as: 'update_status_of'
     end
   end
 
   # Import Jobs
   resources :import_jobs do
-    collection do
-      post ':id/import', to: 'import_jobs#import', as: 'perform_import'
-    end
     member do
-      post 'status_update', to: 'import_jobs#status_update', as: 'status_update'
+      post 'import', to: 'import_jobs#import', as: 'perform'
+      post 'status', to: 'import_jobs#status_update', as: 'update_status_of'
     end
   end
 
@@ -90,7 +88,7 @@ Rails.application.routes.draw do
   resources :publish_jobs, except: [:new] do
     member do
       post 'submit' => 'publish_jobs#submit'
-      post 'status_update' => 'publish_jobs#status_update'
+      post 'status' => 'publish_jobs#status_update', as: 'update_status_of'
     end
   end
   get '/new_publish_job' => 'publish_jobs#new_publish_job'

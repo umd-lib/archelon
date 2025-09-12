@@ -16,7 +16,7 @@
 
   <div class="export-job-download">
     <% if export_job.downloadable? %>
-      <%= link_to download_export_jobs_path(export_job), class: 'btn btn-sm btn-success' do %>
+      <%= link_to download_export_job_path(export_job), class: 'btn btn-sm btn-success' do %>
         <i class="glyphicon glyphicon-download-alt"></i>
         &nbsp;Download
         &nbsp;<span class="badge"><%= number_to_human_size File.size(export_job.path) %></span>

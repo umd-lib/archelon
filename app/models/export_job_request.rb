@@ -8,6 +8,7 @@ class ExportJobRequest < ApplicationRecord
     {
       PlastronCommand: 'export',
       PlastronJobId: job_id,
+      PlastronStatusURL: status_callback_url,
       'PlastronArg-output-dest': File.join(EXPORT_CONFIG[:base_destination], export_job.filename),
       'PlastronArg-on-behalf-of': export_job.cas_user.cas_directory_id,
       'PlastronArg-format': export_job.format,
@@ -21,6 +22,10 @@ class ExportJobRequest < ApplicationRecord
 
   def body
     export_job.uris
+  end
+
+  def status_callback_url
+    STATUS_CALLBACK_BASE_URL + Rails.application.routes.url_helpers.update_status_of_export_job_path(id: export_job.id)
   end
 
   def submitted!

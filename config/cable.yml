@@ -5,4 +5,5 @@ test:
   adapter: test
 
 production:
-  adapter: async
+  adapter: redis
+  url: <%= ENV['ARCHELON_REDIS_URL'] %>

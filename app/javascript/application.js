@@ -27,7 +27,6 @@ const ReactRailsUJS = require("react_ujs")
 ReactRailsUJS.getConstructor = (name) => {
   return componentsContext[name]
 }
-import "@hotwired/turbo-rails"
 
 import "./clipboard"
 const ClipboardJS = require("./clipboard")

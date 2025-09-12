@@ -21,7 +21,7 @@ gem "jsbundling-rails"
 gem "cssbundling-rails"
 
 # Use Redis adapter to run Action Cable in production
-# gem "redis", ">= 4.0.1"
+gem "redis", ">= 4.0.1"
 
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
@@ -66,7 +66,6 @@ gem 'faker', '~> 3.4.1'
 gem 'net-http', '~> 0.4.1'
 # End UMD Blacklight 8 Fix
 
-gem 'turbo-rails'
 gem 'json-ld', '~> 3.3.1'
 
 gem 'http', '~> 5.2.0'
