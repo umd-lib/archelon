@@ -1,0 +1,9 @@
+  <%# Overriding the stock template to remove the turbo attributes, which were causing
+  the confirmation dialog box to appear twice. This is likely due to our continued use
+  of UJS. %>
+  <%= link_to t('blacklight.bookmarks.clear.action_title'), clear_bookmarks_path,
+      method: :delete, # for rails-UJS
+      data: {
+        confirm: t('blacklight.bookmarks.clear.action_confirm'), # for rails-UJS
+      },
+      class: 'clear-bookmarks btn btn-danger' %>
