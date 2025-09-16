@@ -3,6 +3,7 @@
 class PublishJobsController < ApplicationController # rubocop:disable Metrics/ClassLength
   include Blacklight::Bookmarks
   include Blacklight::Searchable
+  include StompJobRequest
 
   before_action :set_publish_job, only: %i[submit start_publish status_update]
 
@@ -100,26 +101,28 @@ class PublishJobsController < ApplicationController # rubocop:disable Metrics/Cl
 
   # POST /publish_job/1/status_update
   def status_update
-    # Triggers import job notification to channel;
-    # it is important to use perform_now so that
-    # ActionCable receives timely updates
-    PublishJobStatusUpdatedJob.perform_now(@publish_job)
-    render status: :no_content
+    Rails.logger.debug { "Received publish job status update message with body #{request.body.read}" }
+    message = JSON.parse(request.raw_post)
+    @job.state = message['state'].to_sym
+    @job.progress = message['progress']
+    @job.save!
+
+    head :no_content
   end
 
   # UMD Blacklight 8 Fix
   # Making this method public, because otherwise Rails 7.1 displays and
   # "Unknown action" error when using the controller.
   def start_publish
-    SendStompMessageJob.perform_later jobs_destination, job_request(@publish_job)
-    @publish_job.publish_pending!
+    @job.publish_pending!
+    submit_job_request(@job, job_request(@job))
   end
   # End UMD Blacklight 8 Fix
 
   private
 
     def set_publish_job
-      @publish_job = PublishJob.find(params[:id])
+      @job = PublishJob.find(params[:id])
     end
 
     def create_job(ids, publish, state, force_hidden)
@@ -144,7 +147,7 @@ class PublishJobsController < ApplicationController # rubocop:disable Metrics/Cl
     end
 
     def resume_publish
-      SendStompMessageJob.perform_later jobs_destination, job_request(@publish_job, resume: true)
-      @publish_job.publish_pending!
+      @job.publish_pending!
+      submit_job_request(@job, job_request(@job))
     end
 end

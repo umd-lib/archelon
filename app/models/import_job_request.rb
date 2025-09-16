@@ -8,6 +8,7 @@ class ImportJobRequest < ApplicationRecord
     {
       PlastronCommand: 'import',
       PlastronJobId: job_id,
+      PlastronStatusURL: status_callback_url,
       'PlastronArg-model': import_job.model,
       'PlastronArg-name': import_job.name,
       'PlastronArg-on-behalf-of': import_job.cas_user.cas_directory_id,
@@ -25,6 +26,10 @@ class ImportJobRequest < ApplicationRecord
 
   def body
     import_job.metadata_file.download
+  end
+
+  def status_callback_url
+    STATUS_CALLBACK_BASE_URL + Rails.application.routes.url_helpers.update_status_of_import_job_path(id: import_job.id)
   end
 
   def submitted!

@@ -12,7 +12,7 @@ class ExportJob < ApplicationRecord
     export_error: 5
   }
 
-  after_commit { ExportJobStatusUpdatedJob.perform_now(self) }
+  after_commit :send_status_notification
 
   # If it has been more than IDLE_THRESHOLD since the last update time on this job,
   # and the job is in an active state, then consider it stalled.
@@ -120,6 +120,10 @@ class ExportJob < ApplicationRecord
   # Returns the maximum allowed binaries file size, in bytes
   def max_allowed_binaries_download_size
     MAX_ALLOWED_BINARIES_DOWNLOAD_SIZE
+  end
+
+  def send_status_notification
+    ExportJobsChannel.update_status_widget(self)
   end
 
   private

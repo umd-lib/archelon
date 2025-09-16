@@ -76,6 +76,7 @@ Rails.application.configure do
   config.hosts = [
     "archelon-local",
     "localhost",
+    "host.docker.internal",
   ]
 
   config.active_job.queue_adapter = :delayed_job
