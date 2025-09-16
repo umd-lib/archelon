@@ -94,6 +94,13 @@ class SolrDocument
     strip_language_tags(:object__title__display).join(' | ')
   end
 
+  # Get the extracted text snippets from the highlighting results and strips out
+  # the page and bounding box tags
+  def extracted_text
+    text_values = response.dig('highlighting', id, 'extracted_text__dps_txt') || []
+    text_values.map { |value| value.gsub(/\|n=\d+&xywh=\d+,\d+,\d+,\d+/, '') }
+  end
+
   private
 
     def extract_language_tags(field_name)
