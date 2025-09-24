@@ -64,7 +64,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # config.index.title_field = 'object__title__txt'
     # End UMD Customization
     # config.index.display_type_field = 'format'
-    # config.index.thumbnail_field = 'thumbnail_path_ss'
+    config.index.thumbnail_field = 'iiif_thumbnail_sequence__uris'
 
     # The presenter is the view-model class for the page
     # config.index.document_presenter_class = MyApp::IndexPresenter
@@ -173,12 +173,13 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # config.add_index_field 'published_ssim', label: 'Published'
     # config.add_index_field 'published_vern_ssim', label: 'Published'
     # config.add_index_field 'lc_callnum_ssim', label: 'Call number'
+    config.add_index_field 'object__created__edtf', label: 'Date'
+    config.add_index_field 'object__description__txt', label: 'Description'
     config.add_index_field 'resource_type__facet', label: 'Resource Type'
+    config.add_index_field 'page_count__int', label: 'Number of Pages'
+    config.add_index_field 'object__archival_collection__label__txt', label: 'Archival Collection'
     config.add_index_field 'creator__facet', label: 'Author'
     # config.add_index_field 'extracted_text', label: 'OCR', highlight: true, helper_method: :format_extracted_text, solr_params: { 'hl.fragsize' => 500 }
-    config.add_index_field 'object__created_by__txt', label: 'Created By'
-    config.add_index_field 'object__created__dt', label: 'Created'
-    config.add_index_field 'object__last_modified__dt', label: 'Last Modified'
 
     # Have BL send the most basic highlighting parameters for you
     config.add_field_configuration_to_solr_request!
