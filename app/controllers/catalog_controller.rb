@@ -321,8 +321,8 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # config.add_sort_field 'year-desc', sort: 'pub_date_si desc, title_si asc', label: 'year'
     # config.add_sort_field 'author', sort: 'author_si asc, title_si asc', label: 'author'
     # config.add_sort_field 'title_si asc, pub_date_si desc', label: 'title'
-    config.add_sort_field 'object__title__txt asc', label: 'Title (Ascending)'
-    config.add_sort_field 'object__title__txt desc', label: 'Title (Descending)'
+    config.add_sort_field 'object__title__display asc', label: 'Title (Ascending)'
+    config.add_sort_field 'object__title__display desc', label: 'Title (Descending)'
 
     config.add_sort_field 'object__date__edtf asc', label: 'Date (Ascending)'
     config.add_sort_field 'object__date__edtf desc', label: 'Date (Descending)'
