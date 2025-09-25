@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Represents a single document returned from Solr
-class SolrDocument
+class SolrDocument # rubocop:disable Metrics/ClassLength
   include Blacklight::Solr::Document
   include ActionView::Helpers::TagHelper
   include Rails.application.routes.url_helpers
