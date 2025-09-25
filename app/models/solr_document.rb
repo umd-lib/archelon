@@ -39,8 +39,14 @@ class SolrDocument
     Array(fetch('object__title__display')).map { |title| format_with_language_tag(title) }
   end
 
-  def archival_collection_anchor
-    vocab_term_with_same_as :object__archival_collection
+  def archival_collection_links
+    handle_link = vocab_term_with_same_as(:object__archival_collection,
+                                          anchor_label: 'View Collection in Archival Collection Database')
+
+    archelon_search_link = ActionController::Base.helpers.link_to('View Collection in Archelon',
+                                                                  search_catalog_path('f[archival_collection__facet][]' => fetch('object__archival_collection__label__txt'))) # rubocop:disable Layout/LineLength
+
+    [handle_link, archelon_search_link]
   end
 
   def format_anchor
@@ -119,16 +125,17 @@ class SolrDocument
       tag.a(label, href: uri)
     end
 
-    def vocab_term_with_uri(base_field, label_suffix: '__label__txt')
+    def vocab_term_with_uri(base_field, label_suffix: '__label__txt', anchor_label: nil)
       return unless has? "#{base_field}__uri"
 
       uri = fetch("#{base_field}__uri")
       label = fetch("#{base_field}#{label_suffix}", uri)
 
-      safe_join([label, tag.a(uri, href: uri)], ' → ')
+      safe_join([label, tag.a(anchor_label || uri, href: uri)], ' → ')
     end
 
-    def vocab_term_with_same_as(base_field, label_suffix: '__label__txt', same_as_suffix: '__same_as__uris')
+    def vocab_term_with_same_as(base_field, label_suffix: '__label__txt', same_as_suffix: '__same_as__uris',
+                                anchor_label: nil)
       return unless has? "#{base_field}__uri"
 
       uri = fetch("#{base_field}__uri")
@@ -136,6 +143,6 @@ class SolrDocument
       same_as_uri = fetch("#{base_field}#{same_as_suffix}", []).first
       return label if same_as_uri.nil?
 
-      safe_join([label, tag.a(same_as_uri, href: same_as_uri)], ' → ')
+      safe_join([label, tag.a(anchor_label || same_as_uri, href: same_as_uri)], ' → ')
     end
 end
