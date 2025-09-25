@@ -134,7 +134,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     config.add_facet_field 'presentation_set__facet', label: 'Presentation Set', limit: 10, collapse: false,
                                                       sort: 'index'
     config.add_facet_field 'admin_set__facet', label: 'Administrative Set', limit: 10, sort: 'index'
-    config.add_facet_field 'creator__facet', label: 'Author', limit: 10
+    config.add_facet_field 'creator__facet', label: 'Creator', limit: 10
     config.add_facet_field 'resource_type__facet', label: 'Resource Type', limit: 10
     config.add_facet_field 'rdf_type__facet', label: 'RDF Type', limit: 10
     config.add_facet_field 'visibility__facet', label: 'Visibility'
