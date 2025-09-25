@@ -41,7 +41,7 @@ class SolrDocument
 
   def archival_collection_links
     handle_link = vocab_term_with_same_as(:object__archival_collection,
-                                          anchor_label: 'View Collection in Archival Database')
+                                          anchor_label: 'View Collection in Archival Collection Database')
 
     archelon_search_link = ActionController::Base.helpers.link_to('View Collection in Archelon',
                                                                   search_catalog_path('f[archival_collection__facet][]' => fetch('object__archival_collection__label__txt'))) # rubocop:disable Layout/LineLength
