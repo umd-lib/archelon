@@ -174,7 +174,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # config.add_index_field 'published_ssim', label: 'Published'
     # config.add_index_field 'published_vern_ssim', label: 'Published'
     # config.add_index_field 'lc_callnum_ssim', label: 'Call number'
-    config.add_index_field 'object__created__edtf', label: 'Date'
+    config.add_index_field 'object__date__edtf', label: 'Date'
     config.add_index_field 'object__description__txt', label: 'Description'
     config.add_index_field 'resource_type__facet', label: 'Resource Type'
     config.add_index_field 'page_count__int', label: 'Number of Pages'
