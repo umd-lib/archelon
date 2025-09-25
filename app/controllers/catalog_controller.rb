@@ -134,6 +134,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     config.add_facet_field 'presentation_set__facet', label: 'Presentation Set', limit: 10, collapse: false,
                                                       sort: 'index'
     config.add_facet_field 'admin_set__facet', label: 'Administrative Set', limit: 10, sort: 'index'
+    config.add_facet_field 'archival_collection__facet', label: 'Archival Collection', limit: 10
     config.add_facet_field 'creator__facet', label: 'Creator', limit: 10
     config.add_facet_field 'resource_type__facet', label: 'Resource Type', limit: 10
     config.add_facet_field 'rdf_type__facet', label: 'RDF Type', limit: 10
@@ -212,7 +213,8 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     config.add_show_field 'object__title__display', label: 'Title', accessor: :title_language_badge, component: ListMetadataComponent
     config.add_show_field 'object__format__uri', label: 'Format', accessor: :format_anchor
     # pair with object__archival_collection__label__txt
-    config.add_show_field 'object__archival_collection__uri', label: 'Archival Collection', accessor: :archival_collection_anchor
+    # pair with object__archival_collection__same_as__uris
+    config.add_show_field 'object__archival_collection__uri', label: 'Archival Collection', accessor: :archival_collection_links, component: ListMetadataComponent
     config.add_show_field 'object__date__edtf', label: 'Date'
     config.add_show_field 'object__description__txt', label: 'Description'
     config.add_show_field 'object__bibliographic_citation__txt', label: 'Bibliographic Citation'
