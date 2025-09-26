@@ -40,7 +40,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # config.raw_endpoint.enabled = false
 
     ## Default parameters to send to solr for all search-like requests. See also SearchBuilder#processed_parameters
-    # config.default_solr_params = {}
+    config.default_solr_params = { fq: 'is_top_level:true' }
 
     # config.fetch_many_document_params = {}
 
@@ -174,13 +174,13 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # config.add_index_field 'published_ssim', label: 'Published'
     # config.add_index_field 'published_vern_ssim', label: 'Published'
     # config.add_index_field 'lc_callnum_ssim', label: 'Call number'
+    config.add_index_field 'extracted_text__dps_txt', label: 'Text Content', accessor: :extracted_text, component: ExtractedTextMetadataComponent
     config.add_index_field 'object__date__edtf', label: 'Date'
     config.add_index_field 'object__description__txt', label: 'Description'
     config.add_index_field 'resource_type__facet', label: 'Resource Type'
     config.add_index_field 'page_count__int', label: 'Number of Pages'
     config.add_index_field 'object__archival_collection__label__txt', label: 'Archival Collection'
     config.add_index_field 'creator__facet', label: 'Creator'
-    # config.add_index_field 'extracted_text', label: 'OCR', highlight: true, helper_method: :format_extracted_text, solr_params: { 'hl.fragsize' => 500 }
 
     # Have BL send the most basic highlighting parameters for you
     config.add_field_configuration_to_solr_request!
@@ -271,11 +271,21 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # or can be specified manually to be different.
 
     config.add_search_field('text') do |field|
-      field.label = 'Text/Keywords'
-      field.solr_parameters = { df: 'text', defType: 'edismax', 'q.alt': '*:*' }
+      field.label = 'Text & Metadata'
+      field.solr_parameters = {
+        qf: 'extracted_text__dps_txt text',
+        defType: 'edismax',
+        hl: true,
+        'hl.fl': 'extracted_text__dps_txt',
+        'hl.snippets': 5,
+        'hl.fragsize': 50,
+        'hl.maxAnalyzedChars': 1_000_000,
+        'hl.tag.pre': '<b class="hl">',
+        'hl.tag.post': '</b>'
+      }
     end
     config.add_search_field('identifier') do |field|
-      field.label = 'Identifier'
+      field.label = 'Identifier Lookup'
       field.solr_parameters = { df: 'identifier', defType: 'edismax', 'q:alt': '*:*' }
     end
 
@@ -356,7 +366,6 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     super
 
     @id = params[:id]
-    @resource = ResourceService.resource_with_model(@id)
     @displayable = mirador_displayable?(@document)
 
     @published = @document[:is_published]
@@ -380,7 +389,9 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     end
 
     def make_current_query_accessible
-      @current_query = params[:q]
+      @current_query = params[:q] || Search.find(session.dig('search', 'id')).query_params['q']
+    rescue ActiveRecord::RecordNotFound
+      @current_query = nil
     end
 
     def collection_facet_selected?
@@ -401,6 +412,5 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
       # Check if this is a identifier search
       params[:search_field] == 'identifier'
     end
-
   # End UMD Customization
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Represents a single document returned from Solr
-class SolrDocument
+class SolrDocument # rubocop:disable Metrics/ClassLength
   include Blacklight::Solr::Document
   include ActionView::Helpers::TagHelper
   include Rails.application.routes.url_helpers
@@ -40,11 +40,14 @@ class SolrDocument
   end
 
   def archival_collection_links
-    handle_link = vocab_term_with_same_as(:object__archival_collection,
-                                          anchor_label: 'View Collection in Archival Collection Database')
+    return unless has? 'object__archival_collection'
 
-    archelon_search_link = ActionController::Base.helpers.link_to('View Collection in Archelon',
-                                                                  search_catalog_path('f[archival_collection__facet][]' => fetch('object__archival_collection__label__txt'))) # rubocop:disable Layout/LineLength
+    handle_link = vocab_term_with_same_as(
+      :object__archival_collection,
+      anchor_label: 'View Collection in Archival Collection Database'
+    )
+    path = search_catalog_path('f[archival_collection__facet][]' => fetch('object__archival_collection__label__txt'))
+    archelon_search_link = ActionController::Base.helpers.link_to('View Collection in Archelon', path)
 
     [handle_link, archelon_search_link]
   end
@@ -92,6 +95,13 @@ class SolrDocument
   # Concatenates titles for display, stripping out any language tags
   def display_titles
     strip_language_tags(:object__title__display).join(' | ')
+  end
+
+  # Get the extracted text snippets from the highlighting results and strips out
+  # the page and bounding box tags
+  def extracted_text
+    text_values = response.dig('highlighting', id, 'extracted_text__dps_txt') || []
+    text_values.map { |value| value.gsub(/\|n=\d+&xywh=\d+,\d+,\d+,\d+/, '') }
   end
 
   private
