@@ -15,6 +15,10 @@ class SolrDocument # rubocop:disable Metrics/ClassLength
   # Recommendation: Use field names from Dublin Core
   use_extension(Blacklight::Document::DublinCore)
 
+  def iiif_manifest_uri
+    fetch('iiif_manifest__uri')
+  end
+
   def creator_language_badge
     return unless has? 'object__creator'
 
