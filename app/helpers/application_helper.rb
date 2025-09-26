@@ -16,7 +16,7 @@ module ApplicationHelper
   end
 
   def repo_path(url)
-    url.slice(REPO_EXTERNAL_URL.size, url.size)
+    url.sub(REPO_EXTERNAL_URL, '')
   end
 
   def fcrepo_url
@@ -46,16 +46,8 @@ module ApplicationHelper
     end
   end
 
-  def iiif_id(repo_uri)
-    "fcrepo:#{repo_path(repo_uri).tr('/', ':')}"
-  end
-
-  def iiif_manifest_url(repo_uri)
-    IIIF_MANIFESTS_URL_TEMPLATE.expand(manifest_id: iiif_id(repo_uri)).to_s
-  end
-
-  def iiif_viewer_url(repo_uri, query)
-    IIIF_VIEWER_URL_TEMPLATE.expand(manifest: iiif_manifest_url(repo_uri), q: query).to_s
+  def iiif_viewer_url(manifest_uri, query)
+    IIIF_VIEWER_URL_TEMPLATE.expand(manifest: manifest_uri, q: query).to_s
   end
 
   def link_to_edit(resource)

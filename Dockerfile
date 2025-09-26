@@ -72,7 +72,6 @@ RUN bundle exec bootsnap precompile app/ lib/
 RUN SECRET_KEY_BASE_DUMMY=1 \
     ARCHELON_DATABASE_ADAPTER=postgresql \
     IIIF_VIEWER_URL_TEMPLATE=x \
-    IIIF_MANIFESTS_URL_TEMPLATE=x \
     ./bin/rails assets:precompile
 # End UMD Customization
 
