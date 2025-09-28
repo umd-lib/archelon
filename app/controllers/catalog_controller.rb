@@ -360,7 +360,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
   def index
     super
     redirect_to action: 'show', id: first_result['id'] if identifier_search? && single_result?
-    clear_search_session if params.keys == %w[search_field controller action]
+    clear_search_session if params.keys.sort == %w[action controller search_field]
   end
 
   def show
