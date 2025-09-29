@@ -44,7 +44,7 @@ class SolrDocument # rubocop:disable Metrics/ClassLength
   end
 
   def archival_collection_links
-    return unless has? 'object__archival_collection'
+    return unless has? 'object__archival_collection__uri'
 
     handle_link = vocab_term_with_same_as(
       :object__archival_collection,
