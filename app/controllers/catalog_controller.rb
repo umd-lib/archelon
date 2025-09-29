@@ -360,6 +360,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
   def index
     super
     redirect_to action: 'show', id: first_result['id'] if identifier_search? && single_result?
+    clear_search_session if params.keys.sort == %w[action controller search_field]
   end
 
   def show
@@ -378,6 +379,11 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
   end
 
   private
+
+    def clear_search_session
+      params.delete(:search_field)
+      redirect_to action: 'index'
+    end
 
     def mirador_displayable?(document)
       %w[Item Issue Page].include?(document[:content_model_name__str])
