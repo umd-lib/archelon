@@ -207,39 +207,43 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # UMD Customization
 
     # Item Level Fields
-    config.add_show_field 'object__object_type__uri', label: 'Object Type', accessor: :object_type_anchor
-    config.add_show_field 'object__identifier__ids', label: 'Identifiers', component: ListMetadataComponent
-    # pair with object__rights__label__txt
-    config.add_show_field 'object__rights__uri', label: 'Rights Statement', accessor: :rights_anchor
     config.add_show_field 'object__title__display', label: 'Title', accessor: :title_language_badge, component: ListMetadataComponent
-    config.add_show_field 'object__format__uri', label: 'Format', accessor: :format_anchor
+    config.add_show_field 'object__identifier__ids', label: 'Identifiers', component: ListMetadataComponent
+    config.add_show_field 'object__accession_number__ids', label: 'Accession Number'
+    config.add_show_field 'handle__id', label: 'Handle', accessor: :handle_anchor
+    config.add_show_field 'object__creator', label: 'Creator', accessor: :creator_language_badge, component: ListMetadataComponent
+    config.add_show_field 'publisher__facet', label: 'Publisher', component: ListMetadataComponent
+    config.add_show_field 'object__date__edtf', label: 'Date'
+    config.add_show_field 'object__description__txt', label: 'Description'
+
     # pair with object__archival_collection__label__txt
     # pair with object__archival_collection__same_as__uris
     config.add_show_field 'object__archival_collection__uri', label: 'Archival Collection', accessor: :archival_collection_links, component: ListMetadataComponent
-    config.add_show_field 'object__date__edtf', label: 'Date'
-    config.add_show_field 'object__description__txt', label: 'Description'
-    config.add_show_field 'object__bibliographic_citation__txt', label: 'Bibliographic Citation'
-    config.add_show_field 'object__creator', label: 'Creator', accessor: :creator_language_badge, component: ListMetadataComponent
-    config.add_show_field 'object__audience', label: 'Audience', accessor: :audience_language_badge, component: ListMetadataComponent
-    config.add_show_field 'publisher__facet', label: 'Publisher', component: ListMetadataComponent
+
+    config.add_show_field 'object__bibliographic_citation__txt', label: 'Collection Information'
+    config.add_show_field 'object__format__uri', label: 'Format', accessor: :format_anchor
+    config.add_show_field 'object__object_type__uri', label: 'Object Type', accessor: :object_type_anchor
+
+    # pair with object__rights__label__txt
+    config.add_show_field 'object__rights__uri', label: 'Rights Statement', accessor: :rights_anchor
+
     config.add_show_field 'location__facet', label: 'Location', component: ListMetadataComponent
     # not sure what to do for extent
     config.add_show_field 'subject__facet', label: 'Subject', accessor: :subject_facet_links, component: ListMetadataComponent
     config.add_show_field 'language__facet', label: 'Language', component: ListMetadataComponent
-    config.add_show_field 'object__terms_of_use__value__txt', label: 'Terms of Use', accessor: :terms_of_use
-    # not sure what to do for collection information
-    config.add_show_field 'handle__id', label: 'Handle', accessor: :handle_anchor
-
     config.add_show_field 'publication_status__facet', label: 'Publication Status'
     config.add_show_field 'visibility__facet', label: 'Visibility'
     config.add_show_field 'presentation_set__facet', label: 'Presentation Set', component: ListMetadataComponent
+    config.add_show_field 'admin_set__facet', label: 'Member Of'
+    config.add_show_field 'page_uri_sequence__uris', label: 'Members', accessor: :members_anchor, component: ListMetadataComponent
     config.add_show_field 'object__created_by__str', label: 'Created By'
     config.add_show_field 'object__created__dt', label: 'Created'
     config.add_show_field 'object__last_modified_by__str', label: 'Last Modified By'
     config.add_show_field 'object__last_modified__dt', label: 'Last Modified'
     config.add_show_field 'rdf_type__facet', label: 'RDF Type', component: ListMetadataComponent
-    config.add_show_field 'admin_set__facet', label: 'Member Of'
-    config.add_show_field 'page_uri_sequence__uris', label: 'Members', accessor: :members_anchor, component: ListMetadataComponent
+
+    config.add_show_field 'object__audience', label: 'Audience', accessor: :audience_language_badge, component: ListMetadataComponent
+    config.add_show_field 'object__terms_of_use__value__txt', label: 'Terms of Use', accessor: :terms_of_use
 
     # Page Level Fields
     config.add_show_field 'page__title__txt', label: 'Page'
