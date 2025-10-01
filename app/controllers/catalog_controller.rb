@@ -136,6 +136,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     config.add_facet_field 'admin_set__facet', label: 'Administrative Set', limit: 10, sort: 'index'
     config.add_facet_field 'archival_collection__facet', label: 'Archival Collection', limit: 10
     config.add_facet_field 'creator__facet', label: 'Creator', limit: 10
+    config.add_facet_field 'subject__facet', label: 'Subject', limit: 10
     config.add_facet_field 'resource_type__facet', label: 'Resource Type', limit: 10
     config.add_facet_field 'rdf_type__facet', label: 'RDF Type', limit: 10
     config.add_facet_field 'visibility__facet', label: 'Visibility'
@@ -223,7 +224,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     config.add_show_field 'publisher__facet', label: 'Publisher', component: ListMetadataComponent
     config.add_show_field 'location__facet', label: 'Location', component: ListMetadataComponent
     # not sure what to do for extent
-    config.add_show_field 'subject__facet', label: 'Subject', component: ListMetadataComponent
+    config.add_show_field 'subject__facet', label: 'Subject', accessor: :subject_facet_links, component: ListMetadataComponent
     config.add_show_field 'language__facet', label: 'Language', component: ListMetadataComponent
     config.add_show_field 'object__terms_of_use__value__txt', label: 'Terms of Use', accessor: :terms_of_use
     # not sure what to do for collection information

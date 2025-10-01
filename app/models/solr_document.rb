@@ -56,6 +56,17 @@ class SolrDocument # rubocop:disable Metrics/ClassLength
     [handle_link, archelon_search_link]
   end
 
+  def subject_facet_links
+    return unless has? 'subject__facet'
+
+    subjects = fetch('subject__facet')
+
+    subjects.map do |subject|
+      path = search_catalog_path('f[subject__facet][]' => subject)
+      ActionController::Base.helpers.link_to(subject, path)
+    end
+  end
+
   def format_anchor
     vocab_term_with_same_as :object__format
   end
