@@ -132,8 +132,8 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
 
     # UMD Customization
     config.add_facet_field 'presentation_set__facet', label: 'Presentation Set', limit: 10, sort: 'index'
-    config.add_facet_field 'archival_collection__facet', label: 'Archival Collection', limit: 10
-    config.add_facet_field 'creator__facet', label: 'Creator', limit: 10
+    config.add_facet_field 'archival_collection__facet', label: 'Archival Collection', component: FilterFacetComponent
+    config.add_facet_field 'creator__facet', label: 'Creator', component: FilterFacetComponent
     config.add_facet_field 'resource_type__facet', label: 'Resource Type', limit: 10
     config.add_facet_field 'subject__facet', label: 'Subject', limit: 10
     config.add_facet_field 'rights__facet', label: 'Rights Statement', limit: 10
