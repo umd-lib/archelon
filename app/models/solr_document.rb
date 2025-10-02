@@ -31,16 +31,32 @@ class SolrDocument # rubocop:disable Metrics/ClassLength
   def audience_language_badge
     return unless has? 'object__audience'
 
-    Array(fetch('object__audience')).map do |audience|
-      tagged_names = audience[:agent__label__display].map { |name| format_with_language_tag(name) }
-      safe_join(tagged_names, ' | ')
-    end
+    agent_names('object__audience')
   end
 
   def title_language_badge
     return unless has? 'object__title__display'
 
     Array(fetch('object__title__display')).map { |title| format_with_language_tag(title) }
+  end
+
+  def contributor_language_badge
+    return unless has? 'object__contributor'
+
+    agent_names('object__contributor')
+  end
+
+  def rights_holder_language_badge
+    return unless has? 'object__rights_holder'
+
+    agent_names('object__rights_holder')
+  end
+
+  def agent_names(field_name)
+    Array(fetch(field_name)).map do |agent|
+      tagged_names = agent[:agent__label__display].map { |name| format_with_language_tag(name) }
+      safe_join(tagged_names, ' | ')
+    end
   end
 
   def archival_collection_links
