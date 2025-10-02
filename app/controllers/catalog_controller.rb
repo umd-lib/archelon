@@ -209,11 +209,12 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # Item Level Fields
     config.add_show_field 'object__title__display', label: 'Title', accessor: :title_language_badge, component: ListMetadataComponent
     config.add_show_field 'object__alternate_title__txts', label: 'Alternate Title'
-    config.add_show_field 'object__identifier__ids', label: 'Identifiers', component: ListMetadataComponent
-    config.add_show_field 'object__accession_number__ids', label: 'Accession Number'
+    config.add_show_field 'object__identifier__ids', label: 'Identifier', component: ListMetadataComponent
+    config.add_show_field 'object__accession_number__id', label: 'Accession Number'
     config.add_show_field 'handle__id', label: 'Handle', accessor: :handle_anchor
     config.add_show_field 'object__creator', label: 'Creator', accessor: :creator_language_badge, component: ListMetadataComponent
     config.add_show_field 'object__contributor', label: 'Contributor', accessor: :contributor_language_badge, component: ListMetadataComponent
+    config.add_show_field 'object__audience', label: 'Audience', accessor: :audience_language_badge, component: ListMetadataComponent
     config.add_show_field 'publisher__facet', label: 'Publisher', component: ListMetadataComponent
     config.add_show_field 'object__date__edtf', label: 'Date'
     config.add_show_field 'object__description__txt', label: 'Description'
@@ -230,9 +231,10 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     config.add_show_field 'object__rights__uri', label: 'Rights Statement', accessor: :rights_anchor
     config.add_show_field 'object__rights_holder', label: 'Rights Holder', accessor: :rights_holder_language_badge, component: ListMetadataComponent
 
+    config.add_show_field 'object__terms_of_use__value__txt', label: 'Terms of Use', accessor: :terms_of_use
     config.add_show_field 'location__facet', label: 'Location', component: ListMetadataComponent
-    config.add_show_field 'object__extent__txts', label: 'Extent'
     config.add_show_field 'subject__facet', label: 'Subject', accessor: :subject_facet_links, component: ListMetadataComponent
+    config.add_show_field 'object__extent__txts', label: 'Extent'
     config.add_show_field 'language__facet', label: 'Language', component: ListMetadataComponent
     config.add_show_field 'publication_status__facet', label: 'Publication Status'
     config.add_show_field 'visibility__facet', label: 'Visibility'
@@ -244,9 +246,6 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     config.add_show_field 'object__last_modified_by__str', label: 'Last Modified By'
     config.add_show_field 'object__last_modified__dt', label: 'Last Modified'
     config.add_show_field 'rdf_type__facet', label: 'RDF Type', component: ListMetadataComponent
-
-    config.add_show_field 'object__audience', label: 'Audience', accessor: :audience_language_badge, component: ListMetadataComponent
-    config.add_show_field 'object__terms_of_use__value__txt', label: 'Terms of Use', accessor: :terms_of_use
 
     # Page Level Fields
     config.add_show_field 'page__title__txt', label: 'Page'
