@@ -285,9 +285,20 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
         'hl.tag.post': '</b>'
       }
     end
+
     config.add_search_field('identifier') do |field|
       field.label = 'Identifier Lookup'
       field.solr_parameters = { df: 'identifier', defType: 'edismax', 'q:alt': '*:*' }
+    end
+
+    config.add_search_field('subject__facet') do |field|
+      field.label = 'Subject'
+      field.solr_parameters = { df: 'subject__facet', defType: 'edismax', 'q:alt': '*:*' }
+    end
+
+    config.add_search_field('location__facet') do |field|
+      field.label = 'Location'
+      field.solr_parameters = { df: 'location__facet', defType: 'edismax', 'q:alt': '*:*' }
     end
 
     # Now we see how to over-ride Solr request handler defaults, in this
