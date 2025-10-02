@@ -134,9 +134,9 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     config.add_facet_field 'presentation_set__facet', label: 'Presentation Set', limit: 10, sort: 'index'
     config.add_facet_field 'archival_collection__facet', label: 'Archival Collection', limit: 10
     config.add_facet_field 'creator__facet', label: 'Creator', limit: 10
+    config.add_facet_field 'resource_type__facet', label: 'Resource Type', limit: 10
     config.add_facet_field 'subject__facet', label: 'Subject', limit: 10
     config.add_facet_field 'rights__facet', label: 'Rights Statement', limit: 10
-    config.add_facet_field 'resource_type__facet', label: 'Resource Type', limit: 10
     config.add_facet_field 'censorship__facet', label: 'Censored', if: :show_censorship_facet?
     config.add_facet_field 'publication_status__facet', label: 'Publication'
     # "For DPI Use" facet fields
