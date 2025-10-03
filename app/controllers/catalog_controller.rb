@@ -291,9 +291,27 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
         'hl.tag.post': '</b>'
       }
     end
+
     config.add_search_field('identifier') do |field|
       field.label = 'Identifier Lookup'
       field.solr_parameters = { df: 'identifier', defType: 'edismax', 'q:alt': '*:*' }
+    end
+
+    # For the subject and location searches, use the parent query parser to return
+    # the parent documents of the documents that match the given query.
+    # See also the Solr documentation here:
+    # https://solr.apache.org/guide/solr/9_6/query-guide/searching-nested-documents.html#parent-query-parser
+
+    config.add_search_field('subject') do |field|
+      field.label = 'Subject'
+      field.solr_parameters = { df: 'subject__label__txt' }
+      field.solr_local_parameters = { type: 'parent', which: '*:* -_nest_path_:*' }
+    end
+
+    config.add_search_field('location') do |field|
+      field.label = 'Location'
+      field.solr_parameters = { df: 'place__label__txt' }
+      field.solr_local_parameters = { type: 'parent', which: '*:* -_nest_path_:*' }
     end
 
     # Now we see how to over-ride Solr request handler defaults, in this
