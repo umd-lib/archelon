@@ -131,16 +131,20 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # :index_range can be an array or range of prefixes that will be used to create the navigation (note: It is case sensitive when searching values)
 
     # UMD Customization
-    config.add_facet_field 'presentation_set__facet', label: 'Presentation Set', limit: 10, collapse: false,
-                                                      sort: 'index'
-    config.add_facet_field 'admin_set__facet', label: 'Administrative Set', limit: 10, sort: 'index'
+    config.add_facet_field 'presentation_set__facet', label: 'Presentation Set', limit: 10, sort: 'index'
     config.add_facet_field 'archival_collection__facet', label: 'Archival Collection', limit: 10
     config.add_facet_field 'creator__facet', label: 'Creator', limit: 10
-    config.add_facet_field 'subject__facet', label: 'Subject', limit: 10
     config.add_facet_field 'resource_type__facet', label: 'Resource Type', limit: 10
-    config.add_facet_field 'rdf_type__facet', label: 'RDF Type', limit: 10
-    config.add_facet_field 'visibility__facet', label: 'Visibility'
+    config.add_facet_field 'subject__facet', label: 'Subject', limit: 10
+    config.add_facet_field 'rights__facet', label: 'Rights Statement', limit: 10
+    config.add_facet_field 'censorship__facet', label: 'Censored', if: :show_censorship_facet?
     config.add_facet_field 'publication_status__facet', label: 'Publication'
+    # "For DPI Use" facet fields
+    config.add_facet_field 'admin_set__facet', label: 'Administrative Set', limit: 10, sort: 'index', if: :show_dpi_use_facets?
+    config.add_facet_field 'has_ocr__facet', label: 'Has OCR', if: :show_dpi_use_facets?
+    config.add_facet_field 'visibility__facet', label: 'Visibility', if: :show_dpi_use_facets?
+    config.add_facet_field 'rdf_type__facet', label: 'RDF Type', limit: 10, if: :show_dpi_use_facets?
+
     # config.add_facet_field 'format', label: 'Format'
     # config.add_facet_field 'pub_date_ssim', label: 'Publication Year', single: true
     # config.add_facet_field 'subject_ssim', label: 'Topic', limit: 20, index_range: 'A'..'Z'
@@ -442,6 +446,21 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     def identifier_search?
       # Check if this is a identifier search
       params[:search_field] == 'identifier'
+    end
+
+    def show_dpi_use_facets?
+      current_cas_user.admin?
+    end
+
+    def facets_include?(name, value = nil)
+      facet_param = params.dig(:f, name)
+      return facet_param.present? if value.blank?
+
+      facet_param.present? && facet_param.include?(value)
+    end
+
+    def show_censorship_facet?
+      facets_include?(:censorship__facet) || facets_include?(:presentation_set__facet, "Prange Children's Books")
     end
   # End UMD Customization
 end
