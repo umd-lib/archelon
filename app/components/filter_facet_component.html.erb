@@ -3,9 +3,9 @@
     <%= @facet_field.label %>
   <% end %>
   <% component.with_body do %>
-    <input type="text" id="input-<%= @uuid %>" placeholder="<%= @facet_field.label %>..." onkeyup="filterFacets('<%= @uuid %>')" style="display: block; margin: 0 auto;" />
+    <input type="text" id="input-<%= @uuid %>" class="filter" placeholder="<%= @facet_field.label %>..." onkeyup="filterFacets('<%= @uuid %>')"/>
     <%= helpers.render(Blacklight::FacetFieldInclusiveConstraintComponent.new(facet_field: @facet_field)) %>
-    <ul class="facet-values list-unstyled" id="list-<%= @uuid %>" style="padding-top: 10px; max-height: 372px; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none;">
+    <ul class="facet-values list-unstyled with-filter" id="list-<%= @uuid %>">
       <%= render facet_items %>
     </ul>
     <%# backwards compatibility, ugh %>
