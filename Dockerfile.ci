@@ -5,7 +5,7 @@
 # the application. It should _not_ be used for creating Docker images for use
 # in production.
 
-ARG RUBY_VERSION=3.2.9-slim
+ARG RUBY_VERSION=3.2.9
 
 FROM registry.docker.com/library/ruby:$RUBY_VERSION-slim
 
