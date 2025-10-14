@@ -11,7 +11,7 @@
 # End UMD Customization
 
 # Make sure RUBY_VERSION matches the Ruby version in .ruby-version and Gemfile
-ARG RUBY_VERSION=3.2.4
+ARG RUBY_VERSION=3.2.9
 FROM registry.docker.com/library/ruby:$RUBY_VERSION-slim AS base
 
 # Rails app lives here
@@ -34,7 +34,7 @@ FROM base AS build
 # Customized to add "libpq-dev" which is necessary for bundler to run
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y build-essential curl git libvips node-gyp pkg-config python-is-python3 && \
-    apt-get install --no-install-recommends -y libpq-dev
+    apt-get install --no-install-recommends -y libpq-dev libyaml-dev
 # End UMD Customization
 
 # Install JavaScript dependencies
@@ -82,10 +82,11 @@ FROM base
 # Install packages needed for deployment
 # UMD Customization - install netcat, for checking if the database is available,
 #                     npm (so Node is available as the JavaScript runtime),
-#                     and libpq-dev for Postgres (required by the "pg" gem).
+#                     libpq-dev for Postgres (required by the "pg" gem),
+#                     and libyaml-dev (required by the "psych" gem).
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y curl libsqlite3-0 libvips && \
-    apt-get install --no-install-recommends -y libpq-dev npm netcat-openbsd && \
+    apt-get install --no-install-recommends -y libpq-dev npm netcat-openbsd libyaml-dev && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 # End UMD Customization
 

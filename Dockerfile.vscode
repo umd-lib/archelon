@@ -1,5 +1,5 @@
 # Dockerfile for the VS Code Dev Container development environment
-FROM ruby:3.2.4
+FROM ruby:3.2.9
 WORKDIR /opt/archelon
 
 # Install npm, to enable "yarn" to be installed
