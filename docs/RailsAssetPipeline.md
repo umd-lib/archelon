@@ -46,9 +46,6 @@ for Rails, 2nd Edition” by Noel Rappin (ISBN : 1-68050-998-5).
 
 ### Yarn
 
-**Note:** The VS Code Dev container for Archelon uses Yarn v1.22.22 -
-<https://classic.yarnpkg.com/en/docs>
-
 > The problem Yarn is designed to solve is: “What version of all my dependent
 > modules does my program rely on?” Yarn is for JavaScript and npm modules what
 > Bundler is for Ruby gems. All the JavaScript packaging tools supported by
