@@ -29,10 +29,6 @@ A PlantUML jar file can be downloaded from <https://plantuml.com/download>.
 rails plantuml:images
 ```
 
-**Note:** This task does not work when running Archelon in a VS Code Dev
-container, as it has dependencies (such as the Java JVM and the "dot" package)
-that are not currently part of the container configuration.
-
 Source: [plantuml.rake](../lib/tasks/plantuml.rake)
 
 ## stomp:listen
