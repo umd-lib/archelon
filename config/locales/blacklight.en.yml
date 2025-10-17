@@ -43,6 +43,7 @@ en:
         inprogress: Saving...
       facets:
         title: Limit your search
+        more_html: View All
       facets-workflow:
         title: Limit to
       filters:
