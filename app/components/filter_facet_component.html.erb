@@ -3,18 +3,22 @@
     <%= @facet_field.label %>
   <% end %>
   <% component.with_body do %>
-    <input type="text" id="input-<%= @uuid %>" class="filter" placeholder="<%= @facet_field.label %>..." onkeyup="filterFacets('<%= @uuid %>')"/>
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <% if !@facet_field.in_modal? %>
+        <input style="flex: 1; min-width: 0;" type="text" id="input-<%= @uuid %>" class="filter" placeholder="<%= @facet_field.label %>..." onkeyup="filterFacets('<%= @uuid %>')"/>
+
+        <%# backwards compatibility, ugh %>
+        <%= link_to t("more_#{@facet_field.key}_html", scope: 'blacklight.search.facets', default: :more_html, field_name: @facet_field.label),
+          "/catalog/facet/#{@facet_field.key}",
+          data: { blacklight_modal: 'trigger' },
+          style: 'text-align: center; margin-bottom: 0.5em;' %>
+      <% end %>
+    </div>
+
     <%= helpers.render(Blacklight::FacetFieldInclusiveConstraintComponent.new(facet_field: @facet_field)) %>
+
     <ul class="facet-values list-unstyled with-filter" id="list-<%= @uuid %>">
       <%= render facet_items %>
     </ul>
-    <%# backwards compatibility, ugh %>
-    <% if @layout == Blacklight::FacetFieldNoLayoutComponent && !@facet_field.in_modal? && @facet_field.modal_path %>
-      <div class="more_facets">
-        <%= link_to t("more_#{@facet_field.key}_html", scope: 'blacklight.search.facets', default: :more_html, field_name: @facet_field.label),
-          @facet_field.modal_path,
-          data: { blacklight_modal: 'trigger' } %>
-      </div>
-    <% end %>
   <% end %>
 <% end %>
