@@ -27,7 +27,7 @@ module Blacklight
     end
 
     def in_modal?
-      search_state.params[:action] == "facet"
+      search_state.params[:action] == 'facet'
     end
 
     def modal_path
@@ -89,8 +89,8 @@ module Blacklight
       def default_facet_limit
         facet_field.limit == true ? blacklight_config.default_more_limit : facet.limit
       end
-    # End UMD Customization
+      # End UMD Customization
 
-    delegate :blacklight_config, to: :search_state
+      delegate :blacklight_config, to: :search_state
   end
 end
