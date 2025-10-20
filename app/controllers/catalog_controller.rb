@@ -7,6 +7,9 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
   # UMD Customization
   before_action :make_current_query_accessible, only: %i[show index]
 
+  # Override search_state_class in Blacklight::Controller to customize searches
+  self.search_state_class = UmdSearchState
+
   unless Rails.env.development?
     rescue_from Blacklight::Exceptions::ECONNREFUSED, with: :goto_about_page
     rescue_from Blacklight::Exceptions::InvalidRequest, with: :goto_about_page
