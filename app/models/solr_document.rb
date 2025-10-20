@@ -16,7 +16,16 @@ class SolrDocument # rubocop:disable Metrics/ClassLength
   use_extension(Blacklight::Document::DublinCore)
 
   def iiif_manifest_uri
-    fetch('iiif_manifest__uri')
+    model = fetch('content_model_name__str')
+    querier = Blacklight::Solr::Repository.new(Blacklight::Configuration.new)
+
+    if model == 'Page'
+      object = querier.search(q: "id: \"#{ fetch('page__member_of__uri') }\"").response['docs'][0]
+
+      object['iiif_manifest__uri']
+    else
+      fetch('iiif_manifest__uri')
+    end
   end
 
   def creator_language_badge
