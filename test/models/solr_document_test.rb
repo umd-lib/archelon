@@ -60,4 +60,32 @@ class SolrDocumentTest < ActiveSupport::TestCase
       assert_equal expected, solr_doc.members_anchor, "'#{test_value} did not return '#{expected}'"
     end
   end
+
+  test 'displayable? should be "true" for top-level components' do
+    %w[Item Issue].each do |content_model_name|
+      doc = SolrDocument.new({ content_model_name__str: content_model_name })
+      assert doc.displayable?
+    end
+  end
+
+  test 'displayable? should be "false" for non-top-level components' do
+    %w[Article Page File].each do |content_model_name|
+      doc = SolrDocument.new({ content_model_name__str: content_model_name })
+      assert_not doc.displayable?
+    end
+  end
+
+  test 'editable? should be "true" for top-level components' do
+    %w[Item Issue].each do |content_model_name|
+      doc = SolrDocument.new({ content_model_name__str: content_model_name })
+      assert doc.editable?
+    end
+  end
+
+  test 'editable? should be "false" for non-top-level components' do
+    %w[Article Page File].each do |content_model_name|
+      doc = SolrDocument.new({ content_model_name__str: content_model_name })
+      assert_not doc.editable?
+    end
+  end
 end

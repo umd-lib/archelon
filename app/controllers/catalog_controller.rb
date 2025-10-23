@@ -397,17 +397,6 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
 
   def show
     super
-
-    @id = params[:id]
-    @displayable = mirador_displayable?(@document)
-
-    @published = @document[:is_published]
-    @show_edit_metadata = CatalogController.show_edit_metadata?(@document[:content_model_name__str])
-  end
-
-  def self.show_edit_metadata?(model)
-    editable_types = %w[Item Issue]
-    editable_types.include?(model)
   end
 
   private
@@ -415,10 +404,6 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     def clear_search_session
       params.delete(:search_field)
       redirect_to action: 'index'
-    end
-
-    def mirador_displayable?(document)
-      %w[Item Issue Page].include?(document[:content_model_name__str])
     end
 
     def goto_about_page(err)
