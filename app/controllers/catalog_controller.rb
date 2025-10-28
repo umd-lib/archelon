@@ -3,6 +3,8 @@
 # Blacklight controller that handles searches and document requests
 class CatalogController < ApplicationController # rubocop:disable Metrics/ClassLength
   include Blacklight::Catalog
+  include BlacklightRangeLimit::ControllerOverride
+
 
   # UMD Customization
   before_action :make_current_query_accessible, only: %i[show index]
@@ -137,6 +139,14 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     config.add_facet_field 'presentation_set__facet', label: 'Presentation Set', limit: 10, sort: 'index'
     config.add_facet_field 'archival_collection__facet', label: 'Archival Collection', component: FilterFacetComponent
     config.add_facet_field 'creator__facet', label: 'Creator', component: FilterFacetComponent
+    config.add_facet_field 'object__date__edtf', label: 'Date', range: true, range_config: {
+      assumed_boundaries: [1900, Time.now.year],
+      segments: false,
+      chart_js: true,
+      textual_facets: false,
+      textual_facets_collapsible: false,
+      show_missing_link: false,
+    }
     config.add_facet_field 'resource_type__facet', label: 'Resource Type', limit: 10
     config.add_facet_field 'subject__facet', label: 'Subject', limit: 10
     config.add_facet_field 'rights__facet', label: 'Rights Statement', limit: 10

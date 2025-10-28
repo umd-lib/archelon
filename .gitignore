@@ -11,6 +11,13 @@
 # Ignore environment specific files
 .env
 .env.local
+
+# Ignore development sqlite database
+development.sqlite3
+test.sqlite3
+
+# Ignore package-lock file - using yarn.lock instead
+package-lock.json
 # End UMD Customization
 
 # Ignore all logfiles and tempfiles.

@@ -85,6 +85,8 @@ gem 'ransack'
 # Cron jobs
 gem 'delayed_cron_job', '~> 0.8'
 
+gem "blacklight_range_limit"
+
 # End UMD Customization
 
 

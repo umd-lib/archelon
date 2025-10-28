@@ -32,3 +32,6 @@ import "./clipboard"
 const ClipboardJS = require("./clipboard")
 
 import "./filter_facet.js"
+
+import BlacklightRangeLimit from "blacklight-range-limit";
+BlacklightRangeLimit.init({onLoadHandler: Blacklight.onLoad });
