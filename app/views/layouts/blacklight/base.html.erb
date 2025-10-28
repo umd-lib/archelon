@@ -19,7 +19,9 @@
     <% if defined? Importmap %>
       <%= javascript_importmap_tags %>
     <% elsif defined? Propshaft %>
-      <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+      <% # UMD Customization %>
+      <%= javascript_include_tag "application", "data-turbo-track": "reload", "type": "module", defer: true %>
+      <% # End UMD Customization %>
     <% else %>
       <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
       <%= javascript_include_tag "blacklight/blacklight", type: 'module' %>
