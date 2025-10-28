@@ -6,7 +6,7 @@ class DeleteOldExportsJob < ApplicationJob
 
   def perform # rubocop:disable Metrics/MethodLength
     Rails.logger.info 'Running DeleteOldExportsJob'
-    export_jobs = ExportJob.where('created_at > ? ', 30.days.ago)
+    export_jobs = ExportJob.where(created_at: ..30.days.ago)
 
     if export_jobs.any?
       export_jobs.each do |job|
