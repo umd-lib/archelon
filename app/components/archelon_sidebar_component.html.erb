@@ -18,22 +18,44 @@
     <% else %>
       <nav>
         <ul class="sidebar-list">
-          <% pages.each do |page| %>
+          <% pages.first(8).each do |page| %>
             <li>
                 <%= link_to page[0], solr_document_path(page[1]) %>
             </li>
+          <% end %>
+          <% if pages.length > 8 %>
+            <li><a href="#pages" data-bs-toggle="modal">more »</a></li>
           <% end %>
         </ul>
       </nav>
     <% end %>
   </div>
+  <% if pages.length > 8 %>
+    <div class="modal" id="pages" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Select Page for More Options</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <ul class="sidebar-list">
+              <% pages.each do |page| %>
+                <li><%= link_to page[0], solr_document_path(page[1]) %></li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
 
 <% end %>
 
 <% if model == 'Page' || model != 'File' %>
   <% files = model == 'Page' ? document[:page__has_file] : document[:object__has_file] %>
   <div class="card">
-    <div class="card-header"> Select File for Download Options </div>
+    <div class="card-header"> Select Page to Access Files </div>
       <% if files.nil? %>
         <ul class="nav">
           <li> No Files Found </li>
