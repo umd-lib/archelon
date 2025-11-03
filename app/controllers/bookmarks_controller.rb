@@ -30,6 +30,8 @@ class BookmarksController < CatalogController
     if params.key? :ids
       add_selected(params[:ids])
     else
+      facets = blacklight_config.table[:facet_fields].keys.map { |field| field.to_sym }
+
       # Retrieving all ids from the search
       (@response,) = search_service.search_results do |builder|
         builder.rows = params[:numFound].to_i
