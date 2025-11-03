@@ -14,12 +14,15 @@
 
             page_results_params = { ids: document_ids, page: page, per_page: per_page }
             all_results_params = { numFound: numFound, page: page, per_page: per_page }
+
+            uuid = SecureRandom.uuid
+            max_limit = helpers.max_bookmarks_selection_limit
         %>
-        <%=
-            link_to t('blacklight.bookmarks.add_page_results.button'),
-            select_results_bookmarks_path(page_results_params),
-            class: 'btn btn-primary btn-sm'
-        %>
+
+        <button id="button-<%= uuid %>" class="btn btn-primary btn-sm" data-max-limit="<%= max_limit %>" onclick="selectOnPage('<%= uuid %>')">
+            <%= t('blacklight.bookmarks.add_page_results.button') %>
+        </button>
+
         <%=
             link_to t('blacklight.bookmarks.add_all_results.button'),
             select_results_bookmarks_path(all_results_params),

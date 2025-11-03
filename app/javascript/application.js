@@ -32,3 +32,4 @@ import "./clipboard"
 const ClipboardJS = require("./clipboard")
 
 import "./filter_facet.js"
+import "./select_on_page.js"
