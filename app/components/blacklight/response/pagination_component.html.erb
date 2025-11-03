@@ -1,25 +1,31 @@
 <%= content_tag :section, class: 'paginate-section',  **html_attr do %>
   <%= pagination %>
 
-  <% # UMD Customization %>
+  <%# UMD Customization %>
   <% if helpers.current_or_guest_user %>
     <% if params[:controller] == "catalog" %>
         <br>
         <%
             numFound = @response["response"]["numFound"]
-            document_ids = @response.documents.map { |doc| doc[:id] }
 
             page = helpers.search_state.page
             per_page = helpers.search_state.per_page
 
-            page_results_params = { ids: document_ids, page: page, per_page: per_page }
             all_results_params = { numFound: numFound, page: page, per_page: per_page }
         %>
-        <%=
-            link_to t('blacklight.bookmarks.add_page_results.button'),
-            select_results_bookmarks_path(page_results_params),
-            class: 'btn btn-primary btn-sm'
-        %>
+
+        <%= form_with url: bookmarks_path, html: {style: "display: inline"} do |form| %>
+          <% @response.documents.each do |doc| %>
+          <%# MUST include the document_type in order for the "Select/Selected" checkbox
+              to be properly displayed when loading the catalog or bookmarks pages %>
+            <input type="hidden" name="bookmarks[][document_type]" value="<%= doc.class.to_s %>"/>
+            <input type="hidden" name="bookmarks[][document_id]" value="<%= doc[:id] %>"/>
+          <% end %>
+          <button type="submit" class="btn btn-primary btn-sm">
+            <%= t('blacklight.bookmarks.add_page_results.button') %>
+          </button>
+        <% end %>
+
         <%=
             link_to t('blacklight.bookmarks.add_all_results.button'),
             select_results_bookmarks_path(all_results_params),
@@ -27,5 +33,5 @@
         %>
     <% end %>
   <% end %>
-  <% # End UMD Customization %>
+  <%# End UMD Customization %>
 <% end %>

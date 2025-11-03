@@ -94,6 +94,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
 
     config.add_nav_action(:bookmark, partial: 'blacklight/nav/bookmark', if: :render_bookmarks_control?)
     # config.add_nav_action(:search_history, partial: 'blacklight/nav/search_history')
+    blacklight_config.max_per_page = 1000
 
     # solr field configuration for document/show views
     # UMD Customization
