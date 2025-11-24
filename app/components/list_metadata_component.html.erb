@@ -13,18 +13,20 @@
           initial_list = @field.values.take(item_limit)
           more_list = @field.values.drop(item_limit)
       %>
+      <ul class="initial-list">
       <% initial_list.each do |v| %>
         <li style="display: list-item; list-style: none">
           <%= v %>
         </li>
       <% end %>
       <% unless more_list.empty? %>
-        <details>
-          <summary style="display: list-item;">More</summary>
+        <details class="more-list">
+          <summary>More</summary>
           <% more_list.each do |v| %>
-            <li style="list-style: none"><%= link_to v['display_title'], v %></li>
+            <li><%= v %></li>
           <% end %>
         </details>
       <% end %>
+      </ul>
   <% end %>
 <% end %>
