@@ -114,6 +114,7 @@ class PlainLiteral extends React.Component {
 
   render () {
     let statement = this.getStatement(this.state.value, this.state.language);
+    let valueIsEmpty = (this.state.value.trim() === '');
     let valueIsUnchanged = !(this.state.valueChanged || this.state.languageChanged)
 
     let languageDropdown = <LanguageDropdown value={this.state.language} handleLanguageChange={this.handleLanguageChange} />
@@ -124,7 +125,7 @@ class PlainLiteral extends React.Component {
     return (
       <React.Fragment>
         <input type="hidden" name="delete[]" value={this.initialStatement} disabled={this.props.value.isNew || valueIsUnchanged}/>
-        <input type="hidden" name="insert[]" value={statement} disabled={valueIsUnchanged}/>
+        <input type="hidden" name="insert[]" value={statement} disabled={valueIsUnchanged || valueIsEmpty}/>
         <input name={this.props.name} value={this.state.value} onChange={this.handleTextChange} size="40"/>
         {languageDropdown}
       </React.Fragment>
