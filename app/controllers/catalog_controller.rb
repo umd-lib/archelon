@@ -142,9 +142,9 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     config.add_facet_field 'rights__facet', label: 'Rights Statement', limit: 10
     config.add_facet_field 'censorship__facet', label: 'Censored', if: :show_censorship_facet?
     config.add_facet_field 'publication_status__facet', label: 'Publication'
+    config.add_facet_field 'has_ocr__facet', label: 'Has OCR'
     # "For DPI Use" facet fields
     config.add_facet_field 'admin_set__facet', label: 'Administrative Set', limit: 10, sort: 'index', if: :show_dpi_use_facets?
-    config.add_facet_field 'has_ocr__facet', label: 'Has OCR', if: :show_dpi_use_facets?
     config.add_facet_field 'visibility__facet', label: 'Visibility', if: :show_dpi_use_facets?
     config.add_facet_field 'rdf_type__facet', label: 'RDF Type', limit: 10, if: :show_dpi_use_facets?
 
