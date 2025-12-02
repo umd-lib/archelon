@@ -46,3 +46,14 @@
   overflow-x: hidden;
   overflow-y: auto;
 }
+
+.initial-list, .more-list {
+  padding-left: 0;
+  margin-bottom: 0;
+}
+.more-list summary {
+  display: list-item;
+}
+.more-list li {
+  list-style: none;
+}
