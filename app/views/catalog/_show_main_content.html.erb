@@ -6,25 +6,27 @@
 <%= render (document_component).new(document_component.collection_parameter => document_presenter(@document), component: :div, show: true, partials: blacklight_config.view_config(:show).partials) do |component| %>
 
   <%# UMD Customization %>
-  <% if @displayable %>
+  <% if @document.displayable? or @document.editable? %>
     <div class="skip-link">
-      <% if @show_edit_metadata %>
+      <% if @document.editable? %>
         <%= link_to "Edit Metadata",
                     resource_edit_url(id: @document.id),
                     class: "btn btn-primary",
                     data: { turbo: false } %>
 
         <%= form_with url: update_resource_url(@document.id), method: :post, data: {remote: false}, class: 'publish-controls' do |form| %>
-          <% if @published %>
+          <% if @document.published? %>
             <%= form.submit "Unpublish", name: 'command', class: 'btn btn-primary' %>
           <% else %>
             <%= form.submit "Publish", name: 'command', class: 'btn btn-primary' %>
           <% end %>
         <% end %>
       <% end %>
-    </div>
-    <div class="image-viewer intrinsic-container ratio-4x3">
-      <iframe src="<%= mirador_viewer_url(@document, @current_query) %>" allowfullscreen></iframe>
+      <% if @document.displayable? %>
+        <div class="image-viewer intrinsic-container ratio-4x3">
+          <iframe src="<%= iiif_viewer_url(@document.iiif_manifest_uri, @current_query) %>" allowfullscreen></iframe>
+        </div>
+      <% end %>
     </div>
   <% end %>
   <%# End UMD Customization %>

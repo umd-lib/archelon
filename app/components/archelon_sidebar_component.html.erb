@@ -10,56 +10,59 @@
   <% pages = document.key?(:page_label_sequence__txts) && document.key?(:page_uri_sequence__uris) ?
       document[:page_label_sequence__txts].zip(document[:page_uri_sequence__uris]) : [] %>
   <div class="card">
-    <div class="card-header"> Select Page(s) for More Options </div>
+    <div class="card-header"> Select Page to Access Files</div>
     <% if pages.nil? %>
       <ul class="nav">
-        <li> No File Found </li>
+        <li> No Pages Found </li>
       </ul>
-    <% elsif pages.length < 8 %>
-      &nbsp;
+    <% else %>
       <nav>
-        <ul style="list-style-type: none; height: <% 24 * pages.length %>px">
-          <% pages.each do |page| %>
+        <ul class="sidebar-list">
+          <% pages.first(8).each do |page| %>
             <li>
                 <%= link_to page[0], solr_document_path(page[1]) %>
             </li>
           <% end %>
-        </ul>
-      </nav>
-    <% else %>
-      <nav>
-        <ul style="list-style-type: none; height: 200px; overflow: hidden; overflow-y: scroll;">
-          <% pages.each do |page| %>
-            <li>
-                <%= link_to page[0], solr_document_path(page[1]) %>
-            </li>
+          <% if pages.length > 8 %>
+            <li><a href="#pages" data-bs-toggle="modal">more »</a></li>
           <% end %>
         </ul>
       </nav>
     <% end %>
   </div>
+  <% if pages.length > 8 %>
+    <div class="modal" id="pages" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Select Page for More Options</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <ul class="sidebar-list">
+              <% pages.each do |page| %>
+                <li><%= link_to page[0], solr_document_path(page[1]) %></li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
 
 <% end %>
 
 <% if model == 'Page' || model != 'File' %>
   <% files = model == 'Page' ? document[:page__has_file] : document[:object__has_file] %>
   <div class="card">
-    <div class="card-header"> Select File(s) for Download Options </div>
+    <div class="card-header"> Select Page to Access Files </div>
       <% if files.nil? %>
         <ul class="nav">
-          <li> No File Found </li>
-        </ul>
-      <% elsif files.length < 8 %>
-        <ul class="nav">
-          <% files.each do |file| %>
-            <li>
-                <%= link_to file['file__title__txt'], solr_document_path(file[:id]) %>
-            </li>
-          <% end %>
+          <li> No Files Found </li>
         </ul>
       <% else %>
         <nav>
-          <ul style="list-style-type: none; height: 200px; overflow: hidden; overflow-y: scroll;">
+          <ul class="sidebar-list">
             <% files.each do |file| %>
               <li>
                   <%= link_to file['file__title__txt'], solr_document_path(file[:id]) %>

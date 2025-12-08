@@ -3,10 +3,30 @@
     <%= label %>
   <% end %>
   <% component.with_value do %>
-      <% @field.values.each do |v| %>
+      <%
+          # Split the values into "initial" and "more" lists,
+          # to limit the number of items that are initially displayed.
+          #
+          # Hard-coding the limit, because setting up a configuration
+          # setting for a single instance seems excessive
+          item_limit = 8
+          initial_list = @field.values.take(item_limit)
+          more_list = @field.values.drop(item_limit)
+      %>
+      <ul class="initial-list">
+      <% initial_list.each do |v| %>
         <li style="display: list-item; list-style: none">
           <%= v %>
         </li>
       <% end %>
+      <% unless more_list.empty? %>
+        <details class="more-list">
+          <summary>More</summary>
+          <% more_list.each do |v| %>
+            <li><%= v %></li>
+          <% end %>
+        </details>
+      <% end %>
+      </ul>
   <% end %>
 <% end %>

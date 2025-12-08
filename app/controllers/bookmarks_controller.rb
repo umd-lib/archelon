@@ -23,44 +23,42 @@ class BookmarksController < CatalogController
     super
   end
 
-  def select_results # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+  def select_results
     return redirect_back_to_catalog(params, search_params) if current_user.bookmarks.count >= max_limit
 
-    # Adding only the ids on the page
-    if params.key? :ids
-      add_selected(params[:ids])
-    else
-      # Retrieving all ids from the search
-      (@response,) = search_service.search_results do |builder|
-        builder.rows = params[:numFound].to_i
-        builder
-      end
-
-      document_ids = @response.documents.map(&:id)
-
-      add_selected(document_ids)
-    end
+    # Retrieving all ids from the search
+    @response = current_search_results
+    add_selected(@response.documents)
 
     redirect_back_to_catalog(params, current_search_session.query_params)
   end
 
   private
 
-    def add_selected(document_ids) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-      selected_ids = current_user.bookmarks.map(&:document_id)
-      missing_ids = document_ids.reject { |doc_id| selected_ids.include?(doc_id) }
-      select_ids = missing_ids.take(max_limit - current_user.bookmarks.count)
-
-      if select_ids.empty?
-        flash[:notice] = I18n.t(:already_selected)
-      else
-        select_ids.each do |id|
-          current_user.bookmarks.create(document_id: id, document_type: blacklight_config.document_model.to_s)
-        end
-
-        count = select_ids.length
-        flash[:notice] = I18n.t(:items_selected, selected_count: count, items: count == 1 ? 'item' : 'items')
+    def current_search_results
+      search_service.search_results do |builder|
+        builder.rows = params[:numFound].to_i
+        builder.with(current_search_session.query_params)
       end
+    end
+
+    def documents_to_add(documents)
+      selected_ids = current_user.bookmarks.map(&:document_id)
+      missing_ids = documents.reject { |doc| selected_ids.include?(doc[:id]) }
+      missing_ids.take(max_limit - current_user.bookmarks.count)
+    end
+
+    def add_selected(documents)
+      selected_docs = documents_to_add(documents)
+
+      flash[:notice] = I18n.t(:already_selected) && return unless selected_docs
+
+      selected_docs.each do |doc|
+        current_user.bookmarks.create(document_id: doc[:id], document_type: doc.class.to_s)
+      end
+
+      count = selected_docs.length
+      flash[:notice] = I18n.t(:items_selected, selected_count: count, items: count == 1 ? 'item' : 'items')
     end
 
     def redirect_back_to_catalog(params, search_params)

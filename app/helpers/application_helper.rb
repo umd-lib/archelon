@@ -8,7 +8,7 @@ LABEL_PREDICATE = 'http://www.w3.org/2000/01/rdf-schema#label'
 SAME_AS_PREDICATE = 'http://www.w3.org/2002/07/owl#sameAs'
 # End UMD Customization
 
-module ApplicationHelper # rubocop:disable Metrics/ModuleLength
+module ApplicationHelper
   # UMD Customization
   def encoded_id(document)
     id = document._source[:id]
@@ -16,11 +16,7 @@ module ApplicationHelper # rubocop:disable Metrics/ModuleLength
   end
 
   def repo_path(url)
-    url.slice(FCREPO_BASE_URL.size, url.size)
-  end
-
-  def iiif_base_url
-    IIIF_BASE_URL
+    url.sub(REPO_EXTERNAL_URL, '')
   end
 
   def fcrepo_url
@@ -42,7 +38,7 @@ module ApplicationHelper # rubocop:disable Metrics/ModuleLength
     if args[:value].is_a? Array
       args[:value].map { |v| format_extracted_text(value: v) }.join('... ').html_safe # rubocop:disable Rails/OutputSafety -- I assume the .html_safe is intended
     else
-      # to strip out the embedded word corrdinates
+      # to strip out the embedded word coordinates
       coord_pattern = /\|\d+,\d+,\d+,\d+/
       # to remove {SOFT HYPHEN}{NEWLINE}
       hyphen_pattern = /\u{AD}\n/
@@ -50,27 +46,14 @@ module ApplicationHelper # rubocop:disable Metrics/ModuleLength
     end
   end
 
-  # remove the pairtree from the path
-  def compress_path(path)
-    path.tr('/', ':').gsub(/:(..):(..):(..):(..):\1\2\3\4/, '::\1\2\3\4')
-  end
-
-  def mirador_viewer_url(document, query)
-    template = Addressable::Template.new(
-      "#{IIIF_BASE_URL}viewer{/version}/mirador.html?manifest=fcrepo:{+id}{&iiifURLPrefix,q}"
-    )
-    template.expand(
-      version: MIRADOR_STATIC_VERSION,
-      id: compress_path(repo_path(document[:id])),
-      iiifURLPrefix: "#{IIIF_BASE_URL}manifests/",
-      q: query
-    ).to_s
+  def iiif_viewer_url(manifest_uri, query)
+    IIIF_VIEWER_URL_TEMPLATE.expand(manifest: manifest_uri, q: query).to_s
   end
 
   def link_to_edit(resource)
     return unless can? :edit, resource
 
-    link_to 'Edit', { action: :edit, id: resource }, class: 'btn btn-sm btn-success'
+    link_to 'Edit', resource_edit_path(resource), class: 'btn btn-sm btn-success'
   end
 
   def link_to_delete(resource)

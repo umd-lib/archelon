@@ -408,6 +408,12 @@ Issue:
 
   recommended: []
   optional:
+    - name: 'rights'
+      uri: 'http://purl.org/dc/terms/rights'
+      label: 'Rights Statement'
+      type: :ControlledURIRef
+      vocab: 'rightsStatement'
+
     - name: 'terms_of_use'
       uri: 'http://purl.org/dc/terms/license'
       label: 'Terms of Use'

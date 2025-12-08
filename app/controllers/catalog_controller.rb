@@ -7,6 +7,9 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
   # UMD Customization
   before_action :make_current_query_accessible, only: %i[show index]
 
+  # Override search_state_class in Blacklight::Controller to customize searches
+  self.search_state_class = UmdSearchState
+
   unless Rails.env.development?
     rescue_from Blacklight::Exceptions::ECONNREFUSED, with: :goto_about_page
     rescue_from Blacklight::Exceptions::InvalidRequest, with: :goto_about_page
@@ -40,7 +43,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # config.raw_endpoint.enabled = false
 
     ## Default parameters to send to solr for all search-like requests. See also SearchBuilder#processed_parameters
-    # config.default_solr_params = {}
+    config.default_solr_params = { fq: 'is_top_level:true' }
 
     # config.fetch_many_document_params = {}
 
@@ -64,7 +67,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # config.index.title_field = 'object__title__txt'
     # End UMD Customization
     # config.index.display_type_field = 'format'
-    # config.index.thumbnail_field = 'thumbnail_path_ss'
+    config.index.thumbnail_field = 'iiif_thumbnail_sequence__uris'
 
     # The presenter is the view-model class for the page
     # config.index.document_presenter_class = MyApp::IndexPresenter
@@ -91,6 +94,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
 
     config.add_nav_action(:bookmark, partial: 'blacklight/nav/bookmark', if: :render_bookmarks_control?)
     # config.add_nav_action(:search_history, partial: 'blacklight/nav/search_history')
+    blacklight_config.max_per_page = 1000
 
     # solr field configuration for document/show views
     # UMD Customization
@@ -131,14 +135,20 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # :index_range can be an array or range of prefixes that will be used to create the navigation (note: It is case sensitive when searching values)
 
     # UMD Customization
-    config.add_facet_field 'presentation_set__facet', label: 'Presentation Set', limit: 10, collapse: false,
-                                                      sort: 'index'
-    config.add_facet_field 'admin_set__facet', label: 'Administrative Set', limit: 10, sort: 'index'
-    config.add_facet_field 'creator__facet', label: 'Author', limit: 10
+    config.add_facet_field 'presentation_set__facet', label: 'Presentation Set', limit: 10, sort: 'index'
+    config.add_facet_field 'archival_collection__facet', label: 'Archival Collection', component: FilterFacetComponent
+    config.add_facet_field 'creator__facet', label: 'Creator', component: FilterFacetComponent
     config.add_facet_field 'resource_type__facet', label: 'Resource Type', limit: 10
-    config.add_facet_field 'rdf_type__facet', label: 'RDF Type', limit: 10
-    config.add_facet_field 'visibility__facet', label: 'Visibility'
+    config.add_facet_field 'subject__facet', label: 'Subject', limit: 10
+    config.add_facet_field 'rights__facet', label: 'Rights Statement', limit: 10
+    config.add_facet_field 'censorship__facet', label: 'Censored', if: :show_censorship_facet?
     config.add_facet_field 'publication_status__facet', label: 'Publication'
+    config.add_facet_field 'has_ocr__facet', label: 'Has OCR'
+    # "For DPI Use" facet fields
+    config.add_facet_field 'admin_set__facet', label: 'Administrative Set', limit: 10, sort: 'index', if: :show_dpi_use_facets?
+    config.add_facet_field 'visibility__facet', label: 'Visibility', if: :show_dpi_use_facets?
+    config.add_facet_field 'rdf_type__facet', label: 'RDF Type', limit: 10, if: :show_dpi_use_facets?
+
     # config.add_facet_field 'format', label: 'Format'
     # config.add_facet_field 'pub_date_ssim', label: 'Publication Year', single: true
     # config.add_facet_field 'subject_ssim', label: 'Topic', limit: 20, index_range: 'A'..'Z'
@@ -173,12 +183,13 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # config.add_index_field 'published_ssim', label: 'Published'
     # config.add_index_field 'published_vern_ssim', label: 'Published'
     # config.add_index_field 'lc_callnum_ssim', label: 'Call number'
+    config.add_index_field 'extracted_text__dps_txt', label: 'Text Content', accessor: :extracted_text, component: ExtractedTextMetadataComponent
+    config.add_index_field 'object__date__edtf', label: 'Date'
+    config.add_index_field 'object__description__txt', label: 'Description'
     config.add_index_field 'resource_type__facet', label: 'Resource Type'
-    config.add_index_field 'creator__facet', label: 'Author'
-    # config.add_index_field 'extracted_text', label: 'OCR', highlight: true, helper_method: :format_extracted_text, solr_params: { 'hl.fragsize' => 500 }
-    config.add_index_field 'object__created_by__txt', label: 'Created By'
-    config.add_index_field 'object__created__dt', label: 'Created'
-    config.add_index_field 'object__last_modified__dt', label: 'Last Modified'
+    config.add_index_field 'page_count__int', label: 'Number of Pages'
+    config.add_index_field 'object__archival_collection__label__txt', label: 'Archival Collection'
+    config.add_index_field 'creator__facet', label: 'Creator'
 
     # Have BL send the most basic highlighting parameters for you
     config.add_field_configuration_to_solr_request!
@@ -204,38 +215,45 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # UMD Customization
 
     # Item Level Fields
-    config.add_show_field 'object__object_type__uri', label: 'Object Type', accessor: :object_type_anchor
-    config.add_show_field 'object__identifier__ids', label: 'Identifiers', component: ListMetadataComponent
-    # pair with object__rights__label__txt
-    config.add_show_field 'object__rights__uri', label: 'Rights Statement', accessor: :rights_anchor
     config.add_show_field 'object__title__display', label: 'Title', accessor: :title_language_badge, component: ListMetadataComponent
-    config.add_show_field 'object__format__uri', label: 'Format', accessor: :format_anchor
-    # pair with object__archival_collection__label__txt
-    config.add_show_field 'object__archival_collection__uri', label: 'Archival Collection', accessor: :archival_collection_anchor
-    config.add_show_field 'object__date__edtf', label: 'Date'
-    config.add_show_field 'object__description__txt', label: 'Description'
-    config.add_show_field 'object__bibliographic_citation__txt', label: 'Bibliographic Citation'
+    config.add_show_field 'object__alternate_title__txts', label: 'Alternate Title'
+    config.add_show_field 'object__identifier__ids', label: 'Identifier', component: ListMetadataComponent
+    config.add_show_field 'object__accession_number__id', label: 'Accession Number'
+    config.add_show_field 'handle__id', label: 'Handle', accessor: :handle_anchor
     config.add_show_field 'object__creator', label: 'Creator', accessor: :creator_language_badge, component: ListMetadataComponent
+    config.add_show_field 'object__contributor', label: 'Contributor', accessor: :contributor_language_badge, component: ListMetadataComponent
     config.add_show_field 'object__audience', label: 'Audience', accessor: :audience_language_badge, component: ListMetadataComponent
     config.add_show_field 'publisher__facet', label: 'Publisher', component: ListMetadataComponent
-    config.add_show_field 'location__facet', label: 'Location', component: ListMetadataComponent
-    # not sure what to do for extent
-    config.add_show_field 'subject__facet', label: 'Subject', component: ListMetadataComponent
-    config.add_show_field 'language__facet', label: 'Language', component: ListMetadataComponent
-    config.add_show_field 'object__terms_of_use__value__txt', label: 'Terms of Use', accessor: :terms_of_use
-    # not sure what to do for collection information
-    config.add_show_field 'handle__id', label: 'Handle', accessor: :handle_anchor
+    config.add_show_field 'object__date__edtf', label: 'Date'
+    config.add_show_field 'object__description__txt', label: 'Description'
 
+    # pair with object__archival_collection__label__txt
+    # pair with object__archival_collection__same_as__uris
+    config.add_show_field 'object__archival_collection__uri', label: 'Archival Collection', accessor: :archival_collection_links, component: ListMetadataComponent
+
+    config.add_show_field 'object__bibliographic_citation__txt', label: 'Collection Information'
+    config.add_show_field 'object__format__uri', label: 'Format', accessor: :format_anchor
+    config.add_show_field 'object__object_type__uri', label: 'Object Type', accessor: :object_type_anchor
+
+    # pair with object__rights__label__txt
+    config.add_show_field 'object__rights__uri', label: 'Rights Statement', accessor: :rights_anchor
+    config.add_show_field 'object__rights_holder', label: 'Rights Holder', accessor: :rights_holder_language_badge, component: ListMetadataComponent
+
+    config.add_show_field 'object__terms_of_use__value__txt', label: 'Terms of Use', accessor: :terms_of_use
+    config.add_show_field 'location__facet', label: 'Location', component: ListMetadataComponent
+    config.add_show_field 'subject__facet', label: 'Subject', accessor: :subject_facet_links, component: ListMetadataComponent
+    config.add_show_field 'object__extent__txts', label: 'Extent'
+    config.add_show_field 'language__facet', label: 'Language', component: ListMetadataComponent
     config.add_show_field 'publication_status__facet', label: 'Publication Status'
     config.add_show_field 'visibility__facet', label: 'Visibility'
     config.add_show_field 'presentation_set__facet', label: 'Presentation Set', component: ListMetadataComponent
+    config.add_show_field 'admin_set__facet', label: 'Member Of'
+    config.add_show_field 'page_uri_sequence__uris', label: 'Members', accessor: :members_anchor, component: ListMetadataComponent
     config.add_show_field 'object__created_by__str', label: 'Created By'
     config.add_show_field 'object__created__dt', label: 'Created'
     config.add_show_field 'object__last_modified_by__str', label: 'Last Modified By'
     config.add_show_field 'object__last_modified__dt', label: 'Last Modified'
     config.add_show_field 'rdf_type__facet', label: 'RDF Type', component: ListMetadataComponent
-    config.add_show_field 'admin_set__facet', label: 'Member Of'
-    config.add_show_field 'page_uri_sequence__uris', label: 'Members', accessor: :members_anchor, component: ListMetadataComponent
 
     # Page Level Fields
     config.add_show_field 'page__title__txt', label: 'Page'
@@ -268,12 +286,40 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # or can be specified manually to be different.
 
     config.add_search_field('text') do |field|
-      field.label = 'Text/Keywords'
-      field.solr_parameters = { df: 'text', defType: 'edismax', 'q.alt': '*:*' }
+      field.label = 'Text & Metadata'
+      field.solr_parameters = {
+        qf: 'extracted_text__dps_txt text',
+        defType: 'edismax',
+        hl: true,
+        'hl.fl': 'extracted_text__dps_txt',
+        'hl.snippets': 5,
+        'hl.fragsize': 50,
+        'hl.maxAnalyzedChars': 1_000_000,
+        'hl.tag.pre': '<b class="hl">',
+        'hl.tag.post': '</b>'
+      }
     end
+
     config.add_search_field('identifier') do |field|
-      field.label = 'Identifier'
+      field.label = 'Identifier Lookup'
       field.solr_parameters = { df: 'identifier', defType: 'edismax', 'q:alt': '*:*' }
+    end
+
+    # For the subject and location searches, use the parent query parser to return
+    # the parent documents of the documents that match the given query.
+    # See also the Solr documentation here:
+    # https://solr.apache.org/guide/solr/9_6/query-guide/searching-nested-documents.html#parent-query-parser
+
+    config.add_search_field('subject') do |field|
+      field.label = 'Subject'
+      field.solr_parameters = { df: 'subject__label__txt' }
+      field.solr_local_parameters = { type: 'parent', which: '*:* -_nest_path_:*' }
+    end
+
+    config.add_search_field('location') do |field|
+      field.label = 'Location'
+      field.solr_parameters = { df: 'place__label__txt' }
+      field.solr_local_parameters = { type: 'parent', which: '*:* -_nest_path_:*' }
     end
 
     # Now we see how to over-ride Solr request handler defaults, in this
@@ -321,12 +367,11 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # config.add_sort_field 'year-desc', sort: 'pub_date_si desc, title_si asc', label: 'year'
     # config.add_sort_field 'author', sort: 'author_si asc, title_si asc', label: 'author'
     # config.add_sort_field 'title_si asc, pub_date_si desc', label: 'title'
-    config.add_sort_field 'score desc, object__title__txt asc', label: 'relevance'
-    config.add_sort_field 'object__title__txt asc', label: 'title'
-    config.add_sort_field 'object__created__dt asc', label: 'created (oldest to newest)'
-    config.add_sort_field 'object__created__dt desc', label: 'created (newest to oldest)'
-    config.add_sort_field 'object__last_modified__dt asc', label: 'last modified (oldest to newest)'
-    config.add_sort_field 'object__last_modified__dt desc', label: 'last modified (newest to oldest)'
+    config.add_sort_field 'object__title__display asc', label: 'Title (Ascending)'
+    config.add_sort_field 'object__title__display desc', label: 'Title (Descending)'
+
+    config.add_sort_field 'object__date__edtf asc', label: 'Date (Ascending)'
+    config.add_sort_field 'object__date__edtf desc', label: 'Date (Descending)'
     # End UMD Customization
 
     # If there are more than this many search results, no spelling ("did you
@@ -348,28 +393,18 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
   def index
     super
     redirect_to action: 'show', id: first_result['id'] if identifier_search? && single_result?
+    clear_search_session if params.keys.sort == %w[action controller search_field]
   end
 
   def show
     super
-
-    @id = params[:id]
-    @resource = ResourceService.resource_with_model(@id)
-    @displayable = mirador_displayable?(@document)
-
-    @published = @document[:is_published]
-    @show_edit_metadata = CatalogController.show_edit_metadata?(@document[:content_model_name__str])
-  end
-
-  def self.show_edit_metadata?(model)
-    editable_types = %w[Item Issue]
-    editable_types.include?(model)
   end
 
   private
 
-    def mirador_displayable?(document)
-      %w[Item Issue Page].include?(document[:content_model_name__str])
+    def clear_search_session
+      params.delete(:search_field)
+      redirect_to action: 'index'
     end
 
     def goto_about_page(err)
@@ -378,7 +413,9 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     end
 
     def make_current_query_accessible
-      @current_query = params[:q]
+      @current_query = params[:q] || Search.find(session.dig('search', 'id')).query_params['q']
+    rescue ActiveRecord::RecordNotFound
+      @current_query = nil
     end
 
     def collection_facet_selected?
@@ -400,5 +437,19 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
       params[:search_field] == 'identifier'
     end
 
+    def show_dpi_use_facets?
+      current_cas_user.admin?
+    end
+
+    def facets_include?(name, value = nil)
+      facet_param = params.dig(:f, name)
+      return facet_param.present? if value.blank?
+
+      facet_param.present? && facet_param.include?(value)
+    end
+
+    def show_censorship_facet?
+      facets_include?(:censorship__facet) || facets_include?(:presentation_set__facet, "Prange Children's Books")
+    end
   # End UMD Customization
 end
