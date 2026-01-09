@@ -40,6 +40,12 @@ class SolrDocument # rubocop:disable Metrics/ClassLength
     Array(fetch('object__title__display')).map { |title| format_with_language_tag(title) }
   end
 
+  def alternate_title_language_badge
+    return unless has? 'object__alternate_title__display'
+
+    Array(fetch('object__alternate_title__display')).map { |title| format_with_language_tag(title) }
+  end
+
   def contributor_language_badge
     return unless has? 'object__contributor'
 

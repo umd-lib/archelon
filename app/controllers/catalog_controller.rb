@@ -216,7 +216,10 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
 
     # Item Level Fields
     config.add_show_field 'object__title__display', label: 'Title', accessor: :title_language_badge, component: ListMetadataComponent
-    config.add_show_field 'object__alternate_title__txts', label: 'Alternate Title'
+    config.add_show_field 'object__alternate_title__display', label: 'Alternate Title', accessor: :alternate_title_language_badge, component: ListMetadataComponent
+    config.add_show_field 'object__volume__txt', label: 'Volume'
+    config.add_show_field 'object__issue__txt', label: 'Issue'
+    config.add_show_field 'object__edition__txt', label: 'Edition'
     config.add_show_field 'object__identifier__ids', label: 'Identifier', component: ListMetadataComponent
     config.add_show_field 'object__accession_number__id', label: 'Accession Number'
     config.add_show_field 'handle__id', label: 'Handle', accessor: :handle_anchor
