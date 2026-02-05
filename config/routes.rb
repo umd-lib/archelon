@@ -54,6 +54,7 @@ Rails.application.routes.draw do
   get '/edit/:id', controller: 'resource', action: 'edit', constraints: { id: /.*/ }, as: 'resource_edit'
   post '/edit/:id', controller: 'resource', action: 'update', constraints: { id: /.*/ }
   post '/update/:id', controller: 'resource', action: 'update_state', constraints: { id: /.*/ }, as: 'update_resource'
+  get '/updated/:id', controller: 'catalog', action: 'updated', constraints: { id: /.*/ }, as: 'updated_resource'
 
   # Export Jobs
   resources :export_jobs do
