@@ -15,6 +15,18 @@ class SolrDocument # rubocop:disable Metrics/ClassLength
   # Recommendation: Use field names from Dublin Core
   use_extension(Blacklight::Document::DublinCore)
 
+  # We are using the Unicode "Interlinear Annotation" characters to mark the start and
+  # end of highlighted sections in the snippets. These charaters were chosen because their
+  # semantics roughly match what we are trying to do here, they come in a matching pair,
+  # and they are highly unlikely to occur in the OCR text (unlike things that look like
+  # HTML tags).
+  # see also: https://en.wikipedia.org/wiki/Unicode_control_characters#Interlinear_annotation
+  #
+  # U+FFF9 Interlinear Annotation Anchor
+  HL_START_CHAR = "\u{fff9}"
+  # U+FFFB Interlinear Annotation Terminator
+  HL_END_CHAR = "\u{fffb}"
+
   def iiif_manifest_uri
     fetch('iiif_manifest__uri')
   end
@@ -138,7 +150,12 @@ class SolrDocument # rubocop:disable Metrics/ClassLength
   # the page and bounding box tags
   def extracted_text
     text_values = response.dig('highlighting', id, 'extracted_text__dps_txt') || []
-    text_values.map { |value| value.gsub(/\|n=\d+&xywh=\d+,\d+,\d+,\d+/, '') }
+    text_values.map do |value|
+      # strip bounding box and run HTML escaping
+      safe_value = ERB::Util.html_escape_once(value.gsub(/\|n=\d+&xywh=\d+,\d+,\d+,\d+/, ''))
+      # convert the highlighting start and end characters to HTML markup
+      safe_value.gsub(HL_START_CHAR, '<b class="hl">').gsub(HL_END_CHAR, '</b>')
+    end
   end
 
   def content_model

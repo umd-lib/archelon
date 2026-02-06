@@ -298,8 +298,8 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
         'hl.snippets': 5,
         'hl.fragsize': 50,
         'hl.maxAnalyzedChars': 1_000_000,
-        'hl.tag.pre': '<b class="hl">',
-        'hl.tag.post': '</b>'
+        'hl.tag.pre': SolrDocument::HL_START_CHAR,
+        'hl.tag.post': SolrDocument::HL_END_CHAR
       }
     end
 

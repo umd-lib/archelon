@@ -88,4 +88,18 @@ class SolrDocumentTest < ActiveSupport::TestCase
       assert_not doc.editable?
     end
   end
+
+  test 'highlighted extracted text should be HTML-escaped' do
+    test_cases = [
+      { snippet: 'foo', expected: 'foo' },
+      { snippet: "*'<s", expected: '*&#39;&lt;s' },
+      { snippet: "in \u{fff9}Portland\u{fffb}, ME", expected: 'in <b class="hl">Portland</b>, ME' },
+      { snippet: "in \u{fff9}<Portland>\u{fffb}, ME", expected: 'in <b class="hl">&lt;Portland&gt;</b>, ME' }
+    ]
+    test_cases.each do |test_case|
+      response = { highlighting: { 'http://example.com/foo': { extracted_text__dps_txt: [test_case[:snippet]] } } }.with_indifferent_access
+      doc = SolrDocument.new({ id: 'http://example.com/foo' }, response)
+      assert_equal [test_case[:expected]], doc.extracted_text
+    end
+  end
 end
