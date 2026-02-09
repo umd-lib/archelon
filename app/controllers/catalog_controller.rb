@@ -401,12 +401,20 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
 
   def show
     if request.headers['HX-Request'] == 'true'
-      # render plain: "Hello World! This is plain text."
-      @document = search_service.fetch(params[:id])
-      doc_presenter = view_context.document_presenter(@document)
-      render html: view_context.render(
-        Blacklight::DocumentMetadataComponent.new(fields: doc_presenter.field_presenters)
-      )
+      swap = params[:swap]
+      document = search_service.fetch(params[:id])
+
+      raise ActionController::BadRequest, 'Invalid part of the page to swap' unless %w[title metadata].include?(swap)
+
+      if swap == 'title'
+        render html: "<span itemprop=\"name\">#{document.display_titles}</span>".html_safe
+      else
+        doc_presenter = view_context.document_presenter(document)
+
+        render html: view_context.render(
+          Blacklight::DocumentMetadataComponent.new(fields: doc_presenter.field_presenters)
+        )
+      end
     else
       super
     end
