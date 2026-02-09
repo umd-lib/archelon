@@ -399,7 +399,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     clear_search_session if params.keys.sort == %w[action controller search_field]
   end
 
-  def show
+  def show # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     if request.headers['HX-Request'] == 'true'
       swap = params[:swap]
       document = search_service.fetch(params[:id])
@@ -407,7 +407,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
       raise ActionController::BadRequest, 'Invalid part of the page to swap' unless %w[title metadata].include?(swap)
 
       if swap == 'title'
-        render html: "<span itemprop=\"name\">#{document.display_titles}</span>".html_safe
+        render inline: '<span itemprop="name"><%= title %></span>', locals: { title: @document.display_titles } # rubocop:disable Rails/RenderInline
       else
         doc_presenter = view_context.document_presenter(document)
 
