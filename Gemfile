@@ -73,7 +73,7 @@ gem 'http', '~> 5.2.0'
 gem 'react-rails', '~>3.2.1'
 
 gem 'stomp'
-gem 'faraday', '~> 1.0'
+gem 'faraday', '~> 2.14'
 
 gem 'pg'
 
