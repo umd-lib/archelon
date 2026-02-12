@@ -9,18 +9,127 @@
   <% if @document.displayable? or @document.editable? %>
     <div class="skip-link">
       <% if @document.editable? %>
-        <%= link_to "Edit Metadata",
-                    resource_edit_url(id: @document.id),
-                    class: "btn btn-primary",
-                    data: { turbo: false } %>
+        <div x-data="{
+          publish_status: 'ready',
+          checking_status: 'ready',
+          metadata_updated: false,
+          current_doc_version: '<%= @document['_version_'] %>',
+          new_doc_version: '<%= @document['_version_'] %>',
+          command: '<%= @document.published? ? "Unpublish" : "Publish" %>',
 
-        <%= form_with url: update_resource_url(@document.id), method: :post, data: {remote: false}, class: 'publish-controls' do |form| %>
-          <% if @document.published? %>
-            <%= form.submit "Unpublish", name: 'command', class: 'btn btn-primary' %>
-          <% else %>
-            <%= form.submit "Publish", name: 'command', class: 'btn btn-primary' %>
-          <% end %>
-        <% end %>
+          async publish() {
+            const token = document.querySelector('meta[name=\'csrf-token\']')?.content;
+            const params = new URLSearchParams();
+
+            params.append('authenticity_token', token);
+            params.append('command', this.command);
+
+            this.publish_status = 'waiting';
+
+            try {
+                const response = await fetch('<%= update_resource_url(@document.id) %>', {
+                    method: 'POST',
+                    body: params
+                });
+
+                if (response.ok) {
+                  this.command = this.command === 'Publish' ? 'Unpublish' : 'Publish';
+                  await new Promise(resolve => setTimeout(resolve, 2500));
+                  this.publish_status = 'ready';
+                } else {
+                  await new Promise(resolve => setTimeout(resolve, 2500));
+                  this.publish_status = 'ready';
+                }
+            } catch (e) {
+                console.error('Connection error', e);
+                await new Promise(resolve => setTimeout(resolve, 2500));
+                this.publish_status = 'ready';
+            }
+          },
+
+          async checkForUpdates() {
+            this.checking_status = 'waiting';
+            try {
+              const response = await fetch('<%= updated_resource_url(@document.id) %>', {
+                method: 'GET',
+                headers: {
+                  'If-None-Match': this.current_doc_version,
+                  'Content-Type': 'application/json'
+                }
+              });
+
+              if (response.status === 304) {
+                  this.checking_status = 'ready';
+                  return;
+              }
+
+              if (response.status === 200) {
+                  const data = await response.json();
+
+                  this.new_doc_version = data.new_version;
+                  this.checking_status = 'ready';
+                  this.metadata_updated = true;
+
+                  return
+              }
+            } catch (e) {
+              this.checking_status = 'error';
+              console.error('Connection error', e);
+            }
+          }
+        }">
+          <%= link_to "Edit Metadata",
+            resource_edit_url(id: @document.id),
+            class: "btn btn-primary",
+            data: { turbo: false } %>
+
+          <button @click="publish()" :disabled="publish_status === 'waiting' || checking_status === 'waiting'" class="btn btn-secondary">
+              <span x-show="command === 'Publish' && publish_status === 'ready'">Publish</span>
+              <span x-show="command === 'Unpublish' && publish_status === 'ready'">Unpublish</span>
+              <span x-show="publish_status === 'waiting'"
+                class="spinner-border spinner-border-sm"
+                role="status"
+                aria-hidden="true">
+              </span>
+          </button>
+
+          <button @click="metadata_updated = false; current_doc_version = new_doc_version"
+            hx-get="<%= solr_document_url(@document.id) %>"
+            hx-target=".document-metadata"
+            hx-swap="outerHTML show:top settle:1s"
+            :disabled="publish_status === 'waiting' || checking_status === 'waiting'"
+            class="btn btn-secondary"
+          >
+            <span x-show="publish_status === 'ready'">Refresh Metadata</span>
+            <span x-show="publish_status === 'waiting'"
+                class="spinner-border spinner-border-sm"
+                role="status"
+                aria-hidden="true">
+            </span>
+          </button>
+
+          <button @click="checkForUpdates()" :disabled="checking_status === 'waiting'" class="btn btn-outline-secondary">
+              <span x-show="metadata_updated === false && checking_status === 'ready'"
+                class="bi bi-check-circle-fill text-success"
+                role="status"
+                aria-hidden="true">
+              </span>
+              <span x-show="metadata_updated === true && checking_status === 'ready'"
+                class="bi bi-exclamation-circle-fill text-warning"
+                role="status"
+                aria-hidden="true">
+              </span>
+              <span x-show="checking_status === 'error'"
+                class="bi bi-x-circle-fill text-danger"
+                role="status"
+                aria-hidden="true">
+              <span x-show="checking_status === 'waiting'"
+                class="spinner-border spinner-border-sm"
+                role="status"
+                aria-hidden="true">
+            </span>
+          </button>
+        </div>
       <% end %>
       <% if @document.displayable? %>
         <div class="image-viewer intrinsic-container ratio-4x3">

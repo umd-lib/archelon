@@ -32,3 +32,6 @@ import "./clipboard"
 const ClipboardJS = require("./clipboard")
 
 import "./filter_facet.js"
+
+import "./htmx.min.js"
+import "./alpine.min.js"

@@ -400,7 +400,29 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
   end
 
   def show
-    super
+    if request.headers['HX-Request'] == 'true'
+      # render plain: "Hello World! This is plain text."
+      @document = search_service.fetch(params[:id])
+      doc_presenter = view_context.document_presenter(@document)
+      render html: view_context.render(
+        Blacklight::DocumentMetadataComponent.new(fields: doc_presenter.field_presenters)
+      )
+    else
+      super
+    end
+  end
+
+  def updated
+    document = search_service.fetch(params[:id])
+
+    client_version = request.headers['If-None-Match']
+    current_version = document['_version_'].to_s
+
+    if client_version == current_version
+      head :not_modified
+    else
+      render json: { new_version: current_version }, status: :ok
+    end
   end
 
   private
