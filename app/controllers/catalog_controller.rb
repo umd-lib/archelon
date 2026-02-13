@@ -399,14 +399,22 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     clear_search_session if params.keys.sort == %w[action controller search_field]
   end
 
-  def show
+  def show # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     if request.headers['HX-Request'] == 'true'
-      # render plain: "Hello World! This is plain text."
-      @document = search_service.fetch(params[:id])
-      doc_presenter = view_context.document_presenter(@document)
-      render html: view_context.render(
-        Blacklight::DocumentMetadataComponent.new(fields: doc_presenter.field_presenters)
-      )
+      swap = params[:swap]
+      document = search_service.fetch(params[:id])
+
+      raise ActionController::BadRequest, 'Invalid part of the page to swap' unless %w[title metadata].include?(swap)
+
+      if swap == 'title'
+        render inline: '<span itemprop="name"><%= title %></span>', locals: { title: @document.display_titles } # rubocop:disable Rails/RenderInline
+      else
+        doc_presenter = view_context.document_presenter(document)
+
+        render html: view_context.render(
+          Blacklight::DocumentMetadataComponent.new(fields: doc_presenter.field_presenters)
+        )
+      end
     else
       super
     end
