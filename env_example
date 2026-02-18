@@ -18,7 +18,7 @@ FCREPO_AUTH_TOKEN=
 # URL of the IIIF viewer application
 IIIF_VIEWER_URL=http://localhost:8888/viewer/1.3.0/mirador.html
 # base URL of the IIIF Presentation API server
-IIIF_MANIFESTS_URL=http://localhost:3001/manifests/
+IIIF_MANIFESTS_URL=http://localhost:3002/manifests/
 
 # Base URL for retrieving files via download urls.
 # This should include the entire URL except for the token
