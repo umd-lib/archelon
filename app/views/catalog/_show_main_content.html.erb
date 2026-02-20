@@ -97,8 +97,10 @@
             hx-get="<%= solr_document_url(@document.id) %>"
             hx-target=".document-metadata"
             hx-swap="outerHTML show:top settle:1s"
+            hx-vals='{"swap": "metadata"}'
             :disabled="publish_status === 'waiting' || checking_status === 'waiting'"
             class="btn btn-secondary"
+            id="refresh-metadata-btn"
           >
             <span x-show="publish_status === 'ready'">Refresh Metadata</span>
             <span x-show="publish_status === 'waiting'"
@@ -129,6 +131,13 @@
                 aria-hidden="true">
             </span>
           </button>
+
+          <div hx-get="<%= solr_document_url(@document.id) %>"
+            hx-target="span[itemprop='name']"
+            hx-swap="outerHTML show:top settle:1s"
+            hx-vals='{"swap": "title"}'
+            hx-trigger="click from:#refresh-metadata-btn">
+          </div>
         </div>
       <% end %>
       <% if @document.displayable? %>
