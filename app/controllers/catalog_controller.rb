@@ -373,8 +373,12 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     config.add_sort_field 'object__title__display asc', label: 'Title (Ascending)'
     config.add_sort_field 'object__title__display desc', label: 'Title (Descending)'
 
-    config.add_sort_field 'object__date__edtf asc', label: 'Date (Ascending)'
-    config.add_sort_field 'object__date__edtf desc', label: 'Date (Descending)'
+    config.add_sort_field 'object__created__time asc', label: 'Created Date (Ascending)'
+    config.add_sort_field 'object__created__time desc', label: 'Created Date (Descending)'
+
+    config.add_sort_field 'object__last_modified__time asc', label: 'Last Modified Date (Ascending)'
+    config.add_sort_field 'object__last_modified__time desc', label: 'Last Modified Date (Descending)'
+
     # End UMD Customization
 
     # If there are more than this many search results, no spelling ("did you
