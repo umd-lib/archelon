@@ -241,6 +241,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # pair with object__rights__label__txt
     config.add_show_field 'object__rights__uri', label: 'Rights Statement', accessor: :rights_anchor
     config.add_show_field 'object__rights_holder', label: 'Rights Holder', accessor: :rights_holder_language_badge, component: ListMetadataComponent
+    config.add_show_field 'object__copyright_notice__txt', label: 'Copyright Notice'
 
     config.add_show_field 'object__terms_of_use__value__txt', label: 'Terms of Use', accessor: :terms_of_use
     config.add_show_field 'location__facet', label: 'Location', component: ListMetadataComponent
