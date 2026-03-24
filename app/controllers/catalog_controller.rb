@@ -215,17 +215,17 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # UMD Customization
 
     # Item Level Fields
-    config.add_show_field 'object__title__display', label: 'Title', accessor: :title_language_badge, component: ListMetadataComponent
-    config.add_show_field 'object__alternate_title__display', label: 'Alternate Title', accessor: :alternate_title_language_badge, component: ListMetadataComponent
+    config.add_show_field 'object__title__display', label: 'Title', accessor: :title, component: ListMetadataComponent
+    config.add_show_field 'object__alternate_title__display', label: 'Alternate Title', accessor: :alternate_title, component: ListMetadataComponent
     config.add_show_field 'object__volume__txt', label: 'Volume'
     config.add_show_field 'object__issue__txt', label: 'Issue'
     config.add_show_field 'object__edition__txt', label: 'Edition'
     config.add_show_field 'object__identifier__ids', label: 'Identifier', component: ListMetadataComponent
     config.add_show_field 'object__accession_number__id', label: 'Accession Number'
     config.add_show_field 'handle__id', label: 'Handle', accessor: :handle_anchor
-    config.add_show_field 'object__creator', label: 'Creator', accessor: :creator_language_badge, component: ListMetadataComponent
-    config.add_show_field 'object__contributor', label: 'Contributor', accessor: :contributor_language_badge, component: ListMetadataComponent
-    config.add_show_field 'object__audience', label: 'Audience', accessor: :audience_language_badge, component: ListMetadataComponent
+    config.add_show_field 'object__creator', label: 'Creator', accessor: :creator, component: ListMetadataComponent
+    config.add_show_field 'object__contributor', label: 'Contributor', accessor: :contributor, component: ListMetadataComponent
+    config.add_show_field 'object__audience', label: 'Audience', accessor: :audience, component: ListMetadataComponent
     config.add_show_field 'publisher__facet', label: 'Publisher', component: ListMetadataComponent
     config.add_show_field 'object__date__edtf', label: 'Date'
     config.add_show_field 'object__description__txt', label: 'Description'
@@ -240,8 +240,8 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
 
     # pair with object__rights__label__txt
     config.add_show_field 'object__rights__uri', label: 'Rights Statement', accessor: :rights_anchor
-    config.add_show_field 'object__rights_holder', label: 'Rights Holder', accessor: :rights_holder_language_badge, component: ListMetadataComponent
-    config.add_show_field 'object__copyright_notice__txt', label: 'Copyright Notice'
+    config.add_show_field 'object__rights_holder', label: 'Rights Holder', accessor: :rights_holder, component: ListMetadataComponent
+    config.add_show_field 'object__copyright_notice__display', label: 'Copyright Notice', accessor: :copyright_notice, component: ListMetadataComponent
 
     config.add_show_field 'object__terms_of_use__value__txt', label: 'Terms of Use', accessor: :terms_of_use
     config.add_show_field 'location__facet', label: 'Location', component: ListMetadataComponent

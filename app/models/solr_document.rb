@@ -31,50 +31,32 @@ class SolrDocument # rubocop:disable Metrics/ClassLength
     fetch('iiif_manifest__uri')
   end
 
-  def creator_language_badge
-    return unless has? 'object__creator'
-
-    Array(fetch('object__creator')).map do |creator|
-      tagged_names = creator[:agent__label__display].map { |name| format_with_language_tag(name) }
-      safe_join(tagged_names, ' | ')
-    end
+  def creator
+    agent_names :object__creator
   end
 
-  def audience_language_badge
-    return unless has? 'object__audience'
-
-    agent_names('object__audience')
+  def audience
+    agent_names :object__audience
   end
 
-  def title_language_badge
-    return unless has? 'object__title__display'
-
-    Array(fetch('object__title__display')).map { |title| format_with_language_tag(title) }
+  def title
+    language_tagged_values :object__title__display
   end
 
-  def alternate_title_language_badge
-    return unless has? 'object__alternate_title__display'
-
-    Array(fetch('object__alternate_title__display')).map { |title| format_with_language_tag(title) }
+  def alternate_title
+    language_tagged_values :object__alternate_title__display
   end
 
-  def contributor_language_badge
-    return unless has? 'object__contributor'
-
-    agent_names('object__contributor')
+  def contributor
+    agent_names :object__contributor
   end
 
-  def rights_holder_language_badge
-    return unless has? 'object__rights_holder'
-
-    agent_names('object__rights_holder')
+  def rights_holder
+    agent_names :object__rights_holder
   end
 
-  def agent_names(field_name)
-    Array(fetch(field_name)).map do |agent|
-      tagged_names = agent[:agent__label__display].map { |name| format_with_language_tag(name) }
-      safe_join(tagged_names, ' | ')
-    end
+  def copyright_notice
+    language_tagged_values :object__copyright_notice__display
   end
 
   def archival_collection_links
@@ -176,6 +158,12 @@ class SolrDocument # rubocop:disable Metrics/ClassLength
 
   private
 
+    def language_tagged_values(field_name)
+      return unless has? field_name
+
+      Array(fetch(field_name)).map { |v| format_with_language_tag(v) }
+    end
+
     def extract_language_tags(field_name)
       return [] unless has? field_name
 
@@ -199,6 +187,15 @@ class SolrDocument # rubocop:disable Metrics/ClassLength
       return parsed_value[:value] if parsed_value[:lang].nil?
 
       safe_join([parsed_value[:value], tag.span(parsed_value[:lang], class: %w[badge text-bg-secondary])], "\xa0")
+    end
+
+    def agent_names(field_name)
+      return unless has? field_name
+
+      Array(fetch(field_name)).map do |agent|
+        tagged_names = agent[:agent__label__display].map { |name| format_with_language_tag(name) }
+        safe_join(tagged_names, ' | ')
+      end
     end
 
     def add_anchor_tag(uri, label)
