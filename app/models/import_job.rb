@@ -132,13 +132,13 @@ class ImportJob < ApplicationRecord
   end
 
   # Returns the relpath of the collection (the collection with the
-  # FCREPO_BASE_URL prefix removed). Will always start with a "/", and
+  # FCREPO_ENDPOINT prefix removed). Will always start with a "/", and
   # returns FLAT_LAYOUT_RELPATH if the relpath starts with that value.
   def collection_relpath
-    # Collection path could be either REPO_EXTERNAL_URL or FCREPO_BASE_URL,
+    # Collection path could be either FCREPO_ENDPOINT or FCREPO_ORIGIN,
     # so just strip both
-    relpath = collection.sub(REPO_EXTERNAL_URL, '')
-    relpath = relpath.sub(FCREPO_BASE_URL, '')
+    relpath = collection.sub(FCREPO_ENDPOINT, '')
+    relpath = relpath.sub(FCREPO_ORIGIN, '') if FCREPO_ORIGIN
 
     # Ensure that relpath starts with a "/"
     relpath = "/#{relpath}" unless relpath.starts_with?('/')

@@ -3,10 +3,12 @@
 require 'json/ld'
 
 class ResourceController < ApplicationController
+  include ResourceServiceConcern
+
   before_action :set_resource
 
   def edit
-    @title = ResourceService.display_title(@resource, @id)
+    @title = resource_service.display_title(@resource, @id)
     @page_title = "Editing: \"#{@title}\""
   end
 
@@ -17,7 +19,7 @@ class ResourceController < ApplicationController
       render json: update_complete
     else
       plastron_rest_base_url = Addressable::URI.parse(ENV.fetch('PLASTRON_REST_BASE_URL', nil))
-      repo_path = @id.gsub(FCREPO_BASE_URL, '/')
+      repo_path = @id.gsub(FCREPO_ENDPOINT, '/')
       plastron_resource_url = plastron_rest_base_url.join("resources#{repo_path}")
       begin
         response = HTTP.follow.headers(
@@ -64,7 +66,8 @@ class ResourceController < ApplicationController
 
     def set_resource
       @id = params[:id]
-      @resource = ResourceService.resource_with_model(@id)
+      Rails.logger.info(@id)
+      @resource = resource_service.resource_with_model(@id)
     end
 
     def update_command
