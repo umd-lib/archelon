@@ -4,14 +4,47 @@ require 'link_header'
 
 # Utilities to retrieve resources from the repository
 class ResourceService
-  def self.fcrepo_http_client
-    headers = {}
-    headers['Authorization'] = "Bearer #{FCREPO_AUTH_TOKEN}" if FCREPO_AUTH_TOKEN
-    HTTP::Client.new(headers: headers, ssl_context: SSL_CONTEXT)
+  def initialize(endpoint:, origin: nil, auth_token: nil)
+    @endpoint = URI(endpoint)
+    @origin = origin ? URI(origin) : nil
+    @auth_token = auth_token
   end
 
-  def self.description_uri(uri)
-    response = fcrepo_http_client.head(uri)
+  def forwarding_headers
+    return {} unless @origin
+
+    {
+      'X-Forwarded-Proto': @endpoint.scheme,
+      # fcrepo expects the hostname and port in the X-Forwarded-Host header
+      # Ruby's URI#authority gives us both with intelligent defaulting if the
+      # port is the default for the scheme
+      'X-Forwarded-Host': @endpoint.authority
+    }
+  end
+
+  def authorization_headers
+    @auth_token ? { Authorization: "Bearer #{@auth_token}" } : {}
+  end
+
+  def request_headers
+    { **forwarding_headers, **authorization_headers }
+  end
+
+  def client
+    Rails.logger.debug { "Request headers: #{request_headers}" }
+    @client ||= HTTP::Client.new(headers: request_headers, ssl_context: SSL_CONTEXT)
+  end
+
+  def request_url(uri)
+    raise "invalid URI for this repository: #{uri}" unless uri.start_with? @endpoint.to_s
+
+    @origin ? uri.sub(@endpoint, @origin) : uri
+  end
+
+  def description_uri(uri)
+    Rails.logger.debug { "Request URI: #{uri}" }
+    Rails.logger.debug { "Request URL: #{request_url(uri)}" }
+    response = client.head(request_url(uri))
     if response.headers.include? 'Link'
       links = LinkHeader.parse(response['Link'].join(','))
       links.find_link(%w[rel describedby])&.href || uri
@@ -20,12 +53,12 @@ class ResourceService
     end
   end
 
-  def self.get(uri, **opts)
-    fcrepo_http_client.get(uri, opts)
+  def get(uri, **opts)
+    client.get(uri, opts)
   end
 
-  def self.resources(uri)
-    response = get(description_uri(uri), headers: { accept: 'application/ld+json' })
+  def resources(uri)
+    response = get(request_url(description_uri(uri)), headers: { accept: 'application/ld+json' })
     # This is a bit of a kludge to get around problems with building a string from the
     # response body content when the "frozen_string_literal: true" pragma is in effect.
     # Start with an unfrozen empty string (created using the unary '+' operator), then
@@ -36,15 +69,14 @@ class ResourceService
     JSON::LD::API.expand(input)
   end
 
-  def self.resource_with_model(id)
+  def resource_with_model(uri)
     # create a hash of resources by their URIs
-    items = resources(id).to_h do |resource|
+    items = resources(uri).to_h do |resource|
       uri = resource.delete('@id')
       [uri, resource]
     end
 
-    # default to the Item content model
-    name = content_model_name(items[id]['@type']) || :Item
+    name = content_model_name(items[uri]['@type'] || [])
     {
       items: items,
       content_model_name: name,
@@ -52,22 +84,15 @@ class ResourceService
     }
   end
 
-  CONTENT_MODEL_MAP = [
-    [:Issue, ->(types) { types.include? 'http://purl.org/ontology/bibo/Issue' }],
-    [:Letter, ->(types) { types.include? 'http://purl.org/ontology/bibo/Letter' }],
-    [:Poster, ->(types) { types.include? 'http://purl.org/ontology/bibo/Image' }],
-    [:Page, ->(types) { types.include? 'http://purl.org/spar/fabio/Page' }],
-    [:Page, ->(types) { types.include? 'http://chroniclingamerica.loc.gov/terms/Page' }],
-    [:Item, ->(types) { types.include? 'http://pcdm.org/models#Object' }],
-    [:Item, ->(types) { types.include? 'http://pcdm.org/models#File' }]
-  ].freeze
+  def content_model_name(types)
+    return :Issue if types.include? 'http://vocab.lib.umd.edu/model#Newspaper'
 
-  def self.content_model_name(types)
-    CONTENT_MODEL_MAP.find { |pair| pair[1].call(types) }&.first
+    # default to the Item content model
+    :Item
   end
 
   # Returns the display title for the Fedora resource, or nil
-  def self.display_title(resource, id)
+  def display_title(resource, id)
     return unless resource && id
 
     resource_titles = resource.dig(:items, id, 'http://purl.org/dc/terms/title')
@@ -78,7 +103,7 @@ class ResourceService
   end
 
   # Sorts resource titles by language to ensure consistent ordering
-  def self.sort_titles_by_language(resource_titles) # rubocop:disable Metrics/MethodLength
+  def sort_titles_by_language(resource_titles) # rubocop:disable Metrics/MethodLength
     languages_map = {}
     resource_titles.each do |title|
       language = title['@language'] || 'None'
