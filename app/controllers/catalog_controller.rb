@@ -14,6 +14,19 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     rescue_from Blacklight::Exceptions::ECONNREFUSED, with: :goto_about_page
     rescue_from Blacklight::Exceptions::InvalidRequest, with: :goto_about_page
   end
+
+  DATE_FACET_ORDER = %w[
+    object__date__century__facet
+    object__date__decade__facet
+    object__date__year__facet
+    object__date__month__facet
+    object__date__day__facet
+  ].freeze
+
+  DATE_FACET_PRESENTATION_SETS = [
+    'Katherine Anne Porter Correspondence',
+    'UMD Student Newspapers'
+  ].freeze
   # End UMD Customization
 
   # If you'd like to handle errors returned by Solr in a certain way,
@@ -144,6 +157,14 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     config.add_facet_field 'censorship__facet', label: 'Censored', if: :show_censorship_facet?
     config.add_facet_field 'publication_status__facet', label: 'Publication'
     config.add_facet_field 'has_ocr__facet', label: 'Has OCR'
+
+    # Date facets
+    config.add_facet_field 'object__date__century__facet', label: 'Date — Century', sort: 'index', helper_method: :get_facet_value_label, if: :show_date_facet?
+    config.add_facet_field 'object__date__decade__facet', label: 'Date — Decade', sort: 'index', helper_method: :get_facet_value_label, if: :show_date_facet?
+    config.add_facet_field 'object__date__year__facet', label: 'Date — Year', sort: 'index', helper_method: :get_facet_value_label, if: :show_date_facet?
+    config.add_facet_field 'object__date__month__facet', label: 'Date — Month', sort: 'index', helper_method: :get_facet_value_label, if: :show_date_facet?
+    config.add_facet_field 'object__date__day__facet', label: 'Date — Day', sort: 'index', helper_method: :get_facet_value_label, if: :show_date_facet?
+
     # "For DPI Use" facet fields
     config.add_facet_field 'admin_set__facet', label: 'Administrative Set', limit: 10, sort: 'index', if: :show_dpi_use_facets?
     config.add_facet_field 'visibility__facet', label: 'Visibility', if: :show_dpi_use_facets?
@@ -493,6 +514,19 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
 
     def show_censorship_facet?
       facets_include?(:censorship__facet) || facets_include?(:presentation_set__facet, "Prange Children's Books")
+    end
+
+    def show_date_facet?(config, _field)
+      facet_rank = DATE_FACET_ORDER.index(config.key)
+      # always show the facet if it is in the query or if it is
+      # the top-level facet in the dependent facet order
+      return true if facets_include?(config.key)
+
+      # show the facet if its immediate predecessor in the dependent
+      # facet order is in the query
+      return true if facet_rank.positive? && facets_include?(DATE_FACET_ORDER[facet_rank - 1])
+
+      facet_rank.zero? && DATE_FACET_PRESENTATION_SETS.any? { |name| facets_include?(:presentation_set__facet, name) }
     end
   # End UMD Customization
 end
