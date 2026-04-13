@@ -9,8 +9,11 @@
 SOLR_URL=http://localhost:8983/solr/fedora4
 
 # --- config/fcrepo.rb
-FCREPO_BASE_URL=http://fcrepo-local:8080/fcrepo/rest/
-REPO_EXTERNAL_URL=http://fcrepo-local:8080/fcrepo/rest/
+FCREPO_ENDPOINT=http://fcrepo-local:8080/fcrepo/rest
+# if there is a separate URL for connecting to the Fedora repository that differs
+# from the canonical endpoint URL (e.g., a cluster-interal alternative hostname),
+# uncomment FCREPO_ORIGIN and specify it here
+# FCREPO_ORIGIN=
 # JWT auth token with user "archelon" and role "fedoraAdmin"
 FCREPO_AUTH_TOKEN=
 
