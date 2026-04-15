@@ -23,7 +23,7 @@ class ImportJobTest < ActiveSupport::TestCase
     ]
 
     test_base_urls.each do |base_url|
-      with_constant('FCREPO_BASE_URL', base_url) do
+      with_constant('FCREPO_ENDPOINT', base_url) do
         test_collections.each do |collection, expected_relpath|
           import_job = ImportJob.new
           import_job.collection = collection
@@ -45,7 +45,7 @@ class ImportJobTest < ActiveSupport::TestCase
     ]
 
     test_external_urls.each do |external_url|
-      with_constant('REPO_EXTERNAL_URL', external_url) do
+      with_constant('FCREPO_ENDPOINT', external_url) do
         test_collections.each do |collection, expected_relpath|
           import_job = ImportJob.new
           import_job.collection = collection
@@ -56,7 +56,7 @@ class ImportJobTest < ActiveSupport::TestCase
   end
 
   test 'structure_type returns "hierarchical" for hierarchical collections' do
-    with_constant('FCREPO_BASE_URL', 'http://example.com/rest') do
+    with_constant('FCREPO_ENDPOINT', 'http://example.com/rest') do
       import_job = ImportJob.new
       import_job.collection = 'http://example.com/rest/dc/2021/2'
       assert_equal :hierarchical, import_job.collection_structure
@@ -64,15 +64,15 @@ class ImportJobTest < ActiveSupport::TestCase
   end
 
   test 'structure_type returns "flat" for flat collections' do
-    with_constant('FCREPO_BASE_URL', 'http://example.com/rest/') do
+    with_constant('FCREPO_ENDPOINT', 'http://example.com/rest/') do
       import_job = ImportJob.new
       import_job.collection = 'http://example.com/rest/pcdm'
       assert_equal :flat, import_job.collection_structure
     end
   end
 
-  test 'structure_type returns "flat" for flat collections when FCREPO_BASE_URL does not include final slash' do
-    with_constant('FCREPO_BASE_URL', 'http://example.com/rest') do
+  test 'structure_type returns "flat" for flat collections when FCREPO_ENDPOINT does not include final slash' do
+    with_constant('FCREPO_ENDPOINT', 'http://example.com/rest') do
       import_job = ImportJob.new
       import_job.collection = 'http://example.com/rest/pcdm'
       assert_equal :flat, import_job.collection_structure

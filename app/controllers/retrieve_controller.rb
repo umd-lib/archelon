@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class RetrieveController < ApplicationController
+  include ResourceServiceConcern
+
   skip_before_action :authenticate
 
   # GET /retrieve/:token
@@ -18,7 +20,7 @@ class RetrieveController < ApplicationController
     download_url = DownloadUrl.find_by(token: @token)
     return unless verify_download_url?(download_url)
 
-    response = ResourceService.get(download_url.url)
+    response = resource_service.get(download_url.url)
     data = response.body
 
     download_url.enabled = false

@@ -12,15 +12,15 @@ module ApplicationHelper
   # UMD Customization
   def encoded_id(document)
     id = document._source[:id]
-    ERB::Util.url_encode(id.slice(FCREPO_BASE_URL.size, id.size))
+    ERB::Util.url_encode(id.slice(FCREPO_ENDPOINT.size, id.size))
   end
 
   def repo_path(url)
-    url.sub(REPO_EXTERNAL_URL, '')
+    url.sub(FCREPO_ENDPOINT, '')
   end
 
   def fcrepo_url
-    FCREPO_BASE_URL.sub(%r{fcrepo/rest/?}, '')
+    FCREPO_ENDPOINT.sub(%r{fcrepo/rest/?}, '')
   end
 
   def link_to_document_view(args)
