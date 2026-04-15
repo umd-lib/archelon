@@ -249,7 +249,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     config.add_show_field 'object__audience', label: 'Audience', accessor: :agent_names, component: ListMetadataComponent
     config.add_show_field 'publisher__facet', label: 'Publisher', component: ListMetadataComponent
     config.add_show_field 'object__date__edtf', label: 'Date'
-    config.add_show_field 'object__description__txt', label: 'Description'
+    config.add_show_field 'object__description__display', label: 'Description', accessor: :language_tagged_values, component: ListMetadataComponent
 
     # pair with object__archival_collection__label__txt
     # pair with object__archival_collection__same_as__uris
