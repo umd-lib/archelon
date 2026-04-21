@@ -21,12 +21,8 @@ class UmdSearchState < Blacklight::SearchState
   # find both "http" and "https" versions of the identifier, no matter
   # which one the user specified.
   def rewrite_query_for_http_identifier_search
-    return unless @params['search_field'] == 'identifier'
+    return unless @params['q'] && @params['search_field'] == 'identifier'
 
-    q_param = @params['q']
-
-    q_param.sub!(/^https:/, 'http*:')
-    q_param.sub!(/^http:/, 'http*:')
-    @params['q'] = q_param
+    @params['q'].sub!(/^https?:/, 'http*:')
   end
 end
