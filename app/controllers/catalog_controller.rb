@@ -123,6 +123,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # config.show.document_component = MyApp::DocumentComponent
     # config.show.sidebar_component = MyApp::SidebarComponent
 
+    config.search_state_fields += %i[begin_date end_date]
     # solr fields that will be treated as facets by the blacklight application
     #   The ordering of the field names is the order of the display
     #
