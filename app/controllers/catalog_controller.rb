@@ -325,6 +325,14 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
       }
     end
 
+    config.add_search_field('metadata') do |field|
+      field.label = 'Metadata'
+      field.solr_parameters = {
+        qf: 'text',
+        defType: 'edismax'
+      }
+    end
+
     config.add_search_field('identifier') do |field|
       field.label = 'Identifier Lookup'
       field.solr_parameters = { df: 'identifier', defType: 'edismax', 'q:alt': '*:*' }
