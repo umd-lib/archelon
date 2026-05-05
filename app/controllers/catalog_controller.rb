@@ -235,6 +235,12 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # config.add_show_field 'isbn_ssim', label: 'ISBN'
 
     # UMD Customization
+    config.date_fields = {
+      range: :object__date__dt,
+      precision: :object__date__dt_precision__int,
+      range_size: :object__date__dt_range_size__int
+    }
+    config.date_qualifier_fields = %i[object__dt_is_approximate object__dt_is_uncertain object__dt_is_uncertain_and_approximate]
 
     # Item Level Fields
     config.add_show_field 'object__title__display', label: 'Title', accessor: :language_tagged_values, component: ListMetadataComponent
