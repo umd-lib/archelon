@@ -6,7 +6,7 @@ class SearchBuilder < Blacklight::SearchBuilder
 
   self.default_processor_chain += %i[build_date_range_query]
 
-  def build_date_range_query(solr_parameters)
+  def build_date_range_query(solr_parameters) # rubocop:disable Metrics/AbcSize
     return unless blacklight_params[:begin_date].present? || blacklight_params[:end_date].present?
 
     %i[fq bq bf].each { |key| solr_parameters[key] ||= [] }
