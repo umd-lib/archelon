@@ -103,13 +103,36 @@ class SolrDocument # rubocop:disable Metrics/ClassLength
   # Get the extracted text snippets from the highlighting results and strips out
   # the page and bounding box tags
   def extracted_text
-    text_values = response.dig('highlighting', id, 'extracted_text__dps_txt') || []
-    text_values.map do |value|
-      # strip bounding box and run HTML escaping
-      safe_value = ERB::Util.html_escape_once(value.gsub(/\|n=\d+&xywh=\d+,\d+,\d+,\d+/, ''))
-      # convert the highlighting start and end characters to HTML markup
-      safe_value.gsub(HL_START_CHAR, '<b class="hl">').gsub(HL_END_CHAR, '</b>')
-    end
+    highlighted_values = response.dig('highlighting', id, 'extracted_text__dps_txt') || []
+    hightlight_values(highlighted_values)
+  end
+
+  def title_highlight
+    highlighted_values = response.dig('highlighting', id, 'object__title__display') || []
+    return self['object__title__display'] if highlighted_values.empty?
+
+    hightlight_values(highlighted_values)
+  end
+
+  def creator_highlight
+    highlighted_values = response.dig('highlighting', id, 'creator__facet') || []
+    return self['creator__facet'] if highlighted_values.empty?
+
+    hightlight_values(highlighted_values)
+  end
+
+  def description_highlight
+    highlighted_values = response.dig('highlighting', id, 'object__description__txt') || []
+    return self['object__description__txt'] if highlighted_values.empty?
+
+    hightlight_values(highlighted_values)
+  end
+
+  def archival_collection_highlight
+    highlighted_values = response.dig('highlighting', id, 'object__archival_collection__label__txt') || []
+    return self['object__archival_collection__label__txt'] if highlighted_values.empty?
+
+    hightlight_values(highlighted_values)
   end
 
   def content_model
@@ -146,6 +169,15 @@ class SolrDocument # rubocop:disable Metrics/ClassLength
   end
 
   private
+
+    def hightlight_values(highlighted_values)
+      highlighted_values.map do |value|
+        # strip bounding box and run HTML escaping
+        safe_value = ERB::Util.html_escape_once(value.gsub(/\|n=\d+&xywh=\d+,\d+,\d+,\d+/, ''))
+        # convert the highlighting start and end characters to HTML markup
+        safe_value.gsub(HL_START_CHAR, '<b class="hl">').gsub(HL_END_CHAR, '</b>')
+      end
+    end
 
     def extract_language_tags(field_name)
       return [] unless has? field_name
