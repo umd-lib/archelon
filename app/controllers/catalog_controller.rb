@@ -123,6 +123,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # config.show.document_component = MyApp::DocumentComponent
     # config.show.sidebar_component = MyApp::SidebarComponent
 
+    config.search_state_fields += %i[begin_date end_date]
     # solr fields that will be treated as facets by the blacklight application
     #   The ordering of the field names is the order of the display
     #
@@ -234,6 +235,12 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # config.add_show_field 'isbn_ssim', label: 'ISBN'
 
     # UMD Customization
+    config.date_fields = {
+      range: :object__date__dt,
+      precision: :object__date__dt_precision__int,
+      range_size: :object__date__dt_range_size__int
+    }
+    config.date_qualifier_fields = %i[object__dt_is_approximate object__dt_is_uncertain object__dt_is_uncertain_and_approximate]
 
     # Item Level Fields
     config.add_show_field 'object__title__display', label: 'Title', accessor: :language_tagged_values, component: ListMetadataComponent
