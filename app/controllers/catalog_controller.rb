@@ -206,11 +206,11 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # config.add_index_field 'lc_callnum_ssim', label: 'Call number'
     config.add_index_field 'extracted_text__dps_txt', label: 'Text Content', accessor: :extracted_text, component: HighlightedMetadataComponent
     config.add_index_field 'object__date__edtf', label: 'Date'
-    config.add_index_field 'object__description__txt', label: 'Description', accessor: :description_highlight, component: HighlightedMetadataComponent
+    config.add_index_field 'object__description__txt', label: 'Description', accessor: :highlighted_values, component: HighlightedMetadataComponent
     config.add_index_field 'resource_type__facet', label: 'Resource Type'
     config.add_index_field 'page_count__int', label: 'Number of Pages'
-    config.add_index_field 'object__archival_collection__label__txt', label: 'Archival Collection', accessor: :archival_collection_highlight, component: HighlightedMetadataComponent
-    config.add_index_field 'creator__facet', label: 'Creator', accessor: :creator_highlight, component: HighlightedMetadataComponent
+    config.add_index_field 'object__archival_collection__label__txt', label: 'Archival Collection', accessor: :highlighted_values, component: HighlightedMetadataComponent
+    config.add_index_field 'creator__facet', label: 'Creator', accessor: :highlighted_values, component: HighlightedMetadataComponent
 
     # Have BL send the most basic highlighting parameters for you
     config.add_field_configuration_to_solr_request!
