@@ -107,34 +107,6 @@ class SolrDocument # rubocop:disable Metrics/ClassLength
     hightlight_values(highlighted_values)
   end
 
-  def title_highlight
-    highlighted_values = response.dig('highlighting', id, 'object__title__display') || []
-    return self['object__title__display'] if highlighted_values.empty?
-
-    hightlight_values(highlighted_values)
-  end
-
-  def creator_highlight
-    highlighted_values = response.dig('highlighting', id, 'creator__facet') || []
-    return self['creator__facet'] if highlighted_values.empty?
-
-    hightlight_values(highlighted_values)
-  end
-
-  def description_highlight
-    highlighted_values = response.dig('highlighting', id, 'object__description__txt') || []
-    return self['object__description__txt'] if highlighted_values.empty?
-
-    hightlight_values(highlighted_values)
-  end
-
-  def archival_collection_highlight
-    highlighted_values = response.dig('highlighting', id, 'object__archival_collection__label__txt') || []
-    return self['object__archival_collection__label__txt'] if highlighted_values.empty?
-
-    hightlight_values(highlighted_values)
-  end
-
   def content_model
     fetch('content_model_name__str')
   end
@@ -166,6 +138,16 @@ class SolrDocument # rubocop:disable Metrics/ClassLength
       tagged_names = agent[:agent__label__display].map { |name| format_with_language_tag(name) }
       safe_join(tagged_names, ' | ')
     end
+  end
+
+  # Can be used as an accessor in the Catalog Controller
+  def highlighted_values(field_name)
+    return unless has? field_name
+
+    highlighted_values = response.dig('highlighting', id, field_name) || []
+    return fetch(field_name) if highlighted_values.empty?
+
+    hightlight_values(highlighted_values)
   end
 
   private
