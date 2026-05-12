@@ -318,8 +318,10 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
         hl: true,
         'hl.fl': 'extracted_text__dps_txt object__title__display creator__facet ' \
                  'object__archival_collection__label__txt object__description__txt',
-        'hl.snippets': 5,
-        'hl.fragsize': 50,
+        'hl.snippets': 1,
+        'hl.fragsize': 0,
+        'f.extracted_text__dps_txt.hl.snippets': 5,
+        'f.extracted_text__dps_txt.hl.fragsize': 50,
         'hl.maxAnalyzedChars': 1_000_000,
         'hl.tag.pre': SolrDocument::HL_START_CHAR,
         'hl.tag.post': SolrDocument::HL_END_CHAR
