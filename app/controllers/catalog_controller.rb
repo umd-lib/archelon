@@ -204,13 +204,13 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # config.add_index_field 'published_ssim', label: 'Published'
     # config.add_index_field 'published_vern_ssim', label: 'Published'
     # config.add_index_field 'lc_callnum_ssim', label: 'Call number'
-    config.add_index_field 'extracted_text__dps_txt', label: 'Text Content', accessor: :extracted_text, component: ExtractedTextMetadataComponent
+    config.add_index_field 'extracted_text__dps_txt', label: 'Text Content', accessor: :extracted_text, component: HighlightedMetadataComponent
     config.add_index_field 'object__date__edtf', label: 'Date'
-    config.add_index_field 'object__description__txt', label: 'Description'
+    config.add_index_field 'object__description__txt', label: 'Description', accessor: :highlighted_values, component: HighlightedMetadataComponent
     config.add_index_field 'resource_type__facet', label: 'Resource Type'
     config.add_index_field 'page_count__int', label: 'Number of Pages'
-    config.add_index_field 'object__archival_collection__label__txt', label: 'Archival Collection'
-    config.add_index_field 'creator__facet', label: 'Creator'
+    config.add_index_field 'object__archival_collection__label__txt', label: 'Archival Collection', accessor: :highlighted_values, component: HighlightedMetadataComponent
+    config.add_index_field 'creator__facet', label: 'Creator', accessor: :highlighted_values, component: HighlightedMetadataComponent
 
     # Have BL send the most basic highlighting parameters for you
     config.add_field_configuration_to_solr_request!
@@ -316,9 +316,12 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
         qf: 'extracted_text__dps_txt text',
         defType: 'edismax',
         hl: true,
-        'hl.fl': 'extracted_text__dps_txt',
-        'hl.snippets': 5,
-        'hl.fragsize': 50,
+        'hl.fl': 'extracted_text__dps_txt object__title__display creator__facet ' \
+                 'object__archival_collection__label__txt object__description__txt',
+        'hl.snippets': 1,
+        'hl.fragsize': 0,
+        'f.extracted_text__dps_txt.hl.snippets': 5,
+        'f.extracted_text__dps_txt.hl.fragsize': 50,
         'hl.maxAnalyzedChars': 1_000_000,
         'hl.tag.pre': SolrDocument::HL_START_CHAR,
         'hl.tag.post': SolrDocument::HL_END_CHAR

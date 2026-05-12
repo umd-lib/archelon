@@ -103,13 +103,8 @@ class SolrDocument # rubocop:disable Metrics/ClassLength
   # Get the extracted text snippets from the highlighting results and strips out
   # the page and bounding box tags
   def extracted_text
-    text_values = response.dig('highlighting', id, 'extracted_text__dps_txt') || []
-    text_values.map do |value|
-      # strip bounding box and run HTML escaping
-      safe_value = ERB::Util.html_escape_once(value.gsub(/\|n=\d+&xywh=\d+,\d+,\d+,\d+/, ''))
-      # convert the highlighting start and end characters to HTML markup
-      safe_value.gsub(HL_START_CHAR, '<b class="hl">').gsub(HL_END_CHAR, '</b>')
-    end
+    highlighted_values = response.dig('highlighting', id, 'extracted_text__dps_txt') || []
+    hightlight_values(highlighted_values)
   end
 
   def content_model
@@ -145,7 +140,26 @@ class SolrDocument # rubocop:disable Metrics/ClassLength
     end
   end
 
+  # Can be used as an accessor in the Catalog Controller
+  def highlighted_values(field_name)
+    return unless has? field_name
+
+    highlighted_values = response.dig('highlighting', id, field_name) || []
+    return fetch(field_name) if highlighted_values.empty?
+
+    hightlight_values(highlighted_values)
+  end
+
   private
+
+    def hightlight_values(highlighted_values)
+      highlighted_values.map do |value|
+        # strip bounding box and run HTML escaping
+        safe_value = ERB::Util.html_escape_once(value.gsub(/\|n=\d+&xywh=\d+,\d+,\d+,\d+/, ''))
+        # convert the highlighting start and end characters to HTML markup
+        safe_value.gsub(HL_START_CHAR, '<b class="hl">').gsub(HL_END_CHAR, '</b>')
+      end
+    end
 
     def extract_language_tags(field_name)
       return [] unless has? field_name
