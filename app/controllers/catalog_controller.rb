@@ -282,9 +282,9 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     config.add_show_field 'admin_set__facet', label: 'Member Of'
     config.add_show_field 'page_uri_sequence__uris', label: 'Members', accessor: :members_anchor, component: ListMetadataComponent
     config.add_show_field 'object__created_by__str', label: 'Created By'
-    config.add_show_field 'object__created__dt', label: 'Created'
+    config.add_show_field 'object__created__time', label: 'Created'
     config.add_show_field 'object__last_modified_by__str', label: 'Last Modified By'
-    config.add_show_field 'object__last_modified__dt', label: 'Last Modified'
+    config.add_show_field 'object__last_modified__time', label: 'Last Modified'
     config.add_show_field 'rdf_type__facet', label: 'RDF Type', component: ListMetadataComponent
 
     # Page Level Fields
