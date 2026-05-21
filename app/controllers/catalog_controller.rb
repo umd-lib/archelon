@@ -14,19 +14,6 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     rescue_from Blacklight::Exceptions::ECONNREFUSED, with: :goto_about_page
     rescue_from Blacklight::Exceptions::InvalidRequest, with: :goto_about_page
   end
-
-  DATE_FACET_ORDER = %w[
-    object__date__century__facet
-    object__date__decade__facet
-    object__date__year__facet
-    object__date__month__facet
-    object__date__day__facet
-  ].freeze
-
-  DATE_FACET_PRESENTATION_SETS = [
-    'Katherine Anne Porter Correspondence',
-    'UMD Student Newspapers'
-  ].freeze
   # End UMD Customization
 
   # If you'd like to handle errors returned by Solr in a certain way,
@@ -150,21 +137,22 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
 
     # UMD Customization
     config.add_facet_field 'presentation_set__facet', label: 'Presentation Set', limit: 10, sort: 'index'
+    config.add_facet_field 'publication_title__facet', label: 'Publication Title', if: :show_dependent_facet?
     config.add_facet_field 'archival_collection__facet', label: 'Archival Collection', component: FilterFacetComponent
     config.add_facet_field 'creator__facet', label: 'Creator', component: FilterFacetComponent
     config.add_facet_field 'resource_type__facet', label: 'Resource Type', limit: 10
     config.add_facet_field 'subject__facet', label: 'Subject', limit: 10
     config.add_facet_field 'rights__facet', label: 'Rights Statement', limit: 10
-    config.add_facet_field 'censorship__facet', label: 'Censored', if: :show_censorship_facet?
+    config.add_facet_field 'censorship__facet', label: 'Censored', if: :show_dependent_facet?
     config.add_facet_field 'publication_status__facet', label: 'Publication'
     config.add_facet_field 'has_ocr__facet', label: 'Has OCR'
 
     # Date facets
-    config.add_facet_field 'object__date__century__facet', label: 'Date — Century', sort: 'index', helper_method: :get_facet_value_label, if: :show_date_facet?
-    config.add_facet_field 'object__date__decade__facet', label: 'Date — Decade', sort: 'index', helper_method: :get_facet_value_label, if: :show_date_facet?
-    config.add_facet_field 'object__date__year__facet', label: 'Date — Year', sort: 'index', helper_method: :get_facet_value_label, if: :show_date_facet?
-    config.add_facet_field 'object__date__month__facet', label: 'Date — Month', sort: 'index', helper_method: :get_facet_value_label, if: :show_date_facet?
-    config.add_facet_field 'object__date__day__facet', label: 'Date — Day', sort: 'index', helper_method: :get_facet_value_label, if: :show_date_facet?
+    config.add_facet_field 'object__date__century__facet', label: 'Date — Century', sort: 'index', helper_method: :get_facet_value_label, if: :show_dependent_facet?
+    config.add_facet_field 'object__date__decade__facet', label: 'Date — Decade', sort: 'index', helper_method: :get_facet_value_label, if: :show_dependent_facet?
+    config.add_facet_field 'object__date__year__facet', label: 'Date — Year', sort: 'index', helper_method: :get_facet_value_label, if: :show_dependent_facet?
+    config.add_facet_field 'object__date__month__facet', label: 'Date — Month', sort: 'index', helper_method: :get_facet_value_label, if: :show_dependent_facet?
+    config.add_facet_field 'object__date__day__facet', label: 'Date — Day', sort: 'index', helper_method: :get_facet_value_label, if: :show_dependent_facet?
 
     # "For DPI Use" facet fields
     config.add_facet_field 'admin_set__facet', label: 'Administrative Set', limit: 10, sort: 'index', if: :show_dpi_use_facets?
@@ -527,24 +515,22 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
       facet_param = params.dig(:f, name)
       return facet_param.present? if value.blank?
 
-      facet_param.present? && facet_param.include?(value)
+      if value.respond_to?(:any?)
+        facet_param.present? && value.any? { |v| facet_param.include?(v) }
+      else
+        facet_param.present? && facet_param.include?(value)
+      end
     end
 
-    def show_censorship_facet?
-      facets_include?(:censorship__facet) || facets_include?(:presentation_set__facet, "Prange Children's Books")
+    def show_dependent_facet?(config, _field)
+      facet = config.key.to_sym
+      return true if facets_include?(facet)
+
+      required = DEPENDENT_FACET_REQUIREMENTS[facet]
+      return false if required.nil?
+
+      facets_include?(required[:name], required[:value])
     end
 
-    def show_date_facet?(config, _field)
-      facet_rank = DATE_FACET_ORDER.index(config.key)
-      # always show the facet if it is in the query or if it is
-      # the top-level facet in the dependent facet order
-      return true if facets_include?(config.key)
-
-      # show the facet if its immediate predecessor in the dependent
-      # facet order is in the query
-      return true if facet_rank.positive? && facets_include?(DATE_FACET_ORDER[facet_rank - 1])
-
-      facet_rank.zero? && DATE_FACET_PRESENTATION_SETS.any? { |name| facets_include?(:presentation_set__facet, name) }
-    end
   # End UMD Customization
 end

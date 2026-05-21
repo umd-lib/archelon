@@ -1,0 +1,29 @@
+default: &default
+    object__date__century__facet:
+      name: presentation_set__facet
+      value:
+        - Katherine Anne Porter Correspondence
+        - UMD Student Newspapers
+    object__date__decade__facet:
+      name: object__date__century__facet
+    object__date__year__facet:
+      name: object__date__decade__facet
+    object__date__month__facet:
+      name: object__date__year__facet
+    object__date__day__facet:
+      name: object__date__month__facet
+    publication_title__facet:
+      name: presentation_set__facet
+      value: UMD Student Newspapers
+    censorship__facet:
+      name: presentation_set__facet
+      value: Prange Children's Books
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+
+production:
+  <<: *default
