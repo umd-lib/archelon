@@ -355,7 +355,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
 
     config.add_search_field('edtf_date') do |field|
       field.label = 'EDTF Date'
-      field.solr_parameters = { df: 'object__date__edtf' }
+      field.solr_local_parameters = { type: 'term', f: 'object__date__edtf' }
     end
 
     # Now we see how to over-ride Solr request handler defaults, in this
