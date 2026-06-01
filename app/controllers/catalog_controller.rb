@@ -406,6 +406,9 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     config.add_sort_field 'object__title__display asc', label: 'Title (Ascending)'
     config.add_sort_field 'object__title__display desc', label: 'Title (Descending)'
 
+    config.add_sort_field 'object__date__edtf asc', label: 'Original Date (Ascending)'
+    config.add_sort_field 'object__date__edtf desc', label: 'Original Date (Descending)'
+
     config.add_sort_field 'object__created__time asc', label: 'Created Date (Ascending)'
     config.add_sort_field 'object__created__time desc', label: 'Created Date (Descending)'
 
