@@ -37,6 +37,8 @@ en:
 
     search:
       title: "%{constraints} - %{application_name} Search"
+      placeholder: Enter Search Term
+      submit: Search
       bookmarks:
         present: Selected
         absent: Select

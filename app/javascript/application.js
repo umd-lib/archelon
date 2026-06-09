@@ -29,7 +29,7 @@ ReactRailsUJS.getConstructor = (name) => {
 }
 
 import "./clipboard"
-const ClipboardJS = require("./clipboard")
+window.ClipboardJS = require("./clipboard")
 
 import "./filter_facet.js"
 

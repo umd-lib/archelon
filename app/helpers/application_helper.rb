@@ -129,5 +129,9 @@ module ApplicationHelper
 
     content
   end
+
+  def get_facet_value_label(value)
+    value.split('|')[1]
+  end
   # End UMD Customization
 end

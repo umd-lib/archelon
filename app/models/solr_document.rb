@@ -31,34 +31,6 @@ class SolrDocument # rubocop:disable Metrics/ClassLength
     fetch('iiif_manifest__uri')
   end
 
-  def creator
-    agent_names :object__creator
-  end
-
-  def audience
-    agent_names :object__audience
-  end
-
-  def title
-    language_tagged_values :object__title__display
-  end
-
-  def alternate_title
-    language_tagged_values :object__alternate_title__display
-  end
-
-  def contributor
-    agent_names :object__contributor
-  end
-
-  def rights_holder
-    agent_names :object__rights_holder
-  end
-
-  def copyright_notice
-    language_tagged_values :object__copyright_notice__display
-  end
-
   def archival_collection_links
     return unless has? 'object__archival_collection__uri'
 
@@ -131,13 +103,8 @@ class SolrDocument # rubocop:disable Metrics/ClassLength
   # Get the extracted text snippets from the highlighting results and strips out
   # the page and bounding box tags
   def extracted_text
-    text_values = response.dig('highlighting', id, 'extracted_text__dps_txt') || []
-    text_values.map do |value|
-      # strip bounding box and run HTML escaping
-      safe_value = ERB::Util.html_escape_once(value.gsub(/\|n=\d+&xywh=\d+,\d+,\d+,\d+/, ''))
-      # convert the highlighting start and end characters to HTML markup
-      safe_value.gsub(HL_START_CHAR, '<b class="hl">').gsub(HL_END_CHAR, '</b>')
-    end
+    highlighted_values = response.dig('highlighting', id, 'extracted_text__dps_txt') || []
+    hightlight_values(highlighted_values)
   end
 
   def content_model
@@ -156,12 +123,42 @@ class SolrDocument # rubocop:disable Metrics/ClassLength
     fetch('is_published')
   end
 
+  # Can be used as an accessor in the Catalog Controller
+  def language_tagged_values(field_name)
+    return unless has? field_name
+
+    Array(fetch(field_name)).map { |v| format_with_language_tag(v) }
+  end
+
+  # Can be used as an accessor in the Catalog Controller
+  def agent_names(field_name)
+    return unless has? field_name
+
+    Array(fetch(field_name)).map do |agent|
+      tagged_names = agent[:agent__label__display].map { |name| format_with_language_tag(name) }
+      safe_join(tagged_names, ' | ')
+    end
+  end
+
+  # Can be used as an accessor in the Catalog Controller
+  def highlighted_values(field_name)
+    return unless has? field_name
+
+    highlighted_values = response.dig('highlighting', id, field_name) || []
+    return fetch(field_name) if highlighted_values.empty?
+
+    hightlight_values(highlighted_values)
+  end
+
   private
 
-    def language_tagged_values(field_name)
-      return unless has? field_name
-
-      Array(fetch(field_name)).map { |v| format_with_language_tag(v) }
+    def hightlight_values(highlighted_values)
+      highlighted_values.map do |value|
+        # strip bounding box and run HTML escaping
+        safe_value = ERB::Util.html_escape_once(value.gsub(/\|n=\d+&xywh=\d+,\d+,\d+,\d+/, ''))
+        # convert the highlighting start and end characters to HTML markup
+        safe_value.gsub(HL_START_CHAR, '<b class="hl">').gsub(HL_END_CHAR, '</b>')
+      end
     end
 
     def extract_language_tags(field_name)
@@ -187,15 +184,6 @@ class SolrDocument # rubocop:disable Metrics/ClassLength
       return parsed_value[:value] if parsed_value[:lang].nil?
 
       safe_join([parsed_value[:value], tag.span(parsed_value[:lang], class: %w[badge text-bg-secondary])], "\xa0")
-    end
-
-    def agent_names(field_name)
-      return unless has? field_name
-
-      Array(fetch(field_name)).map do |agent|
-        tagged_names = agent[:agent__label__display].map { |name| format_with_language_tag(name) }
-        safe_join(tagged_names, ' | ')
-      end
     end
 
     def add_anchor_tag(uri, label)
