@@ -7,7 +7,9 @@ require "rails/all"
 Bundler.require(*Rails.groups)
 
 module Archelon
+  # UMD Customization
   VERSION = '2.1.1'
+  # End UMD Customization
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.1
@@ -15,7 +17,7 @@ module Archelon
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.
-    config.autoload_lib(ignore: %w(assets tasks))
+    config.autoload_lib(ignore: %w[assets tasks])
 
     # Configuration for the application, engines, and railties goes here.
     #

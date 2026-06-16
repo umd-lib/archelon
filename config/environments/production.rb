@@ -48,6 +48,9 @@ Rails.application.configure do
   # config.force_ssl = true
   # END UMD Customization
 
+  # Skip http-to-https redirect for the default health check endpoint.
+  # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
+
   # Log to STDOUT by default
   config.logger = ActiveSupport::Logger.new(STDOUT)
     .tap  { |logger| logger.formatter = ::Logger::Formatter.new }
@@ -70,6 +73,8 @@ Rails.application.configure do
   # End UMD Customization
   # config.active_job.queue_name_prefix = "archelon_production"
 
+  # Disable caching for Action Mailer templates even if Action Controller
+  # caching is enabled.
   config.action_mailer.perform_caching = false
 
   # Ignore bad email addresses and do not raise email delivery errors.
@@ -86,6 +91,9 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
+  # Only use :id for inspections in production.
+  config.active_record.attributes_for_inspect = [ :id ]
+
   # Enable DNS rebinding protection and other `Host` header attacks.
   # config.hosts = [
   #   "example.com",     # Allow requests from example.com
@@ -94,6 +102,8 @@ Rails.application.configure do
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 
+  # UMD Customization
   # disable this check since getting a reliable list of origins has proved difficult
   config.action_cable.disable_request_forgery_protection = true
+  # End UMD Customization
 end
