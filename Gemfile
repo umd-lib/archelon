@@ -9,7 +9,7 @@ gem "rails", "~> 8.0.5"
 gem "propshaft"
 
 # Use sqlite3 as the database for Active Record
-gem "sqlite3", "~> 1.4"
+gem "sqlite3", ">= 2.1"
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
@@ -37,6 +37,14 @@ gem "bootsnap", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
+
+# UMD Customization
+# This is a temporary customization to restrict the "connection_pool" gem to the
+# 2.x version, as the 3.x version is not compatible with Rails 7.1.
+# This customization should be reviewed whenever upgrading the Rails version
+# and removed when no longer needed.
+gem 'connection_pool', [">= 2.2.5", "<3"]
+# End UMD Customization
 
 # UMD Customization
 # Blacklight gem
@@ -70,7 +78,7 @@ gem 'json-ld', '~> 3.3.1'
 
 gem 'http', '~> 5.2.0'
 
-gem 'react-rails', '~>3.2.1'
+gem 'react-rails', '~>3.3.1'
 
 gem 'stomp'
 gem 'faraday', '~> 1.10', '>= 1.10.5'
