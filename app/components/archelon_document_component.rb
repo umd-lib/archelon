@@ -91,7 +91,8 @@ class ArchelonDocumentComponent < Blacklight::Component
                  id: nil, classes: [], component: :article, title_component: nil,
                  counter: nil, document_counter: nil, counter_offset: 0,
                  show: false, **args)
-    super
+    super()
+
     if presenter
       Blacklight.deprecation.warn(
         'the `presenter` argument to DocumentComponent#initialize is deprecated; ' \
@@ -127,15 +128,12 @@ class ArchelonDocumentComponent < Blacklight::Component
   end
 
   def before_render
-    set_slot(:title, nil) unless title
-    set_slot(:thumbnail, nil) unless thumbnail || show?
-    set_slot(:metadata, nil, fields: presenter.field_presenters) unless metadata
-    set_slot(:embed, nil) unless embed
-    if view_partials.present?
-      render_partials
-    else
-      set_slot(:partials, nil)
-    end
+    with_title unless title?
+    with_thumbnail({}) unless thumbnail? || show?
+    with_metadata(fields: presenter.field_presenters) unless metadata?
+    with_embed unless embed?
+
+    render_partials if view_partials.present?
   end
 
   private
