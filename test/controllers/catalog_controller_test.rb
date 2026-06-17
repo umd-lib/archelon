@@ -9,23 +9,19 @@ class CatalogControllerTest < ActionController::TestCase
   end
 
   test 'should give warning and redirect if solr is down' do
-    raise_e = -> { raise Blacklight::Exceptions::ECONNREFUSED }
-    @controller.stub(:index, raise_e) do
-      get :index
-      assert_redirected_to(about_url)
-      assert_not flash.empty?
-      assert_equal flash[:error], I18n.t(:solr_is_down)
-    end
+    allow(@controller).to receive(:index).and_raise(Blacklight::Exceptions::ECONNREFUSED)
+    get :index
+    assert_redirected_to(about_url)
+    assert_not flash.empty?
+    assert_equal flash[:error], I18n.t(:solr_is_down)
   end
 
   test 'should give warning and redirect if solr cannot connect' do
-    raise_e = -> { raise Blacklight::Exceptions::InvalidRequest }
-    @controller.stub(:index, raise_e) do
-      get :index
-      assert_redirected_to(about_url)
-      assert_not flash.empty?
-      assert_equal flash[:error], I18n.t(:solr_is_down)
-    end
+    allow(@controller).to receive(:index).and_raise(Blacklight::Exceptions::InvalidRequest)
+    get :index
+    assert_redirected_to(about_url)
+    assert_not flash.empty?
+    assert_equal flash[:error], I18n.t(:solr_is_down)
   end
 
   test 'should redirect to item detail page on identifier search with a single match' do
