@@ -110,7 +110,7 @@ class ArchelonDocumentComponent < Blacklight::Component
     @classes = classes
 
     @counter = counter
-    @document_counter = document_counter || args.fetch(self.class.collection_counter_parameter, nil)
+    @document_counter = document_counter || args.fetch(:document_counter, nil)
     @counter ||= @document_counter + COLLECTION_INDEX_OFFSET + counter_offset if @document_counter.present?
 
     @show = show
