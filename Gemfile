@@ -39,14 +39,6 @@ gem "bootsnap", require: false
 # gem "image_processing", "~> 1.2"
 
 # UMD Customization
-# This is a temporary customization to restrict the "connection_pool" gem to the
-# 2.x version, as the 3.x version is not compatible with Rails 7.1.
-# This customization should be reviewed whenever upgrading the Rails version
-# and removed when no longer needed.
-gem 'connection_pool', [">= 2.2.5", "<3"]
-# End UMD Customization
-
-# UMD Customization
 # Blacklight gem
 gem 'blacklight', "~> 8.12"
 
