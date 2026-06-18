@@ -100,6 +100,9 @@ GEM
     bootsnap (1.18.3)
       msgpack (~> 1.2)
     builder (3.3.0)
+    bundler-audit (0.9.3)
+      bundler (>= 1.2.0)
+      thor (~> 1.0)
     cancancan (3.6.1)
     capybara (3.40.0)
       addressable
@@ -401,12 +404,20 @@ GEM
     rubocop-ast (1.46.0)
       parser (>= 3.3.7.2)
       prism (~> 1.4)
+    rubocop-performance (1.26.0)
+      lint_roller (~> 1.1)
+      rubocop (>= 1.75.0, < 2.0)
+      rubocop-ast (>= 1.44.0, < 2.0)
     rubocop-rails (2.33.2)
       activesupport (>= 4.2.0)
       lint_roller (~> 1.1)
       rack (>= 1.1)
       rubocop (>= 1.75.0, < 2.0)
       rubocop-ast (>= 1.44.0, < 2.0)
+    rubocop-rails-omakase (1.1.0)
+      rubocop (>= 1.72)
+      rubocop-performance (>= 1.24)
+      rubocop-rails (>= 2.30)
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
@@ -475,10 +486,11 @@ PLATFORMS
 DEPENDENCIES
   blacklight (~> 8.12)
   bootsnap
+  bundler-audit
   cancancan
   capybara
   cssbundling-rails
-  debug (~> 1.10)
+  debug
   delayed_cron_job (~> 0.8)
   delayed_job_active_record (~> 4.1)
   dotenv (~> 3.1.2)
@@ -502,8 +514,7 @@ DEPENDENCIES
   rsolr
   rspec
   rspec-mocks (~> 3.13.1)
-  rubocop (~> 1.79.0)
-  rubocop-rails (~> 2.33.0)
+  rubocop-rails-omakase
   selenium-webdriver
   simplecov
   simplecov-rcov
