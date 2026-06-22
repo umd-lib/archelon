@@ -2,4 +2,5 @@
 # CVEs that are not relevant to the application can be enumerated on the ignore list below.
 
 ignore:
-  - CVE-THAT-DOES-NOT-APPLY
+  # See README.md for rationale on ignoring this CVE
+  - CVE-2015-9284
