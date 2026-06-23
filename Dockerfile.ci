@@ -7,16 +7,16 @@
 
 ARG RUBY_VERSION=3.2.9
 
-FROM registry.docker.com/library/ruby:$RUBY_VERSION-slim
+FROM docker.io/library/ruby:$RUBY_VERSION-slim
 
 # Install packages needed to build gems and node modules
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential curl git libvips node-gyp pkg-config python-is-python3 && \
+    apt-get install --no-install-recommends -y build-essential curl git libvips node-gyp pkg-config && \
     apt-get install --no-install-recommends -y libpq-dev libyaml-dev && \
     apt-get install -y libsqlite3-dev && \
     apt-get clean
 
-ARG BUNDLER_VERSION=2.4.19
+ARG BUNDLER_VERSION=4.0.14
 ARG NODE_VERSION=18.19.0
 ARG YARN_VERSION=1.22.22
 
@@ -35,6 +35,7 @@ COPY Gemfile* /tmp/
 # Run bundler to install the gems
 WORKDIR /tmp
 RUN gem install bundler:$BUNDLER_VERSION
-RUN bundle install --without production
+RUN bundle config set without 'production' && \
+    bundle install
 
 WORKDIR /

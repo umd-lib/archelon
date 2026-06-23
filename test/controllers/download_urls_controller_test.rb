@@ -16,8 +16,30 @@ class DownloadUrlsControllerTest < ActionController::TestCase
   end
 
   test 'should add creator on create' do
-    stub_find_solr_document do
-      assert_difference('DownloadUrl.count') do
+    stub_find_solr_document
+    assert_difference('DownloadUrl.count') do
+      post :create, params: {
+        download_url: {
+          accessed_at: @download_url.accessed_at,
+          download_completed_at: @download_url.download_completed_at,
+          enabled: @download_url.enabled, mime_type: @download_url.mime_type,
+          notes: @download_url.notes, request_ip: @download_url.request_ip,
+          request_user_agent: @download_url.request_user_agent,
+          title: @download_url.title,
+          url: @download_url.url
+        }
+      }
+    end
+    download_url = DownloadUrl.last
+    assert_equal session[:cas_user], download_url.creator
+  end
+
+  test 'should add the "real" user as creator while impersonating' do
+    user_one = cas_users(:one)
+    stub_find_solr_document
+    assert_difference('DownloadUrl.count') do
+      impersonate_as_user(user_one) do
+        assert_equal session[:cas_user], user_one.cas_directory_id
         post :create, params: {
           download_url: {
             accessed_at: @download_url.accessed_at,
@@ -29,30 +51,6 @@ class DownloadUrlsControllerTest < ActionController::TestCase
             url: @download_url.url
           }
         }
-      end
-    end
-    download_url = DownloadUrl.last
-    assert_equal session[:cas_user], download_url.creator
-  end
-
-  test 'should add the "real" user as creator while impersonating' do
-    user_one = cas_users(:one)
-    stub_find_solr_document do
-      assert_difference('DownloadUrl.count') do
-        impersonate_as_user(user_one) do
-          assert_equal session[:cas_user], user_one.cas_directory_id
-          post :create, params: {
-            download_url: {
-              accessed_at: @download_url.accessed_at,
-              download_completed_at: @download_url.download_completed_at,
-              enabled: @download_url.enabled, mime_type: @download_url.mime_type,
-              notes: @download_url.notes, request_ip: @download_url.request_ip,
-              request_user_agent: @download_url.request_user_agent,
-              title: @download_url.title,
-              url: @download_url.url
-            }
-          }
-        end
       end
     end
     download_url = DownloadUrl.last
@@ -85,20 +83,19 @@ class DownloadUrlsControllerTest < ActionController::TestCase
   end
 
   test 'should require a note on create' do
-    stub_find_solr_document do
-      assert_no_difference('DownloadUrl.count') do
-        post :create, params: {
-          download_url: {
-            accessed_at: @download_url.accessed_at,
-            download_completed_at: @download_url.download_completed_at,
-            enabled: @download_url.enabled, mime_type: @download_url.mime_type,
-            notes: nil, request_ip: @download_url.request_ip,
-            request_user_agent: @download_url.request_user_agent,
-            title: @download_url.title,
-            url: @download_url.url
-          }
+    stub_find_solr_document
+    assert_no_difference('DownloadUrl.count') do
+      post :create, params: {
+        download_url: {
+          accessed_at: @download_url.accessed_at,
+          download_completed_at: @download_url.download_completed_at,
+          enabled: @download_url.enabled, mime_type: @download_url.mime_type,
+          notes: nil, request_ip: @download_url.request_ip,
+          request_user_agent: @download_url.request_user_agent,
+          title: @download_url.title,
+          url: @download_url.url
         }
-      end
+      }
     end
   end
 
@@ -111,17 +108,15 @@ class DownloadUrlsControllerTest < ActionController::TestCase
   end
 
   test 'generate_download_url should respond with 404 if document cannot be found' do
-    @controller.stub(:find_solr_document, nil) do
-      get :new, params: { document_url: 'document does not exist' }
-      assert_response :not_found
-    end
+    allow(@controller).to receive(:find_solr_document).and_return(nil)
+    get :new, params: { document_url: 'document does not exist' }
+    assert_response :not_found
   end
 
   test 'create_download_url should respond with 404 if document cannot be found' do
-    @controller.stub(:find_solr_document, nil) do
-      post :create, params: { download_url: { id: 1 }, document_url: 'document does not exist' }
-      assert_response :not_found
-    end
+    allow(@controller).to receive(:find_solr_document).and_return(nil)
+    post :create, params: { download_url: { id: 1 }, document_url: 'document does not exist' }
+    assert_response :not_found
   end
 
   test 'show_download_url should assign the retrieve url' do
@@ -163,19 +158,13 @@ class DownloadUrlsControllerTest < ActionController::TestCase
 
     # Stubs the DownloadUrlsController.find_solr_document call, so that it
     # won't actually make a network call. Returns a sample SolrDocument
-    #
-    # Usage:
-    #
-    # stub_find_solr_document do
-    #   <Code that calls "find_solr_document">
-    # end
-    def stub_find_solr_document(&block)
+    def stub_find_solr_document
       stub_response = SolrDocument.new(
         id: 'http://www.example.com',
         mime_type: 'image/jp2',
         object__title__display: ['Example']
       )
 
-      @controller.stub :find_solr_document, stub_response, &block
+      allow(@controller).to receive(:find_solr_document).and_return(stub_response)
     end
 end
