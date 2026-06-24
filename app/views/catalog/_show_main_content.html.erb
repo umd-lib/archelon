@@ -3,8 +3,8 @@
 <% content_for(:head) { render_link_rel_alternates } %>
 
 <% document_component = blacklight_config.view_config(:show).document_component -%>
-<%= render (document_component).new(document_component.collection_parameter => document_presenter(@document), component: :div, show: true, partials: blacklight_config.view_config(:show).partials) do |component| %>
 
+<%= render (document_component.new(document: document_presenter(@document), component: :div, show: true, partials: blacklight_config.view_config(:show).partials)) do |component| %>
   <%# UMD Customization %>
   <% if @document.displayable? or @document.editable? %>
     <div class="skip-link">

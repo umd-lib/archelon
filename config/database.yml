@@ -5,6 +5,7 @@
 #   gem "sqlite3"
 #
 default: &default
+  # UMD Customization
   adapter: <%= ENV["ARCHELON_DATABASE_ADAPTER"] %>
   encoding: <%= ENV["ARCHELON_DATABASE_ENCODING"] %>
   database: <%= ENV["ARCHELON_DATABASE_NAME"] %>
@@ -13,18 +14,31 @@ default: &default
   host: <%= ENV["ARCHELON_DATABASE_HOST"] %>
   port: <%= ENV["ARCHELON_DATABASE_PORT"] %>
   pool: <%= ENV["ARCHELON_DATABASE_POOL"] %>
+  # End UMD Customization
 
 development:
   <<: *default
+  # UMD Customization
+  # database: storage/development.sqlite3
+  # End UMD Customization
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
+  # UMD Customization
   adapter: sqlite3
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
+  # UMD Customization
   database: storage/test.sqlite3
 
+# SQLite3 write its data on the local filesystem, as such it requires
+# persistent disks. If you are deploying to a managed service, you should
+# make sure it provides disk persistence, as many don't.
+#
+# Similarly, if you deploy your application as a Docker container, you must
+# ensure the database is located in a persisted volume.
 production:
   <<: *default
+  # database: path/to/persistent/storage/production.sqlite3
