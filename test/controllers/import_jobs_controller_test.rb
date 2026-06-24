@@ -121,11 +121,10 @@ class ImportJobsControllerTest < ActionController::TestCase
     stub_result = OpenStruct.new # rubocop:disable Style/OpenStructUse
     stub_result.body = json_response
 
-    HTTP.stub :get, stub_result do
-      import_job = ImportJob.first
-      get :show, params: { id: import_job.id }
-      assert_response :success
-    end
+    allow(HTTP).to receive(:get).and_return(stub_result)
+    import_job = ImportJob.first
+    get :show, params: { id: import_job.id }
+    assert_response :success
   end
 
   test 'should get edit' do

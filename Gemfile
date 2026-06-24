@@ -1,30 +1,29 @@
 source "https://rubygems.org"
 
+# UMD Customization
 ruby "3.2.9"
+# End UMD Customization
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 7.1.5", ">= 7.1.5.2"
-
+gem "rails", "~> 8.1.3"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
-
 # Use sqlite3 as the database for Active Record
-gem "sqlite3", "~> 1.4"
-
+gem "sqlite3", ">= 2.1"
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
 
+# UMD Customization
 # Bundle and transpile JavaScript [https://github.com/rails/jsbundling-rails]
 gem "jsbundling-rails"
+# End UMD Customization
 
 # Bundle and process CSS [https://github.com/rails/cssbundling-rails]
 gem "cssbundling-rails"
-
 # Use Redis adapter to run Action Cable in production
+# UMD Customization
 gem "redis", ">= 4.0.1"
-
-# Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
-# gem "kredis"
+# End UMD Customization
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
@@ -36,11 +35,13 @@ gem "tzinfo-data", platforms: %i[ windows jruby ]
 gem "bootsnap", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
+# UMD Customization
 # gem "image_processing", "~> 1.2"
+# End UMD Customization
 
 # UMD Customization
 # Blacklight gem
-gem 'blacklight', "~> 8.3.0"
+gem 'blacklight', "~> 8.12"
 
 # RSolr Gem
 gem 'rsolr'
@@ -70,7 +71,7 @@ gem 'json-ld', '~> 3.3.1'
 
 gem 'http', '~> 5.2.0'
 
-gem 'react-rails', '~>3.2.1'
+gem 'react-rails', '~>3.3.1'
 
 gem 'stomp'
 gem 'faraday', '~> 1.10', '>= 1.10.5'
@@ -90,18 +91,18 @@ gem 'delayed_cron_job', '~> 0.8'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
-  gem "debug", '~> 1.10', platforms: %i[ mri windows ]
+  gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
+
+  # Audits gems for known security defects (use config/bundler-audit.yml to ignore issues)
+  gem "bundler-audit", require: false
+
+  # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
+  gem "rubocop-rails-omakase", require: false
 end
 
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
-
-  # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
-  # gem "rack-mini-profiler"
-
-  # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
-  # gem "spring"
 end
 
 group :test do
@@ -113,9 +114,6 @@ group :test do
   gem 'minitest-reporters'
 
   # Code analysis tools
-  gem 'rubocop', '~> 1.79.0', require: false
-  gem 'rubocop-rails', '~> 2.33.0', require: false
-
   gem 'simplecov', require: false
   gem 'simplecov-rcov', require: false
 

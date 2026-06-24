@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "private": true,
+  "private": "true",
   "dependencies": {
     "@github/auto-complete-element": "^3.6.2",
     "@hotwired/turbo-rails": "^8.0.12",
@@ -11,7 +11,7 @@
     "blacklight-frontend": "^8.3.0",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
-    "esbuild": "^0.25.0",
+    "esbuild": "^0.28.1",
     "esbuild-plugin-import-glob": "^0.1.1",
     "jquery": "3.5.1",
     "n3": "^1.17.4",
@@ -33,5 +33,9 @@
   },
   "browserslist": [
     "defaults"
-  ]
+  ],
+  "devDependencies": {
+    "@babel/core": "^7.0.0-0",
+    "webpack": "^5.0.0"
+  }
 }
