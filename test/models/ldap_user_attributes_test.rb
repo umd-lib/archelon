@@ -44,24 +44,21 @@ class LdapUserAttributesTest < ActiveSupport::TestCase
     ldap_entry[LDAP_NAME_ATTR] = Faker::Name.name
     ldap_entry[LDAP_GROUPS_ATTR] = [GROUPER_GROUPS['Users'], GROUPER_GROUPS['Administrators']]
 
-    LDAP.stub :search, [ldap_entry] do
-      ldap_user_attributes = LdapUserAttributes.create('foo')
-      assert_equal :admin, ldap_user_attributes.user_type
-    end
+    allow(LDAP).to receive(:search).and_return([ldap_entry])
+    ldap_user_attributes = LdapUserAttributes.create('foo')
+    assert_equal :admin, ldap_user_attributes.user_type
   end
 
   test 'Creation from LDAP with nil result' do
-    LDAP.stub :search, nil do
-      ldap_user_attributes = LdapUserAttributes.create('foo')
-      assert_nil ldap_user_attributes
-    end
+    allow(LDAP).to receive(:search).and_return(nil)
+    ldap_user_attributes = LdapUserAttributes.create('foo')
+    assert_nil ldap_user_attributes
   end
 
   test 'Creation from LDAP with empty result' do
-    LDAP.stub :search, [] do
-      ldap_user_attributes = LdapUserAttributes.create('foo')
-      assert_nil ldap_user_attributes
-    end
+    allow(LDAP).to receive(:search).and_return([])
+    ldap_user_attributes = LdapUserAttributes.create('foo')
+    assert_nil ldap_user_attributes
   end
 
   test 'Creation from LDAP with missing attributes' do
@@ -69,11 +66,10 @@ class LdapUserAttributesTest < ActiveSupport::TestCase
     ldap_entry['unexpected_attribute1'] = Faker::Name.name
     ldap_entry['unexpected_attribute2'] = [GROUPER_GROUPS['Users'], GROUPER_GROUPS['Administrators']]
 
-    LDAP.stub :search, [ldap_entry] do
-      ldap_user_attributes = LdapUserAttributes.create('foo')
-      assert_nil ldap_user_attributes.name
-      assert_equal :unauthorized, ldap_user_attributes.user_type
-    end
+    allow(LDAP).to receive(:search).and_return([ldap_entry])
+    ldap_user_attributes = LdapUserAttributes.create('foo')
+    assert_nil ldap_user_attributes.name
+    assert_equal :unauthorized, ldap_user_attributes.user_type
   end
 
   test 'LDAP_OVERRIDE should set the user_type value and LDAP is not searched' do

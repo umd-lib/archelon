@@ -29,7 +29,7 @@ class SolrDocumentTest < ActiveSupport::TestCase
     end
   end
 
-  test 'members_anchor returns Archelon-based relative URLs' do
+  test 'members_anchor returns Archelon-based relative URLs' do # rubocop:disable Metrics/BlockLength
     test_cases = [
       # test_value: [page_label_sequence__txts, page_uri_sequence__uris]
       # expected: [solr_document_path(test_value[1])]
@@ -57,7 +57,11 @@ class SolrDocumentTest < ActiveSupport::TestCase
         **solr_params
       )
 
-      assert_equal expected, solr_doc.members_anchor, "'#{test_value} did not return '#{expected}'"
+      if expected.nil?
+        assert_nil solr_doc.members_anchor, "'#{test_value} did not return '#{expected}'"
+      else
+        assert_equal expected, solr_doc.members_anchor, "'#{test_value} did not return '#{expected}'"
+      end
     end
   end
 
