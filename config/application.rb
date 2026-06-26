@@ -8,7 +8,7 @@ Bundler.require(*Rails.groups)
 
 module Archelon
   # UMD Customization
-  VERSION = '3.0.0-dev'
+  VERSION = '2.2.0-rc1'
   # End UMD Customization
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
