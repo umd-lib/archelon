@@ -2,7 +2,7 @@
 
 # date range query
 class DateRangeQuery
-  def initialize(begin_date, end_date)
+  def initialize(begin_date: nil, end_date: nil)
     @begin_date = begin_date
     @end_date = end_date
   end

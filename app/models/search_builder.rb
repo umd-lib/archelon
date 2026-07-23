@@ -11,7 +11,7 @@ class SearchBuilder < Blacklight::SearchBuilder
 
     %i[fq bq bf].each { |key| solr_parameters[key] ||= [] }
     field = blacklight_config.date_fields[:range].to_s
-    date_range_query = DateRangeQuery.new(*blacklight_params.slice(:begin_date, :end_date).values)
+    date_range_query = DateRangeQuery.new(**blacklight_params.symbolize_keys.slice(:begin_date, :end_date))
     solr_parameters[:fq] << date_range_query.fq(field)
     # boost dates/date ranges that fall completely within the queried range
     solr_parameters[:bq] << date_range_query.fq(field, :Within)
