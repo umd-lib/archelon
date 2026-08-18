@@ -135,7 +135,7 @@ class SolrDocument # rubocop:disable Metrics/ClassLength
     return unless has? field_name
 
     Array(fetch(field_name)).map do |agent|
-      tagged_names = agent[:agent__label__display].map { |name| format_with_language_tag(name) }
+      tagged_names = agent.fetch(:agent__label__display, ['[Unknown]']).map { |name| format_with_language_tag(name) }
       safe_join(tagged_names, ' | ')
     end
   end

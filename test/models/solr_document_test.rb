@@ -106,4 +106,28 @@ class SolrDocumentTest < ActiveSupport::TestCase
       assert_equal [test_case[:expected]], doc.extracted_text
     end
   end
+
+  test 'agent_names should handle missing labels' do
+    doc = SolrDocument.new(
+      {
+        object__creator: [
+          {
+            agent__same_as__curie: 'http://id.loc.gov/authorities/names/n79108379',
+            agent__same_as__uri: 'http://id.loc.gov/authorities/names/n79108379',
+            id: 'https://fcrepo.lib.umd.edu/fcrepo/rest/dc/2025/2/3f/bd/a5/fa/3fbda5fa-8b62-492e-8326-f65f18b1433f#f12f3e64-982d-45e7-bf9c-3fdbb3d36ff3'
+          },
+          {
+            agent__label__display: [
+              'Knowlton, Winthrop'
+            ],
+            agent__label__txt: 'Knowlton, Winthrop',
+            agent__same_as__curie: 'http://id.loc.gov/authorities/names/n82165660',
+            agent__same_as__uri: 'http://id.loc.gov/authorities/names/n82165660',
+            id: 'https://fcrepo.lib.umd.edu/fcrepo/rest/dc/2025/2/3f/bd/a5/fa/3fbda5fa-8b62-492e-8326-f65f18b1433f#bb709360-aec4-49de-a732-c04d0c54d16c'
+          }
+        ]
+      }
+    )
+    assert_equal ['[Unknown]', 'Knowlton, Winthrop'], doc.agent_names(:object__creator)
+  end
 end
