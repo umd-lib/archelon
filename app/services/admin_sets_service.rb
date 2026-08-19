@@ -24,7 +24,7 @@ class AdminSetsService
       solr_doc = SolrDocument.new(doc)
       {
         uri: solr_doc['id'],
-        display_title: solr_doc.display_titles
+        display_title: solr_doc['adminset__title__txt']
       }
     end
     admin_sets.sort_by { |c| c[:display_title] }
