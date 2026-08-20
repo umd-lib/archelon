@@ -7,3 +7,4 @@ test:
 production:
   adapter: redis
   url: <%= ENV['ARCHELON_REDIS_URL'] %>
+  channel_prefix: archelon_production

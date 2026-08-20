@@ -10,16 +10,14 @@ class BookmarksControllerTest < ActionController::TestCase
   end
 
   test 'should not create second bookmark if max bookmark limit reached' do
-    @controller.stub(:max_limit, 1) do
-      put :update, xhr: true, params: { id: 'http://fcrepo-test/new', format: :js }
-      assert_response :forbidden
-    end
+    allow(@controller).to receive(:max_limit).and_return(1)
+    put :update, xhr: true, params: { id: 'http://fcrepo-test/new', format: :js }
+    assert_response :forbidden
   end
 
   test 'should create second bookmark if within max bookmark limit' do
-    @controller.stub(:max_limit, 2) do
-      put :update, xhr: true, params: { id: 'http://fcrepo-test/new', format: :js }
-      assert_response :success
-    end
+    allow(@controller).to receive(:max_limit).and_return(2)
+    put :update, xhr: true, params: { id: 'http://fcrepo-test/new', format: :js }
+    assert_response :success
   end
 end

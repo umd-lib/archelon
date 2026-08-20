@@ -135,7 +135,7 @@ class SolrDocument # rubocop:disable Metrics/ClassLength
     return unless has? field_name
 
     Array(fetch(field_name)).map do |agent|
-      tagged_names = agent[:agent__label__display].map { |name| format_with_language_tag(name) }
+      tagged_names = agent.fetch(:agent__label__display, ['[Unknown]']).map { |name| format_with_language_tag(name) }
       safe_join(tagged_names, ' | ')
     end
   end
@@ -183,7 +183,7 @@ class SolrDocument # rubocop:disable Metrics/ClassLength
       parsed_value = parse_language_tagged_value(value)
       return parsed_value[:value] if parsed_value[:lang].nil?
 
-      safe_join([parsed_value[:value], tag.span(parsed_value[:lang], class: %w[badge text-bg-secondary])], "\xa0")
+      safe_join([parsed_value[:value], tag.span(parsed_value[:lang], class: %w[badge text-bg-secondary])], ' ')
     end
 
     def add_anchor_tag(uri, label)
