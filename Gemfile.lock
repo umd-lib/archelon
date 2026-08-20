@@ -236,7 +236,7 @@ GEM
       builder
       minitest (>= 5.0, < 7)
       ruby-progressbar
-    msgpack (1.7.2)
+    msgpack (1.8.2)
     multi_json (1.15.0)
     net-http (0.4.1)
       uri
