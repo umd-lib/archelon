@@ -29,7 +29,7 @@ class SolrDocumentTest < ActiveSupport::TestCase
     end
   end
 
-  test 'members_anchor returns Archelon-based relative URLs' do
+  test 'members_anchor returns Archelon-based relative URLs' do # rubocop:disable Metrics/BlockLength
     test_cases = [
       # test_value: [page_label_sequence__txts, page_uri_sequence__uris]
       # expected: [solr_document_path(test_value[1])]
@@ -57,7 +57,11 @@ class SolrDocumentTest < ActiveSupport::TestCase
         **solr_params
       )
 
-      assert_equal expected, solr_doc.members_anchor, "'#{test_value} did not return '#{expected}'"
+      if expected.nil?
+        assert_nil solr_doc.members_anchor, "'#{test_value} did not return '#{expected}'"
+      else
+        assert_equal expected, solr_doc.members_anchor, "'#{test_value} did not return '#{expected}'"
+      end
     end
   end
 
@@ -101,5 +105,29 @@ class SolrDocumentTest < ActiveSupport::TestCase
       doc = SolrDocument.new({ id: 'http://example.com/foo' }, response)
       assert_equal [test_case[:expected]], doc.extracted_text
     end
+  end
+
+  test 'agent_names should handle missing labels' do
+    doc = SolrDocument.new(
+      {
+        object__creator: [
+          {
+            agent__same_as__curie: 'http://id.loc.gov/authorities/names/n79108379',
+            agent__same_as__uri: 'http://id.loc.gov/authorities/names/n79108379',
+            id: 'https://fcrepo.lib.umd.edu/fcrepo/rest/dc/2025/2/3f/bd/a5/fa/3fbda5fa-8b62-492e-8326-f65f18b1433f#f12f3e64-982d-45e7-bf9c-3fdbb3d36ff3'
+          },
+          {
+            agent__label__display: [
+              'Knowlton, Winthrop'
+            ],
+            agent__label__txt: 'Knowlton, Winthrop',
+            agent__same_as__curie: 'http://id.loc.gov/authorities/names/n82165660',
+            agent__same_as__uri: 'http://id.loc.gov/authorities/names/n82165660',
+            id: 'https://fcrepo.lib.umd.edu/fcrepo/rest/dc/2025/2/3f/bd/a5/fa/3fbda5fa-8b62-492e-8326-f65f18b1433f#bb709360-aec4-49de-a732-c04d0c54d16c'
+          }
+        ]
+      }
+    )
+    assert_equal ['[Unknown]', 'Knowlton, Winthrop'], doc.agent_names(:object__creator)
   end
 end
