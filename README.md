@@ -9,7 +9,7 @@ system as Git submodules.
 Of particular interest for this application are two of the submodules:
 
 * [Plastron][plastron] - a utility application for performing batch operations
-   on the Fedora repository
+  on the Fedora repository
 * Archelon - a web GUI providing an administrative interface for
   Fedora
 
@@ -23,23 +23,24 @@ Archelon consists of the following components when run in a production
 environment:
 
 * A Rails application providing an administrative interface to the Fedora
-repository. It uses the [Blacklight][blacklight] gem for providing Solr
-search functionality.
+  repository. It uses the [Blacklight][blacklight] gem for providing Solr
+  search functionality.
 * A STOMP listener application for communicating with Plastron using the
-[STOMP messaging protocol][stomp] via ActiveMQ
-* An SFTP server, used to upload files for inclusion in import jobs
+  [STOMP messaging protocol][stomp] via ActiveMQ
+* An SFTP server, used to upload files for inclusion in import jobs. The
+  Docker image for it is maintained in a separate repository, [archelon-sftp].
 
 ## Interactions with other umd-fcrepo components
 
 Archelon interacts directly with the following umd-fcrepo components:
 
 * [ActiveMQ] - Archelon communicates to Plastron using STOMP messaging mediated
-by ActiveMQ queues.
+  by ActiveMQ queues.
 * [Solr] - Archelon communicates directly with the Solr instance in the
-"umd-fcrepo" stack for metadata search and retrieval.
+  "umd-fcrepo" stack for metadata search and retrieval.
 * [Plastron] - Archelon uses the HTTP REST interface provided by Plastron to
-retrieve information about export and import jobs (some export/import status
-information is also provided via STOMP messaging).
+  retrieve information about export and import jobs (some export/import status
+  information is also provided via STOMP messaging).
 
 ### Setup
 
@@ -182,18 +183,18 @@ To enable use of "localhost", the CAS login must be bypassed. To do this:
 1) Edit the "config/environments/development.rb" file and add "localhost" to
    the list of "config.hosts", i.e.:
 
-   ```
-     config.hosts = [
-       "archelon-local",
-       "localhost"
-     ]
+   ```ruby
+   config.hosts = [
+     "archelon-local",
+     "localhost"
+   ]
    ```
 
 2) Run the application, setting the "ARCHELON_AUTH" environment variable
    to "developer", i.e:
 
-   ```
-   $ ARCHELON_AUTH=developer bin/dev
+   ```zsh
+   ARCHELON_AUTH=developer bin/dev
    ```
 
 3) In a web browser go to
@@ -277,3 +278,4 @@ See the [LICENSE](LICENSE.md) file for license rights and limitations
 [Solr]: https://github.com/umd-lib/umd-fcrepo-solr
 [stomp]: https://stomp.github.io/
 [umd-fcrepo]: https://github.com/umd-lib/umd-fcrepo
+[archelon-sftp]: https://github.com/umd-lib/archelon-sftp
