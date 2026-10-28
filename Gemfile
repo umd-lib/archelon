@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 # UMD Customization
-ruby "3.2.9"
+ruby "3.3.13"
 # End UMD Customization
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
