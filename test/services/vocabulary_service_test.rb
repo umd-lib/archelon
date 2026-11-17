@@ -128,6 +128,6 @@ class VocabularyServiceTest < ActiveSupport::TestCase
   # in the model.
   def field_from_content_model(content_model, section, field_name)
     section_fields = content_model[section]
-    section_fields.each.select { |e| (e['name'] == field_name) }.first
+    section_fields.each.select { |e| e['name'] == field_name }.first
   end
 end

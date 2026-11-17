@@ -22,7 +22,7 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
   #
   # rescue_from Blacklight::Exceptions::InvalidRequest, with: :my_handling_method
 
-  # rubocop:disable Layout/LineLength
+  # rubocop:disable-next Layout/LineLength
   configure_blacklight do |config| # rubocop:disable Metrics/BlockLength
     ## Specify the style of markup to be generated (may be 4 or 5)
     # config.bootstrap_version = 5
@@ -428,7 +428,6 @@ class CatalogController < ApplicationController # rubocop:disable Metrics/ClassL
     # default 'mySuggester', uncomment and provide it below
     # config.autocomplete_suggester = 'mySuggester'
   end
-  # rubocop:enable Layout/LineLength
 
   # UMD Customization
 
