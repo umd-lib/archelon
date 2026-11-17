@@ -2,7 +2,6 @@
 
 require 'test_helper'
 
-# frozen_string_literal: true
 class PublishJobsControllerTest < ActionController::TestCase
   setup do
     @cas_user = cas_users(:test_admin)
